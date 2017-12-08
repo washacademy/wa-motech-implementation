@@ -3,8 +3,8 @@ package org.motechproject.nms.flw.service;
 import org.motechproject.server.config.SettingsFacade;
 
 /**
- * Gives access to flw.properties to ITs
+ * Gives access to swc.properties to ITs
  */
-public interface FlwSettingsService {
+public interface SwcSettingsService {
     SettingsFacade getSettingsFacade();
 }

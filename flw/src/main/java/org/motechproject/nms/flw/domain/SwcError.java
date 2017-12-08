@@ -6,11 +6,11 @@ import org.motechproject.mds.annotations.Field;
 /**
  * Audit log object for tracking failed FLW updates
  */
-@Entity(tableName = "nms_flw_errors")
-public class FlwError {
+@Entity(tableName = "wa_swc_errors")
+public class SwcError {
 
     @Field
-    private String mctsId;
+    private String swcId;
 
     @Field
     private Long stateId;
@@ -19,21 +19,21 @@ public class FlwError {
     private Long districtId;
 
     @Field
-    private FlwErrorReason reason;
+    private SwcErrorReason reason;
 
-    public FlwError(String mctsId, Long stateId, Long districtId, FlwErrorReason reason) {
-        this.mctsId = mctsId;
+    public SwcError(String swcId, Long stateId, Long districtId, SwcErrorReason reason) {
+        this.swcId = swcId;
         this.stateId = stateId;
         this.districtId = districtId;
         this.reason = reason;
     }
 
-    public String getMctsId() {
-        return mctsId;
+    public String getSwcId() {
+        return swcId;
     }
 
-    public void setMctsId(String mctsId) {
-        this.mctsId = mctsId;
+    public void setSwcId(String swcId) {
+        this.swcId = swcId;
     }
 
     public Long getStateId() {
@@ -52,11 +52,11 @@ public class FlwError {
         this.districtId = districtId;
     }
 
-    public FlwErrorReason getReason() {
+    public SwcErrorReason getReason() {
         return reason;
     }
 
-    public void setReason(FlwErrorReason reason) {
+    public void setReason(SwcErrorReason reason) {
         this.reason = reason;
     }
 }

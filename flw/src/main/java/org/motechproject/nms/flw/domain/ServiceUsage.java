@@ -4,7 +4,7 @@ import org.motechproject.nms.props.domain.Service;
 
 public class ServiceUsage {
 
-    private FrontLineWorker frontLineWorker;
+    private Swachchagrahi swachchagrahi;
 
     private Service service;
 
@@ -15,21 +15,21 @@ public class ServiceUsage {
     private boolean welcomePrompt;
 
 
-    public ServiceUsage(FrontLineWorker frontLineWorker, Service service, int usageInPulses, int endOfUsage,
+    public ServiceUsage(Swachchagrahi swachchagrahi, Service service, int usageInPulses, int endOfUsage,
                         boolean welcomePrompt) {
-        this.frontLineWorker = frontLineWorker;
+        this.swachchagrahi = swachchagrahi;
         this.service = service;
         this.usageInPulses = usageInPulses;
         this.endOfUsage = endOfUsage;
         this.welcomePrompt = welcomePrompt;
     }
 
-    public FrontLineWorker getFrontLineWorker() {
-        return frontLineWorker;
+    public Swachchagrahi getSwachchagrahi() {
+        return swachchagrahi;
     }
 
-    public void setFrontLineWorker(FrontLineWorker frontLineWorker) {
-        this.frontLineWorker = frontLineWorker;
+    public void setSwachchagrahi(Swachchagrahi swachchagrahi) {
+        this.swachchagrahi = swachchagrahi;
     }
 
     public Service getService() {

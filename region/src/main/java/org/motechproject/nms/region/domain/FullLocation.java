@@ -11,18 +11,9 @@ public interface FullLocation {
     District getDistrict();
     void setDistrict(District district);
 
-    Taluka getTaluka();
-    void setTaluka(Taluka taluka);
+    Block getBlock();
+    void setBlock(Block block);
 
-    Village getVillage();
-    void setVillage(Village village);
-
-    HealthBlock getHealthBlock();
-    void setHealthBlock(HealthBlock healthBlock);
-
-    HealthFacility getHealthFacility();
-    void setHealthFacility(HealthFacility primaryHealthCenter);
-
-    HealthSubFacility getHealthSubFacility();
-    void setHealthSubFacility(HealthSubFacility healthSubFacility);
+    Panchayat getPanchayat();
+    void setPanchayat(Panchayat panchayat);
 }

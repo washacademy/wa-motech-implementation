@@ -16,8 +16,8 @@ import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.ActivityService;
 import org.motechproject.mtraining.service.BookmarkService;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.domain.NmsCourse;
 import org.motechproject.nms.mobileacademy.domain.MtrainingModuleActivityRecordAudit;
@@ -88,7 +88,7 @@ public class MobileAcademyServiceImpl implements MobileAcademyService {
 
     private CourseCompletionRecordDataService courseCompletionRecordDataService;
 
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     /**
      * Activity record data service
@@ -125,7 +125,7 @@ public class MobileAcademyServiceImpl implements MobileAcademyService {
                                     NmsCourseDataService nmsCourseDataService,
                                     ActivityDataService activityDataService,
                                     CourseCompletionRecordDataService courseCompletionRecordDataService,
-                                    FrontLineWorkerService frontLineWorkerService,
+                                    SwcService swcService,
                                     EventRelay eventRelay,
                                     MtrainingModuleActivityRecordAuditDataService mtrainingModuleActivityRecordAuditDataService,
                                     @Qualifier("maSettings") SettingsFacade settingsFacade,
@@ -139,7 +139,7 @@ public class MobileAcademyServiceImpl implements MobileAcademyService {
         this.alertService = alertService;
         this.mtrainingModuleActivityRecordAuditDataService = mtrainingModuleActivityRecordAuditDataService;
         this.courseCompletionRecordDataService = courseCompletionRecordDataService;
-        this.frontLineWorkerService = frontLineWorkerService;
+        this.swcService = swcService;
         bootstrapCourse();
     }
 
@@ -184,7 +184,7 @@ public class MobileAcademyServiceImpl implements MobileAcademyService {
     @Override
     public MaBookmark getBookmark(Long callingNumber, String callId) {
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(callingNumber);
+        Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw == null) {
             return null;
         }
@@ -229,7 +229,7 @@ public class MobileAcademyServiceImpl implements MobileAcademyService {
 
         String flwId = saveBookmark.getFlwId().toString();
         Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(flwId);
-        FrontLineWorker flw = frontLineWorkerService.getById(saveBookmark.getFlwId());
+        Swachchagrahi flw = swcService.getById(saveBookmark.getFlwId());
         String callingNumber = flw.getContactNumber().toString();
 
         // write a new activity record if existing bookmark is null or

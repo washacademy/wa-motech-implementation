@@ -7,8 +7,8 @@ import org.motechproject.alerts.domain.AlertType;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mtraining.service.ActivityService;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.imi.service.SmsNotificationService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
@@ -65,7 +65,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
     /**
      * Used to get flw information
      */
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     private CourseCompletionRecordDataService courseCompletionRecordDataService;
 
@@ -96,7 +96,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                                          MotechSchedulerService schedulerService,
                                          CourseCompletionRecordDataService courseCompletionRecordDataService,
                                          AlertService alertService,
-                                         FrontLineWorkerService frontLineWorkerService,
+                                         SwcService swcService,
                                          DistrictDataService districtDataService) {
 
         this.smsNotificationService = smsNotificationService;
@@ -104,7 +104,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         this.schedulerService = schedulerService;
         this.alertService = alertService;
         this.activityService = activityService;
-        this.frontLineWorkerService = frontLineWorkerService;
+        this.swcService = swcService;
         this.districtDataService = districtDataService;
         this.courseCompletionRecordDataService = courseCompletionRecordDataService;
     }
@@ -132,7 +132,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             }
 
             String smsContent = buildSmsContent(flwId, ccr);
-            long callingNumber = frontLineWorkerService.getById(flwId).getContactNumber();
+            long callingNumber = swcService.getById(flwId).getContactNumber();
             ccr.setSentNotification(smsNotificationService.sendSms(callingNumber, smsContent));
             courseCompletionRecordDataService.update(ccr);
         } catch (IllegalStateException se) {
@@ -150,7 +150,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         String callingNumber = (String) event.getParameters().get(ADDRESS);
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(Long.parseLong(callingNumber));
+        Swachchagrahi flw = swcService.getByContactNumber(Long.parseLong(callingNumber));
         Long flwId = null;
         if (flw != null) {
              flwId= flw.getId();
@@ -212,7 +212,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
      */
     private String buildSmsContent(Long flwId, CourseCompletionRecord ccr) {
 
-        FrontLineWorker flw = frontLineWorkerService.getById(flwId);
+        Swachchagrahi flw = swcService.getById(flwId);
         String locationCode = "XX"; // unknown location id
         String smsLanguageProperty = null;
 

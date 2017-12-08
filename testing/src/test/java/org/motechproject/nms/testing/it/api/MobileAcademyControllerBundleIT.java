@@ -21,9 +21,9 @@ import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryStatus;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.RequestData;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.domain.NmsCourse;
 import org.motechproject.nms.mobileacademy.dto.MaCourse;
@@ -40,8 +40,6 @@ import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -73,7 +71,7 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
     private CourseCompletionRecordDataService courseCompletionRecordDataService;
 
     @Inject
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Inject
     private NmsCourseDataService nmsCourseDataService;
@@ -153,9 +151,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
 
         String endpoint = String.format("http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(BaseController.SMALLEST_10_DIGIT_NUMBER);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(BaseController.SMALLEST_10_DIGIT_NUMBER);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmark = new SaveBookmarkRequest();
         bookmark.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
         bookmark.setCallId(VALID_CALL_ID);
@@ -171,10 +169,10 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         SaveBookmarkRequest bookmark = new SaveBookmarkRequest();
         bookmark.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
         bookmark.setCallId(VALID_CALL_ID);
-        FrontLineWorker flw = new FrontLineWorker(BaseController.SMALLEST_10_DIGIT_NUMBER);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
-        flw = frontLineWorkerService.getByContactNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
+        Swachchagrahi flw = new Swachchagrahi(BaseController.SMALLEST_10_DIGIT_NUMBER);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
+        flw = swcService.getByContactNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
 
         Map<String, Integer> scores = new HashMap<>();
         for (int i = 1; i < 12; i++) {
@@ -201,9 +199,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
 
         String endpoint = String.format("http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(BaseController.SMALLEST_10_DIGIT_NUMBER);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(BaseController.SMALLEST_10_DIGIT_NUMBER);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmark = new SaveBookmarkRequest();
         bookmark.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
         bookmark.setCallId(VALID_CALL_ID);
@@ -528,9 +526,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID);
         bookmarkRequest.setCallingNumber(1234567890l);
@@ -558,9 +556,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID);
         bookmarkRequest.setCallingNumber(1234567890l);
@@ -792,9 +790,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
 
         // save bookamark first
@@ -852,9 +850,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
 
         // save bookamark first
@@ -911,9 +909,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
 
         // save bookamark first
@@ -970,10 +968,10 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
-        flw = frontLineWorkerService.getByContactNumber(1234567890l);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
+        flw = swcService.getByContactNumber(1234567890l);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
 
         // save bookamark first
@@ -1023,9 +1021,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format(
                 "http://localhost:%d/api/mobileacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID);
         bookmarkRequest.setCallingNumber(1234567890l);
@@ -1056,9 +1054,9 @@ public class MobileAcademyControllerBundleIT extends BasePaxIT {
      */
     public void verifyFT564() throws IOException, InterruptedException {
         // create completion record for msisdn 1234567890l
-        FrontLineWorker flw = new FrontLineWorker(1234567890l);
-        frontLineWorkerService.add(flw);
-        flw = frontLineWorkerService.getByContactNumber(1234567890l);
+        Swachchagrahi flw = new Swachchagrahi(1234567890l);
+        swcService.add(flw);
+        flw = swcService.getByContactNumber(1234567890l);
         CourseCompletionRecord ccr = new CourseCompletionRecord(flw.getId(), 25, "score", true, true, 0);
         ccr = courseCompletionRecordDataService.create(ccr);
         assertNull(ccr.getLastDeliveryStatus());

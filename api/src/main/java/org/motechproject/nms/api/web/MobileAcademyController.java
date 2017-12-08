@@ -11,8 +11,8 @@ import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfo;
 import org.motechproject.nms.api.web.converter.MobileAcademyConverter;
 import org.motechproject.nms.api.web.validator.MobileAcademyValidator;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.dto.MaCourse;
 import org.motechproject.nms.mobileacademy.exception.CourseNotCompletedException;
@@ -53,7 +53,7 @@ public class MobileAcademyController extends BaseController {
     private MobileAcademyService mobileAcademyService;
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     /**
      * Event relay service to handle async notifications
@@ -199,7 +199,7 @@ public class MobileAcademyController extends BaseController {
 
         // validate scores
         if (validateMAScores(bookmarkRequest.getScoresByChapter())) {
-            FrontLineWorker flw = frontLineWorkerService.getByContactNumber(bookmarkRequest.getCallingNumber());
+            Swachchagrahi flw = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
             Long flwId = flw.getId();
             MaBookmark bookmark = MobileAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, flwId);
             mobileAcademyService.setBookmark(bookmark);

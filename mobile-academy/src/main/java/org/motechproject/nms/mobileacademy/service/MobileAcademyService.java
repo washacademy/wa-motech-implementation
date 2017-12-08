@@ -63,7 +63,7 @@ public interface MobileAcademyService {
 
     /**
      * Updates Calling Number in MTRAINING_MODULE_BOOKMARK, nms_ma_completion_records, MTRAINING_MODULE_ACTIVITYRECORD tables
-     * @param id primary key of FrontLineWorker
+     * @param id primary key of Swachchagrahi
      * @param oldCallingNumber existing Msisdn of caller
      * @param newCallingNumber new Msisdn of caller
      * @return

@@ -14,22 +14,18 @@ import org.motechproject.nms.csv.utils.GetLocalDate;
 import org.motechproject.nms.csv.utils.CsvImporterBuilder;
 import org.motechproject.nms.csv.utils.ConstraintViolationUtils;
 
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FlwError;
-import org.motechproject.nms.flw.domain.FlwErrorReason;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
-import org.motechproject.nms.flw.domain.ContactNumberAudit;
-import org.motechproject.nms.flw.exception.FlwExistingRecordException;
-import org.motechproject.nms.flw.exception.FlwImportException;
+import org.motechproject.nms.flw.domain.*;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.exception.SwcExistingRecordException;
+import org.motechproject.nms.flw.exception.SwcImportException;
 import org.motechproject.nms.flw.repository.ContactNumberAuditDataService;
-import org.motechproject.nms.flw.repository.FlwErrorDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.repository.SwcErrorDataService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.kilkari.contract.AnmAshaRecord;
 import org.motechproject.nms.kilkari.contract.RchAnmAshaRecord;
 import org.motechproject.nms.kilkari.domain.RejectionReasons;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
-import org.motechproject.nms.flw.utils.FlwMapper;
+import org.motechproject.nms.flw.utils.SwcMapper;
 import org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.kilkari.utils.RejectedObjectConverter;
@@ -60,18 +56,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.motechproject.nms.flw.utils.FlwMapper.createFlw;
-import static org.motechproject.nms.flw.utils.FlwMapper.createRchFlw;
-import static org.motechproject.nms.flw.utils.FlwMapper.updateFlw;
+import static org.motechproject.nms.flw.utils.SwcMapper.createFlw;
+import static org.motechproject.nms.flw.utils.SwcMapper.createRchFlw;
+import static org.motechproject.nms.flw.utils.SwcMapper.updateFlw;
 
 @Service("frontLineWorkerImportService")
 public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontLineWorkerImportServiceImpl.class);
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
     private StateDataService stateDataService;
     private LocationService locationService;
-    private FlwErrorDataService flwErrorDataService;
+    private SwcErrorDataService swcErrorDataService;
     private MobileAcademyService mobileAcademyService;
     private ContactNumberAuditDataService contactNumberAuditDataService;
 
@@ -112,7 +108,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                 }
             } catch (ConstraintViolationException e) {
                 throw new CsvImportDataException(createErrorMessage(e.getConstraintViolations(), csvImporter.getRowNumber()), e);
-            } catch (InvalidLocationException | FlwImportException | JDODataStoreException | FlwExistingRecordException e) {
+            } catch (InvalidLocationException | SwcImportException | JDODataStoreException | SwcExistingRecordException e) {
                 throw new CsvImportDataException(createErrorMessage(e.getMessage(), csvImporter.getRowNumber()), e);
             }
         } else {
@@ -131,7 +127,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                 }
             } catch (ConstraintViolationException e) {
                 throw new CsvImportDataException(createErrorMessage(e.getConstraintViolations(), csvImporter.getRowNumber()), e);
-            } catch (InvalidLocationException | FlwImportException | JDODataStoreException | FlwExistingRecordException e) {
+            } catch (InvalidLocationException | SwcImportException | JDODataStoreException | SwcExistingRecordException e) {
                 throw new CsvImportDataException(createErrorMessage(e.getMessage(), csvImporter.getRowNumber()), e);
             }
         }
@@ -140,16 +136,16 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
     // CHECKSTYLE:ON
     @Override // NO CHECKSTYLE Cyclomatic Complexity
     @Transactional
-    public void importMctsFrontLineWorker(Map<String, Object> record, State state) throws InvalidLocationException, FlwExistingRecordException {
-        FrontLineWorker flw = flwFromRecord(record, state);
+    public void importMctsFrontLineWorker(Map<String, Object> record, State state) throws InvalidLocationException, SwcExistingRecordException {
+        Swachchagrahi flw = flwFromRecord(record, state);
 
         record.put(FlwConstants.STATE_ID, state.getCode());
         Map<String, Object> location = locationService.getLocations(record);
 
         if (flw == null) {
-            FrontLineWorker frontLineWorker = createFlw(record, location);
-            if (frontLineWorker != null) {
-                frontLineWorkerService.add(frontLineWorker);
+            Swachchagrahi swachchagrahi = createFlw(record, location);
+            if (swachchagrahi != null) {
+                swcService.add(swachchagrahi);
             }
         } else {
             String datePattern = "\\d{4}-\\d{2}-\\d{2}";
@@ -162,8 +158,8 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
             //It updated_date_nic from mcts is not null,then it's not a new record. Compare it with the record from database and update
             if (mctsUpdatedDateNic != null && (flw.getUpdatedDateNic() == null || mctsUpdatedDateNic.isAfter(flw.getUpdatedDateNic()) || mctsUpdatedDateNic.isEqual(flw.getUpdatedDateNic()))) {
                 Long oldMsisdn = flw.getContactNumber();
-                FrontLineWorker flwInstance = updateFlw(flw, record, location, SubscriptionOrigin.MCTS_IMPORT);
-                frontLineWorkerService.update(flwInstance);
+                Swachchagrahi flwInstance = updateFlw(flw, record, location, SubscriptionOrigin.MCTS_IMPORT);
+                swcService.update(flwInstance);
                 Long newMsisdn = (Long) record.get(FlwConstants.CONTACT_NO);
                 if (!oldMsisdn.equals(newMsisdn)) {
                     mobileAcademyService.updateMsisdn(flwInstance.getId(), oldMsisdn, newMsisdn);
@@ -174,62 +170,62 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                     contactNumberAuditDataService.create(contactNumberAudit);
                 }
             } else {
-                throw new FlwExistingRecordException("Updated record exists in the database");
+                throw new SwcExistingRecordException("Updated record exists in the database");
             }
         }
     }
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
     @Transactional
-    public void importRchFrontLineWorker(Map<String, Object> record, State state) throws InvalidLocationException, FlwExistingRecordException {
+    public void importRchFrontLineWorker(Map<String, Object> record, State state) throws InvalidLocationException, SwcExistingRecordException {
         String flwId = (String) record.get(FlwConstants.GF_ID);
         Long msisdn = (Long) record.get(FlwConstants.MOBILE_NO);
 
         record.put(FlwConstants.STATE_ID, state.getCode());
         Map<String, Object> location = locationService.getLocations(record);
 
-        FrontLineWorker flw = frontLineWorkerService.getByMctsFlwIdAndState(flwId, state);
+        Swachchagrahi flw = swcService.getByMctsFlwIdAndState(flwId, state);
         if (flw != null) {
-            FrontLineWorker flw2 = frontLineWorkerService.getByContactNumber(msisdn);
-            if (flw2 == null || flw2.getJobStatus().equals(FlwJobStatus.INACTIVE)) {
+            Swachchagrahi flw2 = swcService.getByContactNumber(msisdn);
+            if (flw2 == null || flw2.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                 // update msisdn of existing asha worker
-                FrontLineWorker newFlw = createRchFlw(record, location);
+                Swachchagrahi newFlw = createRchFlw(record, location);
                 if (newFlw != null) {
-                    frontLineWorkerService.add(newFlw);
+                    swcService.add(newFlw);
                 }
             } else {
                 //we got here because an FLW exists with active job status and the same msisdn
                 //check if both these records are the same or not
                 if (flw.equals(flw2)) {
-                    FrontLineWorker flwInstance = updateFlw(flw, record, location, SubscriptionOrigin.RCH_IMPORT);
-                    frontLineWorkerService.update(flwInstance);
+                    Swachchagrahi flwInstance = updateFlw(flw, record, location, SubscriptionOrigin.RCH_IMPORT);
+                    swcService.update(flwInstance);
                 } else {
                     LOGGER.debug("New flw but phone number(update) already in use");
-                    flwErrorDataService.create(new FlwError(flwId, (long) record.get(FlwConstants.STATE_ID), (long) record.get(FlwConstants.DISTRICT_ID), FlwErrorReason.PHONE_NUMBER_IN_USE));
-                    throw new FlwExistingRecordException("Msisdn already in use.");
+                    swcErrorDataService.create(new SwcError(flwId, (long) record.get(FlwConstants.STATE_ID), (long) record.get(FlwConstants.DISTRICT_ID), SwcErrorReason.PHONE_NUMBER_IN_USE));
+                    throw new SwcExistingRecordException("Msisdn already in use.");
                 }
             }
         } else {
-            FrontLineWorker frontLineWorker = frontLineWorkerService.getByContactNumber(msisdn);
-            if (frontLineWorker != null && frontLineWorker.getStatus().equals(FrontLineWorkerStatus.ACTIVE)) {
+            Swachchagrahi swachchagrahi = swcService.getByContactNumber(msisdn);
+            if (swachchagrahi != null && swachchagrahi.getStatus().equals(SwachchagrahiStatus.ACTIVE)) {
                 // check if anonymous FLW
-                if (frontLineWorker.getMctsFlwId() == null) {
-                    FrontLineWorker flwInstance = updateFlw(frontLineWorker, record, location, SubscriptionOrigin.RCH_IMPORT);
-                    frontLineWorkerService.update(flwInstance);
+                if (swachchagrahi.getMctsFlwId() == null) {
+                    Swachchagrahi flwInstance = updateFlw(swachchagrahi, record, location, SubscriptionOrigin.RCH_IMPORT);
+                    swcService.update(flwInstance);
                 } else {
                     // reject the record
                     LOGGER.debug("Existing FLW with provided msisdn");
-                    flwErrorDataService.create(new FlwError(flwId, (long) record.get(FlwConstants.STATE_ID), (long) record.get(FlwConstants.DISTRICT_ID), FlwErrorReason.PHONE_NUMBER_IN_USE));
-                    throw new FlwExistingRecordException("Msisdn already in use.");
+                    swcErrorDataService.create(new SwcError(flwId, (long) record.get(FlwConstants.STATE_ID), (long) record.get(FlwConstants.DISTRICT_ID), SwcErrorReason.PHONE_NUMBER_IN_USE));
+                    throw new SwcExistingRecordException("Msisdn already in use.");
                 }
-            } else if (frontLineWorker != null && frontLineWorker.getStatus().equals(FrontLineWorkerStatus.ANONYMOUS)) {
-                FrontLineWorker flwInstance = updateFlw(frontLineWorker, record, location, SubscriptionOrigin.RCH_IMPORT);
-                frontLineWorkerService.update(flwInstance);
+            } else if (swachchagrahi != null && swachchagrahi.getStatus().equals(SwachchagrahiStatus.ANONYMOUS)) {
+                Swachchagrahi flwInstance = updateFlw(swachchagrahi, record, location, SubscriptionOrigin.RCH_IMPORT);
+                swcService.update(flwInstance);
             } else {
                 // create new FLW record with provided flwId and msisdn
-                FrontLineWorker newFlw = createRchFlw(record, location);
+                Swachchagrahi newFlw = createRchFlw(record, location);
                 if (newFlw != null) {
-                    frontLineWorkerService.add(newFlw);
+                    swcService.add(newFlw);
                 }
             }
         }
@@ -246,7 +242,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
 
         State state = locationService.getState(stateId);
         if (state == null) {
-            flwErrorDataService.create(new FlwError(flwId, stateId, districtId, FlwErrorReason.INVALID_LOCATION_STATE));
+            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_STATE));
             if (importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT)) {
                 action = this.flwActionFinder(convertMapToAsha(flw));
                 flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
@@ -258,7 +254,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
         }
         District district = locationService.getDistrict(stateId, districtId);
         if (district == null) {
-            flwErrorDataService.create(new FlwError(flwId, stateId, districtId, FlwErrorReason.INVALID_LOCATION_DISTRICT));
+            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_DISTRICT));
             if (importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT)) {
                 action = this.flwActionFinder(convertMapToAsha(flw));
                 flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
@@ -269,8 +265,8 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
             return false;
         }
 
-        FrontLineWorker existingFlwByNumber = frontLineWorkerService.getByContactNumber(contactNumber);
-        FrontLineWorker existingFlwByFlwId = frontLineWorkerService.getByMctsFlwIdAndState(flwId, state);
+        Swachchagrahi existingFlwByNumber = swcService.getByContactNumber(contactNumber);
+        Swachchagrahi existingFlwByFlwId = swcService.getByMctsFlwIdAndState(flwId, state);
         Map<String, Object> location = new HashMap<>();
         try {
             location = locationService.getLocations(flw, false);
@@ -283,19 +279,19 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                             existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) {
                         // we are trying to update the same existing flw. set fields and update
                         LOGGER.debug("Updating existing user with the same phone number");
-                        frontLineWorkerService.update(FlwMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT));
+                        swcService.update(SwcMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT));
                         return true;
                     } else if ((!existingFlwByFlwId.getMctsFlwId().equalsIgnoreCase(existingFlwByNumber.getMctsFlwId()) ||
                             !existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) &&
-                            existingFlwByNumber.getJobStatus().equals(FlwJobStatus.INACTIVE)) {
+                            existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Updating existing user with same phone number");
-                        frontLineWorkerService.update(FlwMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT));
+                        swcService.update(SwcMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), true, null, action));
                         return true;
                     } else {
                         // we are trying to update 2 different users and/or phone number used by someone else
                         LOGGER.debug("Existing flw but phone number(update) already in use");
-                        flwErrorDataService.create(new FlwError(flwId, stateId, districtId, FlwErrorReason.PHONE_NUMBER_IN_USE));
+                        swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
@@ -305,7 +301,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                     // worth the effort & we don't really know that its the same flw
                     LOGGER.debug("Updating phone number for flw");
                     long existingContactNumber = existingFlwByFlwId.getContactNumber();
-                    FrontLineWorker flwInstance = FlwMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT);
+                    Swachchagrahi flwInstance = SwcMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT);
                     updateFlwMaMsisdn(flwInstance, existingContactNumber, contactNumber);
                     flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), true, null, action));
                     return true;
@@ -315,14 +311,14 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                         // we just got data from mcts for a previous anonymous user that subscribed by phone number
                         // merging those records
                         LOGGER.debug("Merging mcts data with previously anonymous user");
-                        frontLineWorkerService.update(FlwMapper.updateFlw(existingFlwByNumber, flw, location, SubscriptionOrigin.MCTS_IMPORT));
+                        swcService.update(SwcMapper.updateFlw(existingFlwByNumber, flw, location, SubscriptionOrigin.MCTS_IMPORT));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), true, null, action));
                         return true;
-                    } else if (existingFlwByNumber.getJobStatus().equals(FlwJobStatus.INACTIVE)) {
+                    } else if (existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Adding new flw user");
-                        FrontLineWorker frontLineWorker = FlwMapper.createFlw(flw, location);
-                        if (frontLineWorker != null) {
-                            frontLineWorkerService.add(frontLineWorker);
+                        Swachchagrahi swachchagrahi = SwcMapper.createFlw(flw, location);
+                        if (swachchagrahi != null) {
+                            swcService.add(swachchagrahi);
                             return true;
                         } else {
                             LOGGER.error("Job Status is INACTIVE. So cannot create record.");
@@ -331,7 +327,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                     } else {
                         // phone number used by someone else.
                         LOGGER.debug("New flw but phone number(update) already in use");
-                        flwErrorDataService.create(new FlwError(flwId, stateId, districtId, FlwErrorReason.PHONE_NUMBER_IN_USE));
+                        swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
@@ -339,9 +335,9 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                 } else { // existingFlwByMctsFlwId & existingFlwByNumber are null)
                     // new user. set fields and add
                     LOGGER.debug("Adding new flw user");
-                    FrontLineWorker frontLineWorker = FlwMapper.createFlw(flw, location);
-                    if (frontLineWorker != null) {
-                        frontLineWorkerService.add(frontLineWorker);
+                    Swachchagrahi swachchagrahi = SwcMapper.createFlw(flw, location);
+                    if (swachchagrahi != null) {
+                        swcService.add(swachchagrahi);
                         return true;
                     } else {
                         LOGGER.error("GF Status is INACTIVE. So cannot create record.");
@@ -357,19 +353,19 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                             existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) {
                         // we are trying to update the same existing flw. set fields and update
                         LOGGER.debug("Updating existing user with same phone number");
-                        frontLineWorkerService.update(FlwMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
+                        swcService.update(SwcMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else if ((!existingFlwByFlwId.getMctsFlwId().equalsIgnoreCase(existingFlwByNumber.getMctsFlwId()) ||
                             !existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) &&
-                            existingFlwByNumber.getJobStatus().equals(FlwJobStatus.INACTIVE)) {
+                            existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Updating existing user with same phone number");
-                        frontLineWorkerService.update(FlwMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
+                        swcService.update(SwcMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
                         return true;
                     } else {
                         // we are trying to update 2 different users and/or phone number used by someone else
                         LOGGER.debug("Existing flw but phone number(update) already in use");
-                        flwErrorDataService.create(new FlwError(flwId, stateId, districtId, FlwErrorReason.PHONE_NUMBER_IN_USE));
+                        swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
@@ -379,7 +375,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                     // worth the effort & we don't really know that its the same flw
                     LOGGER.debug("Updating phone number for flw");
                     long existingContactNumber = existingFlwByFlwId.getContactNumber();
-                    FrontLineWorker flwInstance = FlwMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT);
+                    Swachchagrahi flwInstance = SwcMapper.updateFlw(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT);
                     updateFlwMaMsisdn(flwInstance, existingContactNumber, contactNumber);
                     flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
                     return true;
@@ -389,14 +385,14 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                         // we just got data from rch for a previous anonymous user that subscribed by phone number
                         // merging those records
                         LOGGER.debug("Merging rch data with previously anonymous user");
-                        frontLineWorkerService.update(FlwMapper.updateFlw(existingFlwByNumber, flw, location, SubscriptionOrigin.RCH_IMPORT));
+                        swcService.update(SwcMapper.updateFlw(existingFlwByNumber, flw, location, SubscriptionOrigin.RCH_IMPORT));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
                         return true;
-                    } else if (existingFlwByNumber.getJobStatus().equals(FlwJobStatus.INACTIVE)) {
+                    } else if (existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Adding new RCH flw user");
-                        FrontLineWorker frontLineWorker = FlwMapper.createRchFlw(flw, location);
-                        if (frontLineWorker != null) {
-                            frontLineWorkerService.add(frontLineWorker);
+                        Swachchagrahi swachchagrahi = SwcMapper.createRchFlw(flw, location);
+                        if (swachchagrahi != null) {
+                            swcService.add(swachchagrahi);
                             return true;
                         } else {
                             LOGGER.error("GF Status is INACTIVE. So cannot create record.");
@@ -405,7 +401,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                     } else {
                         // phone number used by someone else.
                         LOGGER.debug("New flw but phone number(update) already in use");
-                        flwErrorDataService.create(new FlwError(flwId, stateId, districtId, FlwErrorReason.PHONE_NUMBER_IN_USE));
+                        swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
@@ -413,9 +409,9 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
                 } else { // existingFlwByMctsFlwId & existingFlwByNumber are null)
                     // new user. set fields and add
                     LOGGER.debug("Adding new RCH flw user");
-                    FrontLineWorker frontLineWorker = FlwMapper.createRchFlw(flw, location);
-                    if (frontLineWorker != null) {
-                        frontLineWorkerService.add(frontLineWorker);
+                    Swachchagrahi swachchagrahi = SwcMapper.createRchFlw(flw, location);
+                    if (swachchagrahi != null) {
+                        swcService.add(swachchagrahi);
                         flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else {
@@ -439,8 +435,8 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
         }
     }
 
-    private void updateFlwMaMsisdn(FrontLineWorker flwInstance, Long existingMsisdn, Long newMsisdn) {
-        frontLineWorkerService.update(flwInstance);
+    private void updateFlwMaMsisdn(Swachchagrahi flwInstance, Long existingMsisdn, Long newMsisdn) {
+        swcService.update(flwInstance);
         mobileAcademyService.updateMsisdn(flwInstance.getId(), existingMsisdn, newMsisdn);
     }
 
@@ -458,24 +454,24 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
         }
     }
 
-    private FrontLineWorker flwFromRecord(Map<String, Object> record, State state) { //NO CHECKSTYLE CyclomaticComplexity
-        FrontLineWorker flw = null;
+    private Swachchagrahi flwFromRecord(Map<String, Object> record, State state) { //NO CHECKSTYLE CyclomaticComplexity
+        Swachchagrahi flw = null;
 
         String mctsFlwId = (String) record.get(FlwConstants.ID);
         Long msisdn = (Long) record.get(FlwConstants.CONTACT_NO);
 
         if (mctsFlwId != null) {
-            flw = frontLineWorkerService.getByMctsFlwIdAndState(mctsFlwId, state);
+            flw = swcService.getByMctsFlwIdAndState(mctsFlwId, state);
         }
 
         if (flw == null && msisdn != null) {
-            flw = frontLineWorkerService.getByContactNumber(msisdn);
+            flw = swcService.getByContactNumber(msisdn);
 
             // If we loaded the flw by msisdn but the flw we found has a different mcts id
             // then the data needs to be hand corrected since we don't know if the msisdn has changed or
             // if the mcts id has changed.
             if (flw != null && mctsFlwId != null && flw.getMctsFlwId() != null && !mctsFlwId.equals(flw.getMctsFlwId())) {
-                if (flw.getJobStatus().equals(FlwJobStatus.ACTIVE)) {
+                if (flw.getJobStatus().equals(SwcJobStatus.ACTIVE)) {
                     throw new CsvImportDataException(String.format("Existing FLW with same MSISDN (%s) but " +
                             "different MCTS ID (%s != %s) in the state of Active jobStatus", LogHelper.obscure(msisdn), mctsFlwId, flw.getMctsFlwId()));
                 } else {
@@ -486,13 +482,13 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
 
         } else if (flw != null && msisdn != null) {
             Long id = flw.getId();
-            flw = frontLineWorkerService.getByContactNumber(msisdn);
+            flw = swcService.getByContactNumber(msisdn);
 
             if (flw != null && flw.getId() != id) {
                 throw new CsvImportDataException(String.format("Existing FLW with same MSISDN (%s) but " +
                         "different MCTS ID (%s != %s)", LogHelper.obscure(msisdn), mctsFlwId, flw.getMctsFlwId()));
             } else if (flw == null) {
-                flw = frontLineWorkerService.getById(id);
+                flw = swcService.getById(id);
             }
         }
 
@@ -674,7 +670,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
 
     private String createErrorMessage(Set<ConstraintViolation<?>> violations, int rowNumber) {
         return String.format("CSV instance error [row: %d]: validation failed for instance of type %s, violations: %s",
-                rowNumber, FrontLineWorker.class.getName(), ConstraintViolationUtils.toString(violations));
+                rowNumber, Swachchagrahi.class.getName(), ConstraintViolationUtils.toString(violations));
     }
 
     private void verify(boolean condition, String message) {
@@ -684,8 +680,8 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
     }
 
     @Autowired
-    public void setFrontLineWorkerService(FrontLineWorkerService frontLineWorkerService) {
-        this.frontLineWorkerService = frontLineWorkerService;
+    public void setSwcService(SwcService swcService) {
+        this.swcService = swcService;
     }
 
     @Autowired
@@ -699,8 +695,8 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
     }
 
     @Autowired
-    public void setFlwErrorDataService(FlwErrorDataService flwErrorDataService) {
-        this.flwErrorDataService = flwErrorDataService;
+    public void setSwcErrorDataService(SwcErrorDataService swcErrorDataService) {
+        this.swcErrorDataService = swcErrorDataService;
     }
 
     @Autowired
@@ -714,7 +710,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
     }
 
     private String flwActionFinder(AnmAshaRecord record) {
-        if (frontLineWorkerService.getByMctsFlwIdAndState(record.getId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
+        if (swcService.getByMctsFlwIdAndState(record.getId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
@@ -722,7 +718,7 @@ public class FrontLineWorkerImportServiceImpl implements FrontLineWorkerImportSe
     }
 
     private String rchFlwActionFinder(RchAnmAshaRecord record) {
-        if (frontLineWorkerService.getByMctsFlwIdAndState(record.getGfId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
+        if (swcService.getByMctsFlwIdAndState(record.getGfId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";

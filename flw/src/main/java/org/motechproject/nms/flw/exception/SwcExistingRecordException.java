@@ -3,9 +3,9 @@ package org.motechproject.nms.flw.exception;
 /**
  * Signals an issue with importing an FLW which already exits in database.
  */
-public class FlwExistingRecordException extends Exception {
+public class SwcExistingRecordException extends Exception {
 
-    public FlwExistingRecordException(String message) {
+    public SwcExistingRecordException(String message) {
         super(message);
     }
 }

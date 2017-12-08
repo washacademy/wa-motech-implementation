@@ -4,12 +4,12 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.flw.domain.CallDetailRecord;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
 import org.motechproject.nms.flw.domain.ServiceUsage;
 import org.motechproject.nms.flw.repository.CallDetailRecordDataService;
-import org.motechproject.nms.flw.repository.FrontLineWorkerDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.repository.SwcDataService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.flw.service.ServiceUsageService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.testing.service.TestingService;
@@ -34,10 +34,10 @@ import static org.junit.Assert.assertNotNull;
 public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
     @Inject
-    FrontLineWorkerDataService frontLineWorkerDataService;
+    SwcDataService swcDataService;
 
     @Inject
-    FrontLineWorkerService frontLineWorkerService;
+    SwcService swcService;
 
     @Inject
     ServiceUsageService serviceUsageService;
@@ -51,15 +51,15 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
     private void setupData() {
         testingService.clearDatabase();
 
-        for (FrontLineWorker flw: frontLineWorkerDataService.retrieveAll()) {
-            flw.setStatus(FrontLineWorkerStatus.INVALID);
+        for (Swachchagrahi flw: swcDataService.retrieveAll()) {
+            flw.setStatus(SwachchagrahiStatus.INVALID);
             flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
 
-            frontLineWorkerDataService.update(flw);
+            swcDataService.update(flw);
         }
 
         callDetailRecordDataService.deleteAll();
-        frontLineWorkerDataService.deleteAll();
+        swcDataService.deleteAll();
     }
 
     @Test
@@ -70,14 +70,14 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
     @Test
     public void testGetCurrentMonthlyUsageForFLWAndService() throws Exception {
         setupData();
-        FrontLineWorker flw = new FrontLineWorker("Valid Worker", 1111111111L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi("Valid Worker", 1111111111L);
+        swcService.add(flw);
 
-        FrontLineWorker flwIgnored = new FrontLineWorker("Ignored Worker", 2222222222L);
-        frontLineWorkerService.add(flwIgnored);
+        Swachchagrahi flwIgnored = new Swachchagrahi("Ignored Worker", 2222222222L);
+        swcService.add(flwIgnored);
 
         CallDetailRecord lastMonth = new CallDetailRecord();
-        lastMonth.setFrontLineWorker(flw);
+        lastMonth.setSwachchagrahi(flw);
         lastMonth.setCallingNumber(1111111111l);
         lastMonth.setService(Service.MOBILE_ACADEMY);
         lastMonth.setCallDurationInPulses(1);
@@ -88,7 +88,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         // A usage record for a different service that should be ignored
         CallDetailRecord differentService = new CallDetailRecord();
-        differentService.setFrontLineWorker(flw);
+        differentService.setSwachchagrahi(flw);
         differentService.setCallingNumber(1111111111l);
         differentService.setService(Service.MOBILE_KUNJI);
         differentService.setCallDurationInPulses(1);
@@ -99,7 +99,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         // A usage record for a different FLW that should be ignored
         CallDetailRecord differentFLW = new CallDetailRecord();
-        differentFLW.setFrontLineWorker(flwIgnored);
+        differentFLW.setSwachchagrahi(flwIgnored);
         differentFLW.setCallingNumber(1111111111l);
         differentFLW.setService(Service.MOBILE_KUNJI);
         differentFLW.setCallDurationInPulses(1);
@@ -110,7 +110,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         // Two valid records that should get aggregated
         CallDetailRecord recordOne = new CallDetailRecord();
-        recordOne.setFrontLineWorker(flw);
+        recordOne.setSwachchagrahi(flw);
         recordOne.setCallingNumber(1111111111l);
         recordOne.setService(Service.MOBILE_ACADEMY);
         recordOne.setCallDurationInPulses(1);
@@ -120,7 +120,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(recordOne);
 
         CallDetailRecord recordTwo = new CallDetailRecord();
-        recordTwo.setFrontLineWorker(flw);
+        recordTwo.setSwachchagrahi(flw);
         recordTwo.setCallingNumber(1111111111l);
         recordTwo.setService(Service.MOBILE_ACADEMY);
         recordTwo.setCallDurationInPulses(1);
@@ -131,7 +131,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(flw, Service.MOBILE_ACADEMY);
 
-        assertEquals(flw, serviceUsage.getFrontLineWorker());
+        assertEquals(flw, serviceUsage.getSwachchagrahi());
         assertEquals(Service.MOBILE_ACADEMY, serviceUsage.getService());
         assertEquals(2, serviceUsage.getUsageInPulses());
         assertEquals(1, serviceUsage.getEndOfUsage());
@@ -143,26 +143,26 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         callDetailRecordDataService.delete(recordOne);
         callDetailRecordDataService.delete(recordTwo);
 
-        flw.setStatus(FrontLineWorkerStatus.INVALID);
+        flw.setStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
-        frontLineWorkerService.update(flw);
-        frontLineWorkerService.delete(flw);
+        swcService.update(flw);
+        swcService.delete(flw);
 
-        flwIgnored.setStatus(FrontLineWorkerStatus.INVALID);
+        flwIgnored.setStatus(SwachchagrahiStatus.INVALID);
         flwIgnored.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
-        frontLineWorkerService.update(flwIgnored);
-        frontLineWorkerService.delete(flwIgnored);
+        swcService.update(flwIgnored);
+        swcService.delete(flwIgnored);
     }
 
     @Test
     public void testGetCurrentMonthlyUsageForFLWAndServiceWithNoService() throws Exception {
         setupData();
-        FrontLineWorker flw = new FrontLineWorker("Valid Worker", 1111111111L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi("Valid Worker", 1111111111L);
+        swcService.add(flw);
 
         ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(flw, Service.MOBILE_ACADEMY);
 
-        assertEquals(flw, serviceUsage.getFrontLineWorker());
+        assertEquals(flw, serviceUsage.getSwachchagrahi());
         assertEquals(Service.MOBILE_ACADEMY, serviceUsage.getService());
         assertEquals(0, serviceUsage.getUsageInPulses());
         assertEquals(0, serviceUsage.getEndOfUsage());
@@ -170,10 +170,10 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         callDetailRecordDataService.deleteAll();
 
-        flw.setStatus(FrontLineWorkerStatus.INVALID);
+        flw.setStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
-        frontLineWorkerService.update(flw);
-        frontLineWorkerService.delete(flw);
+        swcService.update(flw);
+        swcService.delete(flw);
     }
 
 }

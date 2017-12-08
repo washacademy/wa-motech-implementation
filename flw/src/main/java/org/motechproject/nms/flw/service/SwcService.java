@@ -3,7 +3,7 @@ package org.motechproject.nms.flw.service;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.mds.annotations.InstanceLifecycleListener;
 import org.motechproject.mds.annotations.InstanceLifecycleListenerType;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
 import org.motechproject.nms.region.domain.State;
 
 import java.util.List;
@@ -11,27 +11,27 @@ import java.util.List;
 /**
  * Simple example of a service interface.
  */
-public interface FrontLineWorkerService {
+public interface SwcService {
 
-    State getState(FrontLineWorker frontLineWorker);
+    State getState(Swachchagrahi swachchagrahi);
 
-    void add(FrontLineWorker frontLineWorker);
+    void add(Swachchagrahi swachchagrahi);
 
-    FrontLineWorker getByContactNumber(Long contactNumber);
+    Swachchagrahi getByContactNumber(Long contactNumber);
 
-    FrontLineWorker getInctiveByContactNumber(Long contactNumber);
+    Swachchagrahi getInctiveByContactNumber(Long contactNumber);
 
-    FrontLineWorker getByFlwId(String flwId);
+    Swachchagrahi getBySwcId(String swcId);
 
-    FrontLineWorker getByMctsFlwIdAndState(String mctsFlwId, State state);
+    Swachchagrahi getByMctsFlwIdAndState(String mctsFlwId, State state);
 
-    FrontLineWorker getById(Long id);
+    Swachchagrahi getById(Long id);
 
-    List<FrontLineWorker> getRecords();
+    List<Swachchagrahi> getRecords();
 
-    void update(FrontLineWorker record);
+    void update(Swachchagrahi record);
 
-    void delete(FrontLineWorker record);
+    void delete(Swachchagrahi record);
 
     /**
      * MotechEvent handler that responds to scheduler events.  Purges FLW records that are in invalid state
@@ -39,14 +39,14 @@ public interface FrontLineWorkerService {
      *
      * @param event
      */
-    void purgeOldInvalidFLWs(MotechEvent event);
+    void purgeOldInvalidSWCs(MotechEvent event);
 
     /**
      * Lifecycle listener that verifies a Front Line Worker can only be deleted if it is invalid
      * and has been in that state for 6 weeks
      *
-     * @param frontLineWorker
+     * @param swachchagrahi
      */
     @InstanceLifecycleListener(InstanceLifecycleListenerType.PRE_DELETE)
-    void deletePreconditionCheck(FrontLineWorker frontLineWorker);
+    void deletePreconditionCheck(Swachchagrahi swachchagrahi);
 }

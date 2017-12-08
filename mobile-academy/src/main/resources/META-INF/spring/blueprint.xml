@@ -39,7 +39,7 @@
                     interface="org.motechproject.mtraining.service.ActivityService" />
 
     <osgi:reference id="frontlineWorkerService"
-                    interface="org.motechproject.nms.flw.service.FrontLineWorkerService" />
+                    interface="org.motechproject.nms.flw.service.SwcService" />
 
     <osgi:reference id="districtDataService"
                     interface="org.motechproject.nms.region.repository.DistrictDataService" />

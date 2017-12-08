@@ -4,9 +4,9 @@ import org.motechproject.nms.api.web.contract.UserLanguageRequest;
 import org.motechproject.nms.api.web.exception.NotAuthorizedException;
 import org.motechproject.nms.api.web.exception.NotDeployedException;
 import org.motechproject.nms.api.web.exception.NotFoundException;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.region.domain.Language;
@@ -29,7 +29,7 @@ public class LanguageController extends BaseController {
     public static final String SERVICE_NAME = "serviceName";
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Autowired
     private LanguageService languageService;
@@ -74,10 +74,10 @@ public class LanguageController extends BaseController {
             throw new IllegalArgumentException(failureReasons.toString());
         }
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(callingNumber);
+        Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw == null) {
-            flw = new FrontLineWorker(callingNumber);
-            flw.setJobStatus(FlwJobStatus.ACTIVE);
+            flw = new Swachchagrahi(callingNumber);
+            flw.setJobStatus(SwcJobStatus.ACTIVE);
         }
 
         Language language = languageService.getForCode(languageLocationCode);
@@ -99,9 +99,9 @@ public class LanguageController extends BaseController {
 
         // MOTECH-1667 added to get an upsert method included
         if (flw.getId() == null) {
-            frontLineWorkerService.add(flw);
+            swcService.add(flw);
         } else {
-            frontLineWorkerService.update(flw);
+            swcService.update(flw);
         }
     }
 

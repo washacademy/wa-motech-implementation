@@ -1,6 +1,6 @@
 package org.motechproject.nms.flw.service.impl;
 
-import org.motechproject.nms.flw.service.FlwSettingsService;
+import org.motechproject.nms.flw.service.SwcSettingsService;
 import org.motechproject.server.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 /**
  * helper service class created to facilitate ITs.
  */
-@Service("flwSettingsService")
-public class FlwSettingsServiceImpl implements FlwSettingsService {
+@Service("swcSettingsService")
+public class SwcSettingsServiceImpl implements SwcSettingsService {
     private SettingsFacade settingsFacade;
 
     @Autowired
-    FlwSettingsServiceImpl(SettingsFacade settingsFacade) {
+    SwcSettingsServiceImpl(SettingsFacade settingsFacade) {
         this.settingsFacade = settingsFacade;
     }
 

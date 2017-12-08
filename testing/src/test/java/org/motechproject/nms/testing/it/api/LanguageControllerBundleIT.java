@@ -11,12 +11,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.api.web.contract.UserLanguageRequest;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
+import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
 import org.motechproject.nms.flw.domain.ServiceUsageCap;
 import org.motechproject.nms.flw.repository.ServiceUsageCapDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.props.domain.DeployedService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.repository.DeployedServiceDataService;
@@ -57,7 +57,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     private static final String VALID_CALL_ID = "1234567890123456789012345";
 
     @Inject
-    FrontLineWorkerService frontLineWorkerService;
+    SwcService swcService;
 
     @Inject
     LanguageDataService languageDataService;
@@ -112,8 +112,8 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     }
 
     private void createFlwCappedServiceNoUsageNoLocationNoLanguage() {
-        FrontLineWorker flw = new FrontLineWorker("Frank Lloyd Wright", 1111111111l);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1111111111l);
+        swcService.add(flw);
 
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
@@ -234,9 +234,9 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(1111111111l);
+        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
         assertNotNull(flw);
-        assertEquals(FrontLineWorkerStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
         Language language = flw.getLanguage();
         assertNotNull(language);
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
@@ -292,10 +292,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(1111111111l);
+        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
         Language language = flw.getLanguage();
         assertNotNull(language);
-        assertEquals(FrontLineWorkerStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
                 language.getCode());
     }
@@ -307,10 +307,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT463() throws IOException, InterruptedException {
         // create FLW record
-        FrontLineWorker flw = new FrontLineWorker(1111111112l);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
-        flw = frontLineWorkerService
+        Swachchagrahi flw = new Swachchagrahi(1111111112l);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
+        flw = swcService
                 .getByContactNumber(1111111112l);
         assertEquals(null, flw.getLanguage());// No Language
 
@@ -325,7 +325,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpPost, ADMIN_USERNAME, ADMIN_PASSWORD);
         
-        flw = frontLineWorkerService
+        flw = swcService
                 .getByContactNumber(1111111112l);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         assertEquals(rh.hindiLanguage().getCode(), flw.getLanguage().getCode());
@@ -462,8 +462,8 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         languageDataService.create(language);
         
     	// create anonymous FLW record
-        FrontLineWorker flw = new FrontLineWorker("Frank Llyod Wright", 1111111111L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swcService.add(flw);
         
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
@@ -486,10 +486,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(1111111111l);
+        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
         Language language = flw.getLanguage();
         assertNotNull(language);
-        assertEquals(FrontLineWorkerStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
         assertEquals("FLW Language Code", "99", language.getCode());
     }
 }

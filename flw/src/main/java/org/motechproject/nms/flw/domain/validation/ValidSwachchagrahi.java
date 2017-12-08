@@ -10,11 +10,11 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { FrontLineWorkerValidator.class })
+@Constraint(validatedBy = { SwcValidator.class })
 @Documented
-public @interface ValidFrontLineWorker {
+public @interface ValidSwachchagrahi {
 
-    String message() default "Active FLWs must have State and District set.";
+    String message() default "Active SWCs must have Location set.";
 
     Class<?>[] groups() default { };
 

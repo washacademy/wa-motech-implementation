@@ -2,7 +2,7 @@ package org.motechproject.nms.flw.ut;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class FrontLineWorkerUnitTest {
+public class SwachchagrahiUnitTest {
     Validator validator;
 
     @Before
@@ -23,9 +23,9 @@ public class FrontLineWorkerUnitTest {
 
     @Test
     public void testContactNumberTooShort() {
-        FrontLineWorker flw = new FrontLineWorker(111111111L);
+        Swachchagrahi flw = new Swachchagrahi(111111111L);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator
                 .validateProperty(flw, "contactNumber");
 
         assertEquals(1, constraintViolations.size());
@@ -34,9 +34,9 @@ public class FrontLineWorkerUnitTest {
 
     @Test
     public void testContactNumberTooLong() {
-        FrontLineWorker flw = new FrontLineWorker(11111111111L);
+        Swachchagrahi flw = new Swachchagrahi(11111111111L);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator
                 .validateProperty(flw, "contactNumber");
 
         assertEquals(1, constraintViolations.size());
@@ -45,9 +45,9 @@ public class FrontLineWorkerUnitTest {
 
     @Test
     public void testContactNumberValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator
                 .validateProperty(flw, "contactNumber");
 
         assertEquals(0, constraintViolations.size());

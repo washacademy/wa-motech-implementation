@@ -15,8 +15,8 @@
 
     <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager"/>
 
-    <osgi:service ref="frontLineWorkerService"
-                  interface="org.motechproject.nms.flw.service.FrontLineWorkerService" />
+    <osgi:service ref="swcService"
+                  interface="org.motechproject.nms.flw.service.SwcService" />
 
     <osgi:service ref="serviceUsageService"
                   interface="org.motechproject.nms.flw.service.ServiceUsageService" />
@@ -33,17 +33,17 @@
     <osgi:service ref="whitelistService"
                   interface="org.motechproject.nms.flw.service.WhitelistService" />
 
-    <osgi:reference id="flwStatusUpdateAuditDataService"
-                  interface="org.motechproject.nms.flw.repository.FlwStatusUpdateAuditDataService" />
+    <osgi:reference id="swcStatusUpdateAuditDataService"
+                  interface="org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService" />
 
     <osgi:reference id="contactNumberAuditDataService"
                     interface="org.motechproject.nms.flw.repository.ContactNumberAuditDataService" />
 
-    <osgi:reference id="flwErrorDataService"
-                    interface="org.motechproject.nms.flw.repository.FlwErrorDataService" />
+    <osgi:reference id="swcErrorDataService"
+                    interface="org.motechproject.nms.flw.repository.SwcErrorDataService" />
 
-    <osgi:reference id="frontLineWorkerDataService"
-                    interface="org.motechproject.nms.flw.repository.FrontLineWorkerDataService" />
+    <osgi:reference id="swcDataService"
+                    interface="org.motechproject.nms.flw.repository.SwcDataService" />
 
     <osgi:reference id="serviceUsageCapDataService"
                     interface="org.motechproject.nms.flw.repository.ServiceUsageCapDataService" />
@@ -66,11 +66,11 @@
     <osgi:reference id="schedulerService"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService" />
     
-    <osgi:service ref="flwSettingsService" interface="org.motechproject.nms.flw.service.FlwSettingsService" />
+    <osgi:service ref="swcSettingsService" interface="org.motechproject.nms.flw.service.SwcSettingsService" />
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
-    <osgi:service ref="flwErrorDataService"
-                    interface="org.motechproject.nms.flw.repository.FlwErrorDataService" />
+    <osgi:service ref="swcErrorDataService"
+                    interface="org.motechproject.nms.flw.repository.SwcErrorDataService" />
 
 </beans>

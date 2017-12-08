@@ -9,12 +9,9 @@ import org.motechproject.nms.api.web.exception.NotAuthorizedException;
 import org.motechproject.nms.api.web.exception.NotDeployedException;
 import org.motechproject.nms.api.web.repository.AnonymousCallAuditDataService;
 import org.motechproject.nms.api.web.repository.InactiveJobCallAuditDataService;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
-import org.motechproject.nms.flw.domain.ServiceUsage;
-import org.motechproject.nms.flw.domain.ServiceUsageCap;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.*;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.flw.service.ServiceUsageCapService;
 import org.motechproject.nms.flw.service.ServiceUsageService;
 import org.motechproject.nms.props.domain.Service;
@@ -44,7 +41,7 @@ public class UserController extends BaseController {
  
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Autowired
     private ServiceUsageService serviceUsageService;
@@ -163,9 +160,9 @@ public class UserController extends BaseController {
         FlwUserResponse user = new FlwUserResponse();
         Service service = getServiceFromName(serviceName);
         ServiceUsage serviceUsage = new ServiceUsage(null, service, 0, 0, false);
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(callingNumber);
+        Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw == null) {
-            flw = frontLineWorkerService.getInctiveByContactNumber(callingNumber);
+            flw = swcService.getInctiveByContactNumber(callingNumber);
         }
 
         State state = getStateForFrontLineWorker(flw, circle);
@@ -210,9 +207,9 @@ public class UserController extends BaseController {
         return user;
     }
 
-    private void restrictAnonymousMAUserCheck(FrontLineWorker flw, Long callingNumber, Circle circle) {
+    private void restrictAnonymousMAUserCheck(Swachchagrahi flw, Long callingNumber, Circle circle) {
 
-        if (flw == null || flw.getStatus() == FrontLineWorkerStatus.ANONYMOUS ||
+        if (flw == null || flw.getStatus() == SwachchagrahiStatus.ANONYMOUS ||
                 flw.getMctsFlwId() == null || flw.getMctsFlwId().isEmpty()) {
             // New requirement - https://applab.atlassian.net/projects/NMS/issues/NMS-325 - Block anonymous FLWs
             // if flw is null here, we don't already have a record from MCTS. return 403
@@ -225,9 +222,9 @@ public class UserController extends BaseController {
         }
     }
 
-    private void restrictInactiveJobUserCheck(FrontLineWorker flw) {
+    private void restrictInactiveJobUserCheck(Swachchagrahi flw) {
 
-        if (flw != null && flw.getJobStatus() == FlwJobStatus.INACTIVE) {
+        if (flw != null && flw.getJobStatus() == SwcJobStatus.INACTIVE) {
             inactiveJobCallAuditDataService.create(new InactiveJobCallAudit(DateUtil.now(), flw.getFlwId(), flw.getMctsFlwId(), flw.getContactNumber()));
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
         } else if (flw == null) {

@@ -7,17 +7,14 @@ import org.motechproject.mds.annotations.Field;
 /**
  * Audit record for update of anonymous flw to active
  */
-@Entity(tableName = "nms_flw_status_update_audit")
-public class FlwStatusUpdateAudit {
+@Entity(tableName = "wash_swachgrahi_status_update_audit")
+public class SwcStatusUpdateAudit {
 
     @Field
     private DateTime importDate;
 
     @Field
-    private String  flwId;
-
-    @Field
-    private String mctsFlwId;
+    private String  swcId;
 
     @Field
     private Long contactNumber;
@@ -26,10 +23,9 @@ public class FlwStatusUpdateAudit {
     private UpdateStatusType updateStatusType;
 
 
-    public FlwStatusUpdateAudit(DateTime importDate, String flwId, String mctsFlwId, Long contactNumber, UpdateStatusType updateStatusType) {
+    public SwcStatusUpdateAudit(DateTime importDate, String swcId, Long contactNumber, UpdateStatusType updateStatusType) {
         this.importDate = importDate;
-        this.flwId = flwId;
-        this.mctsFlwId = mctsFlwId;
+        this.swcId = swcId;
         this.contactNumber = contactNumber;
         this.updateStatusType = updateStatusType;
     }
@@ -50,20 +46,12 @@ public class FlwStatusUpdateAudit {
         this.importDate = importDate;
     }
 
-    public String getFlwId() {
-        return flwId;
+    public String getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(String flwId) {
-        this.flwId = flwId;
-    }
-
-    public String getMctsFlwId() {
-        return mctsFlwId;
-    }
-
-    public void setMctsFlwId(String mctsFlwId) {
-        this.mctsFlwId = mctsFlwId;
+    public void setSwcId(String swcId) {
+        this.swcId = swcId;
     }
 
     public Long getContactNumber() {

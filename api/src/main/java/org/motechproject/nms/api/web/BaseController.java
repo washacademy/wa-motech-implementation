@@ -6,8 +6,8 @@ import org.motechproject.nms.api.web.contract.BadRequest;
 import org.motechproject.nms.api.web.exception.NotAuthorizedException;
 import org.motechproject.nms.api.web.exception.NotDeployedException;
 import org.motechproject.nms.api.web.exception.NotFoundException;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.flw.service.WhitelistService;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.props.domain.CallDisconnectReason;
@@ -71,7 +71,7 @@ public class BaseController {
     private PropertyService propertyService;
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Autowired
     private StateService stateService;
@@ -246,8 +246,8 @@ public class BaseController {
         return new DateTime(epoch * MILLIS); // epoch time sent by IVR is in secs
     }
 
-    protected State getStateForFrontLineWorker(FrontLineWorker flw, Circle circle) {
-        State state = frontLineWorkerService.getState(flw);
+    protected State getStateForFrontLineWorker(Swachchagrahi flw, Circle circle) {
+        State state = swcService.getState(flw);
 
         if (state == null && circle != null) {
             state = getStateFromCircle(circle);
@@ -271,7 +271,7 @@ public class BaseController {
         return state;
     }
 
-    protected boolean frontLineWorkerAuthorizedForAccess(FrontLineWorker flw, State state) {
+    protected boolean frontLineWorkerAuthorizedForAccess(Swachchagrahi flw, State state) {
         return whitelistService.numberWhitelistedForState(state, flw.getContactNumber());
     }
 

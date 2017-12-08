@@ -3,7 +3,7 @@ package org.motechproject.nms.flw.domain;
 /**
  * Reason codes for flw sync errors
  */
-public enum FlwErrorReason {
+public enum SwcErrorReason {
     PHONE_NUMBER_IN_USE,
     INVALID_PHONE_NUMBER,
     INVALID_LOCATION_STATE,

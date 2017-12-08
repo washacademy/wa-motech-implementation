@@ -1,11 +1,6 @@
 package org.motechproject.nms.region.domain.validation;
 
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.FullLocation;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -27,10 +22,10 @@ public class FullLocationValidator implements ConstraintValidator<ValidFullLocat
         if (allNull(location)) {
             return true;
         }
-
-        if (!validateHealthFacilities(location, constraintValidatorContext)) {
-            isValid = false;
-        }
+//
+//        if (!validateHealthFacilities(location, constraintValidatorContext)) {
+//            isValid = false;
+//        }
 
         if (!validateLocationHierarchy(location, constraintValidatorContext)) {
             isValid = false;
@@ -41,20 +36,18 @@ public class FullLocationValidator implements ConstraintValidator<ValidFullLocat
 
     private boolean allNull(FullLocation location) {
         return location.getState() == null && location.getDistrict() == null && // NO CHECKSTYLE Boolean expression complexity
-                location.getTaluka() == null &&  location.getVillage() == null &&
-                location.getHealthBlock() == null && location.getHealthFacility() == null &&
-                location.getHealthSubFacility() == null;
+                location.getBlock() == null &&  location.getPanchayat() == null;
     }
 
     private boolean validateLocationHierarchy(FullLocation location, ConstraintValidatorContext constraintValidatorContext) { // NO CHECKSTYLE Cyclomatic Complexity
         boolean isValid = true;
         boolean locationAtOrBelowDistrict = false;
 
-        if (location.getVillage() != null) {
+        if (location.getPanchayat() != null) {
             locationAtOrBelowDistrict = true;
-            Village village = location.getVillage();
+            Panchayat panchayat = location.getPanchayat();
 
-            if (location.getTaluka() == null) {
+            if (location.getBlock() == null) {
                 constraintValidatorContext.disableDefaultConstraintViolation();
                 constraintValidatorContext.buildConstraintViolationWithTemplate("Taluka must be set if village " +
                                                                          "is provided").addConstraintViolation();
@@ -116,52 +109,52 @@ public class FullLocationValidator implements ConstraintValidator<ValidFullLocat
         return isValid;
     }
 
-    private boolean validateHealthFacilities(FullLocation location, ConstraintValidatorContext constraintValidatorContext) { // NO CHECKSTYLE Cyclomatic Complexity
-        boolean isValid = true;
+//    private boolean validateHealthFacilities(FullLocation location, ConstraintValidatorContext constraintValidatorContext) { // NO CHECKSTYLE Cyclomatic Complexity
+//        boolean isValid = true;
+//
+//        if (location.getHealthSubFacility() != null) {
+//            HealthSubFacility healthSubFacility = location.getHealthSubFacility();
+//
+//            if (location.getHealthFacility() == null) {
+//                constraintValidatorContext.disableDefaultConstraintViolation();
+//                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Facility must be set if " +
+//                                                            "sub-facility is provided").addConstraintViolation();
+//                isValid = false;
+//            } else if (healthSubFacility.getHealthFacility() == null ||
+//                    !healthSubFacility.getHealthFacility().getId().equals(location.getHealthFacility().getId())) {
+//                constraintValidatorContext.disableDefaultConstraintViolation();
+//                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Sub-Facility is not a " +
+//                                                        "child of the Health Facility").addConstraintViolation();
+//                isValid = false;
+//            }
+//        }
+//
+//        if (location.getHealthFacility() != null) {
+//            HealthFacility healthFacility = location.getHealthFacility();
+//
+//            if (location.getHealthBlock() == null) {
+//                constraintValidatorContext.disableDefaultConstraintViolation();
+//                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Block must be set if " +
+//                                                               "facility is provided").addConstraintViolation();
+//                isValid = false;
+//            } else if (healthFacility.getHealthBlock() == null ||
+//                    !healthFacility.getHealthBlock().getId().equals(location.getHealthBlock().getId())) {
+//                constraintValidatorContext.disableDefaultConstraintViolation();
+//                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Facility is not a " +
+//                                                           "child of the Health Block").addConstraintViolation();
+//                isValid = false;
+//            }
+//        }
+//
+//        if (location.getHealthBlock() != null) {
+//            if (location.getTaluka() == null) {
+//                constraintValidatorContext.disableDefaultConstraintViolation();
+//                constraintValidatorContext.buildConstraintViolationWithTemplate("Taluka must be set if block " +
+//                                                                         "is provided").addConstraintViolation();
+//                isValid = false;
+//            }
+//        }
 
-        if (location.getHealthSubFacility() != null) {
-            HealthSubFacility healthSubFacility = location.getHealthSubFacility();
-
-            if (location.getHealthFacility() == null) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Facility must be set if " +
-                                                            "sub-facility is provided").addConstraintViolation();
-                isValid = false;
-            } else if (healthSubFacility.getHealthFacility() == null ||
-                    !healthSubFacility.getHealthFacility().getId().equals(location.getHealthFacility().getId())) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Sub-Facility is not a " +
-                                                        "child of the Health Facility").addConstraintViolation();
-                isValid = false;
-            }
-        }
-
-        if (location.getHealthFacility() != null) {
-            HealthFacility healthFacility = location.getHealthFacility();
-
-            if (location.getHealthBlock() == null) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Block must be set if " +
-                                                               "facility is provided").addConstraintViolation();
-                isValid = false;
-            } else if (healthFacility.getHealthBlock() == null ||
-                    !healthFacility.getHealthBlock().getId().equals(location.getHealthBlock().getId())) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Health Facility is not a " +
-                                                           "child of the Health Block").addConstraintViolation();
-                isValid = false;
-            }
-        }
-
-        if (location.getHealthBlock() != null) {
-            if (location.getTaluka() == null) {
-                constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Taluka must be set if block " +
-                                                                         "is provided").addConstraintViolation();
-                isValid = false;
-            }
-        }
-
-        return isValid;
-    }
+//        return isValid;
+//    }
 }

@@ -11,7 +11,7 @@ public class ContactNumberAudit {
     private LocalDate importDate;
 
     @Field
-    private Long flwId;
+    private Long swcId;
 
     @Field
     private Long oldCallingNumber;
@@ -19,13 +19,13 @@ public class ContactNumberAudit {
     @Field
     private Long newCallingNumber;
 
-    public ContactNumberAudit(Long flwId) {
-        this(null, flwId, null, null);
+    public ContactNumberAudit(Long swcId) {
+        this(null, swcId, null, null);
     }
 
-    public ContactNumberAudit(LocalDate importDate, Long flwId, Long oldCallingNumber, Long newCallingNumber) {
+    public ContactNumberAudit(LocalDate importDate, Long swcId, Long oldCallingNumber, Long newCallingNumber) {
         this.importDate = importDate;
-        this.flwId = flwId;
+        this.swcId = swcId;
         this.oldCallingNumber = oldCallingNumber;
         this.newCallingNumber = newCallingNumber;
     }
@@ -47,12 +47,12 @@ public class ContactNumberAudit {
         this.oldCallingNumber = oldCallingNumber;
     }
 
-    public Long getFlwId() {
-        return flwId;
+    public Long getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(Long flwId) {
-        this.flwId = flwId;
+    public void setFlwId(Long swcId) {
+        this.swcId = swcId;
     }
 
     public Long getNewCallingNumber() {

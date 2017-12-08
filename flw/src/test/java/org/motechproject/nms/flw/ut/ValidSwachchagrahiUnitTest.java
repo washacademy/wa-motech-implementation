@@ -3,8 +3,8 @@ package org.motechproject.nms.flw.ut;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
 import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.State;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class ValidFrontLineWorkerUnitTest {
+public class ValidSwachchagrahiUnitTest {
 
     Validator validator;
     State state;
@@ -39,12 +39,12 @@ public class ValidFrontLineWorkerUnitTest {
     // Test Valid
     @Test
     public void testActiveValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.ACTIVE);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.ACTIVE);
         flw.setState(state);
         flw.setDistrict(district);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         assertEquals(0, constraintViolations.size());
     }
@@ -52,11 +52,11 @@ public class ValidFrontLineWorkerUnitTest {
     // Test Active no state
     @Test
     public void testActiveNoStateInValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.ACTIVE);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.ACTIVE);
         flw.setDistrict(district);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         // One violation is Active without state and district the other is from @FullLocatinValidator
         assertEquals(2, constraintViolations.size());
@@ -65,11 +65,11 @@ public class ValidFrontLineWorkerUnitTest {
     // Test Active no district
     @Test
     public void testActiveNoDistrictInValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.ACTIVE);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.ACTIVE);
         flw.setState(state);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         // One violation is Active without state and district the other is from @FullLocatinValidator
         assertEquals(2, constraintViolations.size());
@@ -78,10 +78,10 @@ public class ValidFrontLineWorkerUnitTest {
     // Test Active no district and state
     @Test
     public void testActiveNoDistrictNoStateInValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.ACTIVE);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.ACTIVE);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("Active FLWs must have State and District set.", constraintViolations.iterator().next().getMessage());
@@ -90,10 +90,10 @@ public class ValidFrontLineWorkerUnitTest {
     // Test ANONYMOUS no location
     @Test
     public void testANONYMOUSValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.ANONYMOUS);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.ANONYMOUS);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         assertEquals(0, constraintViolations.size());
     }
@@ -101,10 +101,10 @@ public class ValidFrontLineWorkerUnitTest {
     // Test INACTIVE no location
     @Test
     public void testINACTIVEValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.INACTIVE);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.INACTIVE);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         assertEquals(0, constraintViolations.size());
     }
@@ -113,10 +113,10 @@ public class ValidFrontLineWorkerUnitTest {
     @Test
     @Ignore
     public void testINVALIDValid() {
-        FrontLineWorker flw = new FrontLineWorker(1111111111L);
-        flw.setStatus(FrontLineWorkerStatus.INVALID);
+        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        flw.setStatus(SwachchagrahiStatus.INVALID);
 
-        Set<ConstraintViolation<FrontLineWorker>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
 
         assertEquals(1, constraintViolations.size());
     }
