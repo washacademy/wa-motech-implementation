@@ -754,7 +754,7 @@
     <modules>
         <module>tracking</module>
         <module>csv</module>
-        <module>mobile-academy</module>
+        <module>wash-academy</module>
         <module>flw</module>
         <module>api</module>
         <module>region</module>
