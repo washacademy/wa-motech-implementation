@@ -9,7 +9,7 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>mobile-academy</artifactId>
+    <artifactId>wash-academy</artifactId>
     <version>1.0.33</version>
     <packaging>bundle</packaging>
     <name>Wash Academy module</name>
