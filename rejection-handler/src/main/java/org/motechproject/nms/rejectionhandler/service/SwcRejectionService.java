@@ -1,14 +1,14 @@
 package org.motechproject.nms.rejectionhandler.service;
 
-import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
+import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
 
 /**
  * Created by vishnu on 15/7/17.
  */
-public interface FlwRejectionService {
+public interface SwcRejectionService {
 
-    FlwImportRejection findByFlwIdAndPanchayatId(Long flwId, Long stateId);
+    SwcImportRejection findBySwcIdAndPanchayatId(Long swcId, Long panchayatId);
 
-    void createUpdate(FlwImportRejection flwImportRejection);
+    void createUpdate(SwcImportRejection swcImportRejection);
 
 }

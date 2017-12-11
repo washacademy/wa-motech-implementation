@@ -48,6 +48,6 @@
                     interface="org.motechproject.nms.flw.repository.SwcErrorDataService" />
 
     <osgi:reference id="flwRejectionService"
-                    interface="org.motechproject.nms.rejectionhandler.service.FlwRejectionService" />
+                    interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService" />
 
 </beans>

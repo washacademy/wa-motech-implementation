@@ -28,10 +28,8 @@ import org.motechproject.nms.mcts.utils.Constants;
 import org.motechproject.nms.region.domain.*;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
-import org.motechproject.nms.rejectionhandler.domain.MotherImportRejection;
-import org.motechproject.nms.rejectionhandler.repository.FlwImportRejectionDataService;
-import org.motechproject.nms.rejectionhandler.repository.MotherRejectionDataService;
+import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
+import org.motechproject.nms.rejectionhandler.repository.SwcImportRejectionDataService;
 import org.motechproject.nms.testing.it.mcts.util.*;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -100,7 +98,7 @@ public class MctsImportBundleIT extends BasePaxIT {
     private SettingsService settingsService;
 
     @Inject
-    private FlwImportRejectionDataService flwImportRejectionDataService;
+    private SwcImportRejectionDataService flwImportRejectionDataService;
 
     @Inject
     private MotherRejectionDataService motherRejectionDataService;
@@ -343,7 +341,7 @@ public class MctsImportBundleIT extends BasePaxIT {
 //        Should reject non ASHA FLWs
         List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
-        List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
+        List<SwcImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
         assertEquals(1, flwImportRejections.size());
         assertEquals(RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), flwImportRejections.get(0).getRejectionReason());
     }
@@ -434,7 +432,7 @@ public class MctsImportBundleIT extends BasePaxIT {
             List<Swachchagrahi> flws = flwDataService.retrieveAll();
             assertEquals(1, flws.size());
 
-            List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
+            List<SwcImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
             assertEquals(2,flwImportRejections.size());
             assertEquals(flwImportRejections.get(0).getRejectionReason(), RejectionReasons.FLW_TYPE_NOT_ASHA.toString());
 
@@ -503,7 +501,7 @@ public class MctsImportBundleIT extends BasePaxIT {
             assertEquals(0, mctsImportFailRecords.size());
             assertEquals("Sample Name 3", flws.get(0).getName());
 
-            List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
+            List<SwcImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
             assertEquals(RejectionReasons.DUPLICATE_MOBILE_NUMBER_IN_DATASET.toString(), flwImportRejections.get(0).getRejectionReason());
             assertEquals(2, flwImportRejections.size());
 
@@ -568,7 +566,7 @@ public class MctsImportBundleIT extends BasePaxIT {
             assertEquals(0, mctsImportFailRecords.size());
             assertEquals("Name a", flws.get(0).getName());
             
-            List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
+            List<SwcImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
             assertEquals(1, flwImportRejections.size());
 
             List<MctsChild> children = mctsChildDataService.retrieveAll();

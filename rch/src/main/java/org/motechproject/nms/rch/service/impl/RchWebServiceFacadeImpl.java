@@ -59,9 +59,7 @@ import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.kilkari.service.ActionFinderService;
-import org.motechproject.nms.rejectionhandler.service.ChildRejectionService;
-import org.motechproject.nms.rejectionhandler.service.MotherRejectionService;
-import org.motechproject.nms.rejectionhandler.service.FlwRejectionService;
+import org.motechproject.nms.rejectionhandler.service.SwcRejectionService;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +145,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     private MctsBeneficiaryImportService mctsBeneficiaryImportService;
 
     @Autowired
-    private FlwRejectionService flwRejectionService;
+    private SwcRejectionService flwRejectionService;
 
     @Autowired
     private MotherRejectionService motherRejectionService;

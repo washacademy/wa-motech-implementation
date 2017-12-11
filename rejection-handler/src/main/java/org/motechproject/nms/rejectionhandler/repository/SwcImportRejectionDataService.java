@@ -3,16 +3,16 @@ package org.motechproject.nms.rejectionhandler.repository;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
+import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
 
 /**
  * Created by vishnu on 14/7/17.
  */
-public interface FlwImportRejectionDataService extends MotechDataService<FlwImportRejection>  {
+public interface SwcImportRejectionDataService extends MotechDataService<SwcImportRejection>  {
 
     @Lookup
-    FlwImportRejection findByFlwIdAndPanchayatId(@LookupField(name = "SwcID") Long SwcID,
-                                             @LookupField(name = "panchayatId") Long panchayatId);
+    SwcImportRejection findBySwcIdAndPanchayatId(@LookupField(name = "SwcID") Long SwcID,
+                                                 @LookupField(name = "panchayatId") Long panchayatId);
 
 
 }

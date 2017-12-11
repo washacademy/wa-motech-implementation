@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 @Entity(tableName = "wash_swachgrahi_rejects")
-public class FlwImportRejection {
+public class SwcImportRejection {
 
     @Field
     private Boolean accepted;
@@ -64,13 +64,11 @@ public class FlwImportRejection {
     @Field
     private String districtName;
 
-
     @Field
     private Long BlockId;
 
     @Field
     private String BlockName;
-
 
     @Field
     private Long panchayatId;
