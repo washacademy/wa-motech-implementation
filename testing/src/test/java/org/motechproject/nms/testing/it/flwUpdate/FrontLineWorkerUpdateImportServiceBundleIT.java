@@ -18,10 +18,10 @@ import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.nms.csv.domain.CsvAuditRecord;
 import org.motechproject.nms.csv.exception.CsvImportDataException;
 import org.motechproject.nms.csv.repository.CsvAuditRecordDataService;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.repository.FrontLineWorkerDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.repository.SwcDataService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.flwUpdate.service.FrontLineWorkerUpdateImportService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
@@ -75,9 +75,9 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Inject
     LanguageService languageService;
     @Inject
-    FrontLineWorkerDataService frontLineWorkerDataService;
+    SwcDataService swcDataService;
     @Inject
-    FrontLineWorkerService frontLineWorkerService;
+    SwcService swcService;
     @Inject
     TestingService testingService;
     @Inject
@@ -117,8 +117,8 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // Test when state not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenStateNotInDatabase() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(9439986187L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(9439986187L);
+        swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,2");
         frontLineWorkerUpdateImportService.importLanguageData(reader);
@@ -134,8 +134,8 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // Test when language not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenLanguageNotInDatabase() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(9439986187L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(9439986187L);
+        swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,1");
         frontLineWorkerUpdateImportService.importLanguageData(reader);
@@ -167,122 +167,122 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // Test NMS Id takes precedence over MCTS ID
     @Test
     public void testImportWhenNMSIdTakesPrecedenceOverMCTSId() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
+        flw = new Swachchagrahi(2000000000L);
         flw.setMctsFlwId("210302604211400029");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,,hi,1");
         frontLineWorkerUpdateImportService.importLanguageData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertEquals(rh.kannadaLanguage(), flw.getLanguage());
     }
 
     // Test NMS Id takes precedence over MSISDN
     @Test
     public void testImportWhenNMSIdTakesPrecedenceOverMSIDN() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
+        flw = new Swachchagrahi(2000000000L);
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,,2000000000,hi,1");
         frontLineWorkerUpdateImportService.importLanguageData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertEquals(rh.kannadaLanguage(), flw.getLanguage());
     }
 
     // Test MCTS Id takes precedence over MSISDN
     @Test
     public void testImportWhenMCTSIdTakesPrecedenceOverMSIDN() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setMctsFlwId("210302604211400029");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
+        flw = new Swachchagrahi(2000000000L);
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,2000000000,hi,1");
         frontLineWorkerUpdateImportService.importLanguageData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertEquals(rh.kannadaLanguage(), flw.getLanguage());
     }
 
     // Test MSISDN only
     @Test
     public void testImportWhenMSISDNOnly() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
+        flw = new Swachchagrahi(2000000000L);
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,1000000000,hi,1");
         frontLineWorkerUpdateImportService.importLanguageData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertEquals(rh.kannadaLanguage(), flw.getLanguage());
     }
 
     @Test
     public void testImportFromSampleLanguageDataFile() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setLanguage(rh.kannadaLanguage());
         flw.setFlwId("72185");
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
+        flw = new Swachchagrahi(2000000000L);
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         frontLineWorkerUpdateImportService.importLanguageData(read("csv/flw_language_update.csv"));
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
     }
 
@@ -320,107 +320,107 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // Test NMS Id takes precedence over MCTS ID
     @Test
     public void testMsisdnImportWhenNMSIdTakesPrecedenceOverMCTSId() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
-        frontLineWorkerService.add(flw);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
+        flw = new Swachchagrahi(2000000000L);
         flw.setMctsFlwId("210302604211400029");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,,9439986187,1");
         frontLineWorkerUpdateImportService.importMSISDNData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertNotNull(flw);
     }
 
     // Test NMS Id takes precedence over MSISDN
     @Test
     public void testMsisdnImportWhenNMSIdTakesPrecedenceOverMSIDN() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw = new Swachchagrahi(2000000000L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,,2000000000,9439986187,1");
         frontLineWorkerUpdateImportService.importMSISDNData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
         assertEquals("72185", flw.getFlwId());
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertNotNull(flw);
     }
 
     // Test MCTS Id takes precedence over MSISDN
     @Test
     public void testMsisdnImportWhenMCTSIdTakesPrecedenceOverMSIDN() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setMctsFlwId("210302604211400029");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw = new Swachchagrahi(2000000000L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,2000000000,9439986187,1");
         frontLineWorkerUpdateImportService.importMSISDNData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
         assertEquals("210302604211400029", flw.getMctsFlwId());
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertNotNull(flw);
     }
 
     // Test MSISDN only flw Update and Bookmark, Completion and Activity Record
     @Test
     public void testMsisdnImportWhenMSISDNOnly() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw = new Swachchagrahi(2000000000L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         createMaRecords(1000000000L);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,9439986187,1");
         frontLineWorkerUpdateImportService.importMSISDNData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertNotNull(flw);
 
         assertMaRecords(1000000000L, 9439986187L);
@@ -428,45 +428,45 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
 
     @Test
     public void testMsisdnImportFromSampleDataFile() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(2000000000L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw = new Swachchagrahi(2000000000L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         frontLineWorkerUpdateImportService.importMSISDNData(read("csv/flw_msisdn_update.csv"));
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(9439986188L);
+        flw = swcService.getByContactNumber(9439986188L);
         assertNotNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(2000000000L);
+        flw = swcService.getByContactNumber(2000000000L);
         assertNull(flw);
     }
 
     // Test new MSISDN larger than 10 digits
     @Test
     public void testMsisdnImportWhenNewMsisdnTooLong() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,09439986187,1");
         frontLineWorkerUpdateImportService.importMSISDNData(reader);
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
     }
 
@@ -490,11 +490,11 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // Test new MSISDN associated with existing FLW
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButAlreadyInUse() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(9439986187L);
-        frontLineWorkerService.add(flw);
+        flw = new Swachchagrahi(9439986187L);
+        swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,1000000000,1");
         frontLineWorkerUpdateImportService.importMSISDNData(reader);
@@ -503,11 +503,11 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // Test Ma Update when new MSISDN associated with existing FLW
     @Test
     public void testMaUpdateWhenMSISDNProvidedIsAlreadyInUse() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
-        frontLineWorkerService.add(flw);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker(9439986187L);
-        frontLineWorkerService.add(flw);
+        flw = new Swachchagrahi(9439986187L);
+        swcService.add(flw);
 
         createMaRecords(9439986187L);
         createMaRecords(1000000000L);
@@ -584,14 +584,14 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT550() throws InterruptedException, IOException {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
         flw.setMctsFlwId("210302604211400029");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         assertEquals(
                 HttpStatus.SC_OK,
@@ -599,7 +599,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_language_update_only_flwId.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = frontLineWorkerService.getByFlwId("72185");
+        flw = swcService.getByFlwId("72185");
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -612,14 +612,14 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT551() throws InterruptedException, IOException {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
         flw.setMctsFlwId("210302604211400029");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         assertEquals(
                 HttpStatus.SC_OK,
@@ -627,7 +627,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_language_update_only_MSISDN.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = frontLineWorkerService.getByFlwId("72185");
+        flw = swcService.getByFlwId("72185");
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -642,13 +642,13 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     // TODO JIRA issue https://applab.atlassian.net/browse/NMS-252
     @Test
     public void verifyFT552() throws InterruptedException, IOException {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
         flw.setMctsFlwId("210302604211400029");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        frontLineWorkerService.add(flw);
+        swcService.add(flw);
 
         assertEquals(
                 HttpStatus.SC_BAD_REQUEST,
@@ -656,7 +656,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_language_update_lang_error.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = frontLineWorkerService.getByFlwId("72185");
+        flw = swcService.getByFlwId("72185");
         assertEquals(rh.kannadaLanguage(), flw.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -669,14 +669,14 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT555() throws InterruptedException, IOException {
-        FrontLineWorker flw = new FrontLineWorker(1000000000L);
+        Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setFlwId("72185");
         flw.setMctsFlwId("210302604211400029");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         assertEquals(
                 HttpStatus.SC_OK,
@@ -684,10 +684,10 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_msisdn_update_only_flwId.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = frontLineWorkerService.getByContactNumber(9439986187L);
+        flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
 
-        flw = frontLineWorkerService.getByContactNumber(1000000000L);
+        flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -702,13 +702,13 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT558() throws InterruptedException, IOException {
         // create FLW record having state as "Delhi" and district as "new delhi district"
-        FrontLineWorker flw = new FrontLineWorker("Aisha Bibi", 1234567899L);
+        Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
         flw.setMctsFlwId("10");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setLanguage(rh.hindiLanguage());
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         // update FLW district to "southDelhiDistrict"
         rh.southDelhiDistrict();
@@ -718,7 +718,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine()
                 .getStatusCode());
 
-        flw = frontLineWorkerService.getByContactNumber(1234567899L);
+        flw = swcService.getByContactNumber(1234567899L);
         assertEquals(rh.southDelhiDistrict().getCode(), flw.getDistrict()
                 .getCode());
         assertEquals(rh.delhiState().getCode(), flw.getState().getCode());
@@ -741,12 +741,12 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT560() throws InterruptedException, IOException {
         // create FLW record
-        FrontLineWorker flw = new FrontLineWorker("Aisha Bibi", 1234567899L);
+        Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
         flw.setMctsFlwId("10");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setLanguage(rh.hindiLanguage());
-        frontLineWorkerService.add(flw);
+        swcService.add(flw);
 
         // update state to "State 10" which doesn't exist in DB
         HttpResponse response = importCsvFileForFLWUpdate(null,
@@ -769,12 +769,12 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT561() throws InterruptedException, IOException {
         // create FLW record
-        FrontLineWorker flw = new FrontLineWorker("Aisha Bibi", 1234567899L);
+        Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
         flw.setMctsFlwId("10");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setLanguage(rh.hindiLanguage());
-        frontLineWorkerService.add(flw);
+        swcService.add(flw);
 
         // update FLW district to a value which doesn't exist in DB
         HttpResponse response = importCsvFileForFLWUpdate(null,

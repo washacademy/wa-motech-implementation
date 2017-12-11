@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.motechproject.nms.api.web.contract.AddFlwRequest;
 import org.motechproject.nms.api.web.contract.AddRchFlwRequest;
 import org.motechproject.nms.api.web.service.FlwCsvService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService;
 import org.motechproject.nms.kilkari.domain.RejectionReasons;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
@@ -45,7 +45,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
     private FlwRejectionService flwRejectionService;
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Autowired
     private StateDataService stateDataService;
@@ -217,7 +217,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
     }
 
     private String flwActionFinder(AddFlwRequest record) {
-        if (frontLineWorkerService.getByMctsFlwIdAndState(record.getMctsFlwId(), stateDataService.findByCode(record.getStateId())) == null) {
+        if (swcService.getByMctsFlwIdAndState(record.getMctsFlwId(), stateDataService.findByCode(record.getStateId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
@@ -225,7 +225,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
     }
 
     private String rchFlwActionFinder(AddRchFlwRequest record) {
-        if (frontLineWorkerService.getByMctsFlwIdAndState(record.getFlwId(), stateDataService.findByCode(record.getStateId())) == null) {
+        if (swcService.getByMctsFlwIdAndState(record.getFlwId(), stateDataService.findByCode(record.getStateId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";

@@ -16,13 +16,13 @@ import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.motechproject.nms.api.web.contract.AddFlwRequest;
-import org.motechproject.nms.flw.domain.FlwError;
-import org.motechproject.nms.flw.domain.FlwErrorReason;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.repository.FlwErrorDataService;
-import org.motechproject.nms.flw.repository.FrontLineWorkerDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.SwcError;
+import org.motechproject.nms.flw.domain.SwcErrorReason;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.repository.SwcDataService;
+import org.motechproject.nms.flw.repository.SwcErrorDataService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.*;
 import org.motechproject.nms.kilkari.service.SubscriberService;
@@ -98,13 +98,13 @@ public class OpsControllerBundleIT extends BasePaxIT {
     TestingService testingService;
 
     @Inject
-    FrontLineWorkerDataService frontLineWorkerDataService;
+    SwcDataService swcDataService;
 
     @Inject
-    FrontLineWorkerService frontLineWorkerService;
+    SwcService swcService;
 
     @Inject
-    FlwErrorDataService flwErrorDataService;
+    SwcErrorDataService swcErrorDataService;
 
 
     @Inject
@@ -197,7 +197,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         AddFlwRequest addFlwRequest = getAddRequestInactiveGfStatus();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         assertNull(flw);
     }
 
@@ -208,12 +208,12 @@ public class OpsControllerBundleIT extends BasePaxIT {
         AddFlwRequest addFlwRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         assertNotNull(flw);
         addFlwRequest = getAddRequestInactiveGfStatus();
         httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-        flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        flw = swcService.getByContactNumber(9876543210L);
         assertNull(flw);
     }
 
@@ -222,7 +222,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testCreateNewFlwTalukaVillage() throws IOException, InterruptedException {
 
         createFlwHelper("Chinkoo Devi", 9876543210L, "123");
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         assertNotNull(flw.getState());
         assertNotNull(flw.getDistrict());
         assertNull(flw.getBlock());    // null since we don't create it by default in helper
@@ -234,8 +234,13 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
+<<<<<<< HEAD
         // refetch and check that block and panchayat are set
         flw = frontLineWorkerService.getByContactNumber(9876543210L);
+=======
+        // refetch and check that taluka and village are set
+        flw = swcService.getByContactNumber(9876543210L);
+>>>>>>> fc3adb13436a78c17ddf5780770193ee02237ac6
         assertNotNull(flw.getState());
         assertNotNull(flw.getDistrict());
         assertNotNull(flw.getBlock());
@@ -265,7 +270,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         AddFlwRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         assertNotEquals(flw.getName(), "Kookoo Devi");
         assertEquals(flw.getName(), updateRequest.getName());
     }
@@ -290,23 +295,23 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw
         createFlwHelper("Chinkoo Devi", 9876543210L, "456");
 
-        long before = flwErrorDataService.count();
+        long before = swcErrorDataService.count();
 
         AddFlwRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        long after = flwErrorDataService.count();
+        long after = swcErrorDataService.count();
 
         assertEquals("No new expected flw error created", before + 1, after);
 
-        List<FlwError> flwErrors = flwErrorDataService.findByMctsId(
+        List<SwcError> swcErrors = swcErrorDataService.findByMctsId(
                 updateRequest.getMctsFlwId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
         // since we clear the db before each test, safe to assume that we will only have 1 item in list
-        assertEquals(flwErrors.get(0).getReason(), FlwErrorReason.PHONE_NUMBER_IN_USE);
+        assertEquals(swcErrors.get(0).getReason(), SwcErrorReason.PHONE_NUMBER_IN_USE);
     }
 
     // Test flw update to an existing used phone number by someone else
@@ -320,7 +325,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        FrontLineWorker flwByNumber = frontLineWorkerService.getByContactNumber(9876543210L);
+        Swachchagrahi flwByNumber = swcService.getByContactNumber(9876543210L);
         assertEquals("Anonymous user was not merged", updateRequest.getMctsFlwId(), flwByNumber.getMctsFlwId());
     }
 
@@ -331,24 +336,24 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw
         createFlwHelper("State Singh", 9876543210L, "123");
 
-        long before = flwErrorDataService.count();
+        long before = swcErrorDataService.count();
 
         AddFlwRequest updateRequest = getAddRequestASHA();
         updateRequest.setStateId(5L);    // 5 doesn't exist since setup only creates state '1'
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        long after = flwErrorDataService.count();
+        long after = swcErrorDataService.count();
 
         assertEquals("No new expected flw error created", before + 1, after);
 
-        List<FlwError> flwErrors = flwErrorDataService.findByMctsId(
+        List<SwcError> swcErrors = swcErrorDataService.findByMctsId(
                 updateRequest.getMctsFlwId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
         // since we clear the db before each test, safe to assume that we will only have 1 item in list
-        assertEquals(flwErrors.get(0).getReason(), FlwErrorReason.INVALID_LOCATION_STATE);
+        assertEquals(swcErrors.get(0).getReason(), SwcErrorReason.INVALID_LOCATION_STATE);
     }
 
     @Test
@@ -357,24 +362,24 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw
         createFlwHelper("District Singh", 9876543210L, "123");
 
-        long before = flwErrorDataService.count();
+        long before = swcErrorDataService.count();
 
         AddFlwRequest updateRequest = getAddRequestASHA();
         updateRequest.setDistrictId(5L);    // 5 doesn't exist since setup only creates district '1'
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        long after = flwErrorDataService.count();
+        long after = swcErrorDataService.count();
 
         assertEquals("No new expected flw error created", before + 1, after);
 
-        List<FlwError> flwErrors = flwErrorDataService.findByMctsId(
+        List<SwcError> swcErrors = swcErrorDataService.findByMctsId(
                 updateRequest.getMctsFlwId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
         // since we clear the db before each test, safe to assume that we will only have 1 item in list
-        assertEquals(flwErrors.get(0).getReason(), FlwErrorReason.INVALID_LOCATION_DISTRICT);
+        assertEquals(swcErrors.get(0).getReason(), SwcErrorReason.INVALID_LOCATION_DISTRICT);
     }
 
 
@@ -389,8 +394,13 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
+<<<<<<< HEAD
         FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
         assertNull("Block update rejected", flw.getBlock());
+=======
+        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
+        assertNull("Taluka update rejected", flw.getTaluka());
+>>>>>>> fc3adb13436a78c17ddf5780770193ee02237ac6
     }
 
     @Test
@@ -459,13 +469,13 @@ public class OpsControllerBundleIT extends BasePaxIT {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         stateDataService.create(state);
         // create flw
-        FrontLineWorker flw = new FrontLineWorker(name, phoneNumber);
+        Swachchagrahi flw = new Swachchagrahi(name, phoneNumber);
         flw.setMctsFlwId(mctsFlwId);
         flw.setState(state);
         flw.setDistrict(district);
         flw.setLanguage(language);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerDataService.create(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcDataService.create(flw);
         transactionManager.commit(status);
     }
 
@@ -698,7 +708,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         Long flwId = flw.getId();
         MaBookmark bookmark = new MaBookmark(flwId, VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark);
@@ -711,7 +721,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
             scores.put(String.valueOf(i), 3);
         }
 
-        flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        flw = swcService.getByContactNumber(9876543210L);
         bookmark.setScoresByChapter(scores);
         maService.setBookmark(bookmark);
         List <CourseCompletionRecord> ncrs = courseCompletionRecordDataService.findByFlwId(flw.getId());
@@ -735,7 +745,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertEquals(0, activityDataService.findRecordsForUserByState("9876543210", ActivityState.STARTED).size());
         assertEquals(1, activityDataService.findRecordsForUserByState("7896543210", ActivityState.STARTED).size());
 
-        flw = frontLineWorkerService.getByContactNumber(7896543210L);
+        flw = swcService.getByContactNumber(7896543210L);
         assertEquals(1, courseCompletionRecordDataService.findByFlwId(flw.getId()).size());
     }
 }

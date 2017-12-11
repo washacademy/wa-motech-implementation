@@ -35,8 +35,8 @@
     <osgi:reference id="frontLineWorkerImportService"
                     interface="org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService" />
 
-    <osgi:reference id="frontLineWorkerService"
-                    interface="org.motechproject.nms.flw.service.FrontLineWorkerService" />
+    <osgi:reference id="swcService"
+                    interface="org.motechproject.nms.flw.service.SwcService" />
 
     <osgi:reference id="mctsBeneficiaryImportService"
                     interface="org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService"/>

@@ -8,11 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
-import org.motechproject.nms.flw.repository.FrontLineWorkerDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.repository.SwcDataService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.imi.service.SettingsService;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MctsChildDataService;
@@ -91,7 +91,7 @@ public class MctsImportBundleIT extends BasePaxIT {
     private SubscriptionPackDataService subscriptionPackDataService;
 
     @Inject
-    private FrontLineWorkerDataService flwDataService;
+    private SwcDataService flwDataService;
 
     @Inject
     private TestingService testingService;
@@ -106,7 +106,7 @@ public class MctsImportBundleIT extends BasePaxIT {
     private MotherRejectionDataService motherRejectionDataService;
 
     @Inject
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Before
     public void setUp() throws ServletException, NamespaceException {
@@ -308,7 +308,7 @@ public class MctsImportBundleIT extends BasePaxIT {
         Thread.currentThread().setContextClassLoader(cl);
 
 //        Should reject non ASHA FLWs
-        List<FrontLineWorker> flws = flwDataService.retrieveAll();
+        List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
         assertEquals("ASHA",flws.get(0).getDesignation());
 
@@ -333,15 +333,15 @@ public class MctsImportBundleIT extends BasePaxIT {
         params.put(Constants.STATE_ID_PARAM, 21L);
         params.put(Constants.ENDPOINT_PARAM, endpoint);
         MotechEvent event = new MotechEvent("foobar", params);
-        FrontLineWorker flw = new FrontLineWorker(2223332235L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
+        Swachchagrahi flw = new Swachchagrahi(2223332235L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
         flw.setMctsFlwId("200");
         flwDataService.create(flw);
         mctsWsImportService.importAnmAshaData(event);
         Thread.currentThread().setContextClassLoader(cl);
 
 //        Should reject non ASHA FLWs
-        List<FrontLineWorker> flws = flwDataService.retrieveAll();
+        List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
         List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
         assertEquals(1, flwImportRejections.size());
@@ -367,18 +367,18 @@ public class MctsImportBundleIT extends BasePaxIT {
         params.put(Constants.STATE_ID_PARAM, 21L);
         params.put(Constants.ENDPOINT_PARAM, endpoint);
         MotechEvent event = new MotechEvent("foobar", params);
-        FrontLineWorker flw = new FrontLineWorker(2223332235L);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        flw.setStatus(FrontLineWorkerStatus.ANONYMOUS);
+        Swachchagrahi flw = new Swachchagrahi(2223332235L);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        flw.setStatus(SwachchagrahiStatus.ANONYMOUS);
         flwDataService.create(flw);
         mctsWsImportService.importAnmAshaData(event);
         Thread.currentThread().setContextClassLoader(cl);
 
 //        Should reject non ASHA FLWs
-        List<FrontLineWorker> flws = flwDataService.retrieveAll();
+        List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
-        flw = frontLineWorkerService.getByContactNumber(2223332235L);
-        assertEquals(FrontLineWorkerStatus.ACTIVE, flw.getStatus());
+        flw = swcService.getByContactNumber(2223332235L);
+        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getStatus());
     }
 
     @Test
@@ -431,7 +431,7 @@ public class MctsImportBundleIT extends BasePaxIT {
             assertEquals(lastDateToCheck, mctsImportAudits.get(0).getStartImportDate());
             assertEquals(yesterday, mctsImportAudits.get(0).getEndImportDate());
 
-            List<FrontLineWorker> flws = flwDataService.retrieveAll();
+            List<Swachchagrahi> flws = flwDataService.retrieveAll();
             assertEquals(1, flws.size());
 
             List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
@@ -496,7 +496,7 @@ public class MctsImportBundleIT extends BasePaxIT {
 
 
             // we expect two of each - the second entry in each ds (4 total) has wrong location data and the first one is a duplicate of the fourth record with no updated dates on any record. So only one of the duplicates should be in the database. And after the import the three errors should clear from failure table.
-            List<FrontLineWorker> flws = flwDataService.retrieveAll();
+            List<Swachchagrahi> flws = flwDataService.retrieveAll();
             assertEquals(1, flws.size());
 
             List<MctsImportFailRecord> mctsImportFailRecords = mctsImportFailRecordDataService.retrieveAll();
@@ -561,7 +561,7 @@ public class MctsImportBundleIT extends BasePaxIT {
             Thread.currentThread().setContextClassLoader(cl);
 
             // we expect one of each - the first entry in each ds (2 total) has an updated dated unlike the previous data. So only the one with updated date should be in the database. And after the import the three errors should clear from failure table.
-            List<FrontLineWorker> flws = flwDataService.retrieveAll();
+            List<Swachchagrahi> flws = flwDataService.retrieveAll();
             assertEquals(0, flws.size());
 
             List<MctsImportFailRecord> mctsImportFailRecords = mctsImportFailRecordDataService.retrieveAll();
@@ -627,7 +627,7 @@ public class MctsImportBundleIT extends BasePaxIT {
             List<MctsChild> children = mctsChildDataService.retrieveAll();
             assertEquals(2, children.size());
 
-            List<FrontLineWorker> flws = flwDataService.retrieveAll();
+            List<Swachchagrahi> flws = flwDataService.retrieveAll();
             assertEquals(2, flws.size());
 
         } finally {

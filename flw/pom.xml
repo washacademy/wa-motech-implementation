@@ -9,7 +9,7 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>flw</artifactId>
+    <artifactId>swc</artifactId>
     <version>1.0.33</version>
     <packaging>bundle</packaging>
     <name>SWC module</name>
@@ -96,14 +96,14 @@
                 <configuration>
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
-                        <Resource-Path>flw/resources</Resource-Path>
-                        <Context-Path>flw</Context-Path>
+                        <Resource-Path>swc/resources</Resource-Path>
+                        <Context-Path>swc</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.flw.service;version=${project.version},
-                            org.motechproject.nms.flw.repository;version=${project.version},
-                            org.motechproject.nms.flw.domain;version=${project.version},
-                            org.motechproject.nms.flw.utils;version=${project.version},
-                            org.motechproject.nms.flw.exception;version=${project.version}
+                            org.motechproject.nms.swc.service;version=${project.version},
+                            org.motechproject.nms.swc.repository;version=${project.version},
+                            org.motechproject.nms.swc.domain;version=${project.version},
+                            org.motechproject.nms.swc.utils;version=${project.version},
+                            org.motechproject.nms.swc.exception;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,

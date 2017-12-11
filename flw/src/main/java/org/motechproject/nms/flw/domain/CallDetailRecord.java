@@ -19,14 +19,14 @@ import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-@Entity(tableName = "nms_flw_cdrs")
+@Entity(tableName = "wash_swachgrahi_cdrs")
 public class CallDetailRecord {
 
     public CallDetailRecord() {
     }
 
     @Field
-    private FrontLineWorker frontLineWorker;
+    private Swachchagrahi swachchagrahi;
 
     @Field
     @NotNull
@@ -79,12 +79,12 @@ public class CallDetailRecord {
     @JsonManagedReference
     private List<CallContent> content;
 
-    public FrontLineWorker getFrontLineWorker() {
-        return frontLineWorker;
+    public Swachchagrahi getSwachchagrahi() {
+        return swachchagrahi;
     }
 
-    public void setFrontLineWorker(FrontLineWorker frontLineWorker) {
-        this.frontLineWorker = frontLineWorker;
+    public void setSwachchagrahi(Swachchagrahi swachchagrahi) {
+        this.swachchagrahi = swachchagrahi;
     }
 
     public Service getService() {

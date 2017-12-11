@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-@Entity(tableName = "nms_call_content")
+@Entity(tableName = "wash_call_content")
 public class CallContent {
 
     @Field

@@ -16,8 +16,8 @@
     <osgi:service ref="flwRejectionCsvService"
                   interface="org.motechproject.nms.api.web.service.FlwCsvService" />
 
-    <osgi:reference id="flwStatusUpdateAuditDataService"
-                    interface="org.motechproject.nms.flw.repository.FlwStatusUpdateAuditDataService" />
+    <osgi:reference id="swcStatusUpdateAuditDataService"
+                    interface="org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService" />
 
     <osgi:reference id="anonymousCallAuditDataService" interface="org.motechproject.nms.api.web.repository.AnonymousCallAuditDataService"/>
 
@@ -31,9 +31,9 @@
 
     <osgi:reference id="inboxService" interface="org.motechproject.nms.kilkari.service.InboxService"/>
 
-    <osgi:reference id="frontLineWorkerService" interface="org.motechproject.nms.flw.service.FrontLineWorkerService"/>
+    <osgi:reference id="swcService" interface="org.motechproject.nms.flw.service.SwcService"/>
 
-    <osgi:reference id="frontLineWorkerDataService" interface="org.motechproject.nms.flw.repository.FrontLineWorkerDataService"/>
+    <osgi:reference id="swcDataService" interface="org.motechproject.nms.flw.repository.SwcDataService"/>
 
     <osgi:reference id="frontLineWorkerImportService" interface="org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService"/>
 

@@ -5,6 +5,7 @@ import org.motechproject.nms.region.domain.FullLocation;
 import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.Panchayat;
 
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

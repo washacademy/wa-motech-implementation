@@ -8,8 +8,8 @@ import org.motechproject.nms.csv.utils.GetInstanceByLong;
 import org.motechproject.nms.csv.utils.GetInstanceByString;
 import org.motechproject.nms.csv.utils.GetLong;
 import org.motechproject.nms.csv.utils.GetString;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.flwUpdate.service.FrontLineWorkerUpdateImportService;
 import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
 import org.motechproject.nms.region.domain.Language;
@@ -42,7 +42,7 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
     public static final String LANGUAGE_CODE = "LANGUAGE CODE";
     public static final String NEW_MSISDN = "NEW MSISDN";
 
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
     private LanguageService languageService;
     private StateDataService stateDataService;
     private MobileAcademyService mobileAcademyService;
@@ -70,7 +70,7 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
                             csvImporter.getRowNumber()));
                 }
 
-                FrontLineWorker flw = flwFromRecord(record);
+                Swachchagrahi flw = flwFromRecord(record);
                 if (flw == null) {
                     throw new CsvImportDataException(createErrorMessage(String.format("Unable to locate FLW: %s(%s) %s(%s) %s(%s)",
                                     NMS_FLW_ID, record.get(NMS_FLW_ID),
@@ -80,7 +80,7 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
                 }
 
                 flw.setLanguage(language);
-                frontLineWorkerService.update(flw);
+                swcService.update(flw);
             }
         } catch (ConstraintViolationException e) {
             throw new CsvImportDataException(createErrorMessage(e.getConstraintViolations(), csvImporter.getRowNumber()), e);
@@ -104,7 +104,7 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
         try {
             Map<String, Object> record;
             while (null != (record = csvImporter.read())) {
-                FrontLineWorker flw = flwFromRecord(record);
+                Swachchagrahi flw = flwFromRecord(record);
                 if (flw == null) {
                     throw new CsvImportDataException(createErrorMessage(String.format("Unable to locate FLW: %s(%s) %s(%s) %s(%s)",
                                     NMS_FLW_ID, record.get(NMS_FLW_ID),
@@ -115,7 +115,7 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
 
                 Long msisdn = (Long) record.get(NEW_MSISDN);
 
-                FrontLineWorker flwWithNewMSISDN = frontLineWorkerService.getByContactNumber(msisdn);
+                Swachchagrahi flwWithNewMSISDN = swcService.getByContactNumber(msisdn);
 
                 if (flwWithNewMSISDN != null && flwWithNewMSISDN != flw) {
                     throw new CsvImportDataException(
@@ -134,7 +134,7 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
 
                 Long oldMsisdn = flw.getContactNumber();
                 flw.setContactNumber(msisdn);
-                frontLineWorkerService.update(flw);
+                swcService.update(flw);
                 mobileAcademyService.updateMsisdn(flw.getId(), oldMsisdn, msisdn);
             }
         } catch (ConstraintViolationException e) {
@@ -144,8 +144,8 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
         }
     }
 
-    private FrontLineWorker flwFromRecord(Map<String, Object> record) {
-        FrontLineWorker flw = null;
+    private Swachchagrahi flwFromRecord(Map<String, Object> record) {
+        Swachchagrahi flw = null;
 
         String nmsFlWId = (String) record.get(NMS_FLW_ID);
         String mctsFlwId = (String) record.get(MCTS_FLW_ID);
@@ -153,15 +153,15 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
         Long msisdn = (Long) record.get(MSISDN);
 
         if (nmsFlWId != null) {
-            flw = frontLineWorkerService.getByFlwId(nmsFlWId);
+            flw = swcService.getByFlwId(nmsFlWId);
         }
 
         if (flw == null && mctsFlwId != null) {
-            flw = frontLineWorkerService.getByMctsFlwIdAndState(mctsFlwId, state);
+            flw = swcService.getByMctsFlwIdAndState(mctsFlwId, state);
         }
 
         if (flw == null && msisdn != null) {
-            flw = frontLineWorkerService.getByContactNumber(msisdn);
+            flw = swcService.getByContactNumber(msisdn);
         }
 
         return flw;
@@ -215,12 +215,12 @@ public class FrontLineWorkerUpdateImportServiceImpl implements FrontLineWorkerUp
 
     private String createErrorMessage(Set<ConstraintViolation<?>> violations, int rowNumber) {
         return String.format("CSV instance error [row: %d]: validation failed for instance of type %s, violations: %s",
-                rowNumber, FrontLineWorker.class.getName(), ConstraintViolationUtils.toString(violations));
+                rowNumber, Swachchagrahi.class.getName(), ConstraintViolationUtils.toString(violations));
     }
 
     @Autowired
-    public void setFrontLineWorkerService(FrontLineWorkerService frontLineWorkerService) {
-        this.frontLineWorkerService = frontLineWorkerService;
+    public void setSwcService(SwcService swcService) {
+        this.swcService = swcService;
     }
 
     @Autowired

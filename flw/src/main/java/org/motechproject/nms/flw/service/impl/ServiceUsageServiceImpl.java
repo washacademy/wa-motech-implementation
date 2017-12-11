@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.flw.domain.CallDetailRecord;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
 import org.motechproject.nms.flw.domain.ServiceUsage;
 import org.motechproject.nms.flw.repository.CallDetailRecordDataService;
 import org.motechproject.nms.flw.service.ServiceUsageService;
@@ -25,8 +25,8 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
     }
 
     @Override
-    public ServiceUsage getCurrentMonthlyUsageForFLWAndService(final FrontLineWorker frontLineWorker, final org.motechproject.nms.props.domain.Service service) {
-        ServiceUsage serviceUsage = new ServiceUsage(frontLineWorker, service, 0, 0, false);
+    public ServiceUsage getCurrentMonthlyUsageForFLWAndService(final Swachchagrahi swachchagrahi, final org.motechproject.nms.props.domain.Service service) {
+        ServiceUsage serviceUsage = new ServiceUsage(swachchagrahi, service, 0, 0, false);
 
         @SuppressWarnings("unchecked")
         QueryExecution<List<CallDetailRecord>> queryExecution = new QueryExecution<List<CallDetailRecord>>() {
@@ -34,10 +34,10 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
             public List<CallDetailRecord> execute(Query query, InstanceSecurityRestriction restriction) {
                 DateTime monthStart = DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay();
 
-                query.setFilter("frontLineWorker == flw && service == flw_service && callStartTime >= monthStart");
-                query.declareParameters("org.motechproject.nms.flw.domain.FrontLineWorker flw, org.joda.time.DateTime monthStart, org.motechproject.nms.props.domain.Service flw_service");
+                query.setFilter("swachchagrahi == flw && service == flw_service && callStartTime >= monthStart");
+                query.declareParameters("org.motechproject.nms.flw.domain.Swachchagrahi flw, org.joda.time.DateTime monthStart, org.motechproject.nms.props.domain.Service flw_service");
 
-                return (List<CallDetailRecord>) query.execute(frontLineWorker, monthStart, service);
+                return (List<CallDetailRecord>) query.execute(swachchagrahi, monthStart, service);
             }
         };
 

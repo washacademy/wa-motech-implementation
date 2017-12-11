@@ -14,13 +14,13 @@ import org.motechproject.nms.csv.domain.CsvAuditRecord;
 import org.motechproject.nms.csv.exception.CsvImportDataException;
 import org.motechproject.nms.csv.repository.CsvAuditRecordDataService;
 import org.motechproject.nms.flw.domain.ContactNumberAudit;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
+import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
+import org.motechproject.nms.flw.domain.SwcJobStatus;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
 import org.motechproject.nms.flw.repository.ContactNumberAuditDataService;
-import org.motechproject.nms.flw.repository.FrontLineWorkerDataService;
+import org.motechproject.nms.flw.repository.SwcDataService;
 import org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
@@ -89,11 +89,11 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Inject
     CircleDataService circleDataService;
     @Inject
-    FrontLineWorkerDataService frontLineWorkerDataService;
+    SwcDataService swcDataService;
     @Inject
     TestingService testingService;
     @Inject
-    FrontLineWorkerService frontLineWorkerService;
+    SwcService swcService;
     @Inject
     BlockService talukaDataService;
     @Inject
@@ -234,19 +234,19 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         State state = stateDataService.findByName("State 1");
         District district = state.getDistricts().iterator().next();
 
-        FrontLineWorker flw = new FrontLineWorker("Existing With MSISDN", 1234567890L);
+        Swachchagrahi flw = new Swachchagrahi("Existing With MSISDN", 1234567890L);
         flw.setMctsFlwId("#0");
         flw.setState(state);
         flw.setDistrict(district);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
-        flw = new FrontLineWorker("Will Update Conflict MSISDN", 1111111111L);
+        flw = new Swachchagrahi("Will Update Conflict MSISDN", 1111111111L);
         flw.setMctsFlwId("#1");
         flw.setState(state);
         flw.setDistrict(district);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         transactionManager.commit(status);
 
         Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
@@ -258,10 +258,10 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     //NMS_FT_538
     @Test(expected = CsvImportDataException.class)
     public void testImportByMSISDNConflictWithMCTSId() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker("Frank Lloyd Wright", 1234567890L);
+        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
         flw.setMctsFlwId("#0");
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
@@ -270,7 +270,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Test
     public void testASHAvalidation() throws Exception {
         frontLineWorkerImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
-        List<FrontLineWorker> flws = frontLineWorkerDataService.retrieveAll();
+        List<Swachchagrahi> flws = swcDataService.retrieveAll();
         assertEquals(9,flws.size());
     }
 
@@ -283,9 +283,9 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(1234567890L);
+        Swachchagrahi flw = swcService.getByContactNumber(1234567890L);
         assertFLW(flw, "#0", 1234567890L, "FLW 0", "District 11", "L1");
-        assertEquals(FrontLineWorkerStatus.INACTIVE, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.INACTIVE, flw.getStatus());
     }
 
     @Test
@@ -293,7 +293,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t12\t18-08-2016\tASHA\tActive");
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(1234567890L);
+        Swachchagrahi flw = swcService.getByContactNumber(1234567890L);
         assertFLW(flw, "#0", 1234567890L, "FLW 0", "District 12", null);
     }
 
@@ -311,7 +311,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     public void testImportFromSampleDataFile() throws Exception {
         frontLineWorkerImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
 
-        FrontLineWorker flw1 = frontLineWorkerService.getByContactNumber(9999999996L);
+        Swachchagrahi flw1 = swcService.getByContactNumber(9999999996L);
         assertFLW(flw1, "72185", 9999999996L, "Bishnu Priya Behera", "Koraput", null);
 
         // verify location data was created on the fly
@@ -339,10 +339,10 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT535() throws Exception {
         importCsvFileForFLW("flw.txt");
-        FrontLineWorker flw1 = frontLineWorkerService.getByContactNumber(1234567899L);
+        Swachchagrahi flw1 = swcService.getByContactNumber(1234567899L);
         assertFLW(flw1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", flw1.getState().toString());
-        assertEquals(FrontLineWorkerStatus.INACTIVE, flw1.getStatus());
+        assertEquals(SwachchagrahiStatus.INACTIVE, flw1.getStatus());
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
@@ -356,16 +356,16 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT536() throws Exception {
-        FrontLineWorker flw = new FrontLineWorker("Frank Lloyd Wright", 1234567890L);
+        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
         flw.setMctsFlwId("#0");
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
-        FrontLineWorker flw1 = frontLineWorkerService.getByContactNumber(1234567890L);
+        Swachchagrahi flw1 = swcService.getByContactNumber(1234567890L);
         assertFLW(flw1, "#0", 1234567890L, "FLW 0", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", flw1.getState().toString());
-        assertEquals(FrontLineWorkerStatus.ACTIVE, flw1.getStatus());
+        assertEquals(SwachchagrahiStatus.ACTIVE, flw1.getStatus());
     }
 
     /**
@@ -438,7 +438,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
-    private void assertFLW(FrontLineWorker flw, String mctsFlwId, Long contactNumber, String name, String districtName, String languageLocationCode) {
+    private void assertFLW(Swachchagrahi flw, String mctsFlwId, Long contactNumber, String name, String districtName, String languageLocationCode) {
         assertNotNull(flw);
         assertEquals(mctsFlwId, flw.getMctsFlwId());
         assertEquals(contactNumber, null != flw.getContactNumber() ? flw.getContactNumber() : null);
@@ -511,23 +511,23 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         District district1 = districtService.findByStateAndName(state, "District 11");
         Language language1 = languageService.getForCode("L1");
 
-        FrontLineWorker flw = new FrontLineWorker("Test MSISDN", 1234567890L);
+        Swachchagrahi flw = new Swachchagrahi("Test MSISDN", 1234567890L);
         flw.setMctsFlwId("#0");
         flw.setState(state);
         flw.setDistrict(district1);
         flw.setLanguage(language1);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         importCsvFileForFLW("flw_location_update_msisdn.txt");
 
-        flw = frontLineWorkerService.getByContactNumber(1234567890L);
+        flw = swcService.getByContactNumber(1234567890L);
 
         // deleting the FLW to avoid conflicts at later stage
-        flw.setStatus(FrontLineWorkerStatus.INVALID);
+        flw.setStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(DateTime.now().minusYears(1));
-        frontLineWorkerService.update(flw);
-        frontLineWorkerService.delete(flw);
+        swcService.update(flw);
+        swcService.delete(flw);
 
         assertFLW(flw, "#0", null, "Test MSISDN", "District 12", language1.getCode());
 
@@ -554,16 +554,16 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         state2.getDistricts().add(district22);
         stateDataService.create(state2);
 
-        FrontLineWorker flw = new FrontLineWorker("Test MSISDN", 1234567890L);
+        Swachchagrahi flw = new Swachchagrahi("Test MSISDN", 1234567890L);
         flw.setState(state);
         flw.setDistrict(district1);
         flw.setLanguage(language1);
-        flw.setJobStatus(FlwJobStatus.ACTIVE);
-        frontLineWorkerService.add(flw);
+        flw.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(flw);
 
         importCsvFileForFLW("flw_update_state_by_msisdn.txt");
 
-        flw = frontLineWorkerService.getByContactNumber(1234567890L);
+        flw = swcService.getByContactNumber(1234567890L);
 
         assertFLW(flw, "#0", 1234567890L, "Test MSISDN", "District 22", language1.getCode());
 
@@ -576,10 +576,10 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         assertEquals("flw_update_state_by_msisdn.txt", auditRecord.getFile());
 
         // deleting the FLW to avoid conflicts at later stage
-        flw.setStatus(FrontLineWorkerStatus.INVALID);
+        flw.setStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(DateTime.now().minusYears(1));
-        frontLineWorkerService.update(flw);
-        frontLineWorkerService.delete(flw);
+        swcService.update(flw);
+        swcService.delete(flw);
     }
 
     // Test whether MSISDN is updated in Bookmark, Activity and Course Completion Records along with Flw
@@ -589,7 +589,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long oldMsisdn = 1234567890L;
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(oldMsisdn);
+        Swachchagrahi flw = swcService.getByContactNumber(oldMsisdn);
         assertFLW(flw, "#0", oldMsisdn, "FLW 0", "District 11", "L1");
 
         Long flwId = flw.getId();
@@ -611,7 +611,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         frontLineWorkerImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long newMsisdn = 9876543210L;
 
-        flw = frontLineWorkerService.getByContactNumber(newMsisdn);
+        flw = swcService.getByContactNumber(newMsisdn);
         assertFLW(flw, "#0", newMsisdn, "FLW 0", "District 11", "L1");
 
         assertNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID));

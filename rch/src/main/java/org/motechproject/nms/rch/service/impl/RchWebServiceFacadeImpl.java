@@ -19,11 +19,11 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
-import org.motechproject.nms.flw.exception.FlwExistingRecordException;
-import org.motechproject.nms.flw.exception.FlwImportException;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
+import org.motechproject.nms.flw.exception.SwcExistingRecordException;
+import org.motechproject.nms.flw.exception.SwcImportException;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
 import org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
@@ -159,7 +159,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     private ActionFinderService actionFinderService;
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Override
     public boolean getMothersData(LocalDate from, LocalDate to, URL endpoint, Long stateId) {
@@ -659,8 +659,8 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                 designation = (designation != null ? designation.trim() : designation);
                 Long msisdn = Long.parseLong(record.getMobileNo());
                 String flwId = record.getGfId().toString();
-                FrontLineWorker flw = frontLineWorkerService.getByContactNumber(msisdn);
-                if ((flw != null && (!flwId.equals(flw.getMctsFlwId()) || state != flw.getState()))  && flw.getStatus() != FrontLineWorkerStatus.ANONYMOUS) {
+                Swachchagrahi flw = swcService.getByContactNumber(msisdn);
+                if ((flw != null && (!flwId.equals(flw.getMctsFlwId()) || state != flw.getState()))  && flw.getStatus() != SwachchagrahiStatus.ANONYMOUS) {
                     LOGGER.error("Existing FLW with same MSISDN but different MCTS ID");
                     flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                     rejected++;
@@ -679,11 +679,11 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                             LOGGER.warn("Invalid location for FLW: ", e);
                             flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.INVALID_LOCATION.toString(), action));
                             rejected++;
-                        } catch (FlwImportException e) {
+                        } catch (SwcImportException e) {
                             LOGGER.error("Existing FLW with same MSISDN but different RCH ID", e);
                             flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                             rejected++;
-                        } catch (FlwExistingRecordException e) {
+                        } catch (SwcExistingRecordException e) {
                             LOGGER.error("Cannot import FLW with ID: {}, and MSISDN (Mobile_No): {}", record.getGfId(), record.getMobileNo(), e);
                             flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.UPDATED_RECORD_ALREADY_EXISTS.toString(), action));
                             rejected++;
@@ -979,7 +979,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     }
 
     private String rchFlwActionFinder(RchAnmAshaRecord record) {
-        if (frontLineWorkerService.getByMctsFlwIdAndState(record.getGfId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
+        if (swcService.getByMctsFlwIdAndState(record.getGfId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";

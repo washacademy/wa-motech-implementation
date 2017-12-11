@@ -12,7 +12,7 @@
     <mvc:annotation-driven />
 
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-        <constructor-arg name="moduleName" value="flw" />
+        <constructor-arg name="moduleName" value="swc" />
         <constructor-arg name="i18n">
             <map>
                 <entry key="messages" value="../flw/resources/messages/" />
@@ -24,10 +24,10 @@
         <property name="maxUploadSize" value="10000000"/>
     </bean>
 
-    <bean id="flwSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+    <bean id="swcSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
             <list>
-                <value>classpath:flw.properties</value>
+                <value>classpath:swc.properties</value>
             </list>
         </property>
     </bean>

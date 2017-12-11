@@ -3,33 +3,26 @@ package org.motechproject.nms.testing.it.mcts;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.flw.domain.FlwJobStatus;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
-import org.motechproject.nms.flw.repository.FrontLineWorkerDataService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.repository.SwcDataService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.imi.service.SettingsService;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MctsChildDataService;
 import org.motechproject.nms.kilkari.repository.MctsMotherDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionPackDataService;
 import org.motechproject.nms.mcts.domain.MctsImportAudit;
-import org.motechproject.nms.mcts.domain.MctsImportFailRecord;
-import org.motechproject.nms.mcts.domain.MctsUserType;
 import org.motechproject.nms.mcts.repository.MctsImportAuditDataService;
 import org.motechproject.nms.mcts.repository.MctsImportFailRecordDataService;
 import org.motechproject.nms.mcts.service.MctsWsImportService;
 import org.motechproject.nms.mcts.utils.Constants;
-import org.motechproject.nms.region.domain.*;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
-import org.motechproject.nms.rejectionhandler.domain.MotherImportRejection;
 import org.motechproject.nms.rejectionhandler.repository.FlwImportRejectionDataService;
 import org.motechproject.nms.rejectionhandler.repository.MotherRejectionDataService;
 import org.motechproject.nms.testing.it.mcts.util.*;
@@ -37,7 +30,6 @@ import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.testing.utils.TestContext;
-import org.motechproject.testing.utils.TimeFaker;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -49,13 +41,10 @@ import javax.inject.Inject;
 import javax.servlet.ServletException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PaxExam.class)
@@ -91,7 +80,7 @@ public class MctsFlwXmlTestBundleIT extends BasePaxIT {
     private SubscriptionPackDataService subscriptionPackDataService;
 
     @Inject
-    private FrontLineWorkerDataService flwDataService;
+    private SwcDataService flwDataService;
 
     @Inject
     private TestingService testingService;
@@ -106,7 +95,7 @@ public class MctsFlwXmlTestBundleIT extends BasePaxIT {
     private MotherRejectionDataService motherRejectionDataService;
 
     @Inject
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Before
     public void setUp() throws ServletException, NamespaceException {
@@ -146,7 +135,7 @@ public class MctsFlwXmlTestBundleIT extends BasePaxIT {
         assertEquals(lastDateToCheck, mctsImportAudits.get(0).getStartImportDate());
         assertEquals(yesterday, mctsImportAudits.get(0).getEndImportDate());
 
-        List<FrontLineWorker> flws = flwDataService.retrieveAll();
+        List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
         List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
         assertEquals(1, flwImportRejections.size());

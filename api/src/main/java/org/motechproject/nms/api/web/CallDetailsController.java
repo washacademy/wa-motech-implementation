@@ -3,16 +3,12 @@ package org.motechproject.nms.api.web;
 import org.joda.time.DateTime;
 import org.motechproject.nms.api.web.contract.CallContentRequest;
 import org.motechproject.nms.api.web.contract.CallDetailRecordRequest;
-import org.motechproject.nms.flw.domain.CallContent;
-import org.motechproject.nms.flw.domain.CallDetailRecord;
-import org.motechproject.nms.flw.domain.FlwStatusUpdateAudit;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerStatus;
-import org.motechproject.nms.flw.domain.UpdateStatusType;
-import org.motechproject.nms.flw.repository.FlwStatusUpdateAuditDataService;
+import org.motechproject.nms.flw.domain.*;
+import org.motechproject.nms.flw.domain.Swachchagrahi;
+import org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService;
 import org.motechproject.nms.flw.service.CallContentService;
 import org.motechproject.nms.flw.service.CallDetailRecordService;
-import org.motechproject.nms.flw.service.FrontLineWorkerService;
+import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.props.domain.FinalCallStatus;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.service.LogHelper;
@@ -41,10 +37,10 @@ public class CallDetailsController extends BaseController {
     private CallContentService callContentService;
 
     @Autowired
-    private FrontLineWorkerService frontLineWorkerService;
+    private SwcService swcService;
 
     @Autowired
-    private FlwStatusUpdateAuditDataService flwStatusUpdateAuditDataService;
+    private SwcStatusUpdateAuditDataService swcStatusUpdateAuditDataService;
 
     /**
      * 2.2.6 Save CallDetails API
@@ -105,44 +101,44 @@ public class CallDetailsController extends BaseController {
             throw new IllegalArgumentException(failureReasons.toString());
         }
 
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
-        if (null == flw) {
+        Swachchagrahi swc = swcService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
+        if (null == swc) {
             // If the flw doesn't exist it is possible they hung up before providing their language.  We
             // create an anonymous stub flw here
-            flw = new FrontLineWorker(callDetailRecordRequest.getCallingNumber());
-            flw.setStatus(FrontLineWorkerStatus.ANONYMOUS);
-            frontLineWorkerService.add(flw);
+            swc = new Swachchagrahi(callDetailRecordRequest.getCallingNumber());
+            swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+            swcService.add(swc);
 
             // reload so the record can be linked to later.
-            flw = frontLineWorkerService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
+            swc = swcService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
         }
 
-        createCallDetailRecord(flw, callDetailRecordRequest, service);
+        createCallDetailRecord(swc, callDetailRecordRequest, service);
 
         // if this is the FLW's first time calling the service, set her status to ACTIVE based on NMS.GEN.FLW.003
-        if (flw.getStatus() == FrontLineWorkerStatus.INACTIVE &&
-                validateFlwNameAndNumber(flw) &&
-                validateFlwLocation(flw)) {
-            flw.setStatus(FrontLineWorkerStatus.ACTIVE);
-            frontLineWorkerService.update(flw);
-            FlwStatusUpdateAudit flwStatusUpdateAudit = new FlwStatusUpdateAudit(DateTime.now(), flw.getFlwId(), flw.getMctsFlwId(), flw.getContactNumber(), UpdateStatusType.INACTIVE_TO_ACTIVE);
-            flwStatusUpdateAuditDataService.create(flwStatusUpdateAudit);
+        if (swc.getCourseStatus() == SwachchagrahiStatus.INACTIVE &&
+                validateSwcNameAndNumber(swc) &&
+                validateSwcLocation(swc)) {
+            swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+            swcService.update(swc);
+            SwcStatusUpdateAudit swcStatusUpdateAudit = new SwcStatusUpdateAudit(DateTime.now(), swc.getSwcId(), swc.getContactNumber(), UpdateStatusType.INACTIVE_TO_ACTIVE);
+            swcStatusUpdateAuditDataService.create(swcStatusUpdateAudit);
         }
     }
 
-    private boolean validateFlwLocation(FrontLineWorker flw) {
+    private boolean validateSwcLocation(Swachchagrahi flw) {
         return flw.getState() != null && flw.getDistrict() != null;
     }
 
-    private boolean validateFlwNameAndNumber(FrontLineWorker flw) {
+    private boolean validateSwcNameAndNumber(Swachchagrahi flw) {
         return flw.getName() != null && flw.getContactNumber() != null;
     }
 
-    private void createCallDetailRecord(FrontLineWorker flw, CallDetailRecordRequest callDetailRecordRequest,
+    private void createCallDetailRecord(Swachchagrahi flw, CallDetailRecordRequest callDetailRecordRequest,
                                         Service service) {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setService(service);
-        cdr.setFrontLineWorker(flw);
+        cdr.setSwachchagrahi(flw);
         cdr.setCallingNumber(callDetailRecordRequest.getCallingNumber());
         cdr.setCallId(callDetailRecordRequest.getCallId());
         cdr.setOperator(callDetailRecordRequest.getOperator());

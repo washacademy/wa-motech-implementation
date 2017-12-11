@@ -24,8 +24,8 @@
     <osgi:reference id="stateDataService"
                     interface="org.motechproject.nms.region.repository.StateDataService" />
 
-    <osgi:reference id="frontLineWorkerService"
-                  interface="org.motechproject.nms.flw.service.FrontLineWorkerService" />
+    <osgi:reference id="swcService"
+                  interface="org.motechproject.nms.flw.service.SwcService" />
 
     <!-- CSV Audit Service -->
     <osgi:reference id="csvAuditService" interface="org.motechproject.nms.csv.service.CsvAuditService" />
@@ -44,8 +44,8 @@
     <osgi:reference id="mobileAcademyService"
                     interface="org.motechproject.nms.mobileacademy.service.MobileAcademyService" />
 
-    <osgi:reference id="flwErrorDataService"
-                    interface="org.motechproject.nms.flw.repository.FlwErrorDataService" />
+    <osgi:reference id="swcErrorDataService"
+                    interface="org.motechproject.nms.flw.repository.SwcErrorDataService" />
 
     <osgi:reference id="flwRejectionService"
                     interface="org.motechproject.nms.rejectionhandler.service.FlwRejectionService" />
