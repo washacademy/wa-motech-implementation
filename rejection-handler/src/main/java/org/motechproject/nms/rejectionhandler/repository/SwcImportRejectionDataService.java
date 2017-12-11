@@ -11,8 +11,8 @@ import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
 public interface FlwImportRejectionDataService extends MotechDataService<FlwImportRejection>  {
 
     @Lookup
-    FlwImportRejection findByFlwIdAndStateId(@LookupField(name = "flwId") Long flwId,
-                                             @LookupField(name = "stateId") Long stateId);
+    FlwImportRejection findByFlwIdAndPanchayatId(@LookupField(name = "SwcID") Long SwcID,
+                                             @LookupField(name = "panchayatId") Long panchayatId);
 
 
 }

@@ -7,7 +7,7 @@ import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
  */
 public interface FlwRejectionService {
 
-    FlwImportRejection findByFlwIdAndStateId(Long flwId, Long stateId);
+    FlwImportRejection findByFlwIdAndPanchayatId(Long flwId, Long stateId);
 
     void createUpdate(FlwImportRejection flwImportRejection);
 
