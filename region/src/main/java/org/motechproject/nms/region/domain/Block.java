@@ -1,6 +1,8 @@
 package org.motechproject.nms.region.domain;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.InstanceLifecycleListeners;
@@ -9,40 +11,57 @@ import org.motechproject.nms.tracking.annotation.TrackClass;
 import org.motechproject.nms.tracking.annotation.TrackFields;
 
 import javax.jdo.annotations.Column;
+import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity(tableName = "nms_health_sub_facilities")
-@Unique(name = "UNIQUE_HEALTH_FACILITY_CODE", members = { "healthFacility", "code" })
+@Entity(tableName = "nms_talukas")
+@Unique(name = "UNIQUE_DISTRICT_CODE", members = { "district", "code" })
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners
-public class HealthSubFacility extends MdsEntity {
+public class Block extends MdsEntity {
 
     @Field
-    @Column(allowsNull = "false", length = 250)
+    @Column(allowsNull = "false", length = 150)
     @NotNull
-    @Size(min = 1, max = 250)
+    @Size(min = 1, max = 150)
     private String name;
 
     @Field
-    @Column(length = 250)
-    @Size(min = 1, max = 250)
+    @Column(length = 150)
+    @Size(min = 1, max = 150)
     private String regionalName;
 
     @Field
-    @Column(allowsNull = "false")
+    @Column(allowsNull = "false", length = 7)
     @NotNull
-    private Long code;
+    @Size(min = 1, max = 7)
+    // File from MoH shows a 50 char string in taluka file, but a 7 char string in village.
+    // Sample data shows string (i.e. '0005')
+    // Email thread says number.   grrrr
+    private String code;
+
+    @Field
+    private Integer identity;
 
     @Field
     @Column(allowsNull = "false")
     @NotNull
     @JsonBackReference
-    private HealthFacility healthFacility;
+    private District district;
 
-    public HealthSubFacility() {
+    @Field
+    @Cascade(delete = true)
+    @Persistent(mappedBy = "taluka", defaultFetchGroup = "false")
+    @JsonManagedReference
+    private List<Panchayat> panchayats;
+
+    public Block() {
+        this.panchayats = new ArrayList<>();
     }
 
     public String getName() {
@@ -61,20 +80,36 @@ public class HealthSubFacility extends MdsEntity {
         this.regionalName = regionalName;
     }
 
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public HealthFacility getHealthFacility() {
-        return healthFacility;
+    public Integer getIdentity() {
+        return identity;
     }
 
-    public void setHealthFacility(HealthFacility healthFacility) {
-        this.healthFacility = healthFacility;
+    public void setIdentity(Integer identity) {
+        this.identity = identity;
+    }
+
+    public District getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(District district) {
+        this.district = district;
+    }
+
+    public List<Panchayat> getPanchayats() {
+        return panchayats;
+    }
+
+    public void setPanchayats(List<Panchayat> panchayats) {
+        this.panchayats = panchayats;
     }
 
     @Override
@@ -86,12 +121,12 @@ public class HealthSubFacility extends MdsEntity {
             return false;
         }
 
-        HealthSubFacility that = (HealthSubFacility) o;
+        Block block = (Block) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) {
+        if (name != null ? !name.equals(block.name) : block.name != null) {
             return false;
         }
-        return !(code != null ? !code.equals(that.code) : that.code != null);
+        return !(code != null ? !code.equals(block.code) : block.code != null);
 
     }
 
@@ -104,7 +139,7 @@ public class HealthSubFacility extends MdsEntity {
 
     @Override
     public String toString() {
-        return "HealthSubFacility{" +
+        return "Block{" +
                 "name='" + name + '\'' +
                 ", code=" + code +
                 '}';

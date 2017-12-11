@@ -7,23 +7,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.DistrictDataService;
-import org.motechproject.nms.region.repository.HealthBlockDataService;
-import org.motechproject.nms.region.repository.HealthFacilityDataService;
-import org.motechproject.nms.region.repository.HealthFacilityTypeDataService;
-import org.motechproject.nms.region.repository.HealthSubFacilityDataService;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.region.repository.TalukaDataService;
-import org.motechproject.nms.region.repository.VillageDataService;
-import org.motechproject.nms.region.service.HealthBlockService;
+import org.motechproject.nms.region.repository.BlockDataService;
+import org.motechproject.nms.region.repository.PanchayatDataService;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -56,10 +45,10 @@ public class LocationServiceBundleIT extends BasePaxIT {
     DistrictDataService districtDataService;
 
     @Inject
-    TalukaDataService talukaDataService;
+    BlockDataService blockDataService;
 
     @Inject
-    VillageDataService villageDataService;
+    PanchayatDataService panchayatDataService;
 
     @Inject
     HealthBlockDataService healthBlockDataService;
@@ -84,8 +73,8 @@ public class LocationServiceBundleIT extends BasePaxIT {
 
     State state;
     District district;
-    Taluka taluka;
-    Village village;
+    Block block;
+    Panchayat panchayat;
     HealthBlock healthBlock;
     HealthFacilityType healthFacilityType;
     HealthFacility healthFacility;
@@ -121,24 +110,24 @@ public class LocationServiceBundleIT extends BasePaxIT {
         healthBlock.setCode(1L);
         healthBlock.getHealthFacilities().add(healthFacility);
 
-        village = new Village();
-        village.setName("Village 1");
-        village.setRegionalName("Village 1");
-        village.setVcode(1L);
+        panchayat = new Panchayat();
+        panchayat.setName("Panchayat 1");
+        panchayat.setRegionalName("Panchayat 1");
+        panchayat.setVcode(1L);
 
-        taluka = new Taluka();
-        taluka.setName("Taluka 1");
-        taluka.setRegionalName("Taluka 1");
-        taluka.setIdentity(1);
-        taluka.setCode("0004");
-        taluka.getVillages().add(village);
-        taluka.getHealthBlocks().add(healthBlock);
+        block = new Block();
+        block.setName("Block 1");
+        block.setRegionalName("Block 1");
+        block.setIdentity(1);
+        block.setCode("0004");
+        block.getPanchayats().add(panchayat);
+        block.getHealthBlocks().add(healthBlock);
 
         district = new District();
         district.setName("District 1");
         district.setRegionalName("District 1");
         district.setCode(1L);
-        district.getTalukas().add(taluka);
+        district.getBlocks().add(block);
 
         state = new State();
         state.setName("State 1");
@@ -163,28 +152,28 @@ public class LocationServiceBundleIT extends BasePaxIT {
 
     @Test(expected = ConstraintViolationException.class)
     public void testCreateTalukaNoName() throws Exception {
-        taluka.setName(null);
+        block.setName(null);
 
-        talukaDataService.create(taluka);
+        blockDataService.create(block);
     }
 
     @Test(expected = ConstraintViolationException.class)
     public void testCreateVillageNoName() throws Exception {
-        village.setName(null);
+        panchayat.setName(null);
 
-        // Village is the leaf, I have to create something connected to the object graph so I save the
-        // taluka (it's parent) instead
-        talukaDataService.create(taluka);
+        // Panchayat is the leaf, I have to create something connected to the object graph so I save the
+        // block (it's parent) instead
+        blockDataService.create(block);
     }
 
     @Test (expected = ConstraintViolationException.class)
     @Ignore // Remove once https://applab.atlassian.net/browse/MOTECH-1691 is resolved
     public void testCreateVillageNoCode() throws Exception {
-        village.setVcode(0);
-        village.setSvid(0);
+        panchayat.setVcode(0);
+        panchayat.setSvid(0);
 
-        // Village is the leaf, I have to create something connected to the object graph so I save the
-        // taluka (it's parent) instead
+        // Panchayat is the leaf, I have to create something connected to the object graph so I save the
+        // block (it's parent) instead
         stateDataService.create(state);
     }
 
@@ -252,23 +241,23 @@ public class LocationServiceBundleIT extends BasePaxIT {
     public void testVillagesWithSameCodeDifferentTalukas() throws Exception {
         stateDataService.create(state);
         districtDataService.create(district);
-        talukaDataService.create(taluka);
-        villageDataService.create(village);
+        blockDataService.create(block);
+        panchayatDataService.create(panchayat);
 
-        Taluka otherTaluka = new Taluka();
-        otherTaluka.setName("Taluka 2");
-        otherTaluka.setRegionalName("Taluka 2");
-        otherTaluka.setDistrict(district);
-        otherTaluka.setIdentity(2);
-        otherTaluka.setCode("0005");
-        talukaDataService.create(otherTaluka);
+        Block otherBlock = new Block();
+        otherBlock.setName("Block 2");
+        otherBlock.setRegionalName("Block 2");
+        otherBlock.setDistrict(district);
+        otherBlock.setIdentity(2);
+        otherBlock.setCode("0005");
+        blockDataService.create(otherBlock);
 
-        Village otherVillage = new Village();
-        otherVillage.setName("Village 2");
-        otherVillage.setRegionalName("Village 2");
-        otherVillage.setVcode(1L);
-        otherVillage.setTaluka(otherTaluka);
-        villageDataService.create(otherVillage);
+        Panchayat otherPanchayat = new Panchayat();
+        otherPanchayat.setName("Panchayat 2");
+        otherPanchayat.setRegionalName("Panchayat 2");
+        otherPanchayat.setVcode(1L);
+        otherPanchayat.setBlock(otherBlock);
+        panchayatDataService.create(otherPanchayat);
     }
 
 
@@ -276,25 +265,25 @@ public class LocationServiceBundleIT extends BasePaxIT {
     public void testVillagesWithSameCodeSameTalukas() throws Exception {
         stateDataService.create(state);
         districtDataService.create(district);
-        talukaDataService.create(taluka);
-        villageDataService.create(village);
+        blockDataService.create(block);
+        panchayatDataService.create(panchayat);
 
-        Village otherVillage = new Village();
-        otherVillage.setName("Village 2");
-        otherVillage.setRegionalName("Village 2");
-        otherVillage.setVcode(1L);
-        otherVillage.setTaluka(taluka);
+        Panchayat otherPanchayat = new Panchayat();
+        otherPanchayat.setName("Panchayat 2");
+        otherPanchayat.setRegionalName("Panchayat 2");
+        otherPanchayat.setVcode(1L);
+        otherPanchayat.setBlock(block);
         exception.expect(javax.jdo.JDODataStoreException.class);
-        villageDataService.create(otherVillage);
+        panchayatDataService.create(otherPanchayat);
     }
 
-    // Single Taluka Single HB, should find it
-    // State -> District -> Taluka -> HealthBlock(1)
+    // Single Block Single HB, should find it
+    // State -> District -> Block -> HealthBlock(1)
     @Test
     public void testFindHealthBlockByTalukaAndCode1() {
         stateDataService.create(state);
         districtDataService.create(district);
-        Taluka t = talukaDataService.create(taluka);
+        Block t = blockDataService.create(block);
         healthBlockDataService.create(healthBlock);
 
         HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 1L);
@@ -303,13 +292,13 @@ public class LocationServiceBundleIT extends BasePaxIT {
     }
 
     // Multiple, lookup by t(1) and HB(2), should find it
-    // State -> District -> Taluka(1) -> HealthBlock(1)
-    //                   -> Taluka(2) -> HealthBlock(2)
+    // State -> District -> Block(1) -> HealthBlock(1)
+    //                   -> Block(2) -> HealthBlock(2)
     @Test
     public void testFindHealthBlockByTalukaAndCode2() {
         stateDataService.create(state);
         district = districtDataService.create(district);
-        Taluka t = talukaDataService.create(taluka);
+        Block t = blockDataService.create(block);
         healthBlockDataService.create(healthBlock);
 
         HealthBlock healthBlock2 = new HealthBlock();
@@ -318,15 +307,15 @@ public class LocationServiceBundleIT extends BasePaxIT {
         healthBlock2.setHq("Health Block 2 HQ");
         healthBlock2.setCode(2L);
 
-        Taluka taluka2 = new Taluka();
-        taluka2.setName("Taluka 2");
-        taluka2.setRegionalName("Taluka 2");
-        taluka2.setIdentity(2);
-        taluka2.setCode("0005");
-        taluka2.setDistrict(district);
-        taluka2.getHealthBlocks().add(healthBlock2);
+        Block block2 = new Block();
+        block2.setName("Block 2");
+        block2.setRegionalName("Block 2");
+        block2.setIdentity(2);
+        block2.setCode("0005");
+        block2.setDistrict(district);
+        block2.getHealthBlocks().add(healthBlock2);
 
-        taluka2 = talukaDataService.create(taluka2);
+        block2 = blockDataService.create(block2);
         healthBlockDataService.create(healthBlock2);
 
         HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 2L);
@@ -337,23 +326,23 @@ public class LocationServiceBundleIT extends BasePaxIT {
         assertNotNull(hb);
         assertEquals(hb.getCode(), healthBlock.getCode());
 
-        hb = healthBlockService.findByTalukaAndCode(taluka2, 1L);
+        hb = healthBlockService.findByTalukaAndCode(block2, 1L);
         assertNotNull(hb);
         assertEquals(hb.getCode(), healthBlock.getCode());
 
-        hb = healthBlockService.findByTalukaAndCode(taluka2, 2L);
+        hb = healthBlockService.findByTalukaAndCode(block2, 2L);
         assertNotNull(hb);
         assertEquals(hb.getCode(), healthBlock2.getCode());
     }
 
-    // Two HB in Single Taluka, lookup by t(1) hb(1), should find it
-    // State -> District -> Taluka -> HealthBlock(1)
+    // Two HB in Single Block, lookup by t(1) hb(1), should find it
+    // State -> District -> Block -> HealthBlock(1)
     //                             -> HealthBlock(2)
     @Test
     public void testFindHealthBlockByTalukaAndCode3() {
         stateDataService.create(state);
         districtDataService.create(district);
-        Taluka t = talukaDataService.create(taluka);
+        Block t = blockDataService.create(block);
         healthBlockDataService.create(healthBlock);
 
         HealthBlock healthBlock2 = new HealthBlock();
@@ -361,7 +350,7 @@ public class LocationServiceBundleIT extends BasePaxIT {
         healthBlock2.setRegionalName("Health Block 2");
         healthBlock2.setHq("Health Block 2 HQ");
         healthBlock2.setCode(2L);
-        healthBlock2.setTaluka(t);
+        healthBlock2.setBlock(t);
 
         healthBlockDataService.create(healthBlock2);
 
@@ -374,13 +363,13 @@ public class LocationServiceBundleIT extends BasePaxIT {
         assertEquals(hb.getCode(), healthBlock2.getCode());
     }
     // Multiple, lookup by t(1), hb(2) should not find it
-    // State(1) -> District -> Taluka(1) -> HealthBlock(1)
-    // State(2) -> District -> Taluka(2) -> HealthBlock(2)
+    // State(1) -> District -> Block(1) -> HealthBlock(1)
+    // State(2) -> District -> Block(2) -> HealthBlock(2)
     @Test
     public void testFindHealthBlockByTalukaAndCode4() {
         stateDataService.create(state);
         districtDataService.create(district);
-        Taluka t = talukaDataService.create(taluka);
+        Block t = blockDataService.create(block);
         healthBlockDataService.create(healthBlock);
 
         HealthBlock healthBlock2 = new HealthBlock();
@@ -389,18 +378,18 @@ public class LocationServiceBundleIT extends BasePaxIT {
         healthBlock2.setHq("Health Block 2 HQ");
         healthBlock2.setCode(2L);
 
-        Taluka taluka2 = new Taluka();
-        taluka2.setName("Taluka 2");
-        taluka2.setRegionalName("Taluka 2");
-        taluka2.setIdentity(2);
-        taluka2.setCode("0005");
-        taluka2.getHealthBlocks().add(healthBlock2);
+        Block block2 = new Block();
+        block2.setName("Block 2");
+        block2.setRegionalName("Block 2");
+        block2.setIdentity(2);
+        block2.setCode("0005");
+        block2.getHealthBlocks().add(healthBlock2);
 
         District district2 = new District();
         district2.setName("District 2");
         district2.setRegionalName("District 2");
         district2.setCode(2L);
-        district2.getTalukas().add(taluka2);
+        district2.getBlocks().add(block2);
 
         State state2 = new State();
         state2.setName("State 2");
@@ -409,7 +398,7 @@ public class LocationServiceBundleIT extends BasePaxIT {
 
         stateDataService.create(state2);
         districtDataService.create(district2);
-        Taluka t2 = talukaDataService.create(taluka2);
+        Block t2 = blockDataService.create(block2);
         healthBlockDataService.create(healthBlock2);
 
         HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 2L);
@@ -432,15 +421,15 @@ public class LocationServiceBundleIT extends BasePaxIT {
         assertEquals(1, districtList.size());
         assertTrue(districtList.contains(district));
 
-        List<Taluka> talukaList = districtList.iterator().next().getTalukas();
-        assertEquals(1, talukaList.size());
-        assertTrue(talukaList.contains(taluka));
+        List<Block> blockList = districtList.iterator().next().getBlocks();
+        assertEquals(1, blockList.size());
+        assertTrue(blockList.contains(block));
 
-        List<Village> villageList = talukaList.get(0).getVillages();
-        assertEquals(1, villageList.size());
-        assertTrue(villageList.contains(village));
+        List<Panchayat> panchayatList = blockList.get(0).getPanchayats();
+        assertEquals(1, panchayatList.size());
+        assertTrue(panchayatList.contains(panchayat));
 
-        List<HealthBlock> healthBlockList = talukaList.get(0).getHealthBlocks();
+        List<HealthBlock> healthBlockList = blockList.get(0).getHealthBlocks();
         assertEquals(1, healthBlockList.size());
         assertTrue(healthBlockList.contains(healthBlock));
 

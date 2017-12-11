@@ -2,7 +2,6 @@ package org.motechproject.nms.region.ut;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.nms.region.domain.HealthFacility;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

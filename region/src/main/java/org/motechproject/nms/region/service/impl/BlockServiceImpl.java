@@ -2,26 +2,26 @@ package org.motechproject.nms.region.service.impl;
 
 import org.datanucleus.store.rdbms.query.ForwardQueryResult;
 import org.motechproject.mds.query.SqlQueryExecution;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.repository.TalukaDataService;
-import org.motechproject.nms.region.service.TalukaService;
+import org.motechproject.nms.region.repository.BlockDataService;
+import org.motechproject.nms.region.service.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.jdo.Query;
 
 @Service("talukaService")
-public class TalukaServiceImpl implements TalukaService {
+public class BlockServiceImpl implements BlockService {
 
     @Autowired
-    private TalukaDataService dataService;
+    private BlockDataService dataService;
 
     @Override
-    public Taluka findByDistrictAndCode(final District district, final String code) {
+    public Block findByDistrictAndCode(final District district, final String code) {
         if (district == null) { return null; }
 
-        SqlQueryExecution<Taluka> queryExecution = new SqlQueryExecution<Taluka>() {
+        SqlQueryExecution<Block> queryExecution = new SqlQueryExecution<Block>() {
 
             @Override
             public String getSqlQuery() {
@@ -29,14 +29,14 @@ public class TalukaServiceImpl implements TalukaService {
             }
 
             @Override
-            public Taluka execute(Query query) {
-                query.setClass(Taluka.class);
+            public Block execute(Query query) {
+                query.setClass(Block.class);
                 ForwardQueryResult fqr = (ForwardQueryResult) query.execute(district.getId(), code);
                 if (fqr.isEmpty()) {
                     return null;
                 }
                 if (fqr.size() == 1) {
-                    return (Taluka) fqr.get(0);
+                    return (Block) fqr.get(0);
                 }
                 throw new IllegalStateException("More than one row returned!");
             }
@@ -46,12 +46,12 @@ public class TalukaServiceImpl implements TalukaService {
     }
 
     @Override
-    public Taluka create(Taluka taluka) {
-        return dataService.create(taluka);
+    public Block create(Block block) {
+        return dataService.create(block);
     }
 
     @Override
-    public Taluka update(Taluka taluka) {
-        return dataService.update(taluka);
+    public Block update(Block block) {
+        return dataService.update(block);
     }
 }

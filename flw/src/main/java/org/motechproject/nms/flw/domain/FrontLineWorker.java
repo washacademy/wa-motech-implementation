@@ -7,15 +7,8 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.InstanceLifecycleListeners;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.flw.domain.validation.ValidFrontLineWorker;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.FullLocation;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.Language;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.validation.ValidFullLocation;
 import org.motechproject.nms.tracking.annotation.TrackClass;
 import org.motechproject.nms.tracking.annotation.TrackFields;
@@ -72,11 +65,11 @@ public class FrontLineWorker extends MdsEntity implements FullLocation {
 
     @Field
     @Persistent(defaultFetchGroup = "true")
-    private Taluka taluka;
+    private Block block;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
-    private Village village;
+    private Panchayat panchayat;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
@@ -192,23 +185,23 @@ public class FrontLineWorker extends MdsEntity implements FullLocation {
     }
 
     @Override
-    public Taluka getTaluka() {
-        return taluka;
+    public Block getBlock() {
+        return block;
     }
 
     @Override
-    public void setTaluka(Taluka taluka) {
-        this.taluka = taluka;
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
     @Override
-    public Village getVillage() {
-        return village;
+    public Panchayat getPanchayat() {
+        return panchayat;
     }
 
     @Override
-    public void setVillage(Village village) {
-        this.village = village;
+    public void setPanchayat(Panchayat panchayat) {
+        this.panchayat = panchayat;
     }
 
     @Override

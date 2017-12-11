@@ -5,15 +5,8 @@ import org.motechproject.alerts.domain.AlertStatus;
 import org.motechproject.alerts.domain.AlertType;
 import org.motechproject.nms.csv.exception.CsvImportException;
 import org.motechproject.nms.csv.service.CsvAuditService;
-import org.motechproject.nms.region.csv.CensusVillageImportService;
-import org.motechproject.nms.region.csv.DistrictImportService;
-import org.motechproject.nms.region.csv.HealthBlockImportService;
-import org.motechproject.nms.region.csv.HealthFacilityImportService;
-import org.motechproject.nms.region.csv.HealthSubFacilityImportService;
-import org.motechproject.nms.region.csv.LocationDataImportService;
-import org.motechproject.nms.region.csv.NonCensusVillageImportService;
-import org.motechproject.nms.region.csv.StateImportService;
-import org.motechproject.nms.region.csv.TalukaImportService;
+import org.motechproject.nms.region.csv.*;
+import org.motechproject.nms.region.csv.BlockImportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +34,9 @@ public class LocationDataImportController {
 
     private StateImportService stateImportService;
     private DistrictImportService districtImportService;
-    private TalukaImportService talukaImportService;
-    private NonCensusVillageImportService nonCensusVillageImportService;
-    private CensusVillageImportService censusVillageImportService;
-    private HealthBlockImportService healthBlockImportService;
-    private HealthFacilityImportService healthFacilityImportService;
-    private HealthSubFacilityImportService healthSubFacilityImportService;
+    private BlockImportService blockImportService;
+    private NonCensusPanchayatImportService nonCensusPanchayatImportService;
+    private CensusPanchayatImportService censusPanchayatImportService;
     private CsvAuditService csvAuditService;
 
     private Map<String, LocationDataImportService> locationDataImportServiceMapping;
@@ -105,34 +95,20 @@ public class LocationDataImportController {
     }
 
     @Autowired
-    public void setTalukaImportService(TalukaImportService talukaImportService) {
-        this.talukaImportService = talukaImportService;
+    public void setBlockImportService(BlockImportService blockImportService) {
+        this.blockImportService = blockImportService;
     }
 
     @Autowired
-    public void setNonCensusVillageImportService(NonCensusVillageImportService nonCensusVillageImportService) {
-        this.nonCensusVillageImportService = nonCensusVillageImportService;
+    public void setNonCensusPanchayatImportService(NonCensusPanchayatImportService nonCensusPanchayatImportService) {
+        this.nonCensusPanchayatImportService = nonCensusPanchayatImportService;
     }
 
     @Autowired
-    public void setCensusVillageImportService(CensusVillageImportService censusVillageImportService) {
-        this.censusVillageImportService = censusVillageImportService;
+    public void setCensusPanchayatImportService(CensusPanchayatImportService censusPanchayatImportService) {
+        this.censusPanchayatImportService = censusPanchayatImportService;
     }
 
-    @Autowired
-    public void setHealthBlockImportService(HealthBlockImportService healthBlockImportService) {
-        this.healthBlockImportService = healthBlockImportService;
-    }
-
-    @Autowired
-    public void setHealthFacilityImportService(HealthFacilityImportService healthFacilityImportService) {
-        this.healthFacilityImportService = healthFacilityImportService;
-    }
-
-    @Autowired
-    public void setHealthSubFacilityImportService(HealthSubFacilityImportService healthSubFacilityImportService) {
-        this.healthSubFacilityImportService = healthSubFacilityImportService;
-    }
 
     @Autowired
     public void setCsvAuditService(CsvAuditService csvAuditService) {
@@ -144,12 +120,9 @@ public class LocationDataImportController {
             locationDataImportServiceMapping = new HashMap<>();
             locationDataImportServiceMapping.put("state", stateImportService);
             locationDataImportServiceMapping.put("district", districtImportService);
-            locationDataImportServiceMapping.put("taluka", talukaImportService);
-            locationDataImportServiceMapping.put("nonCensusVillage", nonCensusVillageImportService);
-            locationDataImportServiceMapping.put("censusVillage", censusVillageImportService);
-            locationDataImportServiceMapping.put("healthBlock", healthBlockImportService);
-            locationDataImportServiceMapping.put("healthFacility", healthFacilityImportService);
-            locationDataImportServiceMapping.put("healthSubFacility", healthSubFacilityImportService);
+            locationDataImportServiceMapping.put("taluka", blockImportService);
+            locationDataImportServiceMapping.put("nonCensusVillage", nonCensusPanchayatImportService);
+            locationDataImportServiceMapping.put("censusVillage", censusPanchayatImportService);
         }
         return locationDataImportServiceMapping;
     }

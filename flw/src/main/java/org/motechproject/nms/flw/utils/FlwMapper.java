@@ -10,11 +10,8 @@ import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
 import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.Block;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 
 import java.util.Map;
@@ -145,11 +142,11 @@ public final class FlwMapper {
 
         flw.setState((State) locations.get(FlwConstants.STATE_ID));
         flw.setDistrict((District) locations.get(FlwConstants.DISTRICT_ID));
-        flw.setTaluka((Taluka) locations.get(FlwConstants.TALUKA_ID));
+        flw.setBlock((Block) locations.get(FlwConstants.TALUKA_ID));
         flw.setHealthBlock((HealthBlock) locations.get(FlwConstants.HEALTH_BLOCK_ID));
         flw.setHealthFacility((HealthFacility) locations.get(FlwConstants.PHC_ID));
         flw.setHealthSubFacility((HealthSubFacility) locations.get(FlwConstants.SUB_CENTRE_ID));
-        flw.setVillage((Village) locations.get(FlwConstants.CENSUS_VILLAGE_ID + FlwConstants.NON_CENSUS_VILLAGE_ID));
+        flw.setPanchayat((Panchayat) locations.get(FlwConstants.CENSUS_VILLAGE_ID + FlwConstants.NON_CENSUS_VILLAGE_ID));
         return flw;
     }
 }

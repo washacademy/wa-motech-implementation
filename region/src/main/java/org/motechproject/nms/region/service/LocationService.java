@@ -1,12 +1,9 @@
 package org.motechproject.nms.region.service;
 
 import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthSubFacility;
 import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.Block;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 
 import java.util.Map;
@@ -37,20 +34,12 @@ public interface LocationService {
 
     District getDistrict(Long stateId, Long districtId);
 
-    Taluka getTaluka(Long stateId, Long districtId, String talukaId);
+    Block getBlock(Long stateId, Long districtId, String blockId);
 
-    Village getVillage(Long stateId, Long districtId, String talukaId, Long vCode, Long svid);
+    Panchayat getPanchayat(Long stateId, Long districtId, String blockId, Long vCode, Long svid);
 
-    Village getCensusVillage(Long stateId, Long districtId, String talukaId, Long vCode);
+    Panchayat getCensusPanchayat(Long stateId, Long districtId, String blockId, Long vCode);
 
-    Village getNonCensusVillage(Long stateId, Long districtId, String talukaId, Long svid);
-
-    HealthBlock getHealthBlock(Long stateId, Long districtId, String talukaId, Long healthBlockId);
-
-    HealthFacility getHealthFacility(Long stateId, Long districtId, String talukaId, Long healthBlockId,
-                                     Long healthFacilityId);
-
-    HealthSubFacility getHealthSubFacility(Long stateId, Long districtId, String talukaId, Long healthBlockId,
-                                           Long healthFacilityId, Long healthSubFacilityId);
+    Panchayat getNonCensusPanchayat(Long stateId, Long districtId, String blockId, Long svid);
 
 }

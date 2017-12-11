@@ -2,14 +2,8 @@ package org.motechproject.nms.region.ut;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.FullLocation;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.validation.ValidFullLocation;
 
 import javax.validation.ConstraintViolation;
@@ -58,10 +52,10 @@ public class FullLocationValidatorUnitTest {
         state.setId(1L);
         District district = new District();
         district.setId(2L);
-        Taluka taluka = new Taluka();
-        taluka.setId(3L);
-        Village village = new Village();
-        village.setId(4L);
+        Block block = new Block();
+        block.setId(3L);
+        Panchayat panchayat = new Panchayat();
+        panchayat.setId(4L);
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setId(5L);
         HealthFacility healthFacility = new HealthFacility();
@@ -71,12 +65,12 @@ public class FullLocationValidatorUnitTest {
 
         state.getDistricts().add(district);
         district.setState(state);
-        district.getTalukas().add(taluka);
-        taluka.setDistrict(district);
-        taluka.getVillages().add(village);
-        village.setTaluka(taluka);
-        taluka.getHealthBlocks().add(healthBlock);
-        healthBlock.setTaluka(taluka);
+        district.getBlocks().add(block);
+        block.setDistrict(district);
+        block.getPanchayats().add(panchayat);
+        panchayat.setBlock(block);
+        block.getHealthBlocks().add(healthBlock);
+        healthBlock.setBlock(block);
         healthBlock.getHealthFacilities().add(healthFacility);
         healthFacility.setHealthBlock(healthBlock);
         healthFacility.getHealthSubFacilities().add(healthSubFacility);
@@ -84,8 +78,8 @@ public class FullLocationValidatorUnitTest {
 
         testLocation.setState(state);
         testLocation.setDistrict(district);
-        testLocation.setTaluka(taluka);
-        testLocation.setVillage(village);
+        testLocation.setBlock(block);
+        testLocation.setPanchayat(panchayat);
         testLocation.setHealthBlock(healthBlock);
         testLocation.setHealthFacility(healthFacility);
         testLocation.setHealthSubFacility(healthSubFacility);
@@ -114,16 +108,16 @@ public class FullLocationValidatorUnitTest {
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("District must be set if taluka is provided", constraintViolations.iterator().next().getMessage());
+        assertEquals("District must be set if block is provided", constraintViolations.iterator().next().getMessage());
     }
 
-    //  Test all but taluka with village
+    //  Test all but block with panchayat
     @Test
     public void testBrokenChainNoTalukaWithVillage() {
         TestLocation testLocation = new TestLocation();
 
         buildValidFullLocation(testLocation);
-        testLocation.setTaluka(null);
+        testLocation.setBlock(null);
         testLocation.setHealthBlock(null);
         testLocation.setHealthFacility(null);
         testLocation.setHealthSubFacility(null);
@@ -131,7 +125,7 @@ public class FullLocationValidatorUnitTest {
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Taluka must be set if village is provided", constraintViolations.iterator().next().getMessage());
+        assertEquals("Block must be set if panchayat is provided", constraintViolations.iterator().next().getMessage());
     }
 
     //  Test all but health block
@@ -162,19 +156,19 @@ public class FullLocationValidatorUnitTest {
         assertEquals("Health Facility must be set if sub-facility is provided", constraintViolations.iterator().next().getMessage());
     }
 
-    //  Test all but taluka with health block
+    //  Test all but block with health block
     @Test
     public void testBrokenChainNoTalukaWithHealthBlock() {
         TestLocation testLocation = new TestLocation();
 
         buildValidFullLocation(testLocation);
-        testLocation.setTaluka(null);
-        testLocation.setVillage(null);
+        testLocation.setBlock(null);
+        testLocation.setPanchayat(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Taluka must be set if block is provided", constraintViolations.iterator().next().getMessage());
+        assertEquals("Block must be set if block is provided", constraintViolations.iterator().next().getMessage());
     }
 
     // Test child not in parent
@@ -193,34 +187,34 @@ public class FullLocationValidatorUnitTest {
         assertEquals("District is not a child of the State", constraintViolations.iterator().next().getMessage());
     }
 
-    //   Test taluka not in district
+    //   Test block not in district
     @Test
     public void testTalukaNotInDistrict() {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
-        testLocation.getDistrict().setTalukas(Collections.<Taluka>emptyList());
-        testLocation.getTaluka().setDistrict(null);
+        testLocation.getDistrict().setBlocks(Collections.<Block>emptyList());
+        testLocation.getBlock().setDistrict(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Taluka is not a child of the District", constraintViolations.iterator().next().getMessage());
+        assertEquals("Block is not a child of the District", constraintViolations.iterator().next().getMessage());
     }
 
-    //   Test village not in taluka
+    //   Test panchayat not in block
     @Test
     public void testVillageNotInTaluka() {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
-        testLocation.getTaluka().setVillages(Collections.<Village>emptyList());
-        testLocation.getVillage().setTaluka(null);
+        testLocation.getBlock().setPanchayats(Collections.<Panchayat>emptyList());
+        testLocation.getPanchayat().setBlock(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Village is not a child of the Taluka", constraintViolations.iterator().next().getMessage());
+        assertEquals("Panchayat is not a child of the Block", constraintViolations.iterator().next().getMessage());
     }
 
     //   Test health facility not in health block
@@ -258,8 +252,8 @@ public class FullLocationValidatorUnitTest {
 class TestLocation implements FullLocation {
     State state;
     District district;
-    Taluka taluka;
-    Village village;
+    Block block;
+    Panchayat panchayat;
     HealthBlock healthBlock;
     HealthFacility healthFacility;
     HealthSubFacility healthSubFacility;
@@ -285,23 +279,23 @@ class TestLocation implements FullLocation {
     }
 
     @Override
-    public Taluka getTaluka() {
-        return taluka;
+    public Block getBlock() {
+        return block;
     }
 
     @Override
-    public void setTaluka(Taluka taluka) {
-        this.taluka = taluka;
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
     @Override
-    public Village getVillage() {
-        return village;
+    public Panchayat getPanchayat() {
+        return panchayat;
     }
 
     @Override
-    public void setVillage(Village village) {
-        this.village = village;
+    public void setPanchayat(Panchayat panchayat) {
+        this.panchayat = panchayat;
     }
 
     @Override

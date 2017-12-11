@@ -3,24 +3,13 @@ package org.motechproject.nms.testing.it.region;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.region.domain.Circle;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.CircleDataService;
 import org.motechproject.nms.region.repository.DistrictDataService;
-import org.motechproject.nms.region.repository.HealthBlockDataService;
-import org.motechproject.nms.region.repository.HealthFacilityDataService;
-import org.motechproject.nms.region.repository.HealthFacilityTypeDataService;
-import org.motechproject.nms.region.repository.HealthSubFacilityDataService;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.region.repository.TalukaDataService;
-import org.motechproject.nms.region.repository.VillageDataService;
+import org.motechproject.nms.region.repository.BlockDataService;
+import org.motechproject.nms.region.repository.PanchayatDataService;
 import org.motechproject.nms.region.service.CircleService;
 import org.motechproject.nms.region.service.StateService;
 import org.motechproject.nms.testing.service.TestingService;
@@ -61,10 +50,10 @@ public class CircleServiceBundleIT extends BasePaxIT {
     DistrictDataService districtDataService;
 
     @Inject
-    TalukaDataService talukaDataService;
+    BlockDataService blockDataService;
 
     @Inject
-    VillageDataService villageDataService;
+    PanchayatDataService panchayatDataService;
 
     @Inject
     HealthBlockDataService healthBlockDataService;
@@ -79,8 +68,8 @@ public class CircleServiceBundleIT extends BasePaxIT {
     HealthSubFacilityDataService healthSubFacilityDataService;
 
     District district;
-    Taluka taluka;
-    Village village;
+    Block block;
+    Panchayat panchayat;
     HealthBlock healthBlock;
     HealthFacilityType healthFacilityType;
     HealthFacility healthFacility;
@@ -132,24 +121,24 @@ public class CircleServiceBundleIT extends BasePaxIT {
         healthBlock.setCode(1L);
         healthBlock.getHealthFacilities().add(healthFacility);
 
-        village = new Village();
-        village.setName("Village 1");
-        village.setRegionalName("Village 1");
-        village.setVcode(1L);
+        panchayat = new Panchayat();
+        panchayat.setName("Panchayat 1");
+        panchayat.setRegionalName("Panchayat 1");
+        panchayat.setVcode(1L);
 
-        taluka = new Taluka();
-        taluka.setName("Taluka 1");
-        taluka.setRegionalName("Taluka 1");
-        taluka.setIdentity(1);
-        taluka.setCode("0004");
-        taluka.getVillages().add(village);
-        taluka.getHealthBlocks().add(healthBlock);
+        block = new Block();
+        block.setName("Block 1");
+        block.setRegionalName("Block 1");
+        block.setIdentity(1);
+        block.setCode("0004");
+        block.getPanchayats().add(panchayat);
+        block.getHealthBlocks().add(healthBlock);
 
         district = new District();
         district.setName("District 1");
         district.setRegionalName("District 1");
         district.setCode(1L);
-        district.getTalukas().add(taluka);
+        district.getBlocks().add(block);
         district.setCircle(circle1);
 
         final State state1 = new State();

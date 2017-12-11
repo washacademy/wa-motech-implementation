@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.imi.service.SettingsService;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.domain.SubscriptionPackMessage;
@@ -17,7 +16,6 @@ import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.testing.it.rch.util.*;
 import org.motechproject.nms.testing.service.TestingService;
-import org.motechproject.scheduler.contract.RunOnceSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -33,9 +31,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
@@ -77,14 +73,14 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
         district.setName("District_Name 4");
         district.setRegionalName("Regional Name 4");
 
-        Taluka taluka = new Taluka();
-        taluka.setRegionalName("Taluka Regional");
-        taluka.setName("Taluka_Name 1");
-        taluka.setCode("0046");
-        taluka.setIdentity(55);
+        Block block = new Block();
+        block.setRegionalName("Block Regional");
+        block.setName("Taluka_Name 1");
+        block.setCode("0046");
+        block.setIdentity(55);
 
-        taluka.setDistrict(district);
-        district.setTalukas(new ArrayList<>(singletonList(taluka)));
+        block.setDistrict(district);
+        district.setBlocks(new ArrayList<>(singletonList(block)));
 
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setCode(113L);
@@ -92,8 +88,8 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
         healthBlock.setRegionalName("HB1");
         healthBlock.setHq("An HQ");
 
-        healthBlock.setTaluka(taluka);
-        taluka.setHealthBlocks(new ArrayList<>(singletonList(healthBlock)));
+        healthBlock.setBlock(block);
+        block.setHealthBlocks(new ArrayList<>(singletonList(healthBlock)));
 
         HealthFacilityType phcType = new HealthFacilityType();
         phcType.setCode(11L);

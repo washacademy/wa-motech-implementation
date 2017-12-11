@@ -33,11 +33,11 @@ import javax.validation.constraints.Size;
  */
 @ValidVillage
 @Entity(tableName = "nms_villages")
-@Unique(name = "UNIQUE_TALUKA_VCODE_SVID", members = { "taluka", "vcode", "svid" })
+@Unique(name = "UNIQUE_TALUKA_VCODE_SVID", members = { "block", "vcode", "svid" })
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners
-public class Village extends MdsEntity {
+public class Panchayat extends MdsEntity {
 
     @Field
     @Column(allowsNull = "false", length = 250)
@@ -67,7 +67,7 @@ public class Village extends MdsEntity {
     @Column(allowsNull = "false")
     @NotNull
     @JsonBackReference
-    private Taluka taluka;
+    private Block block;
 
     public String getName() {
         return name;
@@ -121,12 +121,12 @@ public class Village extends MdsEntity {
         this.svid = svid;
     }
 
-    public Taluka getTaluka() {
-        return taluka;
+    public Block getBlock() {
+        return block;
     }
 
-    public void setTaluka(Taluka taluka) {
-        this.taluka = taluka;
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
     @Override
@@ -138,15 +138,15 @@ public class Village extends MdsEntity {
             return false;
         }
 
-        Village village = (Village) o;
+        Panchayat panchayat = (Panchayat) o;
 
-        if (name != null ? !name.equals(village.name) : village.name != null) {
+        if (name != null ? !name.equals(panchayat.name) : panchayat.name != null) {
             return false;
         }
-        if (vcode != 0 ? vcode != village.vcode : village.vcode != 0) {
+        if (vcode != 0 ? vcode != panchayat.vcode : panchayat.vcode != 0) {
             return false;
         }
-        return !(svid != 0 ? svid != village.svid : village.svid != 0);
+        return !(svid != 0 ? svid != panchayat.svid : panchayat.svid != 0);
 
     }
 
@@ -160,7 +160,7 @@ public class Village extends MdsEntity {
 
     @Override
     public String toString() {
-        return "Village{" +
+        return "Panchayat{" +
                 "name='" + name + '\'' +
                 ", regionalName='" + regionalName + '\'' +
                 ", vcode=" + vcode +

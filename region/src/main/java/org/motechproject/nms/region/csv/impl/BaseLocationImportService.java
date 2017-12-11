@@ -8,16 +8,11 @@ import org.motechproject.nms.csv.utils.CsvInstanceImporter;
 import org.motechproject.nms.csv.utils.GetInstanceByLong;
 import org.motechproject.nms.csv.utils.GetInstanceByString;
 import org.motechproject.nms.csv.utils.Store;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.StateDataService;
+import org.motechproject.nms.region.service.BlockService;
 import org.motechproject.nms.region.service.DistrictService;
-import org.motechproject.nms.region.service.HealthBlockService;
-import org.motechproject.nms.region.service.HealthFacilityService;
-import org.motechproject.nms.region.service.TalukaService;
 import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
@@ -86,51 +81,21 @@ public abstract class BaseLocationImportService<T> {
         };
     }
 
-    protected CellProcessor mapTaluka(final Store store, final TalukaService talukaService) {
-        return new GetInstanceByString<Taluka>() {
+    protected CellProcessor mapBlock(final Store store, final BlockService blockService) {
+        return new GetInstanceByString<Block>() {
             @Override
-            public Taluka retrieve(String value) {
+            public Block retrieve(String value) {
                 District district = (District) store.get(DISTRICT);
                 if (district == null) {
                     throw new IllegalStateException(String
-                            .format("Unable to load Taluka %s with a null district", value));
+                            .format("Unable to load Block %s with a null district", value));
                 }
 
-                return talukaService.findByDistrictAndCode(district, value);
+                return blockService.findByDistrictAndCode(district, value);
             }
         };
     }
 
-    protected CellProcessor mapHealthBlock(final Store store, final HealthBlockService healthBlockService) {
-        return new GetInstanceByLong<HealthBlock>() {
-            @Override
-            public HealthBlock retrieve(Long value) {
-                Taluka taluka = (Taluka) store.get(TALUKA);
-                if (taluka == null) {
-                    throw new IllegalStateException(String
-                            .format("Unable to load HealthBlock %s with a null taluka", value));
-                }
-
-                return healthBlockService.findByTalukaAndCode(taluka, value);
-            }
-        };
-    }
-
-    protected CellProcessor mapHealthFacility(final Store store,
-                                              final HealthFacilityService healthFacilityService) {
-        return new GetInstanceByLong<HealthFacility>() {
-            @Override
-            public HealthFacility retrieve(Long value) {
-                HealthBlock healthBlock = (HealthBlock) store.get(HEALTH_BLOCK);
-                if (healthBlock == null) {
-                    throw new IllegalStateException(String
-                            .format("Unable to load HealthFacility %s with a null HealthBlock", value));
-                }
-
-                return healthFacilityService.findByHealthBlockAndCode(healthBlock, value);
-            }
-        };
-    }
 
     protected abstract void createOrUpdateInstance(T instance);
 

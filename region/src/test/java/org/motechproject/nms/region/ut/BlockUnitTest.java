@@ -2,7 +2,7 @@ package org.motechproject.nms.region.ut;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.nms.region.domain.Taluka;
+import org.motechproject.nms.region.domain.Block;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by rob on 5/4/15.
  */
-public class TalukaUnitTest {
+public class BlockUnitTest {
     Validator validator;
 
     @Before
@@ -26,10 +26,10 @@ public class TalukaUnitTest {
 
     @Test
     public void testNameNull() {
-        Taluka taluka = new Taluka();
+        Block block = new Block();
 
-        Set<ConstraintViolation<Taluka>> constraintViolations = validator
-                .validateProperty(taluka, "name");
+        Set<ConstraintViolation<Block>> constraintViolations = validator
+                .validateProperty(block, "name");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("may not be null", constraintViolations.iterator().next().getMessage());
@@ -37,18 +37,18 @@ public class TalukaUnitTest {
 
     @Test
     public void testNameSize() {
-        Taluka taluka = new Taluka();
-        taluka.setName("AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBXAAAAsAAsssssssAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAA");
+        Block block = new Block();
+        block.setName("AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBXAAAAsAAsssssssAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAA");
 
-        Set<ConstraintViolation<Taluka>> constraintViolations = validator
-                .validateProperty(taluka, "name");
+        Set<ConstraintViolation<Block>> constraintViolations = validator
+                .validateProperty(block, "name");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 150", constraintViolations.iterator().next().getMessage());
 
-        taluka.setName("");
+        block.setName("");
 
-        constraintViolations = validator.validateProperty(taluka, "name");
+        constraintViolations = validator.validateProperty(block, "name");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 150", constraintViolations.iterator().next().getMessage());
@@ -56,18 +56,18 @@ public class TalukaUnitTest {
 
     @Test
     public void testRegionalNameSize() {
-        Taluka taluka = new Taluka();
-        taluka.setRegionalName("AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBXAAAAsAAsssssssAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAA");
+        Block block = new Block();
+        block.setRegionalName("AAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBXAAAAsAAsssssssAAAABBBBBBBBBBAAAAAAAAAABBBBBBBBBBAA");
 
-        Set<ConstraintViolation<Taluka>> constraintViolations = validator
-                .validateProperty(taluka, "regionalName");
+        Set<ConstraintViolation<Block>> constraintViolations = validator
+                .validateProperty(block, "regionalName");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 150", constraintViolations.iterator().next().getMessage());
 
-        taluka.setRegionalName("");
+        block.setRegionalName("");
 
-        constraintViolations = validator.validateProperty(taluka, "regionalName");
+        constraintViolations = validator.validateProperty(block, "regionalName");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 150", constraintViolations.iterator().next().getMessage());
@@ -75,10 +75,10 @@ public class TalukaUnitTest {
 
     @Test
     public void testCodeNull() {
-        Taluka taluka = new Taluka();
+        Block block = new Block();
 
-        Set<ConstraintViolation<Taluka>> constraintViolations = validator
-                .validateProperty(taluka, "code");
+        Set<ConstraintViolation<Block>> constraintViolations = validator
+                .validateProperty(block, "code");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("may not be null", constraintViolations.iterator().next().getMessage());
@@ -86,18 +86,18 @@ public class TalukaUnitTest {
 
     @Test
     public void testCodeSize() {
-        Taluka taluka = new Taluka();
-        taluka.setCode("00000001");
+        Block block = new Block();
+        block.setCode("00000001");
 
-        Set<ConstraintViolation<Taluka>> constraintViolations = validator
-                .validateProperty(taluka, "code");
+        Set<ConstraintViolation<Block>> constraintViolations = validator
+                .validateProperty(block, "code");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
 
-        taluka.setCode("");
+        block.setCode("");
 
-        constraintViolations = validator.validateProperty(taluka, "code");
+        constraintViolations = validator.validateProperty(block, "code");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
@@ -105,10 +105,10 @@ public class TalukaUnitTest {
 
     @Test
     public void testDistrictNull() {
-        Taluka taluka = new Taluka();
+        Block block = new Block();
 
-        Set<ConstraintViolation<Taluka>> constraintViolations = validator
-                .validateProperty(taluka, "district");
+        Set<ConstraintViolation<Block>> constraintViolations = validator
+                .validateProperty(block, "district");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("may not be null", constraintViolations.iterator().next().getMessage());

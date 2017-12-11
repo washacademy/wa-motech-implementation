@@ -56,7 +56,7 @@ public class District extends MdsEntity {
     @Cascade(delete = true)
     @Persistent(mappedBy = "district", defaultFetchGroup = "false")
     @JsonManagedReference
-    private List<Taluka> talukas;
+    private List<Block> blocks;
 
     @Field
     @JsonBackReference
@@ -67,7 +67,7 @@ public class District extends MdsEntity {
     private Language language;
 
     public District() {
-        this.talukas = new ArrayList<>();
+        this.blocks = new ArrayList<>();
     }
 
     public String getName() {
@@ -102,12 +102,12 @@ public class District extends MdsEntity {
         this.state = state;
     }
 
-    public List<Taluka> getTalukas() {
-        return talukas;
+    public List<Block> getBlocks() {
+        return blocks;
     }
 
-    public void setTalukas(List<Taluka> talukas) {
-        this.talukas = talukas;
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
     }
 
     public Circle getCircle() {
