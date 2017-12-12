@@ -22,7 +22,7 @@ import org.motechproject.nms.flw.domain.SwcJobStatus;
 import org.motechproject.nms.flw.domain.Swachchagrahi;
 import org.motechproject.nms.flw.repository.SwcDataService;
 import org.motechproject.nms.flw.service.SwcService;
-import org.motechproject.nms.flwUpdate.service.FrontLineWorkerUpdateImportService;
+import org.motechproject.nms.flwUpdate.service.SwcUpdateImportService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.region.repository.CircleDataService;
@@ -81,7 +81,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Inject
     TestingService testingService;
     @Inject
-    FrontLineWorkerUpdateImportService frontLineWorkerUpdateImportService;
+    SwcUpdateImportService swcUpdateImportService;
     @Inject
     CsvAuditRecordDataService csvAuditRecordDataService;
     @Inject
@@ -111,7 +111,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenStateNotPresent() throws Exception {
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // Test when state not in database
@@ -121,14 +121,14 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,2");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // Test when language not provided
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenLanguageNotPresent() throws Exception {
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // Test when language not in database
@@ -138,14 +138,14 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // Test when only NMS Id found and FLW not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenFLWIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createLanguageReaderWithHeaders("72185,,,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // NMS_FT_553
@@ -153,7 +153,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenMCTSIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createLanguageReaderWithHeaders(",210302604211400029,,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // NMS_FT_554
@@ -161,7 +161,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenMSISDProvidedButNotInDatabase() throws Exception {
         Reader reader = createLanguageReaderWithHeaders(",,9439986187,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
     }
 
     // Test NMS Id takes precedence over MCTS ID
@@ -182,7 +182,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
 
         flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
@@ -206,7 +206,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,,2000000000,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
 
         flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
@@ -232,7 +232,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,2000000000,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
 
         flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
@@ -255,7 +255,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,1000000000,hi,1");
-        frontLineWorkerUpdateImportService.importLanguageData(reader);
+        swcUpdateImportService.importLanguageData(reader);
 
         flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
@@ -277,7 +277,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
-        frontLineWorkerUpdateImportService.importLanguageData(read("csv/flw_language_update.csv"));
+        swcUpdateImportService.importLanguageData(read("csv/flw_language_update.csv"));
 
         flw = swcService.getByContactNumber(1000000000L);
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
@@ -293,28 +293,28 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenNewMsisdnNotPresent() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,9439986187,,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // Test when only NMS Id found and FLW not in database
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenFLWIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders("72185,,,9439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // Test when only MCTS Id found and FLW not in database
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMCTSIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders(",210302604211400029,,9439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // Test when only MSISDN found and FLW not in database
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButNotInDatabase() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,9439986188,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // Test NMS Id takes precedence over MCTS ID
@@ -332,7 +332,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,,9439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNull(flw);
@@ -357,7 +357,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,,2000000000,9439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
@@ -385,7 +385,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,2000000000,9439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
@@ -412,7 +412,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         createMaRecords(1000000000L);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,9439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
@@ -437,7 +437,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
-        frontLineWorkerUpdateImportService.importMSISDNData(read("csv/flw_msisdn_update.csv"));
+        swcUpdateImportService.importMSISDNData(read("csv/flw_msisdn_update.csv"));
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
@@ -461,7 +461,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,09439986187,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
@@ -475,7 +475,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButNotValid() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,AAAAAAAAAA,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // NMS_FT_557
@@ -483,7 +483,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButTooShort() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,943998618,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // NMS_FT_556
@@ -497,7 +497,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(flw);
 
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,1000000000,1");
-        frontLineWorkerUpdateImportService.importMSISDNData(reader);
+        swcUpdateImportService.importMSISDNData(reader);
     }
 
     // Test Ma Update when new MSISDN associated with existing FLW
@@ -517,7 +517,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,1000000000,1");
 
         try {
-            frontLineWorkerUpdateImportService.importMSISDNData(reader);
+            swcUpdateImportService.importMSISDNData(reader);
         } catch(CsvImportDataException e) {
 
             assertBookmark("1000000000", 1);   // Records expected is 1 instead of 2 since update fails

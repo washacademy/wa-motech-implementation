@@ -5,23 +5,23 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="mobileAcademyService"
-                  interface="org.motechproject.nms.mobileacademy.service.MobileAcademyService" />
+    <osgi:service ref="washAcademyService"
+                  interface="org.motechproject.nms.washacademy.service.WashAcademyService" />
 
     <osgi:service ref="courseNotificationService"
-                  interface="org.motechproject.nms.mobileacademy.service.CourseNotificationService" />
+                  interface="org.motechproject.nms.washacademy.service.CourseNotificationService" />
 
     <osgi:service ref="settingsService"
-                  interface="org.motechproject.nms.mobileacademy.service.SettingsService" />
+                  interface="org.motechproject.nms.washacademy.service.SettingsService" />
 
     <osgi:reference id="nmsCourseDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.NmsCourseDataService" />
+                    interface="org.motechproject.nms.washacademy.repository.NmsCourseDataService" />
 
     <osgi:reference id="courseCompletionRecordDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService" />
+                    interface="org.motechproject.nms.washacademy.repository.CourseCompletionRecordDataService" />
 
     <osgi:reference id="mtrainingModuleActivityRecordAuditDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.MtrainingModuleActivityRecordAuditDataService" />
+                    interface="org.motechproject.nms.washacademy.repository.MtrainingModuleActivityRecordAuditDataService" />
 
     <osgi:reference id="activityDataService"
                     interface="org.motechproject.mtraining.repository.ActivityDataService" />
@@ -38,8 +38,8 @@
     <osgi:reference id="activityService"
                     interface="org.motechproject.mtraining.service.ActivityService" />
 
-    <osgi:reference id="frontlineWorkerService"
-                    interface="org.motechproject.nms.flw.service.SwcService" />
+    <osgi:reference id="swcService"
+                    interface="org.motechproject.nms.swc.service.SwcService" />
 
     <osgi:reference id="districtDataService"
                     interface="org.motechproject.nms.region.repository.DistrictDataService" />
@@ -54,6 +54,6 @@
                     interface="org.motechproject.scheduler.service.MotechSchedulerService" />
 
     <osgi:service ref="mobileAcademyService"
-                    interface="org.motechproject.nms.mobileacademy.service.MobileAcademyService" />
+                    interface="org.motechproject.nms.washacademy.service.WashAcademyService" />
 
 </beans>

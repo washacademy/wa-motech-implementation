@@ -25,7 +25,7 @@ import org.motechproject.nms.flw.exception.SwcExistingRecordException;
 import org.motechproject.nms.flw.exception.SwcImportException;
 import org.motechproject.nms.flw.service.SwcService;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
-import org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService;
+import org.motechproject.nms.flwUpdate.service.SwcImportService;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService;
 import org.motechproject.nms.kilkari.service.MctsBeneficiaryValueProcessor;
@@ -132,7 +132,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     private StateDataService stateDataService;
 
     @Autowired
-    private FrontLineWorkerImportService frontLineWorkerImportService;
+    private SwcImportService swcImportService;
 
     @Autowired
     private RchImportFailRecordDataService rchImportFailRecordDataService;
@@ -672,7 +672,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                         try {
                             // get user property map
                             Map<String, Object> recordMap = record.toFlwRecordMap();    // temp var used for debugging
-                            frontLineWorkerImportService.importRchFrontLineWorker(recordMap, state);
+                            swcImportService.importRchFrontLineWorker(recordMap, state);
                             flwRejectionService.createUpdate(flwRejectionRch(record, true, null, action));
                             saved++;
                         } catch (InvalidLocationException e) {
