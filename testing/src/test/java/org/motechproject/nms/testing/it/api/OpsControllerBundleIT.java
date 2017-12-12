@@ -31,15 +31,8 @@ import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.Language;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.*;
 import org.motechproject.nms.region.service.DistrictService;
 import org.motechproject.nms.region.service.LanguageService;
@@ -90,8 +83,8 @@ public class OpsControllerBundleIT extends BasePaxIT {
             TestContext.getJettyPort());
     State state;
     District district;
-    Taluka taluka;
-    Village village;
+    Block block;
+    Panchayat panchayat;
     HealthBlock healthBlock;
     HealthFacilityType healthFacilityType;
     HealthFacility healthFacility;
@@ -232,21 +225,26 @@ public class OpsControllerBundleIT extends BasePaxIT {
         Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         assertNotNull(flw.getState());
         assertNotNull(flw.getDistrict());
-        assertNull(flw.getTaluka());    // null since we don't create it by default in helper
-        assertNull(flw.getVillage());   // null since we don't create it by default in helper
+        assertNull(flw.getBlock());    // null since we don't create it by default in helper
+        assertNull(flw.getPanchayat());   // null since we don't create it by default in helper
 
         AddFlwRequest addFlwRequest = getAddRequestASHA();
-        addFlwRequest.setTalukaId(taluka.getCode());
-        addFlwRequest.setVillageId(village.getVcode());
+        addFlwRequest.setTalukaId(block.getCode());
+        addFlwRequest.setVillageId(panchayat.getVcode());
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
+<<<<<<< HEAD
+        // refetch and check that block and panchayat are set
+        flw = frontLineWorkerService.getByContactNumber(9876543210L);
+=======
         // refetch and check that taluka and village are set
         flw = swcService.getByContactNumber(9876543210L);
+>>>>>>> fc3adb13436a78c17ddf5780770193ee02237ac6
         assertNotNull(flw.getState());
         assertNotNull(flw.getDistrict());
-        assertNotNull(flw.getTaluka());
-        assertNotNull(flw.getVillage());
+        assertNotNull(flw.getBlock());
+        assertNotNull(flw.getPanchayat());
     }
 
     @Test
@@ -389,15 +387,20 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateNoTaluka() throws IOException, InterruptedException {
 
         // create flw
-        createFlwHelper("Taluka Singh", 9876543210L, "123");
+        createFlwHelper("Block Singh", 9876543210L, "123");
 
         AddFlwRequest updateRequest = getAddRequestASHA();
-        updateRequest.setTalukaId("999");   // taluka 999 doesn't exist. this shouldn't be updated
+        updateRequest.setTalukaId("999");   // block 999 doesn't exist. this shouldn't be updated
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
+<<<<<<< HEAD
+        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
+        assertNull("Block update rejected", flw.getBlock());
+=======
         Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
         assertNull("Taluka update rejected", flw.getTaluka());
+>>>>>>> fc3adb13436a78c17ddf5780770193ee02237ac6
     }
 
     @Test
@@ -555,24 +558,24 @@ public class OpsControllerBundleIT extends BasePaxIT {
         healthBlock.setCode(1L);
         healthBlock.getHealthFacilities().add(healthFacility);
 
-        village = new Village();
-        village.setName("Village 1");
-        village.setRegionalName("Village 1");
-        village.setVcode(1L);
+        panchayat = new Panchayat();
+        panchayat.setName("Panchayat 1");
+        panchayat.setRegionalName("Panchayat 1");
+        panchayat.setVcode(1L);
 
-        taluka = new Taluka();
-        taluka.setName("Taluka 1");
-        taluka.setRegionalName("Taluka 1");
-        taluka.setIdentity(1);
-        taluka.setCode("0004");
-        taluka.getVillages().add(village);
-        taluka.getHealthBlocks().add(healthBlock);
+        block = new Block();
+        block.setName("Block 1");
+        block.setRegionalName("Block 1");
+        block.setIdentity(1);
+        block.setCode("0004");
+        block.getPanchayats().add(panchayat);
+        block.getHealthBlocks().add(healthBlock);
 
         district = new District();
         district.setName("District 1");
         district.setRegionalName("District 1");
         district.setCode(1L);
-        district.getTalukas().add(taluka);
+        district.getBlocks().add(block);
 
         state = new State();
         state.setName("State 1");

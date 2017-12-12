@@ -11,8 +11,8 @@ import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
-import org.motechproject.nms.rejectionhandler.service.FlwRejectionService;
+import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
+import org.motechproject.nms.rejectionhandler.service.SwcRejectionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FlwCsvServiceImpl.class);
 
     @Autowired
-    private FlwRejectionService flwRejectionService;
+    private SwcRejectionService flwRejectionService;
 
     @Autowired
     private SwcService swcService;
@@ -232,8 +232,8 @@ public class FlwCsvServiceImpl implements FlwCsvService {
         }
     }
 
-    public static FlwImportRejection flwRejectionMcts(AddFlwRequest record, Boolean accepted, String rejectionReason, String action) {
-        FlwImportRejection flwImportRejection = new FlwImportRejection();
+    public static SwcImportRejection flwRejectionMcts(AddFlwRequest record, Boolean accepted, String rejectionReason, String action) {
+        SwcImportRejection flwImportRejection = new SwcImportRejection();
         flwImportRejection.setGfName(record.getName());
         flwImportRejection.setFlwId(Long.parseLong(record.getMctsFlwId()));
         flwImportRejection.setMsisdn(record.getContactNumber().toString());
@@ -254,8 +254,8 @@ public class FlwCsvServiceImpl implements FlwCsvService {
         return flwImportRejection;
     }
 
-    public static FlwImportRejection flwRejectionRch(AddRchFlwRequest record, Boolean accepted, String rejectionReason, String action) {
-        FlwImportRejection flwImportRejection = new FlwImportRejection();
+    public static SwcImportRejection flwRejectionRch(AddRchFlwRequest record, Boolean accepted, String rejectionReason, String action) {
+        SwcImportRejection flwImportRejection = new SwcImportRejection();
         flwImportRejection.setGfName(record.getName());
         flwImportRejection.setFlwId(Long.parseLong(record.getFlwId()));
         flwImportRejection.setMsisdn(record.getMsisdn().toString());

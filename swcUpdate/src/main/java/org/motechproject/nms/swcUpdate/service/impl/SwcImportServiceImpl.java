@@ -36,7 +36,7 @@ import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.region.service.LocationService;
-import org.motechproject.nms.rejectionhandler.service.FlwRejectionService;
+import org.motechproject.nms.rejectionhandler.service.SwcRejectionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class SwcImportServiceImpl implements SwcImportService {
     private ContactNumberAuditDataService contactNumberAuditDataService;
 
     @Autowired
-    private FlwRejectionService flwRejectionService;
+    private SwcRejectionService flwRejectionService;
 
     /*
         Expected file format:

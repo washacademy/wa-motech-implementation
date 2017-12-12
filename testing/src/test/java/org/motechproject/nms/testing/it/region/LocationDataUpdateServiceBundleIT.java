@@ -11,22 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.csv.domain.CsvAuditRecord;
 import org.motechproject.nms.csv.repository.CsvAuditRecordDataService;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.DistrictDataService;
-import org.motechproject.nms.region.repository.HealthBlockDataService;
-import org.motechproject.nms.region.repository.HealthFacilityDataService;
-import org.motechproject.nms.region.repository.HealthFacilityTypeDataService;
-import org.motechproject.nms.region.repository.HealthSubFacilityDataService;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.region.repository.TalukaDataService;
-import org.motechproject.nms.region.repository.VillageDataService;
+import org.motechproject.nms.region.repository.BlockDataService;
+import org.motechproject.nms.region.repository.PanchayatDataService;
 import org.motechproject.nms.testing.it.api.utils.RequestBuilder;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.nms.tracking.domain.ChangeLog;
@@ -66,7 +56,7 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     private DistrictDataService districtDataService;
 
     @Inject
-    private TalukaDataService talukaDataService;
+    private BlockDataService blockDataService;
 
     @Inject
     private HealthBlockDataService healthBlockDataService;
@@ -78,7 +68,7 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     private HealthFacilityDataService healthFacilityDataService;
 
     @Inject
-    private VillageDataService villageDataService;
+    private PanchayatDataService panchayatDataService;
 
     @Inject
     private CsvAuditRecordDataService csvAuditRecordDataService;
@@ -104,15 +94,15 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         return state;
     }
 
-    private Taluka createTaluka(District district) {
-        Taluka taluka = new Taluka();
-        taluka.setDistrict(district);
-        taluka.setCode("TALUKA");
-        taluka.setName("taluka name");
-        taluka.setRegionalName("taluka regional name");
-        taluka.setIdentity(2);
-        talukaDataService.create(taluka);
-        return taluka;
+    private Block createTaluka(District district) {
+        Block block = new Block();
+        block.setDistrict(district);
+        block.setCode("TALUKA");
+        block.setName("block name");
+        block.setRegionalName("block regional name");
+        block.setIdentity(2);
+        blockDataService.create(block);
+        return block;
     }
 
     private District createDistrict(State state) {
@@ -125,9 +115,9 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         return district;
     }
 
-    private HealthBlock createHealthBlock(Taluka taluka) {
+    private HealthBlock createHealthBlock(Block block) {
         HealthBlock healthBlock = new HealthBlock();
-        healthBlock.setTaluka(taluka);
+        healthBlock.setBlock(block);
         healthBlock.setCode(6l);
         healthBlock.setName("health block name");
         healthBlock.setRegionalName("health block regional name");
@@ -248,12 +238,12 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // add district
         District district = createDistrict(state);
 
-        // add taluka
-        Taluka taluka = createTaluka(district);
+        // add block
+        Block block = createTaluka(district);
 
         // add health block
         HealthBlock orignalHealthBlock = new HealthBlock();
-        orignalHealthBlock.setTaluka(taluka);
+        orignalHealthBlock.setBlock(block);
         orignalHealthBlock.setCode(6l);
         orignalHealthBlock.setName("name");
         orignalHealthBlock.setRegionalName("rn");
@@ -313,11 +303,11 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // add district
         District district = createDistrict(state);
 
-        // add taluka
-        Taluka taluka = createTaluka(district);
+        // add block
+        Block block = createTaluka(district);
 
         // add health block
-        HealthBlock healthBlock = createHealthBlock(taluka);
+        HealthBlock healthBlock = createHealthBlock(block);
 
         // add health facility type
         HealthFacilityType healthFacilityType = new HealthFacilityType();
@@ -359,7 +349,7 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify village location data is updated successfully.
+     * To verify panchayat location data is updated successfully.
      */
     @Test
     public void verifyFT260() throws InterruptedException, IOException {
@@ -369,39 +359,39 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // add district
         District district = createDistrict(state);
 
-        // add taluka
-        Taluka taluka = createTaluka(district);
+        // add block
+        Block block = createTaluka(district);
 
-        // add Census village
-        Village originalCensusVillage = new Village();
-        originalCensusVillage.setName("name");
-        originalCensusVillage.setRegionalName("rn");
-        originalCensusVillage.setTaluka(taluka);
-        originalCensusVillage.setVcode(3l);
-        originalCensusVillage = villageDataService
-                .create(originalCensusVillage);
-        assertEquals("name", originalCensusVillage.getName());
+        // add Census panchayat
+        Panchayat originalCensusPanchayat = new Panchayat();
+        originalCensusPanchayat.setName("name");
+        originalCensusPanchayat.setRegionalName("rn");
+        originalCensusPanchayat.setBlock(block);
+        originalCensusPanchayat.setVcode(3l);
+        originalCensusPanchayat = panchayatDataService
+                .create(originalCensusPanchayat);
+        assertEquals("name", originalCensusPanchayat.getName());
 
         ChangeLog changeLog = changeLogDataService
                 .findByEntityNameAndInstanceId(
-                        originalCensusVillage.getClass().getName(),
-                        originalCensusVillage.getId()).get(0);
+                        originalCensusPanchayat.getClass().getName(),
+                        originalCensusPanchayat.getId()).get(0);
         assertTrue(changeLog.getChange().contains(
                 "regionalName(null, rn)"));
         assertTrue(changeLog.getChange().contains("name(null, name)"));
         changeLogDataService.delete(changeLog);
 
-        // update census village using census_village.csv
+        // update census panchayat using census_village.csv
         HttpResponse response = importCsvFileForLocationData("censusVillage",
                 "census_village.csv");
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-        Village updatedCensusVillage = villageDataService.retrieve("code", 3l);
-        assertEquals(originalCensusVillage.getId(),
-                updatedCensusVillage.getId());
-        assertEquals("census village name", updatedCensusVillage.getName());
-        assertEquals("census village regional name",
-                updatedCensusVillage.getRegionalName());
+        Panchayat updatedCensusPanchayat = panchayatDataService.retrieve("code", 3l);
+        assertEquals(originalCensusPanchayat.getId(),
+                updatedCensusPanchayat.getId());
+        assertEquals("census panchayat name", updatedCensusPanchayat.getName());
+        assertEquals("census panchayat regional name",
+                updatedCensusPanchayat.getRegionalName());
 
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
@@ -414,16 +404,16 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // assert location history
         changeLog = changeLogDataService
                 .findByEntityNameAndInstanceId(
-                        originalCensusVillage.getClass().getName(),
-                        originalCensusVillage.getId()).get(0);
+                        originalCensusPanchayat.getClass().getName(),
+                        originalCensusPanchayat.getId()).get(0);
         assertTrue(changeLog.getChange().contains(
-                "regionalName(rn, census village regional name)"));
+                "regionalName(rn, census panchayat regional name)"));
         assertTrue(changeLog.getChange().contains(
-                "name(name, census village name)"));
+                "name(name, census panchayat name)"));
     }
 
     /*
-     * To verify taluka location data is rejected when district code is having
+     * To verify block location data is rejected when district code is having
      * invalid value.
      */
     @Test
@@ -433,26 +423,26 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
 
         // district with district code1 not added
 
-        // add taluka with district code 1 using taluka.csv
-        HttpResponse response = importCsvFileForLocationData("taluka",
-                "taluka.csv");
+        // add block with district code 1 using block.csv
+        HttpResponse response = importCsvFileForLocationData("block",
+                "block.csv");
         assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
                 .getStatusCode());
 
-        Taluka taluka = talukaDataService.retrieve("code", "TALUKA");
-        assertNull(taluka);
+        Block block = blockDataService.retrieve("code", "TALUKA");
+        assertNull(block);
 
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
-        assertEquals("region/data/import/taluka", csvAuditRecord.getEndpoint());
+        assertEquals("region/data/import/block", csvAuditRecord.getEndpoint());
         assertTrue(csvAuditRecord.getOutcome().contains(FAILURE));
-        assertEquals("taluka.csv", csvAuditRecord.getFile());
+        assertEquals("block.csv", csvAuditRecord.getFile());
 
     }
 
     /**
-     * To verify taluka location data is updated successfully.
+     * To verify block location data is updated successfully.
      */
     @Test
     public void verifyFT232() throws InterruptedException, IOException {
@@ -462,54 +452,54 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // add district
         District district = createDistrict(state);
 
-        // add taluka
-        Taluka originalTaluka = new Taluka();
-        originalTaluka.setDistrict(district);
-        originalTaluka.setCode("TALUKA");
-        originalTaluka.setName("name");
-        originalTaluka.setRegionalName("rn");
-        originalTaluka.setIdentity(2);
-        originalTaluka = talukaDataService.create(originalTaluka);
+        // add block
+        Block originalBlock = new Block();
+        originalBlock.setDistrict(district);
+        originalBlock.setCode("TALUKA");
+        originalBlock.setName("name");
+        originalBlock.setRegionalName("rn");
+        originalBlock.setIdentity(2);
+        originalBlock = blockDataService.create(originalBlock);
 
-        assertEquals("name", originalTaluka.getName());
-        assertEquals("rn", originalTaluka.getRegionalName());
+        assertEquals("name", originalBlock.getName());
+        assertEquals("rn", originalBlock.getRegionalName());
 
         ChangeLog changeLog = changeLogDataService
                 .findByEntityNameAndInstanceId(
-                        originalTaluka.getClass().getName(),
-                        originalTaluka.getId()).get(0);
+                        originalBlock.getClass().getName(),
+                        originalBlock.getId()).get(0);
         assertTrue(changeLog.getChange().contains("regionalName(null, rn)"));
         assertTrue(changeLog.getChange().contains("name(null, name)"));
         changeLogDataService.delete(changeLog);
 
-        // update taluka name to "taluka name" using taluka.csv
-        HttpResponse response = importCsvFileForLocationData("taluka",
-                "taluka.csv");
+        // update block name to "block name" using block.csv
+        HttpResponse response = importCsvFileForLocationData("block",
+                "block.csv");
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-        Taluka updatedTaluka = talukaDataService.retrieve("code", "TALUKA");
-        assertEquals(originalTaluka.getId(), updatedTaluka.getId());// refer
+        Block updatedBlock = blockDataService.retrieve("code", "TALUKA");
+        assertEquals(originalBlock.getId(), updatedBlock.getId());// refer
                                                                     // same
-                                                                    // taluka
-        assertEquals("taluka name", updatedTaluka.getName());
-        assertEquals("taluka regional name", updatedTaluka.getRegionalName());
+                                                                    // block
+        assertEquals("block name", updatedBlock.getName());
+        assertEquals("block regional name", updatedBlock.getRegionalName());
 
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
-        assertEquals("region/data/import/taluka",
+        assertEquals("region/data/import/block",
                 csvAuditRecord.getEndpoint());
         assertEquals(SUCCESS, csvAuditRecord.getOutcome());
-        assertEquals("taluka.csv", csvAuditRecord.getFile());
+        assertEquals("block.csv", csvAuditRecord.getFile());
 
         // assert location history
         changeLog = changeLogDataService
                 .findByEntityNameAndInstanceId(
-                originalTaluka.getClass().getName(), originalTaluka.getId())
+                originalBlock.getClass().getName(), originalBlock.getId())
                 .get(0);
         assertTrue(changeLog.getChange().contains(
-                "regionalName(rn, taluka regional name)"));
-        assertTrue(changeLog.getChange().contains("name(name, taluka name)"));
+                "regionalName(rn, block regional name)"));
+        assertTrue(changeLog.getChange().contains("name(name, block name)"));
 
     }
 
@@ -524,11 +514,11 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // add district
         District district = createDistrict(state);
 
-        // add taluka
-        Taluka taluka = createTaluka(district);
+        // add block
+        Block block = createTaluka(district);
 
         // add health block
-        HealthBlock healthBlock = createHealthBlock(taluka);
+        HealthBlock healthBlock = createHealthBlock(block);
 
         // add health facility type
         HealthFacilityType healthFacilityType = new HealthFacilityType();

@@ -31,26 +31,16 @@ import org.motechproject.nms.kilkari.repository.MctsMotherDataService;
 import org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.region.domain.Circle;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.CircleDataService;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.LanguageDataService;
 import org.motechproject.nms.region.repository.StateDataService;
+import org.motechproject.nms.region.service.BlockService;
 import org.motechproject.nms.region.service.DistrictService;
-import org.motechproject.nms.region.service.HealthBlockService;
-import org.motechproject.nms.region.service.HealthFacilityService;
-import org.motechproject.nms.region.service.HealthSubFacilityService;
 import org.motechproject.nms.region.service.LanguageService;
-import org.motechproject.nms.region.service.TalukaService;
-import org.motechproject.nms.region.service.VillageService;
+import org.motechproject.nms.region.service.PanchayatService;
 import org.motechproject.nms.testing.it.utils.RegionHelper;
 import org.motechproject.nms.testing.it.utils.SubscriptionHelper;
 import org.motechproject.nms.testing.service.TestingService;
@@ -111,7 +101,7 @@ public class RchBeneficiaryImportServiceBundleIT extends BasePaxIT {
     @Inject
     SubscriberService subscriberService;
     @Inject
-    TalukaService talukaDataService;
+    BlockService talukaDataService;
     @Inject
     HealthBlockService healthBlockService;
     @Inject
@@ -119,7 +109,7 @@ public class RchBeneficiaryImportServiceBundleIT extends BasePaxIT {
     @Inject
     HealthSubFacilityService healthSubFacilityService;
     @Inject
-    VillageService villageService;
+    PanchayatService panchayatService;
     @Inject
     SubscriptionDataService subscriptionDataService;
     @Inject
@@ -167,23 +157,23 @@ public class RchBeneficiaryImportServiceBundleIT extends BasePaxIT {
         District district5 = createDistrict(state21, 5L, "Rectangle", null, circle2);
         state21.getDistricts().addAll(Arrays.asList(district2, district3, district4, district5));
 
-        Taluka taluka24 = createTaluka(district2, "0024", "Laikera P.S.", 24);
-        district2.getTalukas().add(taluka24);
+        Block block24 = createTaluka(district2, "0024", "Laikera P.S.", 24);
+        district2.getBlocks().add(block24);
 
-        Taluka taluka26 = createTaluka(district3, "0026", "Govindpur P.S.", 26);
-        district3.getTalukas().add(taluka26);
+        Block block26 = createTaluka(district3, "0026", "Govindpur P.S.", 26);
+        district3.getBlocks().add(block26);
 
-        Taluka taluka46 = createTaluka(district4, "0046", "Debagarh P.S.", 46);
-        district4.getTalukas().add(taluka46);
+        Block block46 = createTaluka(district4, "0046", "Debagarh P.S.", 46);
+        district4.getBlocks().add(block46);
 
-        HealthBlock healthBlock259 = createHealthBlock(taluka24, 259L, "Laikera", "hq");
-        taluka24.getHealthBlocks().add(healthBlock259);
+        HealthBlock healthBlock259 = createHealthBlock(block24, 259L, "Laikera", "hq");
+        block24.getHealthBlocks().add(healthBlock259);
 
-        HealthBlock healthBlock453 = createHealthBlock(taluka26, 453L, "Bamara", "hq");
-        taluka26.getHealthBlocks().add(healthBlock453);
+        HealthBlock healthBlock453 = createHealthBlock(block26, 453L, "Bamara", "hq");
+        block26.getHealthBlocks().add(healthBlock453);
 
-        HealthBlock healthBlock153 = createHealthBlock(taluka46, 153L, "Tileibani", "hq");
-        taluka46.getHealthBlocks().add(healthBlock153);
+        HealthBlock healthBlock153 = createHealthBlock(block46, 153L, "Tileibani", "hq");
+        block46.getHealthBlocks().add(healthBlock153);
 
         HealthFacilityType facilityType635 = createHealthFacilityType("Mundrajore CHC", 635L);
         HealthFacility healthFacility635 = createHealthFacility(healthBlock259, 635L, "Mundrajore CHC", facilityType635);
@@ -209,18 +199,18 @@ public class RchBeneficiaryImportServiceBundleIT extends BasePaxIT {
         HealthSubFacility subFacilityType342 = createHealthSubFacility("El Dorado", 342L, healthFacility114);
         healthFacility114.getHealthSubFacilities().add(subFacilityType342);
 
-        Village village10004693 = createVillage(taluka24, 10004693L, 0, "Khairdihi");
-        Village village10004691 = createVillage(taluka24, 10004691L, 0, "Gambhariguda");
-        Village village1509 = createVillage(taluka24, 0, 1509L, "Mundrajore");
-        Village village1505 = createVillage(taluka24, 0, 1505L, "Kulemura");
-        Village village10004690 = createVillage(taluka24, 10004690L, 0, "Ampada");
-        Village village10004697 = createVillage(taluka24, 10004697L, 0, "Saletikra");
+        Panchayat panchayat10004693 = createVillage(block24, 10004693L, 0, "Khairdihi");
+        Panchayat panchayat10004691 = createVillage(block24, 10004691L, 0, "Gambhariguda");
+        Panchayat panchayat1509 = createVillage(block24, 0, 1509L, "Mundrajore");
+        Panchayat panchayat1505 = createVillage(block24, 0, 1505L, "Kulemura");
+        Panchayat panchayat10004690 = createVillage(block24, 10004690L, 0, "Ampada");
+        Panchayat panchayat10004697 = createVillage(block24, 10004697L, 0, "Saletikra");
 
-        taluka24.getVillages().addAll(Arrays.asList(village10004693, village10004691, village1509, village1505,
-                village10004690, village10004697));
+        block24.getPanchayats().addAll(Arrays.asList(panchayat10004693, panchayat10004691, panchayat1509, panchayat1505,
+                panchayat10004690, panchayat10004697));
 
-        Village village3089 = createVillage(taluka46, 0, 3089L, "Podapara");
-        taluka46.getVillages().add(village3089);
+        Panchayat panchayat3089 = createVillage(block46, 0, 3089L, "Podapara");
+        block46.getPanchayats().add(panchayat3089);
 
         stateDataService.create(state21);
     }
@@ -354,10 +344,10 @@ public class RchBeneficiaryImportServiceBundleIT extends BasePaxIT {
         // verify location data was created on the fly
         State state = stateDataService.findByCode(21L);
         District district = districtService.findByStateAndCode(state, 3L);
-        Taluka taluka = talukaDataService.findByDistrictAndCode(district, "26");
-        Assert.assertEquals("Govindpur P.S.", taluka.getName());
+        Block block = talukaDataService.findByDistrictAndCode(district, "26");
+        Assert.assertEquals("Govindpur P.S.", block.getName());
 
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(taluka, 453L);
+        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 453L);
         Assert.assertEquals("Bamara", healthBlock.getName());
 
         HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 41L);
@@ -366,8 +356,8 @@ public class RchBeneficiaryImportServiceBundleIT extends BasePaxIT {
         HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, 7389L);
         Assert.assertEquals("Babuniktimal", healthSubFacility.getName());
 
-        Village village = villageService.findByTalukaAndVcodeAndSvid(taluka, 555L, 0L);
-        Assert.assertEquals("Village", village.getName());
+        Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 555L, 0L);
+        Assert.assertEquals("Panchayat", panchayat.getName());
 
     }
 

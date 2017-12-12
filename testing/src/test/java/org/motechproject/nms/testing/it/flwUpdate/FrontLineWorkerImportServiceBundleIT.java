@@ -25,26 +25,15 @@ import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
-import org.motechproject.nms.region.domain.Circle;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.Language;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.CircleDataService;
 import org.motechproject.nms.region.repository.LanguageDataService;
 import org.motechproject.nms.region.repository.StateDataService;
+import org.motechproject.nms.region.service.BlockService;
 import org.motechproject.nms.region.service.DistrictService;
-import org.motechproject.nms.region.service.HealthBlockService;
-import org.motechproject.nms.region.service.HealthFacilityService;
-import org.motechproject.nms.region.service.HealthSubFacilityService;
 import org.motechproject.nms.region.service.LanguageService;
-import org.motechproject.nms.region.service.TalukaService;
-import org.motechproject.nms.region.service.VillageService;
+import org.motechproject.nms.region.service.PanchayatService;
 import org.motechproject.nms.testing.it.api.utils.RequestBuilder;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -106,7 +95,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Inject
     SwcService swcService;
     @Inject
-    TalukaService talukaDataService;
+    BlockService talukaDataService;
     @Inject
     HealthBlockService healthBlockService;
     @Inject
@@ -114,7 +103,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Inject
     HealthSubFacilityService healthSubFacilityService;
     @Inject
-    VillageService villageService;
+    PanchayatService panchayatService;
     @Inject
     SwcImportService swcImportService;
     @Inject
@@ -157,14 +146,14 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         District bargarh = createDistrict(state1, 1L, "Bargarh");
         District puri = createDistrict(state1, 18L, "Puri");
 
-        Taluka similiguda = createTaluka(kuraput, "0463", "Similiguda", 1);
-        Taluka Phulabani = createTaluka(kandhamal, "0360", "Phulabani Town", 1);
-        Taluka kotagarh = createTaluka(kandhamal, "0371", "Kotagarh", 1);
-        Taluka digapahandi = createTaluka(ganjam, "0343", "DIGAPAHANDI", 1);
-        Taluka lakhanpur = createTaluka(jharsuguda, "0017", "Lakhanpur P.S.", 1);
-        Taluka baliguda = createTaluka(kandhamal, "0367", "Baliguda", 1);
-        Taluka bhatli = createTaluka(bargarh, "0013", "Bhatli", 1);
-        Taluka pipili = createTaluka(puri, "0304", "Pipili", 1);
+        Block similiguda = createTaluka(kuraput, "0463", "Similiguda", 1);
+        Block Phulabani = createTaluka(kandhamal, "0360", "Phulabani Town", 1);
+        Block kotagarh = createTaluka(kandhamal, "0371", "Kotagarh", 1);
+        Block digapahandi = createTaluka(ganjam, "0343", "DIGAPAHANDI", 1);
+        Block lakhanpur = createTaluka(jharsuguda, "0017", "Lakhanpur P.S.", 1);
+        Block baliguda = createTaluka(kandhamal, "0367", "Baliguda", 1);
+        Block bhatli = createTaluka(bargarh, "0013", "Bhatli", 1);
+        Block pipili = createTaluka(puri, "0304", "Pipili", 1);
 
         HealthBlock kunduli = createHealthBlock(similiguda, 405L, "Kunduli", "hq");
         HealthBlock Phulbani  = createHealthBlock(Phulabani, 348L, "Phulbani", "hq");
@@ -195,8 +184,8 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         HealthSubFacility Bharatipur_SC = createHealthSubFacility("Bharatipur SC", 5159L, Managalpur_CHC);
         HealthSubFacility Danagahiri_SC = createHealthSubFacility("Danagahiri SC", 5167L, Managalpur_CHC);
 
-        Village Bharatipur = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
-        Village Nuasahi = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
+        Panchayat Bharatipur = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
+        Panchayat Nuasahi = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
 
         similiguda.getHealthBlocks().add(kunduli);
         Phulabani.getHealthBlocks().add(Phulbani);
@@ -223,14 +212,14 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         BHATLI_CHC.getHealthSubFacilities().add(BHATLI_SC);
         Managalpur_CHC.getHealthSubFacilities().addAll(Arrays.asList(Bharatipur_SC, Danagahiri_SC));
 
-        pipili.getVillages().addAll(Arrays.asList(Bharatipur, Nuasahi));
+        pipili.getPanchayats().addAll(Arrays.asList(Bharatipur, Nuasahi));
 
-        kuraput.getTalukas().add(similiguda);
-        kandhamal.getTalukas().addAll(Arrays.asList(Phulabani, kotagarh, baliguda));
-        ganjam.getTalukas().add(digapahandi);
-        jharsuguda.getTalukas().add(lakhanpur);
-        bargarh.getTalukas().add(bhatli);
-        puri.getTalukas().add(pipili);
+        kuraput.getBlocks().add(similiguda);
+        kandhamal.getBlocks().addAll(Arrays.asList(Phulabani, kotagarh, baliguda));
+        ganjam.getBlocks().add(digapahandi);
+        jharsuguda.getBlocks().add(lakhanpur);
+        bargarh.getBlocks().add(bhatli);
+        puri.getBlocks().add(pipili);
 
         state1.getDistricts().addAll(Arrays.asList(district11, district12,
                 kuraput, kandhamal, ganjam, jharsuguda, bargarh, puri));
@@ -328,10 +317,10 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         // verify location data was created on the fly
         State state = stateDataService.findByCode(1L);
         District district = districtService.findByStateAndCode(state, 18L);
-        Taluka taluka = talukaDataService.findByDistrictAndCode(district, "111");
-        assertEquals("Taluka", taluka.getName());
+        Block block = talukaDataService.findByDistrictAndCode(district, "111");
+        assertEquals("Block", block.getName());
 
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(taluka, 222L);
+        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 222L);
         assertEquals("HealthBlock", healthBlock.getName());
 
         HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 333L);
@@ -340,8 +329,8 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, 444L);
         assertEquals("SC", healthSubFacility.getName());
 
-        Village village = villageService.findByTalukaAndVcodeAndSvid(taluka, 555L, 0L);
-        assertEquals("Village", village.getName());
+        Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 555L, 0L);
+        assertEquals("Panchayat", panchayat.getName());
     }
 
     /**

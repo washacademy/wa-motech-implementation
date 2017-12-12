@@ -45,7 +45,7 @@
                     interface="org.motechproject.nms.kilkari.service.ActionFinderService"/>
 
     <osgi:reference id="flwRejectionService"
-                    interface="org.motechproject.nms.rejectionhandler.service.FlwRejectionService"/>
+                    interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
 
     <osgi:reference id="childRejectionService"
                     interface="org.motechproject.nms.rejectionhandler.service.ChildRejectionService"/>

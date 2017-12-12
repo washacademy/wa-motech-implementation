@@ -1,15 +1,7 @@
 package org.motechproject.nms.testing.it.utils;
 
-import org.motechproject.nms.region.domain.Circle;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
-import org.motechproject.nms.region.domain.Language;
-import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.*;
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.CircleDataService;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.LanguageDataService;
@@ -272,19 +264,19 @@ public class RegionHelper {
         return new Language(code, name);
     }
 
-    public static Taluka createTaluka(District district, String code, String name, int identity) {
-        Taluka taluka = new Taluka();
-        taluka.setDistrict(district);
-        taluka.setCode(code);
-        taluka.setName(name);
-        taluka.setRegionalName(regionalName(name));
-        taluka.setIdentity(identity);
-        return taluka;
+    public static Block createTaluka(District district, String code, String name, int identity) {
+        Block block = new Block();
+        block.setDistrict(district);
+        block.setCode(code);
+        block.setName(name);
+        block.setRegionalName(regionalName(name));
+        block.setIdentity(identity);
+        return block;
     }
 
-    public static HealthBlock createHealthBlock(Taluka taluka, Long code, String name, String hq) {
+    public static HealthBlock createHealthBlock(Block block, Long code, String name, String hq) {
         HealthBlock healthBlock = new HealthBlock();
-        healthBlock.setTaluka(taluka);
+        healthBlock.setBlock(block);
         healthBlock.setCode(code);
         healthBlock.setName(name);
         healthBlock.setRegionalName(regionalName(name));
@@ -292,14 +284,14 @@ public class RegionHelper {
         return healthBlock;
     }
 
-    public static Village createVillage(Taluka taluka, long svid, long vcode, String name) {
-        Village village = new Village();
-        village.setTaluka(taluka);
-        village.setSvid(svid);
-        village.setVcode(vcode);
-        village.setName(name);
-        village.setRegionalName(regionalName(name));
-        return village;
+    public static Panchayat createVillage(Block block, long svid, long vcode, String name) {
+        Panchayat panchayat = new Panchayat();
+        panchayat.setBlock(block);
+        panchayat.setSvid(svid);
+        panchayat.setVcode(vcode);
+        panchayat.setName(name);
+        panchayat.setRegionalName(regionalName(name));
+        return panchayat;
     }
 
     public static HealthFacility createHealthFacility(HealthBlock healthBlock, Long code, String name, HealthFacilityType type) {

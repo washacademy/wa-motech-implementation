@@ -7,9 +7,9 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.InstanceLifecycleListeners;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.swc.domain.validation.ValidSwachchagrahi;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.Block;
-import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.FullLocation;
 import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.domain.validation.ValidFullLocation;
@@ -98,14 +98,6 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     @Persistent(defaultFetchGroup = "true")
     private SwcJobStatus jobStatus;
 
-    public Panchayat getPanchayat() {
-        return panchayat;
-    }
-
-    @Override
-    public void setPanchayat(Panchayat panchayat) {
-        this.panchayat = panchayat;
-    }
 
     public String getSex() {
         return sex;
@@ -183,9 +175,20 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
         return block;
     }
 
+
     @Override
     public void setBlock(Block block) {
         this.block = block;
+    }
+
+    @Override
+    public Panchayat getPanchayat() {
+        return panchayat;
+    }
+
+    @Override
+    public void setPanchayat(Panchayat panchayat) {
+        this.panchayat = panchayat;
     }
 
     public Swachchagrahi(Long contactNumber) {

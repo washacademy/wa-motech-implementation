@@ -1,21 +1,15 @@
 package org.motechproject.nms.region.service.impl;
 
+import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthSubFacility;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
+import org.motechproject.nms.region.service.BlockService;
 import org.motechproject.nms.region.service.DistrictService;
-import org.motechproject.nms.region.service.HealthBlockService;
-import org.motechproject.nms.region.service.HealthFacilityService;
-import org.motechproject.nms.region.service.HealthSubFacilityService;
 import org.motechproject.nms.region.service.LocationService;
-import org.motechproject.nms.region.service.TalukaService;
-import org.motechproject.nms.region.service.VillageService;
+import org.motechproject.nms.region.service.PanchayatService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,44 +29,27 @@ public class LocationServiceImpl implements LocationService {
     private static final String INVALID = "<%s - %s : Invalid location>";
     private static final String STATE_ID = "StateID";
     private static final String DISTRICT_ID = "District_ID";
-    private static final String TALUKA_ID = "Taluka_ID";
-    private static final String TALUKA_NAME = "Taluka_Name";
-    private static final String HEALTHBLOCK_ID = "HealthBlock_ID";
-    private static final String HEALTHBLOCK_NAME = "HealthBlock_Name";
-    private static final String PHC_ID = "PHC_ID";
-    private static final String PHC_NAME = "PHC_Name";
-    private static final String SUBCENTRE_ID = "SubCentre_ID";
-    private static final String SUBCENTRE_NAME = "SubCentre_Name";
-    private static final String VILLAGE_ID = "Village_ID";
-    private static final String VILLAGE_NAME = "Village_Name";
-    private static final String NON_CENSUS_VILLAGE = "SVID";
+    private static final String BLOCK_ID = "Block_ID";
+    private static final String BLOCK_NAME = "Block_Name";
+    private static final String PANCHAYAT_ID = "Panchayat_ID";
+    private static final String PANCHAYAT_NAME = "Panchayat_Name";
+    private static final String NON_CENSUS_PANCHAYAT = "SVID";
 
     private StateDataService stateDataService;
 
     private DistrictService districtService;
 
-    private TalukaService talukaService;
+    private BlockService blockService;
 
-    private VillageService villageService;
-
-    private HealthBlockService healthBlockService;
-
-    private HealthFacilityService healthFacilityService;
-
-    private HealthSubFacilityService healthSubFacilityService;
+    private PanchayatService panchayatService;
 
     @Autowired
     public LocationServiceImpl(StateDataService stateDataService, DistrictService districtService,
-                               TalukaService talukaService, VillageService villageService,
-                               HealthBlockService healthBlockService, HealthFacilityService healthFacilityService,
-                               HealthSubFacilityService healthSubFacilityService) {
+                               BlockService blockService, PanchayatService panchayatService) {
         this.stateDataService = stateDataService;
         this.districtService = districtService;
-        this.talukaService = talukaService;
-        this.villageService = villageService;
-        this.healthBlockService = healthBlockService;
-        this.healthFacilityService = healthFacilityService;
-        this.healthSubFacilityService = healthSubFacilityService;
+        this.blockService = blockService;
+        this.panchayatService = panchayatService;
     }
 
 
@@ -121,87 +98,45 @@ public class LocationServiceImpl implements LocationService {
         locations.put(DISTRICT_ID, district);
 
 
-        // set and/or create taluka
-        if (!isValidID(map, TALUKA_ID)) {
+        // set and/or create block
+        if (!isValidID(map, BLOCK_ID)) {
             return locations;
         }
-        Taluka taluka = talukaService.findByDistrictAndCode(district, (String) map.get(TALUKA_ID));
-        if (taluka == null && createIfNotExists) {
-            taluka = new Taluka();
-            taluka.setCode((String) map.get(TALUKA_ID));
-            taluka.setName((String) map.get(TALUKA_NAME));
-            taluka.setDistrict(district);
-            district.getTalukas().add(taluka);
-            LOGGER.debug(String.format("Created %s in %s with id %d", taluka, district, taluka.getId()));
+        Block block = blockService.findByDistrictAndCode(district, (String) map.get(BLOCK_ID));
+        if (block == null && createIfNotExists) {
+            block = new Block();
+            block.setCode((String) map.get(BLOCK_ID));
+            block.setName((String) map.get(BLOCK_NAME));
+            block.setDistrict(district);
+            district.getBlocks().add(block);
+            LOGGER.debug(String.format("Created %s in %s with id %d", block, district, block.getId()));
         }
-        locations.put(TALUKA_ID, taluka);
+        locations.put(BLOCK_ID, block);
 
 
-        // set and/or create village
-        Long svid = map.get(NON_CENSUS_VILLAGE) == null ? 0 : (Long) map.get(NON_CENSUS_VILLAGE);
-        Long vcode = map.get(VILLAGE_ID) == null ? 0 : (Long) map.get(VILLAGE_ID);
+        // set and/or create panchayat
+        Long svid = map.get(NON_CENSUS_PANCHAYAT) == null ? 0 : (Long) map.get(NON_CENSUS_PANCHAYAT);
+        Long vcode = map.get(PANCHAYAT_ID) == null ? 0 : (Long) map.get(PANCHAYAT_ID);
         if (vcode != 0 || svid != 0) {
-            Village village = villageService.findByTalukaAndVcodeAndSvid(taluka, vcode, svid);
-            if (village == null && createIfNotExists) {
-                village = new Village();
-                village.setSvid(svid);
-                village.setVcode(vcode);
-                village.setTaluka(taluka);
-                village.setName((String) map.get(VILLAGE_NAME));
-                taluka.getVillages().add(village);
-                LOGGER.debug(String.format("Created %s in %s with id %d", village, taluka, village.getId()));
+            Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, vcode, svid);
+            if (panchayat == null && createIfNotExists) {
+                panchayat = new Panchayat();
+                panchayat.setSvid(svid);
+                panchayat.setVcode(vcode);
+                panchayat.setBlock(block);
+                panchayat.setName((String) map.get(PANCHAYAT_NAME));
+                block.getPanchayats().add(panchayat);
+                LOGGER.debug(String.format("Created %s in %s with id %d", panchayat, block, panchayat.getId()));
             }
-            locations.put(VILLAGE_ID + NON_CENSUS_VILLAGE, village);
+            locations.put(PANCHAYAT_ID + NON_CENSUS_PANCHAYAT, panchayat);
         }
 
 
         // set and/or create health block
-        if (!isValidID(map, HEALTHBLOCK_ID)) {
-            return locations;
-        }
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(taluka, (Long) map.get(HEALTHBLOCK_ID));
-        if (healthBlock == null && createIfNotExists) {
-            healthBlock = new HealthBlock();
-            healthBlock.setTaluka(taluka);
-            healthBlock.setCode((Long) map.get(HEALTHBLOCK_ID));
-            healthBlock.setName((String) map.get(HEALTHBLOCK_NAME));
-            taluka.getHealthBlocks().add(healthBlock);
-            LOGGER.debug(String.format("Created %s in %s with id %d", healthBlock, taluka, healthBlock.getId()));
-        }
-        locations.put(HEALTHBLOCK_ID, healthBlock);
-
-
         // set and/or create health facility
-        if (!isValidID(map, PHC_ID)) {
-            return locations;
-        }
-        HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, (Long) map.get(PHC_ID));
-        if (healthFacility == null && createIfNotExists) {
-            healthFacility = new HealthFacility();
-            healthFacility.setHealthBlock(healthBlock);
-            healthFacility.setCode((Long) map.get(PHC_ID));
-            healthFacility.setName((String) map.get(PHC_NAME));
-            healthBlock.getHealthFacilities().add(healthFacility);
-            LOGGER.debug(String.format("Created %s in %s with id %d", healthFacility, healthBlock, healthFacility.getId()));
-        }
-        locations.put(PHC_ID, healthFacility);
-
 
         // set and/or create health sub-facility
-        if (!isValidID(map, SUBCENTRE_ID)) {
-            return locations;
-        }
-        HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, (Long) map.get(SUBCENTRE_ID));
-        if (healthSubFacility == null && createIfNotExists) {
-            healthSubFacility = new HealthSubFacility();
-            healthSubFacility.setHealthFacility(healthFacility);
-            healthSubFacility.setCode((Long) map.get(SUBCENTRE_ID));
-            healthSubFacility.setName((String) map.get(SUBCENTRE_NAME));
-            healthFacility.getHealthSubFacilities().add(healthSubFacility);
-            LOGGER.debug(String.format("Created %s in %s with id %d", healthSubFacility, healthFacility, healthSubFacility.getId()));
-        }
-        locations.put(SUBCENTRE_ID, healthSubFacility);
-
+        
         return locations;
     }
 
@@ -224,81 +159,38 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Taluka getTaluka(Long stateId, Long districtId, String talukaId) {
+    public Block getBlock(Long stateId, Long districtId, String blockId) {
 
         District district = getDistrict(stateId, districtId);
 
         if (district != null) {
-            return talukaService.findByDistrictAndCode(district, talukaId);
+            return blockService.findByDistrictAndCode(district, blockId);
         }
 
         return null;
     }
 
     @Override
-    public Village getVillage(Long stateId, Long districtId, String talukaId, Long vCode, Long svid) {
+    public Panchayat getPanchayat(Long stateId, Long districtId, String blockId, Long vCode, Long svid) {
 
-        Taluka taluka = getTaluka(stateId, districtId, talukaId);
+        Block block = getBlock(stateId, districtId, blockId);
 
-        if (taluka != null) {
-            return villageService.findByTalukaAndVcodeAndSvid(taluka, vCode, svid);
+        if (block != null) {
+            return panchayatService.findByBlockAndVcodeAndSvid(block, vCode, svid);
         }
 
         return null;
     }
 
     @Override
-    public Village getCensusVillage(Long stateId, Long districtId, String talukaId, Long vCode) {
+    public Panchayat getCensusPanchayat(Long stateId, Long districtId, String blockId, Long vCode) {
 
-        return getVillage(stateId, districtId, talukaId, vCode, 0L);
+        return getPanchayat(stateId, districtId, blockId, vCode, 0L);
     }
 
     @Override
-    public Village getNonCensusVillage(Long stateId, Long districtId, String talukaId, Long svid) {
+    public Panchayat getNonCensusPanchayat(Long stateId, Long districtId, String blockId, Long svid) {
 
-        return getVillage(stateId, districtId, talukaId, 0L, svid);
-    }
-
-    @Override
-    public HealthBlock getHealthBlock(Long stateId, Long districtId, String talukaId, Long healthBlockId) {
-
-        Taluka taluka = getTaluka(stateId, districtId, talukaId);
-
-        if (taluka != null) {
-
-            return healthBlockService.findByTalukaAndCode(taluka, healthBlockId);
-        }
-
-        return null;
-    }
-
-    @Override
-    public HealthFacility getHealthFacility(Long stateId, Long districtId, String talukaId, Long healthBlockId,
-                                            Long healthFacilityId) {
-
-        HealthBlock healthBlock = getHealthBlock(stateId, districtId, talukaId, healthBlockId);
-
-        if (healthBlock != null) {
-
-            return healthFacilityService.findByHealthBlockAndCode(healthBlock, healthFacilityId);
-        }
-
-        return null;
-    }
-
-    @Override
-    public HealthSubFacility getHealthSubFacility(Long stateId, Long districtId, String talukaId,
-                                                  Long healthBlockId, Long healthFacilityId,
-                                                  Long healthSubFacilityId) {
-
-        HealthFacility healthFacility = getHealthFacility(stateId, districtId, talukaId, healthBlockId,
-                healthFacilityId);
-
-        if (healthFacility != null) {
-
-            return healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, healthSubFacilityId);
-        }
-
-        return null;
+        return getPanchayat(stateId, districtId, blockId, 0L, svid);
     }
 }

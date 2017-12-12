@@ -1,12 +1,12 @@
 package org.motechproject.nms.region.domain.validation;
 
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.Panchayat;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-public class VillageValidator implements ConstraintValidator<ValidVillage, Village> {
+public class VillageValidator implements ConstraintValidator<ValidVillage, Panchayat> {
 
     @Override
     public void initialize(ValidVillage validVillage) {
@@ -14,12 +14,12 @@ public class VillageValidator implements ConstraintValidator<ValidVillage, Villa
     }
 
     @Override
-    public boolean isValid(Village village, ConstraintValidatorContext constraintValidatorContext) {
-        if (village == null) {
+    public boolean isValid(Panchayat panchayat, ConstraintValidatorContext constraintValidatorContext) {
+        if (panchayat == null) {
             return true;
         }
 
-        if (village.getVcode() == 0 && village.getSvid() == 0) {
+        if (panchayat.getVcode() == 0 && panchayat.getSvid() == 0) {
             constraintValidatorContext
                     .buildConstraintViolationWithTemplate(constraintValidatorContext.getDefaultConstraintMessageTemplate())
                     .addNode("vcode").addConstraintViolation();

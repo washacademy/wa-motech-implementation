@@ -4,34 +4,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.csv.exception.CsvImportDataException;
-import org.motechproject.nms.region.csv.CensusVillageImportService;
-import org.motechproject.nms.region.csv.DistrictImportService;
-import org.motechproject.nms.region.csv.HealthBlockImportService;
-import org.motechproject.nms.region.csv.HealthFacilityImportService;
-import org.motechproject.nms.region.csv.HealthSubFacilityImportService;
-import org.motechproject.nms.region.csv.NonCensusVillageImportService;
-import org.motechproject.nms.region.csv.StateImportService;
-import org.motechproject.nms.region.csv.TalukaImportService;
+import org.motechproject.nms.region.csv.*;
+import org.motechproject.nms.region.csv.BlockImportService;
 import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.HealthBlock;
-import org.motechproject.nms.region.domain.HealthFacility;
-import org.motechproject.nms.region.domain.HealthFacilityType;
-import org.motechproject.nms.region.domain.HealthSubFacility;
 import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.domain.Taluka;
-import org.motechproject.nms.region.domain.Village;
+import org.motechproject.nms.region.domain.Block;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.repository.DistrictDataService;
-import org.motechproject.nms.region.repository.HealthBlockDataService;
-import org.motechproject.nms.region.repository.HealthFacilityDataService;
-import org.motechproject.nms.region.repository.HealthFacilityTypeDataService;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.region.repository.TalukaDataService;
+import org.motechproject.nms.region.repository.BlockDataService;
+import org.motechproject.nms.region.service.BlockService;
 import org.motechproject.nms.region.service.DistrictService;
-import org.motechproject.nms.region.service.HealthBlockService;
-import org.motechproject.nms.region.service.HealthFacilityService;
-import org.motechproject.nms.region.service.HealthSubFacilityService;
-import org.motechproject.nms.region.service.TalukaService;
-import org.motechproject.nms.region.service.VillageService;
+import org.motechproject.nms.region.service.PanchayatService;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -70,11 +54,11 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     @Inject
     DistrictDataService districtDataService;
     @Inject
-    TalukaService talukaService;
+    BlockService blockService;
     @Inject
-    TalukaDataService talukaDataService;
+    BlockDataService blockDataService;
     @Inject
-    VillageService villageService;
+    PanchayatService panchayatService;
     @Inject
     HealthBlockService healthBlockService;
     @Inject
@@ -92,11 +76,11 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     @Inject
     DistrictImportService districtImportService;
     @Inject
-    TalukaImportService talukaImportService;
+    BlockImportService blockImportService;
     @Inject
-    NonCensusVillageImportService nonCensusVillageImportService;
+    NonCensusPanchayatImportService nonCensusPanchayatImportService;
     @Inject
-    CensusVillageImportService censusVillageImportService;
+    CensusPanchayatImportService censusPanchayatImportService;
     @Inject
     HealthBlockImportService healthBlockImportService;
     @Inject
@@ -107,7 +91,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     
     State exampleState;
     District exampleDistrict;
-    Taluka exampleTaluka;
+    Block exampleBlock;
     HealthFacilityType exampleFacilityType;
 
     private String stateHeader = "StateID,Name";
@@ -134,13 +118,13 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         exampleDistrict = createDistrict(exampleState, 2L, "EXAMPLE DISTRICT");
         districtDataService.create(exampleDistrict);
 
-        exampleTaluka = createTaluka(exampleDistrict, "00003", "EXAMPLE TALUKA", 1);
-        talukaDataService.create(exampleTaluka);
+        exampleBlock = createTaluka(exampleDistrict, "00003", "EXAMPLE TALUKA", 1);
+        blockDataService.create(exampleBlock);
 
         HealthFacilityType facilityType = createHealthFacilityType("EXAMPLE FACILITY TYPE", 5678L);
         exampleFacilityType = healthFacilityTypeDataService.create(facilityType);
 
-        HealthBlock healthBlock = createHealthBlock(exampleTaluka, 4L, "EXAMPLE HEALTH BLOCK", "hq");
+        HealthBlock healthBlock = createHealthBlock(exampleBlock, 4L, "EXAMPLE HEALTH BLOCK", "hq");
         healthBlockDataService.create(healthBlock);
 
         HealthFacility healthFacility = createHealthFacility(healthBlock, 5L, "EXAMPLE HEALTH FACILITY", exampleFacilityType);
@@ -164,50 +148,50 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         assertEquals("district regional name", district.getRegionalName());
         assertNotNull(district.getState());
 
-        talukaImportService.importData(read("csv/taluka.csv"));
-        Taluka taluka = talukaService.findByDistrictAndCode(district, "TALUKA");
-        assertNotNull(taluka);
-        assertEquals("TALUKA", taluka.getCode());
-        assertEquals(2, (int) taluka.getIdentity());
-        assertEquals("taluka name", taluka.getName());
-        assertEquals("taluka regional name", taluka.getRegionalName());
-        assertNotNull(taluka.getDistrict());
+        blockImportService.importData(read("csv/taluka.csv"));
+        Block block = blockService.findByDistrictAndCode(district, "TALUKA");
+        assertNotNull(block);
+        assertEquals("TALUKA", block.getCode());
+        assertEquals(2, (int) block.getIdentity());
+        assertEquals("block name", block.getName());
+        assertEquals("block regional name", block.getRegionalName());
+        assertNotNull(block.getDistrict());
 
-        censusVillageImportService.importData(read("csv/census_village.csv"));
-        Village censusVillage = villageService.findByTalukaAndVcodeAndSvid(taluka, 3L, 0L);
-        assertNotNull(censusVillage);
-        assertEquals(3L, censusVillage.getVcode());
-        assertEquals("census village name", censusVillage.getName());
-        assertEquals("census village regional name", censusVillage.getRegionalName());
-        assertNotNull(censusVillage.getTaluka());
+        censusPanchayatImportService.importData(read("csv/census_village.csv"));
+        Panchayat censusPanchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 3L, 0L);
+        assertNotNull(censusPanchayat);
+        assertEquals(3L, censusPanchayat.getVcode());
+        assertEquals("census panchayat name", censusPanchayat.getName());
+        assertEquals("census panchayat regional name", censusPanchayat.getRegionalName());
+        assertNotNull(censusPanchayat.getBlock());
 
-        nonCensusVillageImportService.importData(read("csv/non_census_village_associated.csv"));
-        Village nonCensusVillageAssociated = villageService.findByTalukaAndVcodeAndSvid(taluka, 3L, 4L);
-        assertNotNull(nonCensusVillageAssociated);
-        assertEquals(4L, nonCensusVillageAssociated.getSvid());
-        assertEquals("non census village associated name", nonCensusVillageAssociated.getName());
-        assertEquals("non census village associated regional name", nonCensusVillageAssociated.getRegionalName());
-        assertNotNull(nonCensusVillageAssociated.getTaluka());
-        assertEquals(3L, nonCensusVillageAssociated.getVcode());
+        nonCensusPanchayatImportService.importData(read("csv/non_census_village_associated.csv"));
+        Panchayat nonCensusPanchayatAssociated = panchayatService.findByBlockAndVcodeAndSvid(block, 3L, 4L);
+        assertNotNull(nonCensusPanchayatAssociated);
+        assertEquals(4L, nonCensusPanchayatAssociated.getSvid());
+        assertEquals("non census panchayat associated name", nonCensusPanchayatAssociated.getName());
+        assertEquals("non census panchayat associated regional name", nonCensusPanchayatAssociated.getRegionalName());
+        assertNotNull(nonCensusPanchayatAssociated.getBlock());
+        assertEquals(3L, nonCensusPanchayatAssociated.getVcode());
 
-        nonCensusVillageImportService.importData(read("csv/non_census_village_non_associated.csv"));
-        Village nonCensusVillageNonAssociated = villageService.findByTalukaAndVcodeAndSvid(taluka, 0L, 5L);
-        assertNotNull(nonCensusVillageNonAssociated);
-        assertEquals(5L, nonCensusVillageNonAssociated.getSvid());
-        assertEquals("non census village non associated name", nonCensusVillageNonAssociated.getName());
-        assertEquals("non census village non associated regional name",
-                nonCensusVillageNonAssociated.getRegionalName());
-        assertNotNull(nonCensusVillageNonAssociated.getTaluka());
-        assertEquals(0, nonCensusVillageNonAssociated.getVcode());
+        nonCensusPanchayatImportService.importData(read("csv/non_census_village_non_associated.csv"));
+        Panchayat nonCensusPanchayatNonAssociated = panchayatService.findByBlockAndVcodeAndSvid(block, 0L, 5L);
+        assertNotNull(nonCensusPanchayatNonAssociated);
+        assertEquals(5L, nonCensusPanchayatNonAssociated.getSvid());
+        assertEquals("non census panchayat non associated name", nonCensusPanchayatNonAssociated.getName());
+        assertEquals("non census panchayat non associated regional name",
+                nonCensusPanchayatNonAssociated.getRegionalName());
+        assertNotNull(nonCensusPanchayatNonAssociated.getBlock());
+        assertEquals(0, nonCensusPanchayatNonAssociated.getVcode());
 
         healthBlockImportService.importData(read("csv/health_block.csv"));
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(taluka, 6L);
+        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 6L);
         assertNotNull(healthBlock);
         assertEquals(6L, (long) healthBlock.getCode());
         assertEquals("health block name", healthBlock.getName());
         assertEquals("health block regional name", healthBlock.getRegionalName());
         assertEquals("health block hq", healthBlock.getHq());
-        assertNotNull(healthBlock.getTaluka());
+        assertNotNull(healthBlock.getBlock());
 
         healthFacilityImportService.importData(read("csv/health_facility.csv"));
         HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 7L);
@@ -335,12 +319,12 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     }
 
     /*
-    * To verify taluka location data is rejected when mandatory parameter name is missing.
+    * To verify block location data is rejected when mandatory parameter name is missing.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT227() throws Exception {
-        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,taluka regional name,,1,2");
-        talukaImportService.importData(reader);
+        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,block regional name,,1,2");
+        blockImportService.importData(reader);
     }
 
 
@@ -350,43 +334,43 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     */
     @Test
     public void verifyErrorMessageHasCorrectColumnNumber() throws Exception {
-        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,,Taluka 2,1,2");
+        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,,Block 2,1,2");
         try {
-            talukaImportService.importData(reader);
+            blockImportService.importData(reader);
         } catch (CsvImportDataException e) {
             assertEquals("CSV field error [row: 2, col: 3]: Expected String value, found null", e.getMessage());
         }
     }
 
     /*
-    * To verify taluka location data is rejected when mandatory parameter code is missing.
+    * To verify block location data is rejected when mandatory parameter code is missing.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT228() throws Exception {
-        Reader reader = createReaderWithHeaders(talukaHeader, ",2,taluka regional name,taluka name,1,2");
-        talukaImportService.importData(reader);
+        Reader reader = createReaderWithHeaders(talukaHeader, ",2,block regional name,block name,1,2");
+        blockImportService.importData(reader);
     }
 
     /*
-    * To verify taluka location data is rejected when mandatory parameter district_id is missing.
+    * To verify block location data is rejected when mandatory parameter district_id is missing.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT229() throws Exception {
-        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,taluka regional name,taluka name,1,");
-        talukaImportService.importData(reader);
+        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,block regional name,block name,1,");
+        blockImportService.importData(reader);
     }
 
     /*
-    * To verify taluka location data is rejected when district_id is having invalid value.
+    * To verify block location data is rejected when district_id is having invalid value.
     */
     @Test
     public void verifyFT230() throws Exception {
         boolean thrown = false;
         String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "org.motechproject.nms.region.domain.Taluka, violations: {'district': may not be null}";
-        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,taluka regional name,taluka name,1,3");
+                "org.motechproject.nms.region.domain.Block, violations: {'district': may not be null}";
+        Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,block regional name,block name,1,3");
         try {
-            talukaImportService.importData(reader);
+            blockImportService.importData(reader);
         } catch (CsvImportDataException e) {
             thrown = true;
             assertEquals(errorMessage, e.getMessage());
@@ -431,9 +415,9 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT237() throws Exception {
         boolean thrown = false;
         String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "org.motechproject.nms.region.domain.HealthBlock, violations: {'taluka': may not be null}";
+                "org.motechproject.nms.region.domain.HealthBlock, violations: {'block': may not be null}";
         Reader reader = createReaderWithHeaders(
-                healthBlockHeader, "6,health block regional name,health block name,health block hq,1,2,invalid taluka");
+                healthBlockHeader, "6,health block regional name,health block name,health block hq,1,2,invalid block");
         try {
             healthBlockImportService.importData(reader);
         } catch (CsvImportDataException e) {
@@ -572,47 +556,47 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     }
 
     /*
-    * To verify village location data is rejected when mandatory parameter name is missing.
+    * To verify panchayat location data is rejected when mandatory parameter name is missing.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT255() throws Exception {
         Reader reader = createReaderWithHeaders(
-                villageHeader, "3,census village regional name,,1,2,TALUKA");
-        censusVillageImportService.importData(reader);
+                villageHeader, "3,census panchayat regional name,,1,2,TALUKA");
+        censusPanchayatImportService.importData(reader);
     }
 
     /*
-    * To verify village location data is rejected when mandatory parameter code is missing.
+    * To verify panchayat location data is rejected when mandatory parameter code is missing.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT256() throws Exception {
         Reader reader = createReaderWithHeaders(
-                villageHeader, ",census village regional name,census village name,1,2,TALUKA");
-        censusVillageImportService.importData(reader);
+                villageHeader, ",census panchayat regional name,census panchayat name,1,2,TALUKA");
+        censusPanchayatImportService.importData(reader);
     }
 
     /*
-    * To verify village location data is rejected when mandatory parameter taluka_id is missing.
+    * To verify panchayat location data is rejected when mandatory parameter taluka_id is missing.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT257() throws Exception {
         Reader reader = createReaderWithHeaders(
-                villageHeader, "3,census village regional name,census village name,1,2,");
-        censusVillageImportService.importData(reader);
+                villageHeader, "3,census panchayat regional name,census panchayat name,1,2,");
+        censusPanchayatImportService.importData(reader);
     }
 
     /*
-    * To verify village location data is rejected when taluka_id is having invalid value.
+    * To verify panchayat location data is rejected when taluka_id is having invalid value.
     */
     @Test
     public void verifyFT258() throws Exception {
         boolean thrown = false;
         String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "org.motechproject.nms.region.domain.Village, violations: {'taluka': may not be null}";
+                "org.motechproject.nms.region.domain.Panchayat, violations: {'block': may not be null}";
         Reader reader = createReaderWithHeaders(
-                villageHeader, "3,census village regional name,census village name,1,2,invalid taluka");
+                villageHeader, "3,census panchayat regional name,census panchayat name,1,2,invalid block");
         try {
-            censusVillageImportService.importData(reader);
+            censusPanchayatImportService.importData(reader);
         } catch (CsvImportDataException e) {
             thrown = true;
             assertEquals(errorMessage, e.getMessage());
@@ -621,13 +605,13 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     }
 
     /*
-    * To verify village location data is rejected when code is having invalid value.
+    * To verify panchayat location data is rejected when code is having invalid value.
     */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT259() throws Exception {
         Reader reader = createReaderWithHeaders(
-                villageHeader, "abc,census village regional name,census village name,1,2,TALUKA");
-        censusVillageImportService.importData(reader);
+                villageHeader, "abc,census panchayat regional name,census panchayat name,1,2,TALUKA");
+        censusPanchayatImportService.importData(reader);
     }
 
     private Reader createReaderWithHeaders(String header, String... lines) {

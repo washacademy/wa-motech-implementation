@@ -23,8 +23,8 @@
     <osgi:reference id="5" interface="org.motechproject.nms.region.service.LanguageService" />
     <osgi:reference id="6" interface="org.motechproject.nms.mcts.service.MctsWebServiceFacade" />
     <osgi:reference id="7" interface="org.motechproject.nms.rch.service.RchWebServiceFacade" />
-    <osgi:reference id="8" interface="org.motechproject.nms.rejectionhandler.repository.FlwImportRejectionDataService" />
-    <osgi:reference id="9" interface="org.motechproject.nms.rejectionhandler.service.FlwRejectionService" />
+    <osgi:reference id="8" interface="org.motechproject.nms.rejectionhandler.repository.SwcImportRejectionDataService" />
+    <osgi:reference id="9" interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService" />
     <osgi:reference id="10" interface="org.motechproject.nms.api.web.service.FlwCsvService"/>
 
 
