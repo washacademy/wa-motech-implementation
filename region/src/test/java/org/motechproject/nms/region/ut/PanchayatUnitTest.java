@@ -72,7 +72,7 @@ public class PanchayatUnitTest {
     }
 
     @Test
-    public void testTalukaNull() {
+    public void testBlockNull() {
         Panchayat panchayat = new Panchayat();
 
         Set<ConstraintViolation<Panchayat>> constraintViolations = validator
@@ -83,7 +83,7 @@ public class PanchayatUnitTest {
     }
 
     @Test
-    public void testVillageCodeInvalid() {
+    public void testPanchayatCodeInvalid() {
         Block block = new Block();
         block.setName("Block 1");
         block.setCode("0004");
@@ -102,7 +102,7 @@ public class PanchayatUnitTest {
     }
 
     @Test
-    public void testVillageCodeValid() {
+    public void testPanchayatCodeValid() {
         Block block = new Block();
         block.setName("Block 1");
         block.setCode("0004");

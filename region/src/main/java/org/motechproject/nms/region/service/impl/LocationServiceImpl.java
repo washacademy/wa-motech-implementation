@@ -1,7 +1,9 @@
 package org.motechproject.nms.region.service.impl;
 
-import org.motechproject.nms.region.domain.*;
 import org.motechproject.nms.region.domain.Block;
+import org.motechproject.nms.region.domain.District;
+import org.motechproject.nms.region.domain.Panchayat;
+import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.region.service.BlockService;
@@ -29,12 +31,6 @@ public class LocationServiceImpl implements LocationService {
     private static final String DISTRICT_ID = "District_ID";
     private static final String BLOCK_ID = "Block_ID";
     private static final String BLOCK_NAME = "Block_Name";
-    private static final String HEALTHBLOCK_ID = "HealthBlock_ID";
-    private static final String HEALTHBLOCK_NAME = "HealthBlock_Name";
-    private static final String PHC_ID = "PHC_ID";
-    private static final String PHC_NAME = "PHC_Name";
-    private static final String SUBCENTRE_ID = "SubCentre_ID";
-    private static final String SUBCENTRE_NAME = "SubCentre_Name";
     private static final String PANCHAYAT_ID = "Panchayat_ID";
     private static final String PANCHAYAT_NAME = "Panchayat_Name";
     private static final String NON_CENSUS_PANCHAYAT = "SVID";

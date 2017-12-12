@@ -5,8 +5,6 @@ import org.junit.runner.RunWith;
 import org.motechproject.mds.filter.Filter;
 import org.motechproject.mds.filter.Filters;
 import org.motechproject.metrics.service.Timer;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
-import org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService;
 import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.Language;
 import org.motechproject.nms.region.domain.State;
@@ -49,8 +47,8 @@ public class BundleIT extends BasePaxIT {
     @Inject
     DistrictDataService districtDataService;
 
-    @Inject
-    MctsBeneficiaryImportService mctsBeneficiaryImportService;
+//    @Inject
+//    MctsBeneficiaryImportService mctsBeneficiaryImportService;
 
     @Inject
     PlatformTransactionManager transactionManager;
@@ -85,38 +83,38 @@ public class BundleIT extends BasePaxIT {
     }
 
 
-    @Test
-    public void testTheRealDeal() throws IOException {
-        Timer timer = new Timer();
-        testingService.clearDatabase();
-        getLogger().debug("clearDatabase: {}", timer.time());
-
-        timer.reset();
-        testingService.createSubscriptionPacks();
-        getLogger().debug("createSubscriptionPacks: {}", timer.time());
-
-        timer.reset();
-        createLocationData();
-        getLogger().debug("createLocationData: {}", timer.time());
-
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        timer = new Timer("mom", "moms");
-        String file = testingService.createMctsMoms(TEST_COUNT, false).split("\t")[0];
-        getLogger().debug("Created {}", timer.frequency(TEST_COUNT));
-        transactionManager.commit(status);
-
-        timer.reset();
-        mctsBeneficiaryImportService.importMotherData(new InputStreamReader(new FileInputStream(file)), SubscriptionOrigin.MCTS_IMPORT);
-        getLogger().debug("Imported {}", timer.frequency(TEST_COUNT));
-
-        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        timer = new Timer("kid", "kids");
-        file = testingService.createMctsKids(TEST_COUNT, false).split("\t")[0];
-        getLogger().debug("Created {}", timer.frequency(TEST_COUNT));
-        transactionManager.commit(status);
-
-        timer.reset();
-        mctsBeneficiaryImportService.importChildData(new InputStreamReader(new FileInputStream(file)), SubscriptionOrigin.MCTS_IMPORT);
-        getLogger().debug("Imported {}", timer.frequency(TEST_COUNT));
-    }
+//    @Test
+//    public void testTheRealDeal() throws IOException {
+//        Timer timer = new Timer();
+//        testingService.clearDatabase();
+//        getLogger().debug("clearDatabase: {}", timer.time());
+//
+//        timer.reset();
+//        testingService.createSubscriptionPacks();
+//        getLogger().debug("createSubscriptionPacks: {}", timer.time());
+//
+//        timer.reset();
+//        createLocationData();
+//        getLogger().debug("createLocationData: {}", timer.time());
+//
+//        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//        timer = new Timer("mom", "moms");
+//        String file = testingService.createMctsMoms(TEST_COUNT, false).split("\t")[0];
+//        getLogger().debug("Created {}", timer.frequency(TEST_COUNT));
+//        transactionManager.commit(status);
+//
+//        timer.reset();
+//        mctsBeneficiaryImportService.importMotherData(new InputStreamReader(new FileInputStream(file)), SubscriptionOrigin.MCTS_IMPORT);
+//        getLogger().debug("Imported {}", timer.frequency(TEST_COUNT));
+//
+//        status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//        timer = new Timer("kid", "kids");
+//        file = testingService.createMctsKids(TEST_COUNT, false).split("\t")[0];
+//        getLogger().debug("Created {}", timer.frequency(TEST_COUNT));
+//        transactionManager.commit(status);
+//
+//        timer.reset();
+//        mctsBeneficiaryImportService.importChildData(new InputStreamReader(new FileInputStream(file)), SubscriptionOrigin.MCTS_IMPORT);
+//        getLogger().debug("Imported {}", timer.frequency(TEST_COUNT));
+//    }
 }
