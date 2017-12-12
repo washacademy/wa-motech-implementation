@@ -3,7 +3,7 @@ package org.motechproject.nms.swc.utils;
 /**
  * Created by vishnu on 8/12/17.
  */
-public class SwcConstants {
+public final class SwcConstants {
     public static final java.lang.String ID = "ID";
     public static final java.lang.String CONTACT_NO = "Contact_No";
     public static final java.lang.String NAME = "Name";

@@ -9,15 +9,16 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
-import org.motechproject.nms.flw.domain.*;
-import org.motechproject.nms.swc.domain.*;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.SwcStatusUpdateAudit;
+import org.motechproject.nms.swc.domain.UpdateStatusType;
 import org.motechproject.nms.swc.repository.SwcDataService;
 import org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.service.LanguageService;
-import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
@@ -52,18 +53,15 @@ public class SwcServiceImpl implements SwcService {
 
     private SettingsFacade settingsFacade;
     private MotechSchedulerService schedulerService;
-    private LanguageService languageService;
 
     @Autowired
     public SwcServiceImpl(@Qualifier("swcSettings") SettingsFacade settingsFacade,
                           MotechSchedulerService schedulerService,
                           SwcDataService swcDataService,
-                          LanguageService languageService,
                           SwcStatusUpdateAuditDataService swcStatusUpdateAuditDataService) {
         this.swcDataService = swcDataService;
         this.schedulerService = schedulerService;
         this.settingsFacade = settingsFacade;
-        this.languageService = languageService;
         this.swcStatusUpdateAuditDataService = swcStatusUpdateAuditDataService;
         schedulePurgeOfOldSwc();
     }
@@ -104,7 +102,7 @@ public class SwcServiceImpl implements SwcService {
         schedulerService.safeScheduleRepeatingJob(job);
     }
 
-    @MotechListener(subjects = {SWC_PURGE_EVENT_SUBJECT})
+    @MotechListener(subjects = { SWC_PURGE_EVENT_SUBJECT })
     @Transactional
     public void purgeOldInvalidSWCs(MotechEvent event) {
         int weeksToKeepInvalidSWCs = Integer.parseInt(settingsFacade.getProperty(WEEKS_TO_KEEP_INVALID_SWCS));
@@ -141,18 +139,6 @@ public class SwcServiceImpl implements SwcService {
             state = district.getState();
         }
 
-//        if (state == null) {
-//            Language language = swachchagrahi.getLanguage();
-//
-//            if (language != null) {
-//                Set<State> states = languageService.getAllStatesForLanguage(language);
-//
-//                if (states.size() == 1) {
-//                    state = states.iterator().next();
-//                }
-//            }
-//        }
-
         return state;
     }
 
@@ -162,7 +148,7 @@ public class SwcServiceImpl implements SwcService {
         // TODO: also check for FLWDesignation, once we add that field
         // TODO: find out which language/location fields are mandatory
         if ((record.getName() != null) && (record.getContactNumber() != null) &&
-                  (record.getDistrict() != null)) {
+                (record.getDistrict() != null)) {
 
 //            (record.getLanguage() != null)
             // the record was added via CSV upload and the FLW hasn't called the service yet

@@ -102,9 +102,6 @@ public class WashAcademyServiceUnitTest {
     private MotechSchedulerService schedulerService;
 
     @Mock
-    private DistrictDataService districtDataService;
-
-    @Mock
     private MtrainingModuleActivityRecordAuditDataService mtrainingModuleActivityRecordAuditDataService;
 
     private Validator validator;
@@ -118,7 +115,7 @@ public class WashAcademyServiceUnitTest {
                 nmsCourseDataService, activityDataService, courseCompletionRecordDataService, swcService, eventRelay, mtrainingModuleActivityRecordAuditDataService, settingsFacade, alertService);
         courseNotificationService = new CourseNotificationServiceImpl(smsNotificationService,
                     settingsFacade, activityService, schedulerService, courseCompletionRecordDataService, alertService,
-                swcService, districtDataService);
+                swcService);
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         when(activityService.createActivity(any(ActivityRecord.class))).thenReturn(new ActivityRecord());
     }

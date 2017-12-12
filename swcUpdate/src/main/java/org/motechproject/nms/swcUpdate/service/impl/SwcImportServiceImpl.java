@@ -14,8 +14,12 @@ import org.motechproject.nms.csv.utils.GetLocalDate;
 import org.motechproject.nms.csv.utils.CsvImporterBuilder;
 import org.motechproject.nms.csv.utils.ConstraintViolationUtils;
 
-import org.motechproject.nms.flw.domain.*;
-import org.motechproject.nms.swc.domain.*;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.ContactNumberAudit;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.SwcError;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcErrorReason;
 import org.motechproject.nms.swc.exception.SwcExistingRecordException;
 import org.motechproject.nms.swc.exception.SwcImportException;
 import org.motechproject.nms.swc.repository.ContactNumberAuditDataService;
