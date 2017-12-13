@@ -80,7 +80,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     @Inject
     NonCensusPanchayatImportService nonCensusPanchayatImportService;
     @Inject
-    CensusPanchayatImportService censusPanchayatImportService;
+    PanchayatImportService panchayatImportService;
     @Inject
     HealthBlockImportService healthBlockImportService;
     @Inject
@@ -157,7 +157,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         assertEquals("block regional name", block.getRegionalName());
         assertNotNull(block.getDistrict());
 
-        censusPanchayatImportService.importData(read("csv/census_village.csv"));
+        panchayatImportService.importData(read("csv/census_village.csv"));
         Panchayat censusPanchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 3L, 0L);
         assertNotNull(censusPanchayat);
         assertEquals(3L, censusPanchayat.getVcode());
@@ -562,7 +562,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT255() throws Exception {
         Reader reader = createReaderWithHeaders(
                 villageHeader, "3,census panchayat regional name,,1,2,TALUKA");
-        censusPanchayatImportService.importData(reader);
+        panchayatImportService.importData(reader);
     }
 
     /*
@@ -572,7 +572,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT256() throws Exception {
         Reader reader = createReaderWithHeaders(
                 villageHeader, ",census panchayat regional name,census panchayat name,1,2,TALUKA");
-        censusPanchayatImportService.importData(reader);
+        panchayatImportService.importData(reader);
     }
 
     /*
@@ -582,7 +582,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT257() throws Exception {
         Reader reader = createReaderWithHeaders(
                 villageHeader, "3,census panchayat regional name,census panchayat name,1,2,");
-        censusPanchayatImportService.importData(reader);
+        panchayatImportService.importData(reader);
     }
 
     /*
@@ -596,7 +596,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         Reader reader = createReaderWithHeaders(
                 villageHeader, "3,census panchayat regional name,census panchayat name,1,2,invalid block");
         try {
-            censusPanchayatImportService.importData(reader);
+            panchayatImportService.importData(reader);
         } catch (CsvImportDataException e) {
             thrown = true;
             assertEquals(errorMessage, e.getMessage());
@@ -611,7 +611,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT259() throws Exception {
         Reader reader = createReaderWithHeaders(
                 villageHeader, "abc,census panchayat regional name,census panchayat name,1,2,TALUKA");
-        censusPanchayatImportService.importData(reader);
+        panchayatImportService.importData(reader);
     }
 
     private Reader createReaderWithHeaders(String header, String... lines) {

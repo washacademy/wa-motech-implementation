@@ -32,8 +32,8 @@ import javax.validation.constraints.Size;
  *
  */
 @ValidVillage
-@Entity(tableName = "nms_villages")
-@Unique(name = "UNIQUE_TALUKA_VCODE_SVID", members = { "block", "vcode", "svid" })
+@Entity(tableName = "wash_villages")
+@Unique(name = "UNIQUE_BLOCK_VCODE_SVID", members = { "block", "vcode", "svid" })
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners

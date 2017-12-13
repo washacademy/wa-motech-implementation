@@ -3,7 +3,7 @@ package org.motechproject.nms.region.csv.impl;
 import org.motechproject.nms.csv.utils.GetLong;
 import org.motechproject.nms.csv.utils.GetString;
 import org.motechproject.nms.csv.utils.Store;
-import org.motechproject.nms.region.csv.CensusPanchayatImportService;
+import org.motechproject.nms.region.csv.PanchayatImportService;
 import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.region.service.BlockService;
@@ -18,8 +18,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service("censusVillageImportService")
-public class CensusPanchayatImportServiceImpl extends BaseLocationImportService<Panchayat>
-        implements CensusPanchayatImportService {
+public class PanchayatImportServiceImpl extends BaseLocationImportService<Panchayat>
+        implements PanchayatImportService {
 
     public static final String PANCHAYAT_CODE = "VCode";
     public static final String REGIONAL_NAME = "Name_G";
@@ -39,10 +39,10 @@ public class CensusPanchayatImportServiceImpl extends BaseLocationImportService<
     private BlockService blockService;
 
     @Autowired
-    public CensusPanchayatImportServiceImpl(PanchayatService panchayatService,
-                                            BlockService blockService,
-                                            DistrictService districtService,
-                                            StateDataService stateDataService) {
+    public PanchayatImportServiceImpl(PanchayatService panchayatService,
+                                      BlockService blockService,
+                                      DistrictService districtService,
+                                      StateDataService stateDataService) {
         super(Panchayat.class);
         this.panchayatService = panchayatService;
         this.blockService = blockService;

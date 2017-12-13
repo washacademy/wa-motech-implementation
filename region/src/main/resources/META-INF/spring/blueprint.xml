@@ -78,7 +78,7 @@
     <osgi:service ref="stateImportService" interface="org.motechproject.nms.region.csv.StateImportService" />
     <osgi:service ref="districtImportService" interface="org.motechproject.nms.region.csv.DistrictImportService" />
     <osgi:service ref="blockImportService" interface="org.motechproject.nms.region.csv.BlockImportService" />
-    <osgi:service ref="censusPanchayatImportService" interface="org.motechproject.nms.region.csv.CensusPanchayatImportService" />
+    <osgi:service ref="panchayatImportService" interface="org.motechproject.nms.region.csv.PanchayatImportService" />
     <osgi:service ref="nonCensusPanchayatImportService" interface="org.motechproject.nms.region.csv.NonCensusPanchayatImportService" />
     <osgi:service ref="healthBlockImportService" interface="org.motechproject.nms.region.csv.HealthBlockImportService" />
     <osgi:service ref="healthFacilityImportService" interface="org.motechproject.nms.region.csv.HealthFacilityImportService" />

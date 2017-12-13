@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "nms_talukas")
+@Entity(tableName = "wash_blocks")
 @Unique(name = "UNIQUE_DISTRICT_CODE", members = { "district", "code" })
 @TrackClass
 @TrackFields

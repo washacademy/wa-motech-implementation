@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * This class Models data for State location records
  */
-@Entity(tableName = "nms_states")
+@Entity(tableName = "wash_states")
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners
