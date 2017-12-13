@@ -20,12 +20,6 @@ public class SwcImportRejection {
     private String action;
 
     @Field
-    private DateTime creationDate;
-
-    @Field
-    private String createdBy;
-
-    @Field
     private String updateDateNic;
 
     @Field
@@ -38,16 +32,7 @@ public class SwcImportRejection {
     private String SwcStatus;
 
     @Field
-    private DateTime modificationDate;
-
-    @Field
-    private String modifiedBy;
-
-    @Field
     private String msisdn;
-
-    @Field
-    private String owner;
 
     @Field
     private String sex;
@@ -108,22 +93,6 @@ public class SwcImportRejection {
         this.action = action;
     }
 
-    public DateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public String getUpdateDateNic() {
         return updateDateNic;
     }
@@ -156,36 +125,12 @@ public class SwcImportRejection {
         SwcStatus = swcStatus;
     }
 
-    public DateTime getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(DateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
     public String getMsisdn() {
         return msisdn;
     }
 
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public String getSex() {
@@ -195,7 +140,6 @@ public class SwcImportRejection {
     public void setSex(String sex) {
         this.sex = sex;
     }
-
 
     public Long getStateId() {
         return stateId;
