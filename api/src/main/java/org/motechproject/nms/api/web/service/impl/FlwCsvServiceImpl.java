@@ -5,7 +5,7 @@ import org.motechproject.nms.api.web.contract.AddFlwRequest;
 import org.motechproject.nms.api.web.contract.AddRchFlwRequest;
 import org.motechproject.nms.api.web.service.FlwCsvService;
 import org.motechproject.nms.flw.service.SwcService;
-import org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService;
+import org.motechproject.nms.flwUpdate.service.SwcImportService;
 import org.motechproject.nms.kilkari.domain.RejectionReasons;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
@@ -51,7 +51,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
     private StateDataService stateDataService;
 
     @Autowired
-    private FrontLineWorkerImportService frontLineWorkerImportService;
+    private SwcImportService swcImportService;
 
     @Override
     @Transactional
@@ -117,7 +117,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
             flwProperties.put(FlwConstants.CENSUS_VILLAGE_ID, addFlwRequest.getVillageId());
         }
 
-        frontLineWorkerImportService.createUpdate(flwProperties, SubscriptionOrigin.MCTS_IMPORT);
+        swcImportService.createUpdate(flwProperties, SubscriptionOrigin.MCTS_IMPORT);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class FlwCsvServiceImpl implements FlwCsvService {
             flwProperties.put(FlwConstants.CENSUS_VILLAGE_ID, addRchFlwRequest.getVillageId());
         }
 
-        frontLineWorkerImportService.createUpdate(flwProperties, SubscriptionOrigin.RCH_IMPORT);
+        swcImportService.createUpdate(flwProperties, SubscriptionOrigin.RCH_IMPORT);
     }
 
     @Override

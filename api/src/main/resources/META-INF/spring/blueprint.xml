@@ -35,7 +35,7 @@
 
     <osgi:reference id="swcDataService" interface="org.motechproject.nms.flw.repository.SwcDataService"/>
 
-    <osgi:reference id="frontLineWorkerImportService" interface="org.motechproject.nms.flwUpdate.service.FrontLineWorkerImportService"/>
+    <osgi:reference id="swcImportService" interface="org.motechproject.nms.flwUpdate.service.SwcImportService"/>
 
     <osgi:reference id="serviceUsageService" interface="org.motechproject.nms.flw.service.ServiceUsageService"/>
 
@@ -49,7 +49,7 @@
 
     <osgi:reference id="propertyService" interface="org.motechproject.nms.props.service.PropertyService"/>
 
-    <osgi:reference id="mobileAcademyService" interface="org.motechproject.nms.mobileacademy.service.MobileAcademyService"/>
+    <osgi:reference id="mobileAcademyService" interface="org.motechproject.nms.mobileacademy.service.WashAcademyService"/>
 
     <osgi:reference id="languageService" interface="org.motechproject.nms.region.service.LanguageService"/>
 

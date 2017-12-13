@@ -2,10 +2,13 @@ package org.motechproject.nms.region.ut;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.nms.region.domain.*;
-import org.motechproject.nms.region.domain.Panchayat;
-import org.motechproject.nms.region.domain.validation.ValidFullLocation;
 
+import org.motechproject.nms.region.domain.Block;
+import org.motechproject.nms.region.domain.District;
+import org.motechproject.nms.region.domain.Panchayat;
+import org.motechproject.nms.region.domain.State;
+import org.motechproject.nms.region.domain.FullLocation;
+import org.motechproject.nms.region.domain.validation.ValidFullLocation;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -56,12 +59,6 @@ public class FullLocationValidatorUnitTest {
         block.setId(3L);
         Panchayat panchayat = new Panchayat();
         panchayat.setId(4L);
-        HealthBlock healthBlock = new HealthBlock();
-        healthBlock.setId(5L);
-        HealthFacility healthFacility = new HealthFacility();
-        healthFacility.setId(6L);
-        HealthSubFacility healthSubFacility = new HealthSubFacility();
-        healthSubFacility.setId(7L);
 
         state.getDistricts().add(district);
         district.setState(state);
@@ -69,20 +66,11 @@ public class FullLocationValidatorUnitTest {
         block.setDistrict(district);
         block.getPanchayats().add(panchayat);
         panchayat.setBlock(block);
-        block.getHealthBlocks().add(healthBlock);
-        healthBlock.setBlock(block);
-        healthBlock.getHealthFacilities().add(healthFacility);
-        healthFacility.setHealthBlock(healthBlock);
-        healthFacility.getHealthSubFacilities().add(healthSubFacility);
-        healthSubFacility.setHealthFacility(healthFacility);
-
+       
         testLocation.setState(state);
         testLocation.setDistrict(district);
         testLocation.setBlock(block);
         testLocation.setPanchayat(panchayat);
-        testLocation.setHealthBlock(healthBlock);
-        testLocation.setHealthFacility(healthFacility);
-        testLocation.setHealthSubFacility(healthSubFacility);
     }
 
     // Valid FullLocation
@@ -113,14 +101,11 @@ public class FullLocationValidatorUnitTest {
 
     //  Test all but block with panchayat
     @Test
-    public void testBrokenChainNoTalukaWithVillage() {
+    public void testBrokenChainNoBlockWithPanchayat() {
         TestLocation testLocation = new TestLocation();
 
         buildValidFullLocation(testLocation);
         testLocation.setBlock(null);
-        testLocation.setHealthBlock(null);
-        testLocation.setHealthFacility(null);
-        testLocation.setHealthSubFacility(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
 
@@ -129,47 +114,8 @@ public class FullLocationValidatorUnitTest {
     }
 
     //  Test all but health block
-    @Test
-    public void testBrokenChainNoHealthBlock() {
-        TestLocation testLocation = new TestLocation();
-
-        buildValidFullLocation(testLocation);
-        testLocation.setHealthBlock(null);
-
-        Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Health Block must be set if facility is provided", constraintViolations.iterator().next().getMessage());
-    }
-
-    //  Test all but health facility
-    @Test
-    public void testBrokenChainNoHealthFacility() {
-        TestLocation testLocation = new TestLocation();
-
-        buildValidFullLocation(testLocation);
-        testLocation.setHealthFacility(null);
-
-        Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Health Facility must be set if sub-facility is provided", constraintViolations.iterator().next().getMessage());
-    }
 
     //  Test all but block with health block
-    @Test
-    public void testBrokenChainNoTalukaWithHealthBlock() {
-        TestLocation testLocation = new TestLocation();
-
-        buildValidFullLocation(testLocation);
-        testLocation.setBlock(null);
-        testLocation.setPanchayat(null);
-
-        Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Block must be set if block is provided", constraintViolations.iterator().next().getMessage());
-    }
 
     // Test child not in parent
     //   Test district not in state
@@ -189,7 +135,7 @@ public class FullLocationValidatorUnitTest {
 
     //   Test block not in district
     @Test
-    public void testTalukaNotInDistrict() {
+    public void testBlockNotInDistrict() {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
@@ -204,7 +150,7 @@ public class FullLocationValidatorUnitTest {
 
     //   Test panchayat not in block
     @Test
-    public void testVillageNotInTaluka() {
+    public void testPanchayatNotInBlock() {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
@@ -216,47 +162,15 @@ public class FullLocationValidatorUnitTest {
         assertEquals(1, constraintViolations.size());
         assertEquals("Panchayat is not a child of the Block", constraintViolations.iterator().next().getMessage());
     }
-
-    //   Test health facility not in health block
-    @Test
-    public void testHealthFacilityNotInHealthBlock() {
-        TestLocation testLocation = new TestLocation();
-        buildValidFullLocation(testLocation);
-
-        testLocation.getHealthBlock().setHealthFacilities(Collections.<HealthFacility>emptyList());
-        testLocation.getHealthFacility().setHealthBlock(null);
-
-        Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Health Facility is not a child of the Health Block", constraintViolations.iterator().next().getMessage());
-    }
-
-    //   Test health sub facility not in health facilty
-    @Test
-    public void testHealthSubFacilityNotInHealthFacility() {
-        TestLocation testLocation = new TestLocation();
-        buildValidFullLocation(testLocation);
-
-        testLocation.getHealthFacility().setHealthSubFacilities(Collections.<HealthSubFacility>emptyList());
-        testLocation.getHealthSubFacility().setHealthFacility(null);
-
-        Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("Health Sub-Facility is not a child of the Health Facility", constraintViolations.iterator().next().getMessage());
-    }
+    
 }
 
 @ValidFullLocation
 class TestLocation implements FullLocation {
-    State state;
-    District district;
-    Block block;
-    Panchayat panchayat;
-    HealthBlock healthBlock;
-    HealthFacility healthFacility;
-    HealthSubFacility healthSubFacility;
+    private State state;
+    private District district;
+    private Block block;
+    private Panchayat panchayat;
 
     @Override
     public State getState() {
@@ -296,35 +210,5 @@ class TestLocation implements FullLocation {
     @Override
     public void setPanchayat(Panchayat panchayat) {
         this.panchayat = panchayat;
-    }
-
-    @Override
-    public HealthBlock getHealthBlock() {
-        return healthBlock;
-    }
-
-    @Override
-    public void setHealthBlock(HealthBlock healthBlock) {
-        this.healthBlock = healthBlock;
-    }
-
-    @Override
-    public HealthFacility getHealthFacility() {
-        return healthFacility;
-    }
-
-    @Override
-    public void setHealthFacility(HealthFacility healthFacility) {
-        this.healthFacility = healthFacility;
-    }
-
-    @Override
-    public HealthSubFacility getHealthSubFacility() {
-        return healthSubFacility;
-    }
-
-    @Override
-    public void setHealthSubFacility(HealthSubFacility healthSubFacility) {
-        this.healthSubFacility = healthSubFacility;
     }
 }

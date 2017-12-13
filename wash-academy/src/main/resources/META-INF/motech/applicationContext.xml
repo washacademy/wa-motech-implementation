@@ -7,14 +7,14 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="org.motechproject.nms.mobileacademy" />
+    <context:component-scan base-package="org.motechproject.nms.washacademy" />
 
     <mvc:annotation-driven />
 
     <bean id="maSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
         <list>
-            <value>classpath:mobile-academy.properties</value>
+            <value>classpath:wash-academy.properties</value>
             <value>classpath:sms-content.properties</value>
         </list>
         </property>

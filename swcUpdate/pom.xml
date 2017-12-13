@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>nms</artifactId>
+        <groupId>org.motechproject.nms</groupId>
+        <version>1.0.33</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>swcUpdate</artifactId>
+    <version>1.0.33</version>
+    <packaging>bundle</packaging>
+    <name>SWC Update Module</name>
+
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>swc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>rejection-handler</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>wash-academy</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>kilkari</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-commons-api</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>motech-repo</id>
+            <name>MOTECH Maven Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/public</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.5</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Blueprint-Enabled>true</Blueprint-Enabled>
+                        <Resource-Path>swcUpdate/resources</Resource-Path>
+                        <Context-Path>swcUpdate</Context-Path>
+                        <Export-Package>
+                            org.motechproject.nms.swcUpdate.service;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            org.motechproject.osgi.web,
+                            org.motechproject.nms.tracking.aspect,
+                            org.aopalliance.aop,
+                            org.springframework.aop,
+                            org.springframework.aop.framework,
+                            org.springframework.transaction,
+                            org.apache.commons.fileupload,
+                            org.springframework.web.multipart.commons,
+                            org.motechproject.event.listener,
+                            org.motechproject.nms.kilkari.utils,
+                            org.motechproject.nms.kilkari.domain,
+                            org.motechproject.nms.flw.utils,
+                            org.motechproject.nms.flw.domain,
+                            org.motechproject.nms.flw.exception,
+                            org.motechproject.nms.flw.repository,
+                            org.motechproject.nms.flw.service,
+                            org.motechproject.nms.rejectionhandler.service,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-bundles</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.4</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                        <version>1.7.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>1.7.0</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <aspectLibraries>
+                        <dependency>
+                            <groupId>org.motechproject.nms</groupId>
+                            <artifactId>tracking</artifactId>
+                        </dependency>
+                    </aspectLibraries>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

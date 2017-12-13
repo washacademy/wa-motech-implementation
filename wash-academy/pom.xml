@@ -39,7 +39,7 @@
 
         <dependency>
             <groupId>org.motechproject.nms</groupId>
-            <artifactId>flw</artifactId>
+            <artifactId>swc</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -79,14 +79,14 @@
                 <configuration>
                     <instructions>
                         <Blueprint-Enabled>true</Blueprint-Enabled>
-                        <Resource-Path>mobileacademy/resources</Resource-Path>
-                        <Context-Path>mobileacademy</Context-Path>
+                        <Resource-Path>washacademy/resources</Resource-Path>
+                        <Context-Path>washacademy</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.mobileacademy.domain;version=${project.version},
-                            org.motechproject.nms.mobileacademy.dto;version=${project.version},
-                            org.motechproject.nms.mobileacademy.repository;version=${project.version},
-                            org.motechproject.nms.mobileacademy.exception;version=${project.version},
-                            org.motechproject.nms.mobileacademy.service; version=${project.version},
+                            org.motechproject.nms.washacademy.domain;version=${project.version},
+                            org.motechproject.nms.washacademy.dto;version=${project.version},
+                            org.motechproject.nms.washacademy.repository;version=${project.version},
+                            org.motechproject.nms.washacademy.exception;version=${project.version},
+                            org.motechproject.nms.washacademy.service; version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
