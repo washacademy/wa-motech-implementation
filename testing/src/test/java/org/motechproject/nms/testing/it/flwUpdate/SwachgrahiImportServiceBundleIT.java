@@ -13,14 +13,14 @@ import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.nms.csv.domain.CsvAuditRecord;
 import org.motechproject.nms.csv.exception.CsvImportDataException;
 import org.motechproject.nms.csv.repository.CsvAuditRecordDataService;
-import org.motechproject.nms.flw.domain.ContactNumberAudit;
-import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.repository.ContactNumberAuditDataService;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flwUpdate.service.SwcImportService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.ContactNumberAudit;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.repository.ContactNumberAuditDataService;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swcUpdate.service.SwcImportService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
@@ -76,7 +76,7 @@ import static org.motechproject.nms.testing.it.utils.RegionHelper.createVillage;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
+public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
 
     @Inject
     LanguageDataService languageDataService;
@@ -96,12 +96,6 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     SwcService swcService;
     @Inject
     BlockService talukaDataService;
-    @Inject
-    HealthBlockService healthBlockService;
-    @Inject
-    HealthFacilityService healthFacilityService;
-    @Inject
-    HealthSubFacilityService healthSubFacilityService;
     @Inject
     PanchayatService panchayatService;
     @Inject
@@ -155,64 +149,26 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Block bhatli = createTaluka(bargarh, "0013", "Bhatli", 1);
         Block pipili = createTaluka(puri, "0304", "Pipili", 1);
 
-        HealthBlock kunduli = createHealthBlock(similiguda, 405L, "Kunduli", "hq");
-        HealthBlock Phulbani  = createHealthBlock(Phulabani, 348L, "Phulbani", "hq");
-        HealthBlock Kotagarh  = createHealthBlock(kotagarh, 337L, "Kotagarh", "hq");
-        HealthBlock DIGAPAHANDI  = createHealthBlock(digapahandi, 275L, "DIGAPAHANDI", "hq");
-        HealthBlock Lakhanpur  = createHealthBlock(lakhanpur, 262L, "Lakhanpur", "hq");
-        HealthBlock Baliguda  = createHealthBlock(baliguda, 317L, "Baliguda", "hq");
-        HealthBlock BHATLI  = createHealthBlock(bhatli, 175L, "BHATLI", "hq");
-        HealthBlock Pipli  = createHealthBlock(pipili, 432L, "Pipli", "hq");
 
-        HealthFacilityType hft = createHealthFacilityType("Type", 1L);
 
-        HealthFacility CHC_Kunduli = createHealthFacility(kunduli, 1238L, "CHC Kunduli", hft);
-        HealthFacility PHC_N_Katringia = createHealthFacility(Phulbani, 1427L, "PHC (N) Katringia", hft);
-        HealthFacility CHC_Subarnagiri = createHealthFacility(Kotagarh, 1393L, "CHC Subarnagiri", hft);
-        HealthFacility BHISMAGIRI_PHC = createHealthFacility(DIGAPAHANDI, 1799L, "BHISMAGIRI PHC-N", hft);
-        HealthFacility Lakhanpur_CHC = createHealthFacility(Lakhanpur, 689L, "Lakhanpur CHC", hft);
-        HealthFacility CHC_Barakhama = createHealthFacility(Baliguda, 1271L, "CHC Barakhama", hft);
-        HealthFacility BHATLI_CHC = createHealthFacility(BHATLI, 250L, "BHATLI CHC", hft);
-        HealthFacility Managalpur_CHC = createHealthFacility(Pipli, 1441L, "Managalpur CHC", hft);
+        Panchayat kunduli = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
+        Panchayat Phulbani = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
+        Panchayat Kotagarh = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
+        Panchayat DIGAPAHANDI = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
+        Panchayat Lakhanpur = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
+        Panchayat Baliguda = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
+        Panchayat BHATLI = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
+        Panchayat Pipli = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
 
-        HealthSubFacility Dhudhari = createHealthSubFacility("Dhudhari", 4434L, CHC_Kunduli);
-        HealthSubFacility Adari = createHealthSubFacility("Adari", 5130L, CHC_Subarnagiri);
-        HealthSubFacility Kusuraloi = createHealthSubFacility("Kusuraloi", 2141L, Lakhanpur_CHC);
-        HealthSubFacility Rampela = createHealthSubFacility("Rampela", 2142L, Lakhanpur_CHC);
-        HealthSubFacility Kutikia_MCH = createHealthSubFacility("Kutikia MCH", 4705L, CHC_Barakhama);
-        HealthSubFacility BHATLI_SC = createHealthSubFacility("BHATLI SC", 1096L, BHATLI_CHC);
-        HealthSubFacility Bharatipur_SC = createHealthSubFacility("Bharatipur SC", 5159L, Managalpur_CHC);
-        HealthSubFacility Danagahiri_SC = createHealthSubFacility("Danagahiri SC", 5167L, Managalpur_CHC);
+        similiguda.getPanchayats().add(kunduli);
+        Phulabani.getPanchayats().add(Phulbani);
+        kotagarh.getPanchayats().add(Kotagarh);
+        digapahandi.getPanchayats().add(DIGAPAHANDI);
+        lakhanpur.getPanchayats().add(Lakhanpur);
+        baliguda.getPanchayats().add(Baliguda);
+        bhatli.getPanchayats().add(BHATLI);
+        pipili.getPanchayats().add(Pipli);
 
-        Panchayat Bharatipur = createVillage(pipili, 0L, 28981L, "Bharatipur(28981)");
-        Panchayat Nuasahi = createVillage(pipili, 0L, 10005284L, "Nuasahi *");
-
-        similiguda.getHealthBlocks().add(kunduli);
-        Phulabani.getHealthBlocks().add(Phulbani);
-        kotagarh.getHealthBlocks().add(Kotagarh);
-        digapahandi.getHealthBlocks().add(DIGAPAHANDI);
-        lakhanpur.getHealthBlocks().add(Lakhanpur);
-        baliguda.getHealthBlocks().add(Baliguda);
-        bhatli.getHealthBlocks().add(BHATLI);
-        pipili.getHealthBlocks().add(Pipli);
-
-        kunduli.getHealthFacilities().add(CHC_Kunduli);
-        Phulbani.getHealthFacilities().add(PHC_N_Katringia);
-        Kotagarh.getHealthFacilities().add(CHC_Subarnagiri);
-        DIGAPAHANDI.getHealthFacilities().add(BHISMAGIRI_PHC);
-        Lakhanpur.getHealthFacilities().add(Lakhanpur_CHC);
-        Baliguda.getHealthFacilities().add(CHC_Barakhama);
-        BHATLI.getHealthFacilities().add(BHATLI_CHC);
-        Pipli.getHealthFacilities().add(Managalpur_CHC);
-
-        CHC_Kunduli.getHealthSubFacilities().add(Dhudhari);
-        CHC_Subarnagiri.getHealthSubFacilities().add(Adari);
-        Lakhanpur_CHC.getHealthSubFacilities().addAll(Arrays.asList(Kusuraloi, Rampela));
-        CHC_Barakhama.getHealthSubFacilities().add(Kutikia_MCH);
-        BHATLI_CHC.getHealthSubFacilities().add(BHATLI_SC);
-        Managalpur_CHC.getHealthSubFacilities().addAll(Arrays.asList(Bharatipur_SC, Danagahiri_SC));
-
-        pipili.getPanchayats().addAll(Arrays.asList(Bharatipur, Nuasahi));
 
         kuraput.getBlocks().add(similiguda);
         kandhamal.getBlocks().addAll(Arrays.asList(Phulabani, kotagarh, baliguda));
@@ -235,14 +191,12 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         District district = state.getDistricts().iterator().next();
 
         Swachchagrahi flw = new Swachchagrahi("Existing With MSISDN", 1234567890L);
-        flw.setMctsFlwId("#0");
         flw.setState(state);
         flw.setDistrict(district);
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
         flw = new Swachchagrahi("Will Update Conflict MSISDN", 1111111111L);
-        flw.setMctsFlwId("#1");
         flw.setState(state);
         flw.setDistrict(district);
         flw.setJobStatus(SwcJobStatus.ACTIVE);
@@ -259,7 +213,6 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Test(expected = CsvImportDataException.class)
     public void testImportByMSISDNConflictWithMCTSId() throws Exception {
         Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
-        flw.setMctsFlwId("#0");
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -285,7 +238,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
 
         Swachchagrahi flw = swcService.getByContactNumber(1234567890L);
         assertFLW(flw, "#0", 1234567890L, "FLW 0", "District 11", "L1");
-        assertEquals(SwachchagrahiStatus.INACTIVE, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.INACTIVE, flw.getCourseStatus());
     }
 
     @Test
@@ -320,15 +273,6 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Block block = talukaDataService.findByDistrictAndCode(district, "111");
         assertEquals("Block", block.getName());
 
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 222L);
-        assertEquals("HealthBlock", healthBlock.getName());
-
-        HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 333L);
-        assertEquals("PHC", healthFacility.getName());
-
-        HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, 444L);
-        assertEquals("SC", healthSubFacility.getName());
-
         Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 555L, 0L);
         assertEquals("Panchayat", panchayat.getName());
     }
@@ -342,7 +286,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Swachchagrahi flw1 = swcService.getByContactNumber(1234567899L);
         assertFLW(flw1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", flw1.getState().toString());
-        assertEquals(SwachchagrahiStatus.INACTIVE, flw1.getStatus());
+        assertEquals(SwachchagrahiStatus.INACTIVE, flw1.getCourseStatus());
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
@@ -357,7 +301,6 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT536() throws Exception {
         Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
-        flw.setMctsFlwId("#0");
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
@@ -365,7 +308,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Swachchagrahi flw1 = swcService.getByContactNumber(1234567890L);
         assertFLW(flw1, "#0", 1234567890L, "FLW 0", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", flw1.getState().toString());
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw1.getStatus());
+        assertEquals(SwachchagrahiStatus.ACTIVE, flw1.getCourseStatus());
     }
 
     /**
@@ -440,7 +383,6 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
 
     private void assertFLW(Swachchagrahi flw, String mctsFlwId, Long contactNumber, String name, String districtName, String languageLocationCode) {
         assertNotNull(flw);
-        assertEquals(mctsFlwId, flw.getMctsFlwId());
         assertEquals(contactNumber, null != flw.getContactNumber() ? flw.getContactNumber() : null);
         assertEquals(name, flw.getName());
         assertEquals(districtName, null != flw.getDistrict() ? flw.getDistrict().getName() : null);
@@ -512,7 +454,6 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         Language language1 = languageService.getForCode("L1");
 
         Swachchagrahi flw = new Swachchagrahi("Test MSISDN", 1234567890L);
-        flw.setMctsFlwId("#0");
         flw.setState(state);
         flw.setDistrict(district1);
         flw.setLanguage(language1);
@@ -524,7 +465,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         flw = swcService.getByContactNumber(1234567890L);
 
         // deleting the FLW to avoid conflicts at later stage
-        flw.setStatus(SwachchagrahiStatus.INVALID);
+        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(DateTime.now().minusYears(1));
         swcService.update(flw);
         swcService.delete(flw);
@@ -576,7 +517,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
         assertEquals("flw_update_state_by_msisdn.txt", auditRecord.getFile());
 
         // deleting the FLW to avoid conflicts at later stage
-        flw.setStatus(SwachchagrahiStatus.INVALID);
+        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(DateTime.now().minusYears(1));
         swcService.update(flw);
         swcService.delete(flw);
@@ -622,7 +563,7 @@ public class FrontLineWorkerImportServiceBundleIT extends BasePaxIT {
 
         List<ContactNumberAudit> contactNumberAudits = contactNumberAuditDataService.retrieveAll();
         assertEquals(1, contactNumberAudits.size());
-        assertEquals(flwId, contactNumberAudits.get(0).getFlwId());
+        assertEquals(flwId, contactNumberAudits.get(0).getSwcId());
         assertEquals(oldMsisdn, contactNumberAudits.get(0).getOldCallingNumber());
         assertEquals(newMsisdn, contactNumberAudits.get(0).getNewCallingNumber());
     }

@@ -20,7 +20,7 @@ import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.imi.service.SmsNotificationService;
 import org.motechproject.nms.washacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.washacademy.domain.NmsCourse;
-import org.motechproject.nms.washacademy.dto.MaBookmark;
+import org.motechproject.nms.washacademy.dto.WaBookmark;
 import org.motechproject.nms.washacademy.exception.CourseNotCompletedException;
 import org.motechproject.nms.washacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.washacademy.repository.MtrainingModuleActivityRecordAuditDataService;
@@ -29,9 +29,7 @@ import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.motechproject.nms.washacademy.service.impl.CourseNotificationServiceImpl;
 import org.motechproject.nms.washacademy.service.impl.WashAcademyServiceImpl;
 import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.Language;
 import org.motechproject.nms.region.domain.State;
-import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
@@ -140,8 +138,8 @@ public class WashAcademyServiceUnitTest {
                 .thenReturn(newBookmark);
         when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
 
-        MaBookmark mab = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID);
-        assertTrue(mab.getFlwId() == 55L);
+        WaBookmark mab = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID);
+        assertTrue(mab.getSwcId() == 55L);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -152,7 +150,7 @@ public class WashAcademyServiceUnitTest {
 
     @Test
     public void setNewBookmarkTest() {
-        MaBookmark mab = new MaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
+        WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
 
         Swachchagrahi flw = new Swachchagrahi(1234567890L);
         flw.setId(123456L);
@@ -164,7 +162,7 @@ public class WashAcademyServiceUnitTest {
 
     @Test
     public void setUpdateBookmarkTest() {
-        MaBookmark mab = new MaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
+        WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
 
         Swachchagrahi flw = new Swachchagrahi(1234567890L);
         flw.setId(123456L);
@@ -182,7 +180,7 @@ public class WashAcademyServiceUnitTest {
         for (int i = 1; i < 12; i++) {
             scores.put(String.valueOf(i), ((int) (Math.random() * 100)) % 5);
         }
-        MaBookmark mab = new MaBookmark(123456L, VALID_CALL_ID, "COURSE_COMPLETED", scores);
+        WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "COURSE_COMPLETED", scores);
         doNothing().when(eventRelay).sendEventMessage(any(MotechEvent.class));
 
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, scores.toString(), false);
@@ -201,7 +199,7 @@ public class WashAcademyServiceUnitTest {
         for (int i = 1; i < 12; i++) {
             scores.put(String.valueOf(i), 0);
         }
-        MaBookmark mab = new MaBookmark(123456L, VALID_CALL_ID, "COURSE_COMPLETED", scores);
+        WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "COURSE_COMPLETED", scores);
         doNothing().when(eventRelay).sendEventMessage(any(MotechEvent.class));
         Swachchagrahi flw = new Swachchagrahi(1234567890L);
         flw.setId(123456L);
@@ -226,7 +224,7 @@ public class WashAcademyServiceUnitTest {
         Swachchagrahi flw = new Swachchagrahi(1234567890L);
         flw.setId(55L);
         when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
-        MaBookmark retrieved = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID);
+        WaBookmark retrieved = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID);
         assertNull(retrieved.getBookmark());
         assertNull(retrieved.getScoresByChapter());
     }

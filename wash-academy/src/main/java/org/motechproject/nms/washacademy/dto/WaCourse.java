@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * Course object containing all the course related information and metadata
  */
-public class MaCourse {
+public class WaCourse {
 
     @JsonProperty("name")
     private String name;
@@ -16,10 +16,10 @@ public class MaCourse {
     @JsonProperty("chapters")
     private String content;
 
-    public MaCourse() {
+    public WaCourse() {
     }
 
-    public MaCourse(String name, Long version, String content) {
+    public WaCourse(String name, Long version, String content) {
         this.name = name;
         this.version = version;
         this.content = content;

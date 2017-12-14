@@ -18,11 +18,11 @@ import org.motechproject.mtraining.repository.BookmarkDataService;
 import org.motechproject.nms.csv.domain.CsvAuditRecord;
 import org.motechproject.nms.csv.exception.CsvImportDataException;
 import org.motechproject.nms.csv.repository.CsvAuditRecordDataService;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flw.service.SwcService;
-import org.motechproject.nms.flwUpdate.service.SwcUpdateImportService;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.service.SwcService;
+import org.motechproject.nms.swcUpdate.service.SwcUpdateImportService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.region.repository.CircleDataService;
@@ -60,7 +60,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
+public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
     @Inject
     CircleDataService circleDataService;
@@ -165,37 +165,12 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     // Test NMS Id takes precedence over MCTS ID
-    @Test
-    public void testImportWhenNMSIdTakesPrecedenceOverMCTSId() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        flw = new Swachchagrahi(2000000000L);
-        flw.setMctsFlwId("210302604211400029");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,,hi,1");
-        swcUpdateImportService.importLanguageData(reader);
-
-        flw = swcService.getByContactNumber(1000000000L);
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
-
-        flw = swcService.getByContactNumber(2000000000L);
-        assertEquals(rh.kannadaLanguage(), flw.getLanguage());
-    }
 
     // Test NMS Id takes precedence over MSISDN
     @Test
     public void testImportWhenNMSIdTakesPrecedenceOverMSIDN() throws Exception {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
+        flw.setSwcId("72185");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
@@ -216,30 +191,6 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     // Test MCTS Id takes precedence over MSISDN
-    @Test
-    public void testImportWhenMCTSIdTakesPrecedenceOverMSIDN() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setMctsFlwId("210302604211400029");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        flw = new Swachchagrahi(2000000000L);
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,2000000000,hi,1");
-        swcUpdateImportService.importLanguageData(reader);
-
-        flw = swcService.getByContactNumber(1000000000L);
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
-
-        flw = swcService.getByContactNumber(2000000000L);
-        assertEquals(rh.kannadaLanguage(), flw.getLanguage());
-    }
 
     // Test MSISDN only
     @Test
@@ -268,7 +219,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     public void testImportFromSampleLanguageDataFile() throws Exception {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
         flw.setLanguage(rh.kannadaLanguage());
-        flw.setFlwId("72185");
+        flw.setSwcId("72185");
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -318,37 +269,12 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     // Test NMS Id takes precedence over MCTS ID
-    @Test
-    public void testMsisdnImportWhenNMSIdTakesPrecedenceOverMCTSId() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
-        swcService.add(flw);
-
-        flw = new Swachchagrahi(2000000000L);
-        flw.setMctsFlwId("210302604211400029");
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,,9439986187,1");
-        swcUpdateImportService.importMSISDNData(reader);
-
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNull(flw);
-
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
-
-        flw = swcService.getByContactNumber(2000000000L);
-        assertNotNull(flw);
-    }
 
     // Test NMS Id takes precedence over MSISDN
     @Test
     public void testMsisdnImportWhenNMSIdTakesPrecedenceOverMSIDN() throws Exception {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
+        flw.setSwcId("72185");
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -361,7 +287,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
 
         flw = swcService.getByContactNumber(9439986187L);
         assertNotNull(flw);
-        assertEquals("72185", flw.getFlwId());
+        assertEquals("72185", flw.getSwcId());
 
         flw = swcService.getByContactNumber(1000000000L);
         assertNull(flw);
@@ -371,32 +297,6 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     // Test MCTS Id takes precedence over MSISDN
-    @Test
-    public void testMsisdnImportWhenMCTSIdTakesPrecedenceOverMSIDN() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setMctsFlwId("210302604211400029");
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        flw = new Swachchagrahi(2000000000L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-
-        Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,2000000000,9439986187,1");
-        swcUpdateImportService.importMSISDNData(reader);
-
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNotNull(flw);
-        assertEquals("210302604211400029", flw.getMctsFlwId());
-
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
-
-        flw = swcService.getByContactNumber(2000000000L);
-        assertNotNull(flw);
-    }
 
     // Test MSISDN only flw Update and Bookmark, Completion and Activity Record
     @Test
@@ -429,7 +329,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void testMsisdnImportFromSampleDataFile() throws Exception {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
+        flw.setSwcId("72185");
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -456,7 +356,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void testMsisdnImportWhenNewMsisdnTooLong() throws Exception {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
+        flw.setSwcId("72185");
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -585,8 +485,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT550() throws InterruptedException, IOException {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
-        flw.setMctsFlwId("210302604211400029");
+        flw.setSwcId("72185");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
@@ -599,7 +498,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_language_update_only_flwId.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getByFlwId("72185");
+        flw = swcService.getBySwcId("72185");
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -613,8 +512,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT551() throws InterruptedException, IOException {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
-        flw.setMctsFlwId("210302604211400029");
+        flw.setSwcId("72185");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
@@ -627,7 +525,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_language_update_only_MSISDN.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getByFlwId("72185");
+        flw = swcService.getBySwcId("72185");
         assertEquals(rh.hindiLanguage(), flw.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -643,8 +541,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT552() throws InterruptedException, IOException {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
-        flw.setMctsFlwId("210302604211400029");
+        flw.setSwcId("72185");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
@@ -656,7 +553,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
                         "flw_language_update_lang_error.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getByFlwId("72185");
+        flw = swcService.getBySwcId("72185");
         assertEquals(rh.kannadaLanguage(), flw.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -670,8 +567,7 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT555() throws InterruptedException, IOException {
         Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setFlwId("72185");
-        flw.setMctsFlwId("210302604211400029");
+        flw.setSwcId("72185");
         flw.setLanguage(rh.kannadaLanguage());
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
@@ -703,7 +599,6 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     public void verifyFT558() throws InterruptedException, IOException {
         // create FLW record having state as "Delhi" and district as "new delhi district"
         Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
-        flw.setMctsFlwId("10");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setLanguage(rh.hindiLanguage());
@@ -742,7 +637,6 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     public void verifyFT560() throws InterruptedException, IOException {
         // create FLW record
         Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
-        flw.setMctsFlwId("10");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setLanguage(rh.hindiLanguage());
@@ -770,7 +664,6 @@ public class FrontLineWorkerUpdateImportServiceBundleIT extends BasePaxIT {
     public void verifyFT561() throws InterruptedException, IOException {
         // create FLW record
         Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
-        flw.setMctsFlwId("10");
         flw.setState(rh.delhiState());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setLanguage(rh.hindiLanguage());

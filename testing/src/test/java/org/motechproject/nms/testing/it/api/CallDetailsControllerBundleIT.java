@@ -13,12 +13,16 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.api.web.contract.FlwUserResponse;
+import org.motechproject.nms.api.web.contract.SwcUserResponse;
 import org.motechproject.nms.flw.domain.*;
 import org.motechproject.nms.flw.repository.CallDetailRecordDataService;
-import org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.SwcStatusUpdateAudit;
+import org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService;
 import org.motechproject.nms.flw.service.CallDetailRecordService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.props.domain.DeployedService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.repository.DeployedServiceDataService;
@@ -442,7 +446,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                                              Long currentUsageInPulses, Long endOfUsagePromptCounter,
                                              Boolean welcomePromptFlag, Integer maxAllowedUsageInPulses,
                                              Integer maxAllowedEndOfUsagePrompt) throws IOException {
-        FlwUserResponse userResponse = new FlwUserResponse();
+        SwcUserResponse userResponse = new SwcUserResponse();
         if (defaultLanguageLocationCode != null) {
             userResponse.setDefaultLanguageLocationCode(defaultLanguageLocationCode);
         }
@@ -691,7 +695,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
         Swachchagrahi flw = swcService.getByContactNumber(9810320300l);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
     }
 
     @Test
@@ -2569,7 +2573,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         flw.setLanguage(rh.hindiLanguage());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setState(rh.delhiState());
-        flw.setStatus(SwachchagrahiStatus.INACTIVE);
+        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -2626,7 +2630,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
         flw = swcService.getByContactNumber(1200000001l);
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getCourseStatus());
     }
 
     /**
@@ -2649,8 +2653,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         flw.setLanguage(rh.hindiLanguage());
         flw.setDistrict(rh.newDelhiDistrict());
         flw.setState(rh.delhiState());
-        flw.setStatus(SwachchagrahiStatus.INACTIVE);
-        flw.setMctsFlwId("mcts_id");
+        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
         flw.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(flw);
 
@@ -2714,9 +2717,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
         flw = swcService.getByContactNumber(1200000001l);
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getCourseStatus());
         assertEquals(swcStatusUpdateAuditDataService.count(), 1l);
-        List<SwcStatusUpdateAudit> swcStatusUpdateAuditList = swcStatusUpdateAuditDataService.findByMcstsFlwId(flw.getMctsFlwId());
+        List<SwcStatusUpdateAudit> swcStatusUpdateAuditList = swcStatusUpdateAuditDataService.findBySwcId(flw.getSwcId());
         assertEquals(swcStatusUpdateAuditList.size(), 1);
 
     }

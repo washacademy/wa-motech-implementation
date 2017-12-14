@@ -3,14 +3,14 @@ package org.motechproject.nms.testing.it.flw;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.flw.domain.CallDetailRecord;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
-import org.motechproject.nms.flw.domain.ServiceUsage;
-import org.motechproject.nms.flw.repository.CallDetailRecordDataService;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flw.service.SwcService;
-import org.motechproject.nms.flw.service.ServiceUsageService;
+import org.motechproject.nms.swc.domain.CallDetailRecord;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.ServiceUsage;
+import org.motechproject.nms.swc.repository.CallDetailRecordDataService;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.service.SwcService;
+import org.motechproject.nms.swc.service.ServiceUsageService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -52,7 +52,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         testingService.clearDatabase();
 
         for (Swachchagrahi flw: swcDataService.retrieveAll()) {
-            flw.setStatus(SwachchagrahiStatus.INVALID);
+            flw.setCourseStatus(SwachchagrahiStatus.INVALID);
             flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
 
             swcDataService.update(flw);
@@ -143,12 +143,12 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         callDetailRecordDataService.delete(recordOne);
         callDetailRecordDataService.delete(recordTwo);
 
-        flw.setStatus(SwachchagrahiStatus.INVALID);
+        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(flw);
         swcService.delete(flw);
 
-        flwIgnored.setStatus(SwachchagrahiStatus.INVALID);
+        flwIgnored.setCourseStatus(SwachchagrahiStatus.INVALID);
         flwIgnored.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(flwIgnored);
         swcService.delete(flwIgnored);
@@ -170,7 +170,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         callDetailRecordDataService.deleteAll();
 
-        flw.setStatus(SwachchagrahiStatus.INVALID);
+        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
         flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(flw);
         swcService.delete(flw);

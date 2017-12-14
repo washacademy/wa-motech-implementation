@@ -9,7 +9,7 @@ import javax.jdo.annotations.Unique;
 /**
  * Course entity to store the contents
  */
-@Entity(tableName = "nms_ma_course")
+@Entity(tableName = "wash_course")
 public class NmsCourse extends MdsEntity {
 
     @Field

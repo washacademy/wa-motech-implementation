@@ -21,9 +21,9 @@ import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryStatus;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.RequestData;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.domain.NmsCourse;
 import org.motechproject.nms.mobileacademy.dto.MaCourse;
@@ -59,7 +59,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class MobileAcademyControllerBundleIT extends BasePaxIT {
+public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     @Inject
     TestingService testingService;

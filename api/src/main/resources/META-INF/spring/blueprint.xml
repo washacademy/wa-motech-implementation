@@ -14,7 +14,7 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <osgi:service ref="flwRejectionCsvService"
-                  interface="org.motechproject.nms.api.web.service.FlwCsvService" />
+                  interface="org.motechproject.nms.api.web.service.SwcCsvService" />
 
     <osgi:reference id="swcStatusUpdateAuditDataService"
                     interface="org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService" />

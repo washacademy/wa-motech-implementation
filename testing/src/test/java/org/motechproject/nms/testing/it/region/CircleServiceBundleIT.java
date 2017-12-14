@@ -55,26 +55,10 @@ public class CircleServiceBundleIT extends BasePaxIT {
     @Inject
     PanchayatDataService panchayatDataService;
 
-    @Inject
-    HealthBlockDataService healthBlockDataService;
-
-    @Inject
-    HealthFacilityTypeDataService healthFacilityTypeDataService;
-
-    @Inject
-    HealthFacilityDataService healthFacilityDataService;
-
-    @Inject
-    HealthSubFacilityDataService healthSubFacilityDataService;
 
     District district;
     Block block;
     Panchayat panchayat;
-    HealthBlock healthBlock;
-    HealthFacilityType healthFacilityType;
-    HealthFacility healthFacility;
-    HealthSubFacility healthSubFacility;
-
     // Circle 1           -> State 1
     // Circle 2           -> State 2, State 3
     // Circle 3, Circle 4 -> State 4
@@ -98,29 +82,6 @@ public class CircleServiceBundleIT extends BasePaxIT {
         circleDataService.create(circle3);
         circleDataService.create(circle4);
 
-        healthSubFacility = new HealthSubFacility();
-        healthSubFacility.setName("Health Sub Facility 1");
-        healthSubFacility.setRegionalName("Health Sub Facility 1");
-        healthSubFacility.setCode(1L);
-
-        healthFacilityType = new HealthFacilityType();
-        healthFacilityType.setName("Health Facility Type 1");
-        healthFacilityType.setCode(1L);
-
-        healthFacility = new HealthFacility();
-        healthFacility.setName("Health Facility 1");
-        healthFacility.setRegionalName("Health Facility 1");
-        healthFacility.setCode(1L);
-        healthFacility.setHealthFacilityType(healthFacilityType);
-        healthFacility.getHealthSubFacilities().add(healthSubFacility);
-
-        healthBlock = new HealthBlock();
-        healthBlock.setName("Health Block 1");
-        healthBlock.setRegionalName("Health Block 1");
-        healthBlock.setHq("Health Block 1 HQ");
-        healthBlock.setCode(1L);
-        healthBlock.getHealthFacilities().add(healthFacility);
-
         panchayat = new Panchayat();
         panchayat.setName("Panchayat 1");
         panchayat.setRegionalName("Panchayat 1");
@@ -132,7 +93,6 @@ public class CircleServiceBundleIT extends BasePaxIT {
         block.setIdentity(1);
         block.setCode("0004");
         block.getPanchayats().add(panchayat);
-        block.getHealthBlocks().add(healthBlock);
 
         district = new District();
         district.setName("District 1");

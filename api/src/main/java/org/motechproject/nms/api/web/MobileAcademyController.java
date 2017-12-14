@@ -9,7 +9,7 @@ import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
 import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfo;
-import org.motechproject.nms.api.web.converter.MobileAcademyConverter;
+import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.api.web.validator.MobileAcademyValidator;
 import org.motechproject.nms.flw.domain.Swachchagrahi;
 import org.motechproject.nms.flw.service.SwcService;
@@ -98,7 +98,7 @@ public class MobileAcademyController extends BaseController {
             throw new InternalError(String.format(NOT_FOUND, "course"));
         }
 
-        CourseResponse response = MobileAcademyConverter.convertCourseDto(getCourse);
+        CourseResponse response = WashAcademyConverter.convertCourseDto(getCourse);
 
         if (response == null) {
             LOGGER.error("Failed dto mapping, check object mapping");
@@ -159,7 +159,7 @@ public class MobileAcademyController extends BaseController {
 
         MaBookmark bookmark = mobileAcademyService.getBookmark(callingNumber, callId);
 
-        GetBookmarkResponse ret = MobileAcademyConverter.convertBookmarkDto(bookmark);
+        GetBookmarkResponse ret = WashAcademyConverter.convertBookmarkDto(bookmark);
         log("RESPONSE: /mobileacademy/bookmarkWithScore", String.format("callId=%s, %s", callId, ret.toString()));
         return ret;
     }
@@ -201,7 +201,7 @@ public class MobileAcademyController extends BaseController {
         if (validateMAScores(bookmarkRequest.getScoresByChapter())) {
             Swachchagrahi flw = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
             Long flwId = flw.getId();
-            MaBookmark bookmark = MobileAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, flwId);
+            MaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, flwId);
             mobileAcademyService.setBookmark(bookmark);
         }
     }

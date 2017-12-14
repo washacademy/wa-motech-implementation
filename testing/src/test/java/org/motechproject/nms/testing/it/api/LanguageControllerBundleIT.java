@@ -11,12 +11,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.api.web.contract.UserLanguageRequest;
-import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.domain.ServiceUsageCap;
-import org.motechproject.nms.flw.repository.ServiceUsageCapDataService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.ServiceUsageCap;
+import org.motechproject.nms.swc.repository.ServiceUsageCapDataService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.props.domain.DeployedService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.repository.DeployedServiceDataService;
@@ -236,7 +236,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
         assertNotNull(flw);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
         Language language = flw.getLanguage();
         assertNotNull(language);
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
@@ -295,7 +295,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
         Language language = flw.getLanguage();
         assertNotNull(language);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
                 language.getCode());
     }
@@ -489,7 +489,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
         Language language = flw.getLanguage();
         assertNotNull(language);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
         assertEquals("FLW Language Code", "99", language.getCode());
     }
 }

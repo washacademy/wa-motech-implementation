@@ -5,9 +5,9 @@ import java.util.Map;
 /**
  * Middle man dto to pass data from API to service layer
  */
-public class MaBookmark {
+public class WaBookmark {
 
-    private Long flwId;
+    private Long swcId;
 
     private String callId;
 
@@ -15,23 +15,23 @@ public class MaBookmark {
 
     private Map<String, Integer> scoresByChapter;
 
-    public MaBookmark() {
+    public WaBookmark() {
     }
 
-    public MaBookmark(Long flwId, String callId, String bookmark, Map<String, Integer> scoresByChapter) {
+    public WaBookmark(Long swcId, String callId, String bookmark, Map<String, Integer> scoresByChapter) {
 
-        this.flwId = flwId;
+        this.swcId = swcId;
         this.callId = callId;
         this.bookmark = bookmark;
         this.scoresByChapter = scoresByChapter;
     }
 
-    public Long getFlwId() {
-        return flwId;
+    public Long getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(Long flwId) {
-        this.flwId = flwId;
+    public void setSwcId(Long swcId) {
+        this.swcId = swcId;
     }
 
     public String getCallId() {

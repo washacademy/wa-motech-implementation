@@ -10,11 +10,11 @@ import org.motechproject.mtraining.domain.ActivityState;
 import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.repository.BookmarkDataService;
-import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.mobileacademy.domain.NmsCourse;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
@@ -501,7 +501,7 @@ public class MobileAcademyServiceBundleIT extends BasePaxIT {
         // Setup language/location and flw for notification
         Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw != null) {
-            flw.setStatus(SwachchagrahiStatus.INVALID);
+            flw.setCourseStatus(SwachchagrahiStatus.INVALID);
             swcService.update(flw);
             swcService.delete(flw);
         }
@@ -536,7 +536,7 @@ public class MobileAcademyServiceBundleIT extends BasePaxIT {
         // Setup flw for notification (without language/location)
         Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw != null) {
-            flw.setStatus(SwachchagrahiStatus.INVALID);
+            flw.setCourseStatus(SwachchagrahiStatus.INVALID);
             swcService.update(flw);
             swcService.delete(flw);
         }
@@ -563,7 +563,7 @@ public class MobileAcademyServiceBundleIT extends BasePaxIT {
         // Setup language/location and flw for notification
         Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw != null) {
-            flw.setStatus(SwachchagrahiStatus.INVALID);
+            flw.setCourseStatus(SwachchagrahiStatus.INVALID);
             swcService.update(flw);
             swcService.delete(flw);
         }

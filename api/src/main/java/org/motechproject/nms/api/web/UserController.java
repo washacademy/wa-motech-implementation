@@ -1,7 +1,7 @@
 package org.motechproject.nms.api.web;
 
 import org.motechproject.commons.date.util.DateUtil;
-import org.motechproject.nms.api.web.contract.FlwUserResponse;
+import org.motechproject.nms.api.web.contract.SwcUserResponse;
 import org.motechproject.nms.api.web.contract.UserResponse;
 import org.motechproject.nms.api.web.domain.AnonymousCallAudit;
 import org.motechproject.nms.api.web.domain.InactiveJobCallAudit;
@@ -157,7 +157,7 @@ public class UserController extends BaseController {
     }
 
       private UserResponse getFrontLineWorkerResponseUser(String serviceName, Long callingNumber, Circle circle) {
-        FlwUserResponse user = new FlwUserResponse();
+        SwcUserResponse user = new SwcUserResponse();
         Service service = getServiceFromName(serviceName);
         ServiceUsage serviceUsage = new ServiceUsage(null, service, 0, 0, false);
         Swachchagrahi flw = swcService.getByContactNumber(callingNumber);

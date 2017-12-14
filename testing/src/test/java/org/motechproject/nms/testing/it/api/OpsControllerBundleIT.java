@@ -16,13 +16,13 @@ import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.motechproject.nms.api.web.contract.AddFlwRequest;
-import org.motechproject.nms.flw.domain.SwcError;
-import org.motechproject.nms.flw.domain.SwcErrorReason;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flw.repository.SwcErrorDataService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.SwcError;
+import org.motechproject.nms.swc.domain.SwcErrorReason;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.repository.SwcErrorDataService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.*;
 import org.motechproject.nms.kilkari.service.SubscriberService;
@@ -36,8 +36,8 @@ import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.*;
 import org.motechproject.nms.region.service.DistrictService;
 import org.motechproject.nms.region.service.LanguageService;
-import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
-import org.motechproject.nms.rejectionhandler.repository.FlwImportRejectionDataService;
+import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
+import org.motechproject.nms.rejectionhandler.repository.SwcImportRejectionDataService;
 import org.motechproject.nms.testing.it.api.utils.RequestBuilder;
 import org.motechproject.nms.testing.it.utils.RegionHelper;
 import org.motechproject.nms.testing.it.utils.SubscriptionHelper;
@@ -85,10 +85,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
     District district;
     Block block;
     Panchayat panchayat;
-    HealthBlock healthBlock;
-    HealthFacilityType healthFacilityType;
-    HealthFacility healthFacility;
-    HealthSubFacility healthSubFacility;
     Language language;
 
     @Inject
@@ -143,7 +139,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     CourseCompletionRecordDataService courseCompletionRecordDataService;
 
     @Inject
-    FlwImportRejectionDataService flwImportRejectionDataService;
+    SwcImportRejectionDataService swcImportRejectionDataService;
 
     private RegionHelper rh;
     private SubscriptionHelper sh;
@@ -234,13 +230,9 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-<<<<<<< HEAD
-        // refetch and check that block and panchayat are set
-        flw = frontLineWorkerService.getByContactNumber(9876543210L);
-=======
+
         // refetch and check that taluka and village are set
         flw = swcService.getByContactNumber(9876543210L);
->>>>>>> fc3adb13436a78c17ddf5780770193ee02237ac6
         assertNotNull(flw.getState());
         assertNotNull(flw.getDistrict());
         assertNotNull(flw.getBlock());
@@ -256,7 +248,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_BAD_REQUEST, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
         transactionManager.commit(status);
 
-        List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
+        List<SwcImportRejection> flwImportRejections = swcImportRejectionDataService.retrieveAll();
         assertEquals(1, flwImportRejections.size());
     }
 
@@ -305,7 +297,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         assertEquals("No new expected flw error created", before + 1, after);
 
-        List<SwcError> swcErrors = swcErrorDataService.findByMctsId(
+        List<SwcError> swcErrors = swcErrorDataService.findBySwcId(
                 updateRequest.getMctsFlwId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
@@ -326,7 +318,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
         Swachchagrahi flwByNumber = swcService.getByContactNumber(9876543210L);
-        assertEquals("Anonymous user was not merged", updateRequest.getMctsFlwId(), flwByNumber.getMctsFlwId());
+        assertEquals("Anonymous user was not merged", updateRequest.getMctsFlwId(), flwByNumber.getSwcId());
     }
 
 
@@ -347,7 +339,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         assertEquals("No new expected flw error created", before + 1, after);
 
-        List<SwcError> swcErrors = swcErrorDataService.findByMctsId(
+        List<SwcError> swcErrors = swcErrorDataService.findBySwcId(
                 updateRequest.getMctsFlwId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
@@ -373,34 +365,13 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         assertEquals("No new expected flw error created", before + 1, after);
 
-        List<SwcError> swcErrors = swcErrorDataService.findByMctsId(
+        List<SwcError> swcErrors = swcErrorDataService.findBySwcId(
                 updateRequest.getMctsFlwId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
         // since we clear the db before each test, safe to assume that we will only have 1 item in list
         assertEquals(swcErrors.get(0).getReason(), SwcErrorReason.INVALID_LOCATION_DISTRICT);
-    }
-
-
-    @Test
-    public void testUpdateNoTaluka() throws IOException, InterruptedException {
-
-        // create flw
-        createFlwHelper("Block Singh", 9876543210L, "123");
-
-        AddFlwRequest updateRequest = getAddRequestASHA();
-        updateRequest.setTalukaId("999");   // block 999 doesn't exist. this shouldn't be updated
-        HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
-        assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-
-<<<<<<< HEAD
-        FrontLineWorker flw = frontLineWorkerService.getByContactNumber(9876543210L);
-        assertNull("Block update rejected", flw.getBlock());
-=======
-        Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
-        assertNull("Taluka update rejected", flw.getTaluka());
->>>>>>> fc3adb13436a78c17ddf5780770193ee02237ac6
     }
 
     @Test
@@ -470,7 +441,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
         stateDataService.create(state);
         // create flw
         Swachchagrahi flw = new Swachchagrahi(name, phoneNumber);
-        flw.setMctsFlwId(mctsFlwId);
         flw.setState(state);
         flw.setDistrict(district);
         flw.setLanguage(language);
@@ -535,28 +505,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        healthSubFacility = new HealthSubFacility();
-        healthSubFacility.setName("Health Sub Facility 1");
-        healthSubFacility.setRegionalName("Health Sub Facility 1");
-        healthSubFacility.setCode(1L);
-
-        healthFacilityType = new HealthFacilityType();
-        healthFacilityType.setName("Health Facility Type 1");
-        healthFacilityType.setCode(1L);
-
-        healthFacility = new HealthFacility();
-        healthFacility.setName("Health Facility 1");
-        healthFacility.setRegionalName("Health Facility 1");
-        healthFacility.setCode(1L);
-        healthFacility.setHealthFacilityType(healthFacilityType);
-        healthFacility.getHealthSubFacilities().add(healthSubFacility);
-
-        healthBlock = new HealthBlock();
-        healthBlock.setName("Health Block 1");
-        healthBlock.setRegionalName("Health Block 1");
-        healthBlock.setHq("Health Block 1 HQ");
-        healthBlock.setCode(1L);
-        healthBlock.getHealthFacilities().add(healthFacility);
 
         panchayat = new Panchayat();
         panchayat.setName("Panchayat 1");
@@ -569,7 +517,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
         block.setIdentity(1);
         block.setCode("0004");
         block.getPanchayats().add(panchayat);
-        block.getHealthBlocks().add(healthBlock);
 
         district = new District();
         district.setName("District 1");

@@ -6,12 +6,14 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.InstanceLifecycleListeners;
 import org.motechproject.mds.domain.MdsEntity;
-import org.motechproject.nms.swc.domain.validation.ValidSwachchagrahi;
 import org.motechproject.nms.region.domain.Panchayat;
-import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.FullLocation;
+import org.motechproject.nms.region.domain.District;
+import org.motechproject.nms.region.domain.Language;
 import org.motechproject.nms.region.domain.State;
+
+import org.motechproject.nms.swc.domain.validation.ValidSwachchagrahi;
 import org.motechproject.nms.region.domain.validation.ValidFullLocation;
 import org.motechproject.nms.tracking.annotation.TrackClass;
 import org.motechproject.nms.tracking.annotation.TrackFields;
@@ -78,6 +80,9 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     private LocalDate updatedDateNic;
 
     @Field
+    private Language language;
+
+    @Field
     @Persistent(defaultFetchGroup = "true")
     private State state;
 
@@ -129,6 +134,14 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
 
     public void setTrainedInCommunityService(Boolean trainedInCommunityService) {
         this.trainedInCommunityService = trainedInCommunityService;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 
     public Boolean getWorkingSBMdedicatedresource() {

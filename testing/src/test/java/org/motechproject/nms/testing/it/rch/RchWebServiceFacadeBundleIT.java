@@ -82,35 +82,14 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
         block.setDistrict(district);
         district.setBlocks(new ArrayList<>(singletonList(block)));
 
-        HealthBlock healthBlock = new HealthBlock();
-        healthBlock.setCode(113L);
+        Panchayat healthBlock = new Panchayat();
+        healthBlock.setVcode(113L);
         healthBlock.setName("HealthBlock_Name 1");
         healthBlock.setRegionalName("HB1");
-        healthBlock.setHq("An HQ");
 
         healthBlock.setBlock(block);
-        block.setHealthBlocks(new ArrayList<>(singletonList(healthBlock)));
+        block.setPanchayats(new ArrayList<>(singletonList(healthBlock)));
 
-        HealthFacilityType phcType = new HealthFacilityType();
-        phcType.setCode(11L);
-        phcType.setName("PHC TYPE 111");
-
-        HealthFacility facility = new HealthFacility();
-        facility.setName("PHC_NAME 3");
-        facility.setRegionalName("Regional PHC 3");
-        facility.setCode(111L);
-        facility.setHealthFacilityType(phcType);
-
-        healthBlock.setHealthFacilities(new ArrayList<>(singletonList(facility)));
-        facility.setHealthBlock(healthBlock);
-
-        HealthSubFacility subcentre = new HealthSubFacility();
-        subcentre.setName("SubCentre_Name 1");
-        subcentre.setRegionalName("Regional sub name");
-        subcentre.setCode(333L);
-
-        subcentre.setHealthFacility(facility);
-        facility.setHealthSubFacilities(new ArrayList<>(singletonList(subcentre)));
 
         districtDataService.create(district);
 

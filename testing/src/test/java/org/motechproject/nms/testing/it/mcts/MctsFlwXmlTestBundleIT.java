@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.imi.service.SettingsService;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MctsChildDataService;
@@ -22,9 +22,8 @@ import org.motechproject.nms.mcts.service.MctsWsImportService;
 import org.motechproject.nms.mcts.utils.Constants;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.rejectionhandler.domain.FlwImportRejection;
-import org.motechproject.nms.rejectionhandler.repository.FlwImportRejectionDataService;
-import org.motechproject.nms.rejectionhandler.repository.MotherRejectionDataService;
+import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
+import org.motechproject.nms.rejectionhandler.repository.SwcImportRejectionDataService;
 import org.motechproject.nms.testing.it.mcts.util.*;
 import org.motechproject.nms.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -89,10 +88,8 @@ public class MctsFlwXmlTestBundleIT extends BasePaxIT {
     private SettingsService settingsService;
 
     @Inject
-    private FlwImportRejectionDataService flwImportRejectionDataService;
+    private SwcImportRejectionDataService swcImportRejectionDataService;
 
-    @Inject
-    private MotherRejectionDataService motherRejectionDataService;
 
     @Inject
     private SwcService swcService;
@@ -137,7 +134,7 @@ public class MctsFlwXmlTestBundleIT extends BasePaxIT {
 
         List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
-        List<FlwImportRejection> flwImportRejections = flwImportRejectionDataService.retrieveAll();
+        List<SwcImportRejection> flwImportRejections = swcImportRejectionDataService.retrieveAll();
         assertEquals(1, flwImportRejections.size());
         assertEquals(RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), flwImportRejections.get(0).getRejectionReason());
     }

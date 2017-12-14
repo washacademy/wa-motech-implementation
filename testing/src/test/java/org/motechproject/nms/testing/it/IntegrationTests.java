@@ -2,17 +2,13 @@ package org.motechproject.nms.testing.it;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import org.motechproject.nms.testing.it.api.CallDetailsControllerBundleIT;
-import org.motechproject.nms.testing.it.api.LanguageControllerBundleIT;
-import org.motechproject.nms.testing.it.api.MobileAcademyControllerBundleIT;
-import org.motechproject.nms.testing.it.api.OpsControllerBundleIT;
-import org.motechproject.nms.testing.it.api.UserControllerBundleIT;
-import org.motechproject.nms.testing.it.flw.FrontLineWorkerServiceBundleIT;
+import org.motechproject.nms.testing.it.api.*;
 import org.motechproject.nms.testing.it.flw.ServiceUsageCapServiceBundleIT;
 import org.motechproject.nms.testing.it.flw.ServiceUsageServiceBundleIT;
-import org.motechproject.nms.testing.it.flwUpdate.FrontLineWorkerImportServiceBundleIT;
-import org.motechproject.nms.testing.it.flwUpdate.FrontLineWorkerUpdateImportServiceBundleIT;
+import org.motechproject.nms.testing.it.flw.SwachgrahiServiceBundleIT;
 import org.motechproject.nms.testing.it.flw.WhiteListServiceBundleIT;
+import org.motechproject.nms.testing.it.flwUpdate.SwachgrahiImportServiceBundleIT;
+import org.motechproject.nms.testing.it.flwUpdate.SwachgrahiUpdateImportServiceBundleIT;
 import org.motechproject.nms.testing.it.imi.CdrFileServiceBundleIT;
 import org.motechproject.nms.testing.it.imi.ImiControllerCdrBundleIT;
 import org.motechproject.nms.testing.it.imi.ImiControllerObdBundleIT;
@@ -47,7 +43,7 @@ import org.motechproject.nms.testing.it.tracking.TrackOneToManyChangesBundleIT;
     LanguageControllerBundleIT.class,
     UserControllerBundleIT.class,
     CallDetailsControllerBundleIT.class,
-    MobileAcademyControllerBundleIT.class,
+        WashAcademyControllerBundleIT.class,
     OpsControllerBundleIT.class,
 
     /**
@@ -56,13 +52,13 @@ import org.motechproject.nms.testing.it.tracking.TrackOneToManyChangesBundleIT;
     ServiceUsageServiceBundleIT.class,
     ServiceUsageCapServiceBundleIT.class,
     WhiteListServiceBundleIT.class,
-    FrontLineWorkerServiceBundleIT.class,
+    SwachgrahiServiceBundleIT.class,
 
     /**
      * FLW UPDATE
      */
-    FrontLineWorkerImportServiceBundleIT.class,
-    FrontLineWorkerUpdateImportServiceBundleIT.class,
+    SwachgrahiImportServiceBundleIT.class,
+    SwachgrahiUpdateImportServiceBundleIT.class,
 
     /**
      * IMI

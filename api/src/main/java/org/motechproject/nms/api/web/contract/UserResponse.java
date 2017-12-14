@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *  Response body - base class extended by KilkariUserResponse and FlwUserResponse
+ *  Response body - base class extended by KilkariUserResponse and SwcUserResponse
  *
  * 2.2.1 Get User Details API
  * IVR shall invoke this API when to retrieve details specific to the user identified by callingNumber.

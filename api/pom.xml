@@ -39,7 +39,13 @@
 
         <dependency>
             <groupId>org.motechproject.nms</groupId>
-            <artifactId>flw</artifactId>
+            <artifactId>swc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>swcUpdate</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -51,7 +57,7 @@
 
         <dependency>
             <groupId>org.motechproject.nms</groupId>
-            <artifactId>mobile-academy</artifactId>
+            <artifactId>wash-academy</artifactId>
             <version>${project.version}</version>
         </dependency>
 

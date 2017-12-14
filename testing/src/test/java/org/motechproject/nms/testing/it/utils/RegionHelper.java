@@ -274,15 +274,15 @@ public class RegionHelper {
         return block;
     }
 
-    public static HealthBlock createHealthBlock(Block block, Long code, String name, String hq) {
-        HealthBlock healthBlock = new HealthBlock();
-        healthBlock.setBlock(block);
-        healthBlock.setCode(code);
-        healthBlock.setName(name);
-        healthBlock.setRegionalName(regionalName(name));
-        healthBlock.setHq(hq);
-        return healthBlock;
-    }
+//    public static HealthBlock createHealthBlock(Block block, Long code, String name, String hq) {
+//        HealthBlock healthBlock = new HealthBlock();
+//        healthBlock.setBlock(block);
+//        healthBlock.setCode(code);
+//        healthBlock.setName(name);
+//        healthBlock.setRegionalName(regionalName(name));
+//        healthBlock.setHq(hq);
+//        return healthBlock;
+//    }
 
     public static Panchayat createVillage(Block block, long svid, long vcode, String name) {
         Panchayat panchayat = new Panchayat();
@@ -294,31 +294,31 @@ public class RegionHelper {
         return panchayat;
     }
 
-    public static HealthFacility createHealthFacility(HealthBlock healthBlock, Long code, String name, HealthFacilityType type) {
-        HealthFacility healthFacility = new HealthFacility();
-        healthFacility.setHealthBlock(healthBlock);
-        healthFacility.setCode(code);
-        healthFacility.setName(name);
-        healthFacility.setRegionalName(regionalName(name));
-        healthFacility.setHealthFacilityType(type);
-        return healthFacility;
-    }
-
-    public static HealthFacilityType createHealthFacilityType(String name, Long code) {
-        HealthFacilityType healthFacilityType = new HealthFacilityType();
-        healthFacilityType.setName(name);
-        healthFacilityType.setCode(code);
-        return healthFacilityType;
-    }
-
-    public static HealthSubFacility createHealthSubFacility(String name, Long code, HealthFacility healthFacility) {
-        HealthSubFacility healthSubFacility = new HealthSubFacility();
-        healthSubFacility.setName(name);
-        healthSubFacility.setCode(code);
-        healthSubFacility.setRegionalName(name + " regional name");
-        healthSubFacility.setHealthFacility(healthFacility);
-        return healthSubFacility;
-    }
+//    public static HealthFacility createHealthFacility(HealthBlock healthBlock, Long code, String name, HealthFacilityType type) {
+//        HealthFacility healthFacility = new HealthFacility();
+//        healthFacility.setHealthBlock(healthBlock);
+//        healthFacility.setCode(code);
+//        healthFacility.setName(name);
+//        healthFacility.setRegionalName(regionalName(name));
+//        healthFacility.setHealthFacilityType(type);
+//        return healthFacility;
+//    }
+//
+//    public static HealthFacilityType createHealthFacilityType(String name, Long code) {
+//        HealthFacilityType healthFacilityType = new HealthFacilityType();
+//        healthFacilityType.setName(name);
+//        healthFacilityType.setCode(code);
+//        return healthFacilityType;
+//    }
+//
+//    public static HealthSubFacility createHealthSubFacility(String name, Long code, HealthFacility healthFacility) {
+//        HealthSubFacility healthSubFacility = new HealthSubFacility();
+//        healthSubFacility.setName(name);
+//        healthSubFacility.setCode(code);
+//        healthSubFacility.setRegionalName(name + " regional name");
+//        healthSubFacility.setHealthFacility(healthFacility);
+//        return healthSubFacility;
+//    }
 
     public static Language createLanguage(String code, String name, Circle circle, boolean defaultForCircle, District... districts) {
         Language language = new Language();

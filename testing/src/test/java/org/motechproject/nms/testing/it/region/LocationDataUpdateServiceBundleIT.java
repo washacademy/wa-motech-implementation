@@ -58,14 +58,6 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     @Inject
     private BlockDataService blockDataService;
 
-    @Inject
-    private HealthBlockDataService healthBlockDataService;
-
-    @Inject
-    private HealthFacilityTypeDataService healthFacilityTypeDataService;
-
-    @Inject
-    private HealthFacilityDataService healthFacilityDataService;
 
     @Inject
     private PanchayatDataService panchayatDataService;
@@ -76,8 +68,6 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     @Inject
     private ChangeLogDataService changeLogDataService;
 
-    @Inject
-    private HealthSubFacilityDataService healthSubFacilityDataService;
 
     public static final String SUCCESS = "Success";
 
@@ -115,14 +105,13 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         return district;
     }
 
-    private HealthBlock createHealthBlock(Block block) {
-        HealthBlock healthBlock = new HealthBlock();
+    private Panchayat createHealthBlock(Block block) {
+        Panchayat healthBlock = new Panchayat();
         healthBlock.setBlock(block);
-        healthBlock.setCode(6l);
+        healthBlock.setVcode(6l);
         healthBlock.setName("health block name");
         healthBlock.setRegionalName("health block regional name");
-        healthBlock.setHq("health block hq");
-        healthBlock = healthBlockDataService.create(healthBlock);
+        healthBlock = panchayatDataService.create(healthBlock);
         return healthBlock;
     }
     /**
@@ -230,123 +219,123 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     /**
      * To verify health block location data is updated successfully.
      */
-    @Test
-    public void verifyFT239() throws InterruptedException, IOException {
-        // add state
-        State state = createState();
-
-        // add district
-        District district = createDistrict(state);
-
-        // add block
-        Block block = createTaluka(district);
-
-        // add health block
-        HealthBlock orignalHealthBlock = new HealthBlock();
-        orignalHealthBlock.setBlock(block);
-        orignalHealthBlock.setCode(6l);
-        orignalHealthBlock.setName("name");
-        orignalHealthBlock.setRegionalName("rn");
-        orignalHealthBlock.setHq("hq");
-        orignalHealthBlock = healthBlockDataService.create(orignalHealthBlock);
-        assertEquals("name", orignalHealthBlock.getName());
-
-        ChangeLog changeLog = changeLogDataService
-                .findByEntityNameAndInstanceId(
-                        orignalHealthBlock.getClass().getName(),
-                        orignalHealthBlock.getId()).get(0);
-        assertTrue(changeLog.getChange().contains("regionalName(null, rn)"));
-        assertTrue(changeLog.getChange().contains("name(null, name)"));
-        assertTrue(changeLog.getChange().contains("hq(null, hq)"));
-        changeLogDataService.delete(changeLog);
-
-        // update healthBlock using health_block.csv
-        HttpResponse response = importCsvFileForLocationData("healthBlock",
-                "health_block.csv");
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-
-        HealthBlock updatedHealthBlock = healthBlockDataService.retrieve(
-                "code", 6l);
-        assertEquals(orignalHealthBlock.getId(), updatedHealthBlock.getId());
-        assertEquals("health block name", updatedHealthBlock.getName());
-        assertEquals("health block regional name",
-                updatedHealthBlock.getRegionalName());
-        assertEquals("health block hq", updatedHealthBlock.getHq());
-
-        // Assert audit trail log
-        CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
-                .get(0);
-        assertEquals("region/data/import/healthBlock",
-                csvAuditRecord.getEndpoint());
-        assertEquals(SUCCESS, csvAuditRecord.getOutcome());
-        assertEquals("health_block.csv", csvAuditRecord.getFile());
-
-        // assert location history
-        changeLog = changeLogDataService.findByEntityNameAndInstanceId(
-                orignalHealthBlock.getClass().getName(),
-                orignalHealthBlock.getId()).get(0);
-        assertTrue(changeLog.getChange().contains(
-                "regionalName(rn, health block regional name)"));
-        assertTrue(changeLog.getChange().contains(
-                "name(name, health block name)"));
-        assertTrue(changeLog.getChange().contains("hq(hq, health block hq)"));
-    }
-
-    /**
-     * To verify health facility location data is updated successfully.
-     */
-    @Test
-    public void verifyFT246() throws InterruptedException, IOException {
-        // add state
-        State state = createState();
-
-        // add district
-        District district = createDistrict(state);
-
-        // add block
-        Block block = createTaluka(district);
-
-        // add health block
-        HealthBlock healthBlock = createHealthBlock(block);
-
-        // add health facility type
-        HealthFacilityType healthFacilityType = new HealthFacilityType();
-        healthFacilityType.setName("type");
-        healthFacilityType.setCode(5678l);
-        healthFacilityType = healthFacilityTypeDataService
-                .create(healthFacilityType);
-
-        // add health facility
-        HealthFacility originalHealthFacility = new HealthFacility();
-        originalHealthFacility.setHealthBlock(healthBlock);
-        originalHealthFacility.setCode(7l);
-        originalHealthFacility.setName("name");
-        originalHealthFacility.setRegionalName("regional name");
-        originalHealthFacility.setHealthFacilityType(healthFacilityType);
-        originalHealthFacility = healthFacilityDataService
-                .create(originalHealthFacility);
-        assertEquals("name", originalHealthFacility.getName());
-
-        // update health facility using health_facility.csv
-        HttpResponse response = importCsvFileForLocationData("healthFacility",
-                "health_facility.csv");
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-
-        HealthFacility updatedHealthFacility = healthFacilityDataService
-                .retrieve("code", 7l);
-        assertEquals(originalHealthFacility.getId(),
-                updatedHealthFacility.getId());
-        assertEquals("health facility name", updatedHealthFacility.getName());
-        assertEquals("health facility regional name",
-                updatedHealthFacility.getRegionalName());
-
-        CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
-                .get(0);
-        assertEquals("region/data/import/healthFacility",
-                csvAuditRecord.getEndpoint());
-        assertEquals(SUCCESS, csvAuditRecord.getOutcome());
-        assertEquals("health_facility.csv", csvAuditRecord.getFile());
-    }
+//    @Test
+//    public void verifyFT239() throws InterruptedException, IOException {
+//        // add state
+//        State state = createState();
+//
+//        // add district
+//        District district = createDistrict(state);
+//
+//        // add block
+//        Block block = createTaluka(district);
+//
+//        // add health block
+//        HealthBlock orignalHealthBlock = new HealthBlock();
+//        orignalHealthBlock.setBlock(block);
+//        orignalHealthBlock.setCode(6l);
+//        orignalHealthBlock.setName("name");
+//        orignalHealthBlock.setRegionalName("rn");
+//        orignalHealthBlock.setHq("hq");
+//        orignalHealthBlock = healthBlockDataService.create(orignalHealthBlock);
+//        assertEquals("name", orignalHealthBlock.getName());
+//
+//        ChangeLog changeLog = changeLogDataService
+//                .findByEntityNameAndInstanceId(
+//                        orignalHealthBlock.getClass().getName(),
+//                        orignalHealthBlock.getId()).get(0);
+//        assertTrue(changeLog.getChange().contains("regionalName(null, rn)"));
+//        assertTrue(changeLog.getChange().contains("name(null, name)"));
+//        assertTrue(changeLog.getChange().contains("hq(null, hq)"));
+//        changeLogDataService.delete(changeLog);
+//
+//        // update healthBlock using health_block.csv
+//        HttpResponse response = importCsvFileForLocationData("healthBlock",
+//                "health_block.csv");
+//        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+//
+//        HealthBlock updatedHealthBlock = healthBlockDataService.retrieve(
+//                "code", 6l);
+//        assertEquals(orignalHealthBlock.getId(), updatedHealthBlock.getId());
+//        assertEquals("health block name", updatedHealthBlock.getName());
+//        assertEquals("health block regional name",
+//                updatedHealthBlock.getRegionalName());
+//        assertEquals("health block hq", updatedHealthBlock.getHq());
+//
+//        // Assert audit trail log
+//        CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
+//                .get(0);
+//        assertEquals("region/data/import/healthBlock",
+//                csvAuditRecord.getEndpoint());
+//        assertEquals(SUCCESS, csvAuditRecord.getOutcome());
+//        assertEquals("health_block.csv", csvAuditRecord.getFile());
+//
+//        // assert location history
+//        changeLog = changeLogDataService.findByEntityNameAndInstanceId(
+//                orignalHealthBlock.getClass().getName(),
+//                orignalHealthBlock.getId()).get(0);
+//        assertTrue(changeLog.getChange().contains(
+//                "regionalName(rn, health block regional name)"));
+//        assertTrue(changeLog.getChange().contains(
+//                "name(name, health block name)"));
+//        assertTrue(changeLog.getChange().contains("hq(hq, health block hq)"));
+//    }
+//
+//    /**
+//     * To verify health facility location data is updated successfully.
+//     */
+//    @Test
+//    public void verifyFT246() throws InterruptedException, IOException {
+//        // add state
+//        State state = createState();
+//
+//        // add district
+//        District district = createDistrict(state);
+//
+//        // add block
+//        Block block = createTaluka(district);
+//
+//        // add health block
+//        HealthBlock healthBlock = createHealthBlock(block);
+//
+//        // add health facility type
+//        HealthFacilityType healthFacilityType = new HealthFacilityType();
+//        healthFacilityType.setName("type");
+//        healthFacilityType.setCode(5678l);
+//        healthFacilityType = healthFacilityTypeDataService
+//                .create(healthFacilityType);
+//
+//        // add health facility
+//        HealthFacility originalHealthFacility = new HealthFacility();
+//        originalHealthFacility.setHealthBlock(healthBlock);
+//        originalHealthFacility.setCode(7l);
+//        originalHealthFacility.setName("name");
+//        originalHealthFacility.setRegionalName("regional name");
+//        originalHealthFacility.setHealthFacilityType(healthFacilityType);
+//        originalHealthFacility = healthFacilityDataService
+//                .create(originalHealthFacility);
+//        assertEquals("name", originalHealthFacility.getName());
+//
+//        // update health facility using health_facility.csv
+//        HttpResponse response = importCsvFileForLocationData("healthFacility",
+//                "health_facility.csv");
+//        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+//
+//        HealthFacility updatedHealthFacility = healthFacilityDataService
+//                .retrieve("code", 7l);
+//        assertEquals(originalHealthFacility.getId(),
+//                updatedHealthFacility.getId());
+//        assertEquals("health facility name", updatedHealthFacility.getName());
+//        assertEquals("health facility regional name",
+//                updatedHealthFacility.getRegionalName());
+//
+//        CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
+//                .get(0);
+//        assertEquals("region/data/import/healthFacility",
+//                csvAuditRecord.getEndpoint());
+//        assertEquals(SUCCESS, csvAuditRecord.getOutcome());
+//        assertEquals("health_facility.csv", csvAuditRecord.getFile());
+//    }
 
     /**
      * To verify panchayat location data is updated successfully.
@@ -506,87 +495,87 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     /**
      * To verify health sub facility location data is updated successfully.
      */
-    @Test
-    public void verifyFT253() throws InterruptedException, IOException {
-        // add state
-        State state = createState();
-
-        // add district
-        District district = createDistrict(state);
-
-        // add block
-        Block block = createTaluka(district);
-
-        // add health block
-        HealthBlock healthBlock = createHealthBlock(block);
-
-        // add health facility type
-        HealthFacilityType healthFacilityType = new HealthFacilityType();
-        healthFacilityType.setName("type");
-        healthFacilityType.setCode(5678l);
-        healthFacilityType = healthFacilityTypeDataService
-                .create(healthFacilityType);
-
-        // add health facility
-        HealthFacility healthFacility = new HealthFacility();
-        healthFacility.setHealthBlock(healthBlock);
-        healthFacility.setCode(7l);
-        healthFacility.setName("health facility name");
-        healthFacility.setRegionalName("health facility regional name");
-        healthFacility.setHealthFacilityType(healthFacilityType);
-        healthFacility = healthFacilityDataService
-                .create(healthFacility);
-
-        // add health sub facility
-        HealthSubFacility orgHealthSubFacility = new HealthSubFacility();
-        orgHealthSubFacility.setHealthFacility(healthFacility);
-        orgHealthSubFacility.setCode(8l);
-        orgHealthSubFacility.setName("name");
-        orgHealthSubFacility.setRegionalName("rn");
-        orgHealthSubFacility = healthSubFacilityDataService
-                .create(orgHealthSubFacility);
-
-        assertEquals("name", orgHealthSubFacility.getName());
-        assertEquals("rn", orgHealthSubFacility.getRegionalName());
-
-        ChangeLog changeLog = changeLogDataService
-                .findByEntityNameAndInstanceId(
-                        orgHealthSubFacility.getClass().getName(),
-                        orgHealthSubFacility.getId()).get(0);
-        assertTrue(changeLog.getChange().contains("regionalName(null, rn)"));
-        assertTrue(changeLog.getChange().contains("name(null, name)"));
-        changeLogDataService.delete(changeLog);
-
-        // update health sub facility using health_sub_facility.csv
-        HttpResponse response = importCsvFileForLocationData(
-                "healthSubFacility", "health_sub_facility.csv");
-        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-
-        HealthSubFacility updatedHealthSubFacility = healthSubFacilityDataService
-                .retrieve("code", 8l);
-        assertEquals(orgHealthSubFacility.getId(),
-                updatedHealthSubFacility.getId());
-        assertEquals("health sub facility name",
-                updatedHealthSubFacility.getName());
-        assertEquals("health sub facility regional name",
-                updatedHealthSubFacility.getRegionalName());
-
-        CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
-                .get(0);
-        assertEquals("region/data/import/healthSubFacility",
-                csvAuditRecord.getEndpoint());
-        assertEquals(SUCCESS, csvAuditRecord.getOutcome());
-        assertEquals("health_sub_facility.csv", csvAuditRecord.getFile());
-
-        // assert location history
-        changeLog = changeLogDataService.findByEntityNameAndInstanceId(
-                orgHealthSubFacility.getClass().getName(),
-                orgHealthSubFacility.getId())
-                .get(0);
-        assertTrue(changeLog.getChange().contains(
-                "regionalName(rn, health sub facility regional name)"));
-        assertTrue(changeLog.getChange().contains(
-                "name(name, health sub facility name)"));
-    }
+//    @Test
+//    public void verifyFT253() throws InterruptedException, IOException {
+//        // add state
+//        State state = createState();
+//
+//        // add district
+//        District district = createDistrict(state);
+//
+//        // add block
+//        Block block = createTaluka(district);
+//
+//        // add health block
+//        HealthBlock healthBlock = createHealthBlock(block);
+//
+//        // add health facility type
+//        HealthFacilityType healthFacilityType = new HealthFacilityType();
+//        healthFacilityType.setName("type");
+//        healthFacilityType.setCode(5678l);
+//        healthFacilityType = healthFacilityTypeDataService
+//                .create(healthFacilityType);
+//
+//        // add health facility
+//        HealthFacility healthFacility = new HealthFacility();
+//        healthFacility.setHealthBlock(healthBlock);
+//        healthFacility.setCode(7l);
+//        healthFacility.setName("health facility name");
+//        healthFacility.setRegionalName("health facility regional name");
+//        healthFacility.setHealthFacilityType(healthFacilityType);
+//        healthFacility = healthFacilityDataService
+//                .create(healthFacility);
+//
+//        // add health sub facility
+//        HealthSubFacility orgHealthSubFacility = new HealthSubFacility();
+//        orgHealthSubFacility.setHealthFacility(healthFacility);
+//        orgHealthSubFacility.setCode(8l);
+//        orgHealthSubFacility.setName("name");
+//        orgHealthSubFacility.setRegionalName("rn");
+//        orgHealthSubFacility = healthSubFacilityDataService
+//                .create(orgHealthSubFacility);
+//
+//        assertEquals("name", orgHealthSubFacility.getName());
+//        assertEquals("rn", orgHealthSubFacility.getRegionalName());
+//
+//        ChangeLog changeLog = changeLogDataService
+//                .findByEntityNameAndInstanceId(
+//                        orgHealthSubFacility.getClass().getName(),
+//                        orgHealthSubFacility.getId()).get(0);
+//        assertTrue(changeLog.getChange().contains("regionalName(null, rn)"));
+//        assertTrue(changeLog.getChange().contains("name(null, name)"));
+//        changeLogDataService.delete(changeLog);
+//
+//        // update health sub facility using health_sub_facility.csv
+//        HttpResponse response = importCsvFileForLocationData(
+//                "healthSubFacility", "health_sub_facility.csv");
+//        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+//
+//        HealthSubFacility updatedHealthSubFacility = healthSubFacilityDataService
+//                .retrieve("code", 8l);
+//        assertEquals(orgHealthSubFacility.getId(),
+//                updatedHealthSubFacility.getId());
+//        assertEquals("health sub facility name",
+//                updatedHealthSubFacility.getName());
+//        assertEquals("health sub facility regional name",
+//                updatedHealthSubFacility.getRegionalName());
+//
+//        CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
+//                .get(0);
+//        assertEquals("region/data/import/healthSubFacility",
+//                csvAuditRecord.getEndpoint());
+//        assertEquals(SUCCESS, csvAuditRecord.getOutcome());
+//        assertEquals("health_sub_facility.csv", csvAuditRecord.getFile());
+//
+//        // assert location history
+//        changeLog = changeLogDataService.findByEntityNameAndInstanceId(
+//                orgHealthSubFacility.getClass().getName(),
+//                orgHealthSubFacility.getId())
+//                .get(0);
+//        assertTrue(changeLog.getChange().contains(
+//                "regionalName(rn, health sub facility regional name)"));
+//        assertTrue(changeLog.getChange().contains(
+//                "name(name, health sub facility name)"));
+//    }
 
 }

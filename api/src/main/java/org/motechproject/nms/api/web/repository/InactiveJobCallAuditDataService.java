@@ -17,5 +17,5 @@ public interface InactiveJobCallAuditDataService extends MotechDataService<Inact
     List<InactiveJobCallAudit> findByNumber(@LookupField(name = "callingNumber") Long callingNumber);
 
     @Lookup
-    List<InactiveJobCallAudit> findByFlwId(@LookupField(name = "flwId") String flwId);
+    List<InactiveJobCallAudit> findBySwcId(@LookupField(name = "swcId") Long swcId);
 }

@@ -16,14 +16,14 @@ package org.motechproject.nms.api.web.contract;
  * /api/mobilekunji/user?callingNumber=9999999900&operator=A&circle=AP&callId=234000011111111
  *
  */
-public class FlwUserResponse extends UserResponse {
+public class SwcUserResponse extends UserResponse {
     private long currentUsageInPulses;
     private long endOfUsagePromptCounter;
     private boolean welcomePromptFlag;
     private int maxAllowedUsageInPulses;
     private int maxAllowedEndOfUsagePrompt;
 
-    public FlwUserResponse() {
+    public SwcUserResponse() {
         super();
     }
 
@@ -69,7 +69,7 @@ public class FlwUserResponse extends UserResponse {
 
     @Override
     public String toString() {
-        return "FlwUserResponse{" +
+        return "SwcUserResponse{" +
                 "currentUsageInPulses=" + currentUsageInPulses +
                 ", endOfUsagePromptCounter=" + endOfUsagePromptCounter +
                 ", welcomePromptFlag=" + welcomePromptFlag +
@@ -90,7 +90,7 @@ public class FlwUserResponse extends UserResponse {
             return false;
         }
 
-        FlwUserResponse that = (FlwUserResponse) o;
+        SwcUserResponse that = (SwcUserResponse) o;
 
         if (currentUsageInPulses != that.currentUsageInPulses) {
             return false;

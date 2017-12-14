@@ -7,13 +7,15 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.ex.JdoListenerInvocationException;
-import org.motechproject.nms.flw.domain.*;
-import org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService;
-import org.motechproject.nms.flw.repository.SwcDataService;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService;
+import org.motechproject.nms.swc.repository.SwcDataService;
 import org.motechproject.nms.flw.repository.WhitelistEntryDataService;
 import org.motechproject.nms.flw.repository.WhitelistStateDataService;
-import org.motechproject.nms.flw.service.SwcSettingsService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.service.SwcSettingsService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.flw.service.ServiceUsageService;
 import org.motechproject.nms.region.domain.Circle;
 import org.motechproject.nms.region.domain.District;
@@ -55,7 +57,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class FrontLineWorkerServiceBundleIT extends BasePaxIT {
+public class SwachgrahiServiceBundleIT extends BasePaxIT {
 
     @Inject
     SwcDataService swcDataService;

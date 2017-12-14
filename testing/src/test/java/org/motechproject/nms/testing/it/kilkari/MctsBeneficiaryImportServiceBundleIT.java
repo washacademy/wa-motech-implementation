@@ -67,10 +67,6 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createDistrict;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthBlock;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthFacility;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthFacilityType;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthSubFacility;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createState;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createTaluka;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createVillage;
@@ -108,12 +104,6 @@ public class MctsBeneficiaryImportServiceBundleIT extends BasePaxIT {
     SubscriberService subscriberService;
     @Inject
     BlockService talukaDataService;
-    @Inject
-    HealthBlockService healthBlockService;
-    @Inject
-    HealthFacilityService healthFacilityService;
-    @Inject
-    HealthSubFacilityService healthSubFacilityService;
     @Inject
     PanchayatService panchayatService;
     @Inject
@@ -174,38 +164,38 @@ public class MctsBeneficiaryImportServiceBundleIT extends BasePaxIT {
         Block block46 = createTaluka(district4, "0046", "Debagarh P.S.", 46);
         district4.getBlocks().add(block46);
 
-        HealthBlock healthBlock259 = createHealthBlock(block24, 259L, "Laikera", "hq");
-        block24.getHealthBlocks().add(healthBlock259);
-
-        HealthBlock healthBlock453 = createHealthBlock(block26, 453L, "Bamara", "hq");
-        block26.getHealthBlocks().add(healthBlock453);
-
-        HealthBlock healthBlock153 = createHealthBlock(block46, 153L, "Tileibani", "hq");
-        block46.getHealthBlocks().add(healthBlock153);
-
-        HealthFacilityType facilityType635 = createHealthFacilityType("Mundrajore CHC", 635L);
-        HealthFacility healthFacility635 = createHealthFacility(healthBlock259, 635L, "Mundrajore CHC", facilityType635);
-        healthBlock259.getHealthFacilities().add(healthFacility635);
-
-        HealthFacilityType facilityType41 = createHealthFacilityType("Garposh CHC", 41L);
-        HealthFacility healthFacility41 = createHealthFacility(healthBlock453, 41L, "Garposh CHC", facilityType41);
-        healthBlock453.getHealthFacilities().add(healthFacility41);
-
-        HealthFacilityType facilityType114 = createHealthFacilityType("CHC Tileibani", 114L);
-        HealthFacility healthFacility114 = createHealthFacility(healthBlock153, 114L, "CHC Tileibani", facilityType114);
-        healthBlock153.getHealthFacilities().add(healthFacility114);
-
-        HealthSubFacility subFacilityType7389 = createHealthSubFacility("Babuniktimal", 7389L, healthFacility41);
-        healthFacility41.getHealthSubFacilities().add(subFacilityType7389);
-
-        HealthSubFacility subFacilityType7393 = createHealthSubFacility("Jarabaga", 7393L, healthFacility41);
-        healthFacility41.getHealthSubFacilities().add(subFacilityType7393);
-
-        HealthSubFacility subFacilityType2104 = createHealthSubFacility("Chupacabra", 2104L, healthFacility635);
-        healthFacility635.getHealthSubFacilities().add(subFacilityType2104);
-
-        HealthSubFacility subFacilityType342 = createHealthSubFacility("El Dorado", 342L, healthFacility114);
-        healthFacility114.getHealthSubFacilities().add(subFacilityType342);
+//        HealthBlock healthBlock259 = createHealthBlock(block24, 259L, "Laikera", "hq");
+//        block24.getHealthBlocks().add(healthBlock259);
+//
+//        HealthBlock healthBlock453 = createHealthBlock(block26, 453L, "Bamara", "hq");
+//        block26.getHealthBlocks().add(healthBlock453);
+//
+//        HealthBlock healthBlock153 = createHealthBlock(block46, 153L, "Tileibani", "hq");
+//        block46.getHealthBlocks().add(healthBlock153);
+//
+//        HealthFacilityType facilityType635 = createHealthFacilityType("Mundrajore CHC", 635L);
+//        HealthFacility healthFacility635 = createHealthFacility(healthBlock259, 635L, "Mundrajore CHC", facilityType635);
+//        healthBlock259.getHealthFacilities().add(healthFacility635);
+//
+//        HealthFacilityType facilityType41 = createHealthFacilityType("Garposh CHC", 41L);
+//        HealthFacility healthFacility41 = createHealthFacility(healthBlock453, 41L, "Garposh CHC", facilityType41);
+//        healthBlock453.getHealthFacilities().add(healthFacility41);
+//
+//        HealthFacilityType facilityType114 = createHealthFacilityType("CHC Tileibani", 114L);
+//        HealthFacility healthFacility114 = createHealthFacility(healthBlock153, 114L, "CHC Tileibani", facilityType114);
+//        healthBlock153.getHealthFacilities().add(healthFacility114);
+//
+//        HealthSubFacility subFacilityType7389 = createHealthSubFacility("Babuniktimal", 7389L, healthFacility41);
+//        healthFacility41.getHealthSubFacilities().add(subFacilityType7389);
+//
+//        HealthSubFacility subFacilityType7393 = createHealthSubFacility("Jarabaga", 7393L, healthFacility41);
+//        healthFacility41.getHealthSubFacilities().add(subFacilityType7393);
+//
+//        HealthSubFacility subFacilityType2104 = createHealthSubFacility("Chupacabra", 2104L, healthFacility635);
+//        healthFacility635.getHealthSubFacilities().add(subFacilityType2104);
+//
+//        HealthSubFacility subFacilityType342 = createHealthSubFacility("El Dorado", 342L, healthFacility114);
+//        healthFacility114.getHealthSubFacilities().add(subFacilityType342);
 
         Panchayat panchayat10004693 = createVillage(block24, 10004693L, 0, "Khairdihi");
         Panchayat panchayat10004691 = createVillage(block24, 10004691L, 0, "Gambhariguda");
@@ -1112,14 +1102,14 @@ public class MctsBeneficiaryImportServiceBundleIT extends BasePaxIT {
         Block block = talukaDataService.findByDistrictAndCode(district, "111");
         assertEquals("Block", block.getName());
 
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 222L);
-        assertEquals("HealthBlock", healthBlock.getName());
-
-        HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 333L);
-        assertEquals("PHC", healthFacility.getName());
-
-        HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, 444L);
-        assertEquals("SubCentre", healthSubFacility.getName());
+//        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 222L);
+//        assertEquals("HealthBlock", healthBlock.getName());
+//
+//        HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 333L);
+//        assertEquals("PHC", healthFacility.getName());
+//
+//        HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(healthFacility, 444L);
+//        assertEquals("SubCentre", healthSubFacility.getName());
 
         Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 555L, 0L);
         assertEquals("Panchayat", panchayat.getName());

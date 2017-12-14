@@ -35,9 +35,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createDistrict;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthBlock;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthFacility;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthFacilityType;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createTaluka;
 
 @RunWith(PaxExam.class)
@@ -60,18 +57,6 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     @Inject
     PanchayatService panchayatService;
     @Inject
-    HealthBlockService healthBlockService;
-    @Inject
-    HealthBlockDataService healthBlockDataService;
-    @Inject
-    HealthFacilityTypeDataService healthFacilityTypeDataService;
-    @Inject
-    HealthFacilityService healthFacilityService;
-    @Inject
-    HealthFacilityDataService healthFacilityDataService;
-    @Inject
-    HealthSubFacilityService healthSubFacilityService;
-    @Inject
     StateImportService stateImportService;
     @Inject
     DistrictImportService districtImportService;
@@ -81,18 +66,11 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     NonCensusPanchayatImportService nonCensusPanchayatImportService;
     @Inject
     CensusPanchayatImportService censusPanchayatImportService;
-    @Inject
-    HealthBlockImportService healthBlockImportService;
-    @Inject
-    HealthFacilityImportService healthFacilityImportService;
-    @Inject
-    HealthSubFacilityImportService healthSubFacilityImportService;
 
     
     State exampleState;
     District exampleDistrict;
     Block exampleBlock;
-    HealthFacilityType exampleFacilityType;
 
     private String stateHeader = "StateID,Name";
 
@@ -121,14 +99,9 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         exampleBlock = createTaluka(exampleDistrict, "00003", "EXAMPLE TALUKA", 1);
         blockDataService.create(exampleBlock);
 
-        HealthFacilityType facilityType = createHealthFacilityType("EXAMPLE FACILITY TYPE", 5678L);
-        exampleFacilityType = healthFacilityTypeDataService.create(facilityType);
+//        HealthFacilityType facilityType = createHealthFacilityType("EXAMPLE FACILITY TYPE", 5678L);
+//        exampleFacilityType = healthFacilityTypeDataService.create(facilityType);
 
-        HealthBlock healthBlock = createHealthBlock(exampleBlock, 4L, "EXAMPLE HEALTH BLOCK", "hq");
-        healthBlockDataService.create(healthBlock);
-
-        HealthFacility healthFacility = createHealthFacility(healthBlock, 5L, "EXAMPLE HEALTH FACILITY", exampleFacilityType);
-        healthFacilityDataService.create(healthFacility);
     }
 
     
@@ -184,32 +157,6 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         assertNotNull(nonCensusPanchayatNonAssociated.getBlock());
         assertEquals(0, nonCensusPanchayatNonAssociated.getVcode());
 
-        healthBlockImportService.importData(read("csv/health_block.csv"));
-        HealthBlock healthBlock = healthBlockService.findByTalukaAndCode(block, 6L);
-        assertNotNull(healthBlock);
-        assertEquals(6L, (long) healthBlock.getCode());
-        assertEquals("health block name", healthBlock.getName());
-        assertEquals("health block regional name", healthBlock.getRegionalName());
-        assertEquals("health block hq", healthBlock.getHq());
-        assertNotNull(healthBlock.getBlock());
-
-        healthFacilityImportService.importData(read("csv/health_facility.csv"));
-        HealthFacility healthFacility = healthFacilityService.findByHealthBlockAndCode(healthBlock, 7L);
-        assertNotNull(healthFacility);
-        assertEquals(7L, (long) healthFacility.getCode());
-        assertEquals("health facility name", healthFacility.getName());
-        assertEquals("health facility regional name", healthFacility.getRegionalName());
-        assertNotNull(healthFacility.getHealthBlock());
-        assertNotNull(healthFacility.getHealthFacilityType());
-
-        healthSubFacilityImportService.importData(read("csv/health_sub_facility.csv"));
-        HealthSubFacility healthSubFacility = healthSubFacilityService.findByHealthFacilityAndCode(
-                healthFacility, 8L);
-        assertNotNull(healthSubFacility);
-        assertEquals(8L, ((long) healthSubFacility.getCode()));
-        assertEquals("health sub facility name", healthSubFacility.getName());
-        assertEquals("health sub facility regional name", healthSubFacility.getRegionalName());
-        assertNotNull(healthSubFacility.getHealthFacility());
     }
 
     @Test(expected = SuperCsvException.class)
@@ -381,179 +328,179 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     /*
     * To verify health block location data is rejected when mandatory parameter name is missing.
     */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT234() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthBlockHeader, "6,health block regional name,,health block hq,1,2,TALUKA");
-        healthBlockImportService.importData(reader);
-    }
-
-    /*
-    * To verify health block location data is rejected when mandatory parameter code is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT235() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthBlockHeader, ",health block regional name,health block name,health block hq,1,2,TALUKA");
-        healthBlockImportService.importData(reader);
-    }
-
-    /*
-    * To verify health block location data is rejected when mandatory parameter taluka_id is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT236() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthBlockHeader, "6,health block regional name,health block name,health block hq,1,2,");
-        healthBlockImportService.importData(reader);
-    }
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT234() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthBlockHeader, "6,health block regional name,,health block hq,1,2,TALUKA");
+//        healthBlockImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health block location data is rejected when mandatory parameter code is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT235() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthBlockHeader, ",health block regional name,health block name,health block hq,1,2,TALUKA");
+//        healthBlockImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health block location data is rejected when mandatory parameter taluka_id is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT236() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthBlockHeader, "6,health block regional name,health block name,health block hq,1,2,");
+//        healthBlockImportService.importData(reader);
+//    }
 
     /*
     * To verify health block location data is rejected when taluka_id is having invalid value.
     */
-    @Test
-    public void verifyFT237() throws Exception {
-        boolean thrown = false;
-        String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "org.motechproject.nms.region.domain.HealthBlock, violations: {'block': may not be null}";
-        Reader reader = createReaderWithHeaders(
-                healthBlockHeader, "6,health block regional name,health block name,health block hq,1,2,invalid block");
-        try {
-            healthBlockImportService.importData(reader);
-        } catch (CsvImportDataException e) {
-            thrown = true;
-            assertEquals(errorMessage, e.getMessage());
-        }
-        assertTrue(thrown);
-    }
+//    @Test
+//    public void verifyFT237() throws Exception {
+//        boolean thrown = false;
+//        String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
+//                "org.motechproject.nms.region.domain.HealthBlock, violations: {'block': may not be null}";
+//        Reader reader = createReaderWithHeaders(
+//                healthBlockHeader, "6,health block regional name,health block name,health block hq,1,2,invalid block");
+//        try {
+//            healthBlockImportService.importData(reader);
+//        } catch (CsvImportDataException e) {
+//            thrown = true;
+//            assertEquals(errorMessage, e.getMessage());
+//        }
+//        assertTrue(thrown);
+//    }
 
     /*
     * To verify health block location data is rejected when code is having invalid value.
     */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT238() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthBlockHeader, "abc,health block regional name,health block name,health block hq,1,2,TALUKA");
-        healthBlockImportService.importData(reader);
-    }
-
-    /*
-    * To verify health facility location data is rejected when mandatory parameter name is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT241() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthFacilityHeader, "7,health facility regional name,,1,2,00003,6,5678");
-        healthFacilityImportService.importData(reader);
-    }
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT238() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthBlockHeader, "abc,health block regional name,health block name,health block hq,1,2,TALUKA");
+//        healthBlockImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health facility location data is rejected when mandatory parameter name is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT241() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthFacilityHeader, "7,health facility regional name,,1,2,00003,6,5678");
+//        healthFacilityImportService.importData(reader);
+//    }
 
     /*
     * To verify health facility location data is rejected when mandatory parameter code is missing.
     */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT242() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthFacilityHeader, ",health facility regional name,health facility name,1,2,00003,6,5678");
-        healthFacilityImportService.importData(reader);
-    }
-
-    /*
-    * To verify health facility location data is rejected when mandatory parameter health_block_id is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT243() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthFacilityHeader, "7,health facility regional name,health facility name,1,2,00003,,5678");
-        healthFacilityImportService.importData(reader);
-    }
-
-    /*
-    * To verify health facility location data is rejected when health_block_id is having invalid value.
-    */
-    @Test
-    public void verifyFT244() throws Exception {
-        boolean thrown = false;
-        String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "org.motechproject.nms.region.domain.HealthFacility, violations: {'healthBlock': may not be null}";
-        Reader reader = createReaderWithHeaders(
-                healthFacilityHeader, "7,health facility regional name,health facility name,1,2,00003,10,5678");
-        try {
-            healthFacilityImportService.importData(reader);
-        } catch (CsvImportDataException e) {
-            thrown = true;
-            assertEquals(errorMessage, e.getMessage());
-        }
-        assertTrue(thrown);
-    }
-
-    /*
-    * To verify health facility location data is rejected when code is having invalid value.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT245() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthFacilityHeader, "abc,health facility regional name,health facility name,1,2,00003,6,5678");
-        healthFacilityImportService.importData(reader);
-    }
-
-    /*
-    * To verify health sub facility location data is rejected when mandatory parameter name is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT248() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthSubFacilityHeader, "8,health sub facility regional name,,1,2,00003,4,5");
-        healthSubFacilityImportService.importData(reader);
-    }
-
-    /*
-    * To verify health sub facility location data is rejected when mandatory parameter code is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT249() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthSubFacilityHeader, ",health sub facility regional name,health sub facility name,1,2,00003,4,5");
-        healthSubFacilityImportService.importData(reader);
-    }
-
-    /*
-    * To verify health sub facility location data is rejected when mandatory parameter health_facality_id is missing.
-    */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT250() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthSubFacilityHeader, "8,health sub facility regional name,health sub facility name,1,2,00003,4,");
-        healthSubFacilityImportService.importData(reader);
-    }
-
-    /*
-    * To verify health sub facility location data is rejected when health_facality_id is having invalid value.
-    */
-    @Test
-    public void verifyFT251() throws Exception {
-        boolean thrown = false;
-        String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "org.motechproject.nms.region.domain.HealthSubFacility, violations: {'healthFacility': may not be null}";
-        Reader reader = createReaderWithHeaders(
-                healthSubFacilityHeader, "8,health sub facility regional name,health sub facility name,1,2,00003,4,6");
-        try {
-            healthSubFacilityImportService.importData(reader);
-        } catch (CsvImportDataException e) {
-            thrown = true;
-            assertEquals(errorMessage, e.getMessage());
-        }
-        assertTrue(thrown);
-    }
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT242() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthFacilityHeader, ",health facility regional name,health facility name,1,2,00003,6,5678");
+//        healthFacilityImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health facility location data is rejected when mandatory parameter health_block_id is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT243() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthFacilityHeader, "7,health facility regional name,health facility name,1,2,00003,,5678");
+//        healthFacilityImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health facility location data is rejected when health_block_id is having invalid value.
+//    */
+//    @Test
+//    public void verifyFT244() throws Exception {
+//        boolean thrown = false;
+//        String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
+//                "org.motechproject.nms.region.domain.HealthFacility, violations: {'healthBlock': may not be null}";
+//        Reader reader = createReaderWithHeaders(
+//                healthFacilityHeader, "7,health facility regional name,health facility name,1,2,00003,10,5678");
+//        try {
+//            healthFacilityImportService.importData(reader);
+//        } catch (CsvImportDataException e) {
+//            thrown = true;
+//            assertEquals(errorMessage, e.getMessage());
+//        }
+//        assertTrue(thrown);
+//    }
+//
+//    /*
+//    * To verify health facility location data is rejected when code is having invalid value.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT245() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthFacilityHeader, "abc,health facility regional name,health facility name,1,2,00003,6,5678");
+//        healthFacilityImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health sub facility location data is rejected when mandatory parameter name is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT248() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthSubFacilityHeader, "8,health sub facility regional name,,1,2,00003,4,5");
+//        healthSubFacilityImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health sub facility location data is rejected when mandatory parameter code is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT249() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthSubFacilityHeader, ",health sub facility regional name,health sub facility name,1,2,00003,4,5");
+//        healthSubFacilityImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health sub facility location data is rejected when mandatory parameter health_facality_id is missing.
+//    */
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT250() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthSubFacilityHeader, "8,health sub facility regional name,health sub facility name,1,2,00003,4,");
+//        healthSubFacilityImportService.importData(reader);
+//    }
+//
+//    /*
+//    * To verify health sub facility location data is rejected when health_facality_id is having invalid value.
+//    */
+//    @Test
+//    public void verifyFT251() throws Exception {
+//        boolean thrown = false;
+//        String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
+//                "org.motechproject.nms.region.domain.HealthSubFacility, violations: {'healthFacility': may not be null}";
+//        Reader reader = createReaderWithHeaders(
+//                healthSubFacilityHeader, "8,health sub facility regional name,health sub facility name,1,2,00003,4,6");
+//        try {
+//            healthSubFacilityImportService.importData(reader);
+//        } catch (CsvImportDataException e) {
+//            thrown = true;
+//            assertEquals(errorMessage, e.getMessage());
+//        }
+//        assertTrue(thrown);
+//    }
 
     /*
     * To verify health sub facility location data is rejected when code is having invalid value.
     */
-    @Test(expected = CsvImportDataException.class)
-    public void verifyFT252() throws Exception {
-        Reader reader = createReaderWithHeaders(
-                healthSubFacilityHeader, "abc,health sub facility regional name,health sub facility name,1,2,00003,4,5");
-        healthSubFacilityImportService.importData(reader);
-    }
+//    @Test(expected = CsvImportDataException.class)
+//    public void verifyFT252() throws Exception {
+//        Reader reader = createReaderWithHeaders(
+//                healthSubFacilityHeader, "abc,health sub facility regional name,health sub facility name,1,2,00003,4,5");
+//        healthSubFacilityImportService.importData(reader);
+//    }
 
     /*
     * To verify panchayat location data is rejected when mandatory parameter name is missing.

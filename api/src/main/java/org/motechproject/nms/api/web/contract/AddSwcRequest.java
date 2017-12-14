@@ -3,21 +3,18 @@ package org.motechproject.nms.api.web.contract;
 /**
  * Created by beehyvsc on 17/7/17.
  */
-public class AddRchFlwRequest {
+public class AddSwcRequest {
     private String name;
-    private String flwId;
+    private String swcId;
     private Long msisdn;
     private Long stateId;
     private Long districtId;
-    private String talukaId;
-    private Long phcId;
-    private Long subcentreId;
-    private Long villageId;
-    private Long healthblockId;
+    private Long blockId;
+    private Long panchayatId;
     private String gfType;
     private String gfStatus;
 
-    public AddRchFlwRequest() {
+    public AddSwcRequest() {
 
     }
 
@@ -29,12 +26,12 @@ public class AddRchFlwRequest {
         this.name = name;
     }
 
-    public String getFlwId() {
-        return flwId;
+    public String getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(String flwId) {
-        this.flwId = flwId;
+    public void setSwcId(String swcId) {
+        this.swcId = swcId;
     }
 
     public Long getMsisdn() {
@@ -62,44 +59,20 @@ public class AddRchFlwRequest {
         this.districtId = districtId;
     }
 
-    public String getTalukaId() {
-        return talukaId;
+    public Long getBlockId() {
+        return blockId;
     }
 
-    public void setTalukaId(String talukaId) {
-        this.talukaId = talukaId;
+    public void setBlockId(Long blockId) {
+        this.blockId = blockId;
     }
 
-    public Long getPhcId() {
-        return phcId;
+    public Long getPanchayatId() {
+        return panchayatId;
     }
 
-    public void setPhcId(Long phcId) {
-        this.phcId = phcId;
-    }
-
-    public Long getSubcentreId() {
-        return subcentreId;
-    }
-
-    public void setSubcentreId(Long subcentreId) {
-        this.subcentreId = subcentreId;
-    }
-
-    public Long getVillageId() {
-        return villageId;
-    }
-
-    public void setVillageId(Long villageId) {
-        this.villageId = villageId;
-    }
-
-    public Long getHealthblockId() {
-        return healthblockId;
-    }
-
-    public void setHealthblockId(Long healthblockId) {
-        this.healthblockId = healthblockId;
+    public void setPanchayatId(Long panchayatId) {
+        this.panchayatId = panchayatId;
     }
 
     public String getGfType() {

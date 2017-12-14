@@ -25,6 +25,7 @@ import org.motechproject.nms.swc.exception.SwcImportException;
 import org.motechproject.nms.swc.repository.ContactNumberAuditDataService;
 import org.motechproject.nms.swc.repository.SwcErrorDataService;
 import org.motechproject.nms.swc.service.SwcService;
+import org.motechproject.nms.swcUpdate.contract.SwcRecord;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.kilkari.contract.AnmAshaRecord;
 import org.motechproject.nms.kilkari.contract.RchAnmAshaRecord;
@@ -32,7 +33,7 @@ import org.motechproject.nms.kilkari.domain.RejectionReasons;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
 import org.motechproject.nms.swc.utils.SwcMapper;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
-import org.motechproject.nms.kilkari.utils.RejectedObjectConverter;
+import org.motechproject.nms.swcUpdate.utils.RejectedObjectConverter;
 import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.region.domain.District;
@@ -247,25 +248,16 @@ public class SwcImportServiceImpl implements SwcImportService {
         State state = locationService.getState(stateId);
         if (state == null) {
             swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_STATE));
-            if (importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT)) {
                 action = this.flwActionFinder(convertMapToAsha(flw));
-                flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
-            } else {
-                action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
-                flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
-            }
+                flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
             return false;
         }
         District district = locationService.getDistrict(stateId, districtId);
         if (district == null) {
             swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_DISTRICT));
-            if (importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT)) {
-                action = this.flwActionFinder(convertMapToAsha(flw));
-                flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
-            } else {
                 action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
-                flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
-            }
+                flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+
             return false;
         }
 
@@ -275,81 +267,6 @@ public class SwcImportServiceImpl implements SwcImportService {
         try {
             location = locationService.getLocations(flw, false);
 
-            if (importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT)) {
-                action = this.flwActionFinder(convertMapToAsha(flw));
-                if (existingFlwByFlwId != null && existingFlwByNumber != null) {
-
-                    if (existingFlwByFlwId.getSwcId().equalsIgnoreCase(existingFlwByNumber.getSwcId()) &&
-                            existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) {
-                        // we are trying to update the same existing flw. set fields and update
-                        LOGGER.debug("Updating existing user with the same phone number");
-                        swcService.update(SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT));
-                        return true;
-                    } else if ((!existingFlwByFlwId.getSwcId().equalsIgnoreCase(existingFlwByNumber.getSwcId()) ||
-                            !existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) &&
-                            existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
-                        LOGGER.debug("Updating existing user with same phone number");
-                        swcService.update(SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), true, null, action));
-                        return true;
-                    } else {
-                        // we are trying to update 2 different users and/or phone number used by someone else
-                        LOGGER.debug("Existing flw but phone number(update) already in use");
-                        swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
-                        return false;
-                    }
-                } else if (existingFlwByFlwId != null && existingFlwByNumber == null) {
-                    // trying to update the phone number of the person. possible migration scenario
-                    // making design decision that flw will lose all progress when phone number is changed. Usage and tracking is not
-                    // worth the effort & we don't really know that its the same flw
-                    LOGGER.debug("Updating phone number for flw");
-                    long existingContactNumber = existingFlwByFlwId.getContactNumber();
-                    Swachchagrahi flwInstance = SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.MCTS_IMPORT);
-                    updateFlwMaMsisdn(flwInstance, existingContactNumber, contactNumber);
-                    flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), true, null, action));
-                    return true;
-                } else if (existingFlwByFlwId == null && existingFlwByNumber != null) {
-
-                    if (existingFlwByNumber.getSwcId() == null) {
-                        // we just got data from mcts for a previous anonymous user that subscribed by phone number
-                        // merging those records
-                        LOGGER.debug("Merging mcts data with previously anonymous user");
-                        swcService.update(SwcMapper.updateSwc(existingFlwByNumber, flw, location, SubscriptionOrigin.MCTS_IMPORT));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), true, null, action));
-                        return true;
-                    } else if (existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
-                        LOGGER.debug("Adding new flw user");
-                        Swachchagrahi swachchagrahi = SwcMapper.createSwc(flw, location);
-                        if (swachchagrahi != null) {
-                            swcService.add(swachchagrahi);
-                            return true;
-                        } else {
-                            LOGGER.error("Job Status is INACTIVE. So cannot create record.");
-                            return false;
-                        }
-                    } else {
-                        // phone number used by someone else.
-                        LOGGER.debug("New flw but phone number(update) already in use");
-                        swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
-                        return false;
-                    }
-
-                } else { // existingFlwByMctsFlwId & existingFlwByNumber are null)
-                    // new user. set fields and add
-                    LOGGER.debug("Adding new flw user");
-                    Swachchagrahi swachchagrahi = SwcMapper.createSwc(flw, location);
-                    if (swachchagrahi != null) {
-                        swcService.add(swachchagrahi);
-                        return true;
-                    } else {
-                        LOGGER.error("GF Status is INACTIVE. So cannot create record.");
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.GF_STATUS_INACTIVE.toString(), action));
-                        return false;
-                    }
-                }
-            } else {
                 action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
                 if (existingFlwByFlwId != null && existingFlwByNumber != null) {
 
@@ -358,7 +275,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // we are trying to update the same existing flw. set fields and update
                         LOGGER.debug("Updating existing user with same phone number");
                         swcService.update(SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
+                        flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else if ((!existingFlwByFlwId.getSwcId().equalsIgnoreCase(existingFlwByNumber.getSwcId()) ||
                             !existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) &&
@@ -370,7 +287,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // we are trying to update 2 different users and/or phone number used by someone else
                         LOGGER.debug("Existing flw but phone number(update) already in use");
                         swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                        flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
                 } else if (existingFlwByFlwId != null && existingFlwByNumber == null) {
@@ -381,7 +298,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                     long existingContactNumber = existingFlwByFlwId.getContactNumber();
                     Swachchagrahi flwInstance = SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT);
                     updateFlwMaMsisdn(flwInstance, existingContactNumber, contactNumber);
-                    flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
+                    flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
                     return true;
                 } else if (existingFlwByFlwId == null && existingFlwByNumber != null) {
 
@@ -390,7 +307,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // merging those records
                         LOGGER.debug("Merging rch data with previously anonymous user");
                         swcService.update(SwcMapper.updateSwc(existingFlwByNumber, flw, location, SubscriptionOrigin.RCH_IMPORT));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
+                        flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else if (existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Adding new RCH flw user");
@@ -406,7 +323,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // phone number used by someone else.
                         LOGGER.debug("New flw but phone number(update) already in use");
                         swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                        flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
 
@@ -416,25 +333,20 @@ public class SwcImportServiceImpl implements SwcImportService {
                     Swachchagrahi swachchagrahi = SwcMapper.createRchSwc(flw, location);
                     if (swachchagrahi != null) {
                         swcService.add(swachchagrahi);
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), true, null, action));
+                        flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else {
                         LOGGER.error("GF Status is INACTIVE. So cannot create record.");
-                        flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.GF_STATUS_INACTIVE.toString(), action));
+                        flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.GF_STATUS_INACTIVE.toString(), action));
                         return false;
                     }
                 }
-            }
+
 
         } catch (InvalidLocationException ile) {
             LOGGER.debug(ile.toString());
-            if (importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT)) {
-                action = this.flwActionFinder(convertMapToAsha(flw));
-                flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionMcts(convertMapToAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
-            } else {
                 action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
-                flwRejectionService.createUpdate(RejectedObjectConverter.flwRejectionRch(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
-            }
+                flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
             return false;
         }
     }
@@ -587,8 +499,8 @@ public class SwcImportServiceImpl implements SwcImportService {
         return mapping;
     }
 
-    private static RchAnmAshaRecord convertMapToRchAsha(Map<String, Object> record) { //NO CHECKSTYLE CyclomaticComplexity
-        RchAnmAshaRecord rchAnmAshaRecord = new RchAnmAshaRecord();
+    private static SwcRecord convertMapToRchAsha(Map<String, Object> record) { //NO CHECKSTYLE CyclomaticComplexity
+        SwcRecord rchAnmAshaRecord = new SwcRecord();
         rchAnmAshaRecord.setStateId(record.get(FlwConstants.STATE_ID) == null ? null : (Long) record.get(FlwConstants.STATE_ID));
         rchAnmAshaRecord.setDistrictId(record.get(FlwConstants.DISTRICT_ID) == null ? null : (Long) record.get(FlwConstants.DISTRICT_ID));
         rchAnmAshaRecord.setDistrictName(record.get(FlwConstants.DISTRICT_NAME) == null ? null : (String) record.get(FlwConstants.DISTRICT_NAME));
@@ -721,7 +633,7 @@ public class SwcImportServiceImpl implements SwcImportService {
         }
     }
 
-    private String rchFlwActionFinder(RchAnmAshaRecord record) {
+    private String rchFlwActionFinder(SwcRecord record) {
         if (swcService.getByMctsFlwIdAndState(record.getGfId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
             return "CREATE";
         } else {

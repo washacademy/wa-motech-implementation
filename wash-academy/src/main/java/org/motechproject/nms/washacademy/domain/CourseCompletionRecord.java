@@ -7,7 +7,7 @@ import org.motechproject.mds.domain.MdsEntity;
 /**
  * Tracks the completion record for a given calling number
  */
-@Entity(tableName = "nms_ma_course_completion_records")
+@Entity(tableName = "wash_course_completion_records")
 public class CourseCompletionRecord extends MdsEntity {
 
     @Field

@@ -3,8 +3,8 @@ package org.motechproject.nms.api.web.converter;
 import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
 import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
 import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
-import org.motechproject.nms.mobileacademy.dto.MaBookmark;
-import org.motechproject.nms.mobileacademy.dto.MaCourse;
+import org.motechproject.nms.washacademy.dto.WaBookmark;
+import org.motechproject.nms.washacademy.dto.WaCourse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,14 +12,14 @@ import org.slf4j.LoggerFactory;
  * Translator helper module that converts from the service dto object to
  * API response object
  */
-public final class MobileAcademyConverter {
+public final class WashAcademyConverter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MobileAcademyConverter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WashAcademyConverter.class);
 
     /**
      * Private constructor for static MA course converters
      */
-    private MobileAcademyConverter() {
+    private WashAcademyConverter() {
 
     }
 
@@ -28,7 +28,7 @@ public final class MobileAcademyConverter {
      * @param course course dto
      * @return CourseResponse API object
      */
-    public static CourseResponse convertCourseDto(MaCourse course) {
+    public static CourseResponse convertCourseDto(WaCourse course) {
 
         LOGGER.debug("Converting course dto to response contract");
         CourseResponse response = new CourseResponse();
@@ -43,8 +43,8 @@ public final class MobileAcademyConverter {
      * @param courseResponse course response object
      * @return course dto
      */
-    public static MaCourse convertCourseResponse(CourseResponse courseResponse) {
-        MaCourse course = new MaCourse();
+    public static WaCourse convertCourseResponse(CourseResponse courseResponse) {
+        WaCourse course = new WaCourse();
         course.setName(courseResponse.getName());
         course.setVersion(courseResponse.getCourseVersion());
         course.setContent(courseResponse.getChapters().toString());
@@ -56,7 +56,7 @@ public final class MobileAcademyConverter {
      * @param bookmark bookmark dto
      * @return api response object
      */
-    public static GetBookmarkResponse convertBookmarkDto(MaBookmark bookmark) {
+    public static GetBookmarkResponse convertBookmarkDto(WaBookmark bookmark) {
         GetBookmarkResponse response = new GetBookmarkResponse();
         if (bookmark != null) {
             response.setBookmark(bookmark.getBookmark());
@@ -70,9 +70,9 @@ public final class MobileAcademyConverter {
      * @param saveBookmarkRequest api request object
      * @return bookmark dto
      */
-    public static MaBookmark convertSaveBookmarkRequest(SaveBookmarkRequest saveBookmarkRequest, Long flwId) {
-        MaBookmark bookmark = new MaBookmark();
-        bookmark.setFlwId(flwId);
+    public static WaBookmark convertSaveBookmarkRequest(SaveBookmarkRequest saveBookmarkRequest, Long swcId) {
+        WaBookmark bookmark = new WaBookmark();
+        bookmark.setSwcId(swcId);
         bookmark.setCallId(saveBookmarkRequest.getCallId());
         bookmark.setBookmark(saveBookmarkRequest.getBookmark());
         bookmark.setScoresByChapter(saveBookmarkRequest.getScoresByChapter());

@@ -21,8 +21,8 @@ import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.washacademy.domain.CourseCompletionRecord;
 import org.motechproject.nms.washacademy.domain.NmsCourse;
 import org.motechproject.nms.washacademy.domain.MtrainingModuleActivityRecordAudit;
-import org.motechproject.nms.washacademy.dto.MaBookmark;
-import org.motechproject.nms.washacademy.dto.MaCourse;
+import org.motechproject.nms.washacademy.dto.WaBookmark;
+import org.motechproject.nms.washacademy.dto.WaCourse;
 import org.motechproject.nms.washacademy.exception.CourseNotCompletedException;
 import org.motechproject.nms.washacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.washacademy.repository.NmsCourseDataService;
@@ -144,7 +144,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public MaCourse getCourse() {
+    public WaCourse getCourse() {
 
         NmsCourse course = nmsCourseDataService.getCourseByName(COURSE_NAME);
 
@@ -157,11 +157,11 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public void setCourse(MaCourse courseDto) {
+    public void setCourse(WaCourse courseDto) {
 
         if (courseDto == null) {
             LOGGER.error("Attempted to set null course, exiting operation");
-            alertService.create(COURSE_ENTITY_NAME, "MaCourse", "Trying to set null MaCourse", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            alertService.create(COURSE_ENTITY_NAME, "WaCourse", "Trying to set null WaCourse", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
             return;
         }
 
@@ -182,7 +182,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public MaBookmark getBookmark(Long callingNumber, String callId) {
+    public WaBookmark getBookmark(Long callingNumber, String callId) {
 
         Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
         if (flw == null) {
@@ -192,7 +192,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(flwId.toString());
 
         if (existingBookmark != null) {
-            MaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
+            WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
             toReturn.setCallId(callId);
             return toReturn;
         }
@@ -201,12 +201,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public MaBookmark getBookmarkOps(Long callingNumber) {
+    public WaBookmark getBookmarkOps(Long callingNumber) {
         LOGGER.debug("Retrieve bookmark by Ops");
         Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(callingNumber.toString());
         if (existingBookmark != null) {
-            MaBookmark toReturn = new MaBookmark();
-            toReturn.setFlwId(Long.parseLong(existingBookmark.getExternalId()));
+            WaBookmark toReturn = new WaBookmark();
+            toReturn.setSwcId(Long.parseLong(existingBookmark.getExternalId()));
 
             // default behavior to map the data
             if (existingBookmark.getProgress() != null) {
@@ -220,16 +220,16 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public void setBookmark(MaBookmark saveBookmark) {
+    public void setBookmark(WaBookmark saveBookmark) {
 
         if (saveBookmark == null) {
             LOGGER.error("Bookmark cannot be null, check request");
             throw new IllegalArgumentException("Invalid bookmark, cannot be null");
         }
 
-        String flwId = saveBookmark.getFlwId().toString();
+        String flwId = saveBookmark.getSwcId().toString();
         Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(flwId);
-        Swachchagrahi flw = swcService.getById(saveBookmark.getFlwId());
+        Swachchagrahi flw = swcService.getById(saveBookmark.getSwcId());
         String callingNumber = flw.getContactNumber().toString();
 
         // write a new activity record if existing bookmark is null or
@@ -242,7 +242,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
         if (existingBookmark == null) {
             // if no bookmarks exist for user
-            LOGGER.info("No bookmarks found for user " + LogHelper.obscure(saveBookmark.getFlwId()));
+            LOGGER.info("No bookmarks found for user " + LogHelper.obscure(saveBookmark.getSwcId()));
             bookmarkService.createBookmark(setBookmarkProperties(saveBookmark, new Bookmark()));
         } else {
 
@@ -260,7 +260,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // Create an activity record here since pass/fail counts as 1 try
             activityService.createActivity(
                     new ActivityRecord(callingNumber, null, null, null, null, DateTime.now(), ActivityState.COMPLETED));
-            evaluateCourseCompletion(saveBookmark.getFlwId(), saveBookmark.getScoresByChapter());
+            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter());
         }
     }
 
@@ -308,9 +308,9 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     // Map the dto to the domain object
-    private Bookmark setBookmarkProperties(MaBookmark fromBookmark, Bookmark toBookmark) {
+    private Bookmark setBookmarkProperties(WaBookmark fromBookmark, Bookmark toBookmark) {
 
-        toBookmark.setExternalId(fromBookmark.getFlwId().toString());
+        toBookmark.setExternalId(fromBookmark.getSwcId().toString());
 
         if (toBookmark.getProgress() == null) {
             toBookmark.setProgress(new HashMap<String, Object>());
@@ -331,10 +331,10 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     // Map domain object to dto
-    private MaBookmark setMaBookmarkProperties(Bookmark fromBookmark) {
+    private WaBookmark setMaBookmarkProperties(Bookmark fromBookmark) {
 
-        MaBookmark toReturn = new MaBookmark();
-        toReturn.setFlwId(Long.parseLong(fromBookmark.getExternalId()));
+        WaBookmark toReturn = new WaBookmark();
+        toReturn.setSwcId(Long.parseLong(fromBookmark.getExternalId()));
 
         // default behavior to map the data
         if (fromBookmark.getProgress() != null) {
@@ -418,7 +418,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     private void bootstrapCourse() {
-        MaCourse course = new MaCourse();
+        WaCourse course = new WaCourse();
         try (InputStream is = settingsFacade.getRawConfig(COURSE_CONTENT_FILE)) {
             String jsonText = IOUtils.toString(is);
             JSONObject jo = new JSONObject(jsonText);
@@ -429,11 +429,11 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         }
         catch (Exception e) {
             LOGGER.error("Error while reading course json. Check file. Exception: " + e.toString());
-            alertService.create(COURSE_ENTITY_NAME, "MaCourse", "Error reading course json", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            alertService.create(COURSE_ENTITY_NAME, "WaCourse", "Error reading course json", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
         }
     }
 
-    private void setOrUpdateCourse(MaCourse courseDto) {
+    private void setOrUpdateCourse(WaCourse courseDto) {
         NmsCourse existing = nmsCourseDataService.getCourseByName(courseDto.getName());
 
         if (existing == null) {
@@ -451,9 +451,9 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         }
     }
 
-    private MaCourse mapCourseDomainToDto(NmsCourse course) {
+    private WaCourse mapCourseDomainToDto(NmsCourse course) {
 
-        MaCourse courseDto = new MaCourse();
+        WaCourse courseDto = new WaCourse();
         courseDto.setName(course.getName());
         courseDto.setVersion(course.getModificationDate().getMillis() / MILLIS_PER_SEC);
         courseDto.setContent(course.getContent());

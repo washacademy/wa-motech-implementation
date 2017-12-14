@@ -15,18 +15,14 @@ public class InactiveJobCallAudit {
     private DateTime dateTimeNow;
 
     @Field
-    private String flwId;
-
-    @Field
-    private String mctsFlwId;
+    private Long swcId;
 
     @Field
     private Long callingNumber;
 
-    public InactiveJobCallAudit(DateTime dateTimeNow, String flwId, String mctsFlwId, Long callingNumber) {
+    public InactiveJobCallAudit(DateTime dateTimeNow, Long swcId, Long callingNumber) {
         this.dateTimeNow = dateTimeNow;
-        this.flwId = flwId;
-        this.mctsFlwId = mctsFlwId;
+        this.swcId = swcId;
         this.callingNumber = callingNumber;
     }
 
@@ -38,20 +34,12 @@ public class InactiveJobCallAudit {
         this.dateTimeNow = dateTimeNow;
     }
 
-    public String getFlwId() {
-        return flwId;
+    public Long getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(String flwId) {
-        this.flwId = flwId;
-    }
-
-    public String getMctsFlwId() {
-        return mctsFlwId;
-    }
-
-    public void setMctsFlwId(String mctsFlwId) {
-        this.mctsFlwId = mctsFlwId;
+    public void setSwcId(Long swcId) {
+        this.swcId = swcId;
     }
 
     public Long getCallingNumber() {

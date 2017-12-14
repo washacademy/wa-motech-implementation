@@ -3,12 +3,12 @@ package org.motechproject.nms.api.web;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.nms.api.web.contract.AddFlwRequest;
-import org.motechproject.nms.api.web.contract.AddRchFlwRequest;
-import org.motechproject.nms.api.web.service.FlwCsvService;
+import org.motechproject.nms.api.web.contract.AddSwcRequest;
+import org.motechproject.nms.api.web.service.SwcCsvService;
 import org.motechproject.nms.csv.exception.CsvImportException;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
 import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
-import org.motechproject.nms.api.web.converter.MobileAcademyConverter;
+import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.imi.service.CdrFileService;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -21,6 +21,8 @@ import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
 
+import org.motechproject.nms.washacademy.dto.WaBookmark;
+import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +71,13 @@ public class OpsController extends BaseController {
     private MobileAcademyService mobileAcademyService;
 
     @Autowired
+    private WashAcademyService washAcademyService;
+
+    @Autowired
     private MctsChildFixService mctsChildFixService;
 
     @Autowired
-    private FlwCsvService flwCsvService;
+    private SwcCsvService swcCsvService;
 
     private final String contactNumber = "contactNumber";
 
@@ -139,33 +144,16 @@ public class OpsController extends BaseController {
         eventRelay.sendEventMessage(new MotechEvent(KilkariConstants.SUBSCRIPTION_UPKEEP_SUBJECT));
     }
 
-
-    @RequestMapping(value = "/createUpdateFlw",
-            method = RequestMethod.POST,
-            headers = { "Content-type=application/json" })
-    @ResponseStatus(HttpStatus.OK)
-    public void createUpdateFlw(@RequestBody AddFlwRequest addFlwRequest) {
-        // TODO: add a field updatedDateNic for Add Flw Request.
-        // Will Fix this with NMS-349
-
-        StringBuilder failureReasons = flwCsvService.csvUploadMcts(addFlwRequest);
-        if (failureReasons != null) {
-            throw new IllegalArgumentException(failureReasons.toString());
-        } else {
-            flwCsvService.persistFlwMcts(addFlwRequest);
-        }
-    }
-
     @RequestMapping(value = "/createUpdateRchFlw",
             method = RequestMethod.POST,
             headers = { "Content-type=application/json" })
     @ResponseStatus(HttpStatus.OK)
-    public void createUpdateRchFlw(@RequestBody AddRchFlwRequest addRchFlwRequest) {
-        StringBuilder failureReasons = flwCsvService.csvUploadRch(addRchFlwRequest);
+    public void createUpdateRchFlw(@RequestBody AddSwcRequest addSwcRequest) {
+        StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
         if (failureReasons != null) {
             throw new IllegalArgumentException(failureReasons.toString());
         } else {
-            flwCsvService.persistFlwRch(addRchFlwRequest);
+            swcCsvService.persistFlwRch(addSwcRequest);
         }
     }
 
@@ -173,8 +161,8 @@ public class OpsController extends BaseController {
     @ResponseBody
     public GetBookmarkResponse getBookmarkWithScore(@RequestParam(required = false) Long callingNumber) {
         LOGGER.info("/getbookmark");
-        MaBookmark bookmark = mobileAcademyService.getBookmarkOps(callingNumber);
-        GetBookmarkResponse ret = MobileAcademyConverter.convertBookmarkDto(bookmark);
+        WaBookmark bookmark = washAcademyService.getBookmarkOps(callingNumber);
+        GetBookmarkResponse ret = WashAcademyConverter.convertBookmarkDto(bookmark);
         log("RESPONSE: /ops/getbookmark", String.format("bookmark=%s", ret.toString()));
         return ret;
     }
@@ -207,24 +195,24 @@ public class OpsController extends BaseController {
         return scores;
     }
 
-    @RequestMapping(value = "/updateMotherInChild", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
-    public void importChildUpdate(@RequestParam MultipartFile csvFile) {
-
-        LOGGER.debug("updateMotherInChild() BEGIN");
-        try {
-            try (InputStream in = csvFile.getInputStream()) {
-                mctsChildFixService.updateMotherChild(new InputStreamReader(in));
-            }
-        } catch (CsvImportException e) {
-            LOGGER.error(csvFile.getOriginalFilename(), "/updateMotherInChild", e);
-            throw e;
-        } catch (Exception e) {
-            LOGGER.error(csvFile.getOriginalFilename(), "/updateMotherInChild", e);
-            throw new CsvImportException("An error occurred during CSV import", e);
-        }
-        LOGGER.debug("updateMotherInChild() END");
-    }
+//    @RequestMapping(value = "/updateMotherInChild", method = RequestMethod.POST)
+//    @ResponseStatus(HttpStatus.OK)
+//    public void importChildUpdate(@RequestParam MultipartFile csvFile) {
+//
+//        LOGGER.debug("updateMotherInChild() BEGIN");
+//        try {
+//            try (InputStream in = csvFile.getInputStream()) {
+//                mctsChildFixService.updateMotherChild(new InputStreamReader(in));
+//            }
+//        } catch (CsvImportException e) {
+//            LOGGER.error(csvFile.getOriginalFilename(), "/updateMotherInChild", e);
+//            throw e;
+//        } catch (Exception e) {
+//            LOGGER.error(csvFile.getOriginalFilename(), "/updateMotherInChild", e);
+//            throw new CsvImportException("An error occurred during CSV import", e);
+//        }
+//        LOGGER.debug("updateMotherInChild() END");
+//    }
 
 }
 

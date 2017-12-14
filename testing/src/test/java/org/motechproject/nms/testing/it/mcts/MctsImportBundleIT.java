@@ -8,11 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.flw.domain.SwachchagrahiStatus;
-import org.motechproject.nms.flw.domain.SwcJobStatus;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.repository.SwcDataService;
-import org.motechproject.nms.flw.service.SwcService;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.imi.service.SettingsService;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MctsChildDataService;
@@ -100,8 +100,6 @@ public class MctsImportBundleIT extends BasePaxIT {
     @Inject
     private SwcImportRejectionDataService flwImportRejectionDataService;
 
-    @Inject
-    private MotherRejectionDataService motherRejectionDataService;
 
     @Inject
     private SwcService swcService;
@@ -128,35 +126,14 @@ public class MctsImportBundleIT extends BasePaxIT {
         block.setDistrict(district);
         district.setBlocks(new ArrayList<>(singletonList(block)));
 
-        HealthBlock healthBlock = new HealthBlock();
-        healthBlock.setCode(113L);
+        Panchayat healthBlock = new Panchayat();
+        healthBlock.setVcode(113L);
         healthBlock.setName("HealthBlock_Name 1");
         healthBlock.setRegionalName("HB1");
-        healthBlock.setHq("An HQ");
 
         healthBlock.setBlock(block);
-        block.setHealthBlocks(new ArrayList<>(singletonList(healthBlock)));
+        block.setPanchayats(new ArrayList<>(singletonList(healthBlock)));
 
-        HealthFacilityType phcType = new HealthFacilityType();
-        phcType.setCode(11L);
-        phcType.setName("PHC TYPE 111");
-
-        HealthFacility facility = new HealthFacility();
-        facility.setName("PHC_NAME 3");
-        facility.setRegionalName("Regional PHC 3");
-        facility.setCode(111L);
-        facility.setHealthFacilityType(phcType);
-
-        healthBlock.setHealthFacilities(new ArrayList<>(singletonList(facility)));
-        facility.setHealthBlock(healthBlock);
-
-        HealthSubFacility subcentre = new HealthSubFacility();
-        subcentre.setName("SubCentre_Name 1");
-        subcentre.setRegionalName("Regional sub name");
-        subcentre.setCode(333L);
-
-        subcentre.setHealthFacility(facility);
-        facility.setHealthSubFacilities(new ArrayList<>(singletonList(subcentre)));
 
         districtDataService.create(district);
 
@@ -254,34 +231,6 @@ public class MctsImportBundleIT extends BasePaxIT {
 
     }
 
-    @Test
-    public void testMotherRejection() throws MalformedURLException {
-        URL endpoint = new URL(String.format("http://localhost:%d/mctsMotherRejection", TestContext.getJettyPort()));
-        LocalDate lastDateToCheck = DateUtil.today().minusDays(7);
-        LocalDate yesterday = DateUtil.today().minusDays(1);
-        List<Long> stateIds = singletonList(21L);
-
-        // this CL workaround is for an issue with PAX IT logging messing things up
-        // shouldn't affect production
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(mctsWsImportService.getClass().getClassLoader());
-
-        // setup motech event
-        Map<String, Object> params = new HashMap<>();
-        params.put(Constants.START_DATE_PARAM, lastDateToCheck);
-        params.put(Constants.END_DATE_PARAM, yesterday);
-        params.put(Constants.STATE_ID_PARAM, 21L);
-        params.put(Constants.ENDPOINT_PARAM, endpoint);
-        MotechEvent event = new MotechEvent("foobar", params);
-        mctsWsImportService.importMothersData(event);
-        Thread.currentThread().setContextClassLoader(cl);
-
-//        Since the response while reading the xmls is a Remote server exception, the import should not take place and the data should be updated in nms_mcts_failure table
-        List<MotherImportRejection> motherImportRejections = motherRejectionDataService.retrieveAll();
-        assertEquals(2, motherImportRejections.size());
-
-
-    }
 
     @Test
     public void shouldRejectNonASHAWorkers() throws MalformedURLException {
@@ -308,7 +257,7 @@ public class MctsImportBundleIT extends BasePaxIT {
 //        Should reject non ASHA FLWs
         List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
-        assertEquals("ASHA",flws.get(0).getDesignation());
+        assertEquals("ASHA",flws.get(0).getQualification());
 
     }
 
@@ -333,7 +282,6 @@ public class MctsImportBundleIT extends BasePaxIT {
         MotechEvent event = new MotechEvent("foobar", params);
         Swachchagrahi flw = new Swachchagrahi(2223332235L);
         flw.setJobStatus(SwcJobStatus.ACTIVE);
-        flw.setMctsFlwId("200");
         flwDataService.create(flw);
         mctsWsImportService.importAnmAshaData(event);
         Thread.currentThread().setContextClassLoader(cl);
@@ -367,7 +315,7 @@ public class MctsImportBundleIT extends BasePaxIT {
         MotechEvent event = new MotechEvent("foobar", params);
         Swachchagrahi flw = new Swachchagrahi(2223332235L);
         flw.setJobStatus(SwcJobStatus.ACTIVE);
-        flw.setStatus(SwachchagrahiStatus.ANONYMOUS);
+        flw.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
         flwDataService.create(flw);
         mctsWsImportService.importAnmAshaData(event);
         Thread.currentThread().setContextClassLoader(cl);
@@ -376,7 +324,7 @@ public class MctsImportBundleIT extends BasePaxIT {
         List<Swachchagrahi> flws = flwDataService.retrieveAll();
         assertEquals(1, flws.size());
         flw = swcService.getByContactNumber(2223332235L);
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getStatus());
+        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getCourseStatus());
     }
 
     @Test

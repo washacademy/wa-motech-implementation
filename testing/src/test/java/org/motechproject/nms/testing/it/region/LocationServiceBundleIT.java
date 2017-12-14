@@ -50,20 +50,6 @@ public class LocationServiceBundleIT extends BasePaxIT {
     @Inject
     PanchayatDataService panchayatDataService;
 
-    @Inject
-    HealthBlockDataService healthBlockDataService;
-
-    @Inject
-    HealthBlockService healthBlockService;
-
-    @Inject
-    HealthFacilityTypeDataService healthFacilityTypeDataService;
-
-    @Inject
-    HealthFacilityDataService healthFacilityDataService;
-
-    @Inject
-    HealthSubFacilityDataService healthSubFacilityDataService;
 
     @Inject
     TestingService testingService;
@@ -75,10 +61,7 @@ public class LocationServiceBundleIT extends BasePaxIT {
     District district;
     Block block;
     Panchayat panchayat;
-    HealthBlock healthBlock;
-    HealthFacilityType healthFacilityType;
-    HealthFacility healthFacility;
-    HealthSubFacility healthSubFacility;
+
 
 
     @Before
@@ -87,28 +70,6 @@ public class LocationServiceBundleIT extends BasePaxIT {
 
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
-        healthSubFacility = new HealthSubFacility();
-        healthSubFacility.setName("Health Sub Facility 1");
-        healthSubFacility.setRegionalName("Health Sub Facility 1");
-        healthSubFacility.setCode(1L);
-
-        healthFacilityType = new HealthFacilityType();
-        healthFacilityType.setName("Health Facility Type 1");
-        healthFacilityType.setCode(1L);
-
-        healthFacility = new HealthFacility();
-        healthFacility.setName("Health Facility 1");
-        healthFacility.setRegionalName("Health Facility 1");
-        healthFacility.setCode(1L);
-        healthFacility.setHealthFacilityType(healthFacilityType);
-        healthFacility.getHealthSubFacilities().add(healthSubFacility);
-
-        healthBlock = new HealthBlock();
-        healthBlock.setName("Health Block 1");
-        healthBlock.setRegionalName("Health Block 1");
-        healthBlock.setHq("Health Block 1 HQ");
-        healthBlock.setCode(1L);
-        healthBlock.getHealthFacilities().add(healthFacility);
 
         panchayat = new Panchayat();
         panchayat.setName("Panchayat 1");
@@ -121,7 +82,6 @@ public class LocationServiceBundleIT extends BasePaxIT {
         block.setIdentity(1);
         block.setCode("0004");
         block.getPanchayats().add(panchayat);
-        block.getHealthBlocks().add(healthBlock);
 
         district = new District();
         district.setName("District 1");
@@ -177,26 +137,6 @@ public class LocationServiceBundleIT extends BasePaxIT {
         stateDataService.create(state);
     }
 
-    @Test(expected = ConstraintViolationException.class)
-    public void testCreateHealthBlockNoName() throws Exception {
-        healthBlock.setName(null);
-
-        healthBlockDataService.create(healthBlock);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testCreateHealthFacilityNoName() throws Exception {
-        healthFacility.setName(null);
-
-        healthFacilityDataService.create(healthFacility);
-    }
-
-    @Test(expected = ConstraintViolationException.class)
-    public void testCreateHealthSubFacilityNoName() throws Exception {
-        healthSubFacility.setName(null);
-
-        healthSubFacilityDataService.create(healthSubFacility);
-    }
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -279,134 +219,134 @@ public class LocationServiceBundleIT extends BasePaxIT {
 
     // Single Block Single HB, should find it
     // State -> District -> Block -> HealthBlock(1)
-    @Test
-    public void testFindHealthBlockByTalukaAndCode1() {
-        stateDataService.create(state);
-        districtDataService.create(district);
-        Block t = blockDataService.create(block);
-        healthBlockDataService.create(healthBlock);
-
-        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 1L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock.getCode());
-    }
-
-    // Multiple, lookup by t(1) and HB(2), should find it
-    // State -> District -> Block(1) -> HealthBlock(1)
-    //                   -> Block(2) -> HealthBlock(2)
-    @Test
-    public void testFindHealthBlockByTalukaAndCode2() {
-        stateDataService.create(state);
-        district = districtDataService.create(district);
-        Block t = blockDataService.create(block);
-        healthBlockDataService.create(healthBlock);
-
-        HealthBlock healthBlock2 = new HealthBlock();
-        healthBlock2.setName("Health Block 2");
-        healthBlock2.setRegionalName("Health Block 2");
-        healthBlock2.setHq("Health Block 2 HQ");
-        healthBlock2.setCode(2L);
-
-        Block block2 = new Block();
-        block2.setName("Block 2");
-        block2.setRegionalName("Block 2");
-        block2.setIdentity(2);
-        block2.setCode("0005");
-        block2.setDistrict(district);
-        block2.getHealthBlocks().add(healthBlock2);
-
-        block2 = blockDataService.create(block2);
-        healthBlockDataService.create(healthBlock2);
-
-        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 2L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock2.getCode());
-
-        hb = healthBlockService.findByTalukaAndCode(t, 1L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock.getCode());
-
-        hb = healthBlockService.findByTalukaAndCode(block2, 1L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock.getCode());
-
-        hb = healthBlockService.findByTalukaAndCode(block2, 2L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock2.getCode());
-    }
-
-    // Two HB in Single Block, lookup by t(1) hb(1), should find it
-    // State -> District -> Block -> HealthBlock(1)
-    //                             -> HealthBlock(2)
-    @Test
-    public void testFindHealthBlockByTalukaAndCode3() {
-        stateDataService.create(state);
-        districtDataService.create(district);
-        Block t = blockDataService.create(block);
-        healthBlockDataService.create(healthBlock);
-
-        HealthBlock healthBlock2 = new HealthBlock();
-        healthBlock2.setName("Health Block 2");
-        healthBlock2.setRegionalName("Health Block 2");
-        healthBlock2.setHq("Health Block 2 HQ");
-        healthBlock2.setCode(2L);
-        healthBlock2.setBlock(t);
-
-        healthBlockDataService.create(healthBlock2);
-
-        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 1L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock.getCode());
-
-        hb = healthBlockService.findByTalukaAndCode(t, 2L);
-        assertNotNull(hb);
-        assertEquals(hb.getCode(), healthBlock2.getCode());
-    }
-    // Multiple, lookup by t(1), hb(2) should not find it
-    // State(1) -> District -> Block(1) -> HealthBlock(1)
-    // State(2) -> District -> Block(2) -> HealthBlock(2)
-    @Test
-    public void testFindHealthBlockByTalukaAndCode4() {
-        stateDataService.create(state);
-        districtDataService.create(district);
-        Block t = blockDataService.create(block);
-        healthBlockDataService.create(healthBlock);
-
-        HealthBlock healthBlock2 = new HealthBlock();
-        healthBlock2.setName("Health Block 2");
-        healthBlock2.setRegionalName("Health Block 2");
-        healthBlock2.setHq("Health Block 2 HQ");
-        healthBlock2.setCode(2L);
-
-        Block block2 = new Block();
-        block2.setName("Block 2");
-        block2.setRegionalName("Block 2");
-        block2.setIdentity(2);
-        block2.setCode("0005");
-        block2.getHealthBlocks().add(healthBlock2);
-
-        District district2 = new District();
-        district2.setName("District 2");
-        district2.setRegionalName("District 2");
-        district2.setCode(2L);
-        district2.getBlocks().add(block2);
-
-        State state2 = new State();
-        state2.setName("State 2");
-        state2.setCode(2L);
-        state2.getDistricts().add(district2);
-
-        stateDataService.create(state2);
-        districtDataService.create(district2);
-        Block t2 = blockDataService.create(block2);
-        healthBlockDataService.create(healthBlock2);
-
-        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 2L);
-        assertNull(hb);
-
-        hb = healthBlockService.findByTalukaAndCode(t2, 1L);
-        assertNull(hb);
-    }
+//    @Test
+//    public void testFindHealthBlockByTalukaAndCode1() {
+//        stateDataService.create(state);
+//        districtDataService.create(district);
+//        Block t = blockDataService.create(block);
+//        healthBlockDataService.create(healthBlock);
+//
+//        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 1L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock.getCode());
+//    }
+//
+//    // Multiple, lookup by t(1) and HB(2), should find it
+//    // State -> District -> Block(1) -> HealthBlock(1)
+//    //                   -> Block(2) -> HealthBlock(2)
+//    @Test
+//    public void testFindHealthBlockByTalukaAndCode2() {
+//        stateDataService.create(state);
+//        district = districtDataService.create(district);
+//        Block t = blockDataService.create(block);
+//        healthBlockDataService.create(healthBlock);
+//
+//        HealthBlock healthBlock2 = new HealthBlock();
+//        healthBlock2.setName("Health Block 2");
+//        healthBlock2.setRegionalName("Health Block 2");
+//        healthBlock2.setHq("Health Block 2 HQ");
+//        healthBlock2.setCode(2L);
+//
+//        Block block2 = new Block();
+//        block2.setName("Block 2");
+//        block2.setRegionalName("Block 2");
+//        block2.setIdentity(2);
+//        block2.setCode("0005");
+//        block2.setDistrict(district);
+//        block2.getHealthBlocks().add(healthBlock2);
+//
+//        block2 = blockDataService.create(block2);
+//        healthBlockDataService.create(healthBlock2);
+//
+//        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 2L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock2.getCode());
+//
+//        hb = healthBlockService.findByTalukaAndCode(t, 1L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock.getCode());
+//
+//        hb = healthBlockService.findByTalukaAndCode(block2, 1L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock.getCode());
+//
+//        hb = healthBlockService.findByTalukaAndCode(block2, 2L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock2.getCode());
+//    }
+//
+//    // Two HB in Single Block, lookup by t(1) hb(1), should find it
+//    // State -> District -> Block -> HealthBlock(1)
+//    //                             -> HealthBlock(2)
+//    @Test
+//    public void testFindHealthBlockByTalukaAndCode3() {
+//        stateDataService.create(state);
+//        districtDataService.create(district);
+//        Block t = blockDataService.create(block);
+//        healthBlockDataService.create(healthBlock);
+//
+//        HealthBlock healthBlock2 = new HealthBlock();
+//        healthBlock2.setName("Health Block 2");
+//        healthBlock2.setRegionalName("Health Block 2");
+//        healthBlock2.setHq("Health Block 2 HQ");
+//        healthBlock2.setCode(2L);
+//        healthBlock2.setBlock(t);
+//
+//        healthBlockDataService.create(healthBlock2);
+//
+//        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 1L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock.getCode());
+//
+//        hb = healthBlockService.findByTalukaAndCode(t, 2L);
+//        assertNotNull(hb);
+//        assertEquals(hb.getCode(), healthBlock2.getCode());
+//    }
+//    // Multiple, lookup by t(1), hb(2) should not find it
+//    // State(1) -> District -> Block(1) -> HealthBlock(1)
+//    // State(2) -> District -> Block(2) -> HealthBlock(2)
+//    @Test
+//    public void testFindHealthBlockByTalukaAndCode4() {
+//        stateDataService.create(state);
+//        districtDataService.create(district);
+//        Block t = blockDataService.create(block);
+//        healthBlockDataService.create(healthBlock);
+//
+//        HealthBlock healthBlock2 = new HealthBlock();
+//        healthBlock2.setName("Health Block 2");
+//        healthBlock2.setRegionalName("Health Block 2");
+//        healthBlock2.setHq("Health Block 2 HQ");
+//        healthBlock2.setCode(2L);
+//
+//        Block block2 = new Block();
+//        block2.setName("Block 2");
+//        block2.setRegionalName("Block 2");
+//        block2.setIdentity(2);
+//        block2.setCode("0005");
+//        block2.getHealthBlocks().add(healthBlock2);
+//
+//        District district2 = new District();
+//        district2.setName("District 2");
+//        district2.setRegionalName("District 2");
+//        district2.setCode(2L);
+//        district2.getBlocks().add(block2);
+//
+//        State state2 = new State();
+//        state2.setName("State 2");
+//        state2.setCode(2L);
+//        state2.getDistricts().add(district2);
+//
+//        stateDataService.create(state2);
+//        districtDataService.create(district2);
+//        Block t2 = blockDataService.create(block2);
+//        healthBlockDataService.create(healthBlock2);
+//
+//        HealthBlock hb = healthBlockService.findByTalukaAndCode(t, 2L);
+//        assertNull(hb);
+//
+//        hb = healthBlockService.findByTalukaAndCode(t2, 1L);
+//        assertNull(hb);
+//    }
 
     @Test
     @Ignore // TODO: Remove once https://applab.atlassian.net/browse/MOTECH-1678 is resolved
@@ -429,17 +369,5 @@ public class LocationServiceBundleIT extends BasePaxIT {
         assertEquals(1, panchayatList.size());
         assertTrue(panchayatList.contains(panchayat));
 
-        List<HealthBlock> healthBlockList = blockList.get(0).getHealthBlocks();
-        assertEquals(1, healthBlockList.size());
-        assertTrue(healthBlockList.contains(healthBlock));
-
-        List<HealthFacility> healthFacilityList = healthBlockList.get(0).getHealthFacilities();
-        assertEquals(1, healthFacilityList.size());
-        Assert.assertEquals(healthFacilityType, healthFacilityList.get(0).getHealthFacilityType());
-        assertTrue(healthFacilityList.contains(healthFacility));
-
-        List<HealthSubFacility> healthSubFacilityList = healthFacilityList.get(0).getHealthSubFacilities();
-        assertEquals(1, healthSubFacilityList.size());
-        assertTrue(healthSubFacilityList.contains(healthSubFacility));
     }
 }
