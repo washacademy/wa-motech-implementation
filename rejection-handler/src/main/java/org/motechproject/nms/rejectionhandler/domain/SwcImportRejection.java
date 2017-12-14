@@ -1,6 +1,5 @@
 package org.motechproject.nms.rejectionhandler.domain;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -23,13 +22,13 @@ public class SwcImportRejection {
     private String updateDateNic;
 
     @Field
-    private Long SwcID;
+    private Long swcID;
 
     @Field
-    private String SwcName;
+    private String swcName;
 
     @Field
-    private String SwcStatus;
+    private String swcStatus;
 
     @Field
     private String msisdn;
@@ -50,10 +49,10 @@ public class SwcImportRejection {
     private String districtName;
 
     @Field
-    private Long BlockId;
+    private Long blockId;
 
     @Field
-    private String BlockName;
+    private String blockName;
 
     @Field
     private Long panchayatId;
@@ -99,30 +98,6 @@ public class SwcImportRejection {
 
     public void setUpdateDateNic(String updateDateNic) {
         this.updateDateNic = updateDateNic;
-    }
-
-    public Long getSwcID() {
-        return SwcID;
-    }
-
-    public void setSwcID(Long swcID) {
-        SwcID = swcID;
-    }
-
-    public String getSwcName() {
-        return SwcName;
-    }
-
-    public void setSwcName(String swcName) {
-        SwcName = swcName;
-    }
-
-    public String getSwcStatus() {
-        return SwcStatus;
-    }
-
-    public void setSwcStatus(String swcStatus) {
-        SwcStatus = swcStatus;
     }
 
     public String getMsisdn() {
@@ -173,20 +148,44 @@ public class SwcImportRejection {
         this.districtName = districtName;
     }
 
+    public Long getSwcID() {
+        return swcID;
+    }
+
+    public void setSwcID(Long swcID) {
+        this.swcID = swcID;
+    }
+
+    public String getSwcName() {
+        return swcName;
+    }
+
+    public void setSwcName(String swcName) {
+        this.swcName = swcName;
+    }
+
+    public String getSwcStatus() {
+        return swcStatus;
+    }
+
+    public void setSwcStatus(String swcStatus) {
+        this.swcStatus = swcStatus;
+    }
+
     public Long getBlockId() {
-        return BlockId;
+        return blockId;
     }
 
     public void setBlockId(Long blockId) {
-        BlockId = blockId;
+        this.blockId = blockId;
     }
 
     public String getBlockName() {
-        return BlockName;
+        return blockName;
     }
 
     public void setBlockName(String blockName) {
-        BlockName = blockName;
+        this.blockName = blockName;
     }
 
     public Long getPanchayatId() {
