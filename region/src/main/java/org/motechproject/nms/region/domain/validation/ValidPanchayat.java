@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = { VillageValidator.class })
+@Constraint(validatedBy = { PanchayatValidator.class })
 @Documented
-public @interface ValidVillage {
+public @interface ValidPanchayat {
 
     String message() default "At least one of vcode or svid must be set.";
 

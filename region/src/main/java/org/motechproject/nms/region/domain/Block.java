@@ -56,7 +56,7 @@ public class Block extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
-    @Persistent(mappedBy = "taluka", defaultFetchGroup = "false")
+    @Persistent(mappedBy = "block", defaultFetchGroup = "false")
     @JsonManagedReference
     private List<Panchayat> panchayats;
 

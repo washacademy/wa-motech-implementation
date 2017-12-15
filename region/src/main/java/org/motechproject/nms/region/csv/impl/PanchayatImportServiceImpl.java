@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Service("censusVillageImportService")
+@Service("panchayatImportService")
 public class PanchayatImportServiceImpl extends BaseLocationImportService<Panchayat>
         implements PanchayatImportService {
 

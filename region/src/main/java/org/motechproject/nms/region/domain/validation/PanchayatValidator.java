@@ -6,10 +6,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-public class VillageValidator implements ConstraintValidator<ValidVillage, Panchayat> {
+public class PanchayatValidator implements ConstraintValidator<ValidPanchayat, Panchayat> {
 
     @Override
-    public void initialize(ValidVillage validVillage) {
+    public void initialize(ValidPanchayat validPanchayat) {
 
     }
 
