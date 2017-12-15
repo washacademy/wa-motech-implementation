@@ -15,7 +15,6 @@ import org.motechproject.mtraining.domain.ActivityState;
 import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.BookmarkService;
-import org.motechproject.nms.api.web.contract.AddFlwRequest;
 import org.motechproject.nms.swc.domain.SwcError;
 import org.motechproject.nms.swc.domain.SwcErrorReason;
 import org.motechproject.nms.swc.domain.SwcJobStatus;

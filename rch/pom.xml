@@ -73,6 +73,18 @@
 
         <dependency>
             <groupId>org.motechproject.nms</groupId>
+            <artifactId>swc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>swcUpdate</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
             <artifactId>rejection-handler</artifactId>
             <version>${project.version}</version>
         </dependency>

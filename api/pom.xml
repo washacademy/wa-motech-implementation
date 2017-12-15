@@ -42,12 +42,12 @@
             <artifactId>swc</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
+        
+          <dependency>
             <groupId>org.motechproject.nms</groupId>
             <artifactId>swcUpdate</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency> 
 
         <dependency>
             <groupId>org.motechproject.nms</groupId>

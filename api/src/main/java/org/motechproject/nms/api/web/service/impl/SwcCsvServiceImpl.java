@@ -1,7 +1,6 @@
 package org.motechproject.nms.api.web.service.impl;
 
 import org.apache.commons.lang3.StringUtils;
-import org.motechproject.nms.api.web.contract.AddFlwRequest;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
 import org.motechproject.nms.swc.service.SwcService;
@@ -116,13 +115,6 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         }
     }
 
-    private String flwActionFinder(AddFlwRequest record) {
-        if (swcService.getByMctsFlwIdAndState(record.getMctsFlwId(), stateDataService.findByCode(record.getStateId())) == null) {
-            return "CREATE";
-        } else {
-            return "UPDATE";
-        }
-    }
 
     private String rchFlwActionFinder(AddSwcRequest record) {
         if (swcService.getByMctsFlwIdAndState(record.getSwcId(), stateDataService.findByCode(record.getStateId())) == null) {

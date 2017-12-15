@@ -20,9 +20,9 @@ public class InactiveJobCallAudit {
     @Field
     private Long callingNumber;
 
-    public InactiveJobCallAudit(DateTime dateTimeNow, Long swcId, Long callingNumber) {
+    public InactiveJobCallAudit(DateTime dateTimeNow, String swcId, Long callingNumber) {
         this.dateTimeNow = dateTimeNow;
-        this.swcId = swcId;
+        this.swcId = Long.parseLong(swcId);
         this.callingNumber = callingNumber;
     }
 

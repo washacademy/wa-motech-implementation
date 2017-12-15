@@ -28,8 +28,8 @@ public abstract class BaseLocationImportService<T> {
 
     public static final String STATE = "state";
     public static final String DISTRICT = "district";
-    public static final String TALUKA = "taluka";
-    public static final String HEALTH_BLOCK = "healthBlock";
+    public static final String BLOCK = "block";
+    public static final String PANCHAYAT = "panchayat";
 
     private Class<T> type;
 

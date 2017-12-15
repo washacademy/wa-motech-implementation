@@ -1,6 +1,5 @@
 package org.motechproject.nms.rejectionhandler.domain;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -20,34 +19,19 @@ public class SwcImportRejection {
     private String action;
 
     @Field
-    private DateTime creationDate;
-
-    @Field
-    private String createdBy;
-
-    @Field
     private String updateDateNic;
 
     @Field
-    private Long SwcID;
+    private Long swcID;
 
     @Field
-    private String SwcName;
+    private String swcName;
 
     @Field
-    private String SwcStatus;
-
-    @Field
-    private DateTime modificationDate;
-
-    @Field
-    private String modifiedBy;
+    private String swcStatus;
 
     @Field
     private String msisdn;
-
-    @Field
-    private String owner;
 
     @Field
     private String sex;
@@ -65,10 +49,10 @@ public class SwcImportRejection {
     private String districtName;
 
     @Field
-    private Long BlockId;
+    private Long blockId;
 
     @Field
-    private String BlockName;
+    private String blockName;
 
     @Field
     private Long panchayatId;
@@ -108,68 +92,12 @@ public class SwcImportRejection {
         this.action = action;
     }
 
-    public DateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(DateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public String getUpdateDateNic() {
         return updateDateNic;
     }
 
     public void setUpdateDateNic(String updateDateNic) {
         this.updateDateNic = updateDateNic;
-    }
-
-    public Long getSwcID() {
-        return SwcID;
-    }
-
-    public void setSwcID(Long swcID) {
-        SwcID = swcID;
-    }
-
-    public String getSwcName() {
-        return SwcName;
-    }
-
-    public void setSwcName(String swcName) {
-        SwcName = swcName;
-    }
-
-    public String getSwcStatus() {
-        return SwcStatus;
-    }
-
-    public void setSwcStatus(String swcStatus) {
-        SwcStatus = swcStatus;
-    }
-
-    public DateTime getModificationDate() {
-        return modificationDate;
-    }
-
-    public void setModificationDate(DateTime modificationDate) {
-        this.modificationDate = modificationDate;
-    }
-
-    public String getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(String modifiedBy) {
-        this.modifiedBy = modifiedBy;
     }
 
     public String getMsisdn() {
@@ -180,14 +108,6 @@ public class SwcImportRejection {
         this.msisdn = msisdn;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public String getSex() {
         return sex;
     }
@@ -195,7 +115,6 @@ public class SwcImportRejection {
     public void setSex(String sex) {
         this.sex = sex;
     }
-
 
     public Long getStateId() {
         return stateId;
@@ -229,20 +148,44 @@ public class SwcImportRejection {
         this.districtName = districtName;
     }
 
+    public Long getSwcID() {
+        return swcID;
+    }
+
+    public void setSwcID(Long swcID) {
+        this.swcID = swcID;
+    }
+
+    public String getSwcName() {
+        return swcName;
+    }
+
+    public void setSwcName(String swcName) {
+        this.swcName = swcName;
+    }
+
+    public String getSwcStatus() {
+        return swcStatus;
+    }
+
+    public void setSwcStatus(String swcStatus) {
+        this.swcStatus = swcStatus;
+    }
+
     public Long getBlockId() {
-        return BlockId;
+        return blockId;
     }
 
     public void setBlockId(Long blockId) {
-        BlockId = blockId;
+        this.blockId = blockId;
     }
 
     public String getBlockName() {
-        return BlockName;
+        return blockName;
     }
 
     public void setBlockName(String blockName) {
-        BlockName = blockName;
+        this.blockName = blockName;
     }
 
     public Long getPanchayatId() {

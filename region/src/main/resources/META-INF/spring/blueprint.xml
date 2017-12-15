@@ -40,33 +40,16 @@
     <osgi:service ref="districtService"
                   interface="org.motechproject.nms.region.service.DistrictService" />
 
-    <osgi:reference id="talukaDataService"
+    <osgi:reference id="blockDataService"
                     interface="org.motechproject.nms.region.repository.BlockDataService" />
     <osgi:service ref="blockService"
                   interface="org.motechproject.nms.region.service.BlockService" />
 
-    <osgi:reference id="villageDataService"
+    <osgi:reference id="panchayatDataService"
                     interface="org.motechproject.nms.region.repository.PanchayatDataService" />
     <osgi:service ref="panchayatService"
                   interface="org.motechproject.nms.region.service.PanchayatService" />
 
-    <osgi:reference id="healthBlockDataService"
-                    interface="org.motechproject.nms.region.repository.HealthBlockDataService" />
-    <osgi:service ref="healthBlockService"
-                  interface="org.motechproject.nms.region.service.HealthBlockService" />
-
-    <osgi:reference id="healthFacilityTypeDataService"
-                    interface="org.motechproject.nms.region.repository.HealthFacilityTypeDataService" />
-
-    <osgi:reference id="healthFacilityDataService"
-                    interface="org.motechproject.nms.region.repository.HealthFacilityDataService" />
-    <osgi:service ref="healthFacilityService"
-                  interface="org.motechproject.nms.region.service.HealthFacilityService" />
-
-    <osgi:reference id="healthSubFacilityDataService"
-                    interface="org.motechproject.nms.region.repository.HealthSubFacilityDataService" />
-    <osgi:service ref="healthSubFacilityService"
-                  interface="org.motechproject.nms.region.service.HealthSubFacilityService" />
 
     <!--- Circle Services -->
     <osgi:service ref="circleService"
@@ -78,12 +61,7 @@
     <osgi:service ref="stateImportService" interface="org.motechproject.nms.region.csv.StateImportService" />
     <osgi:service ref="districtImportService" interface="org.motechproject.nms.region.csv.DistrictImportService" />
     <osgi:service ref="blockImportService" interface="org.motechproject.nms.region.csv.BlockImportService" />
-    <osgi:service ref="censusPanchayatImportService" interface="org.motechproject.nms.region.csv.CensusPanchayatImportService" />
-    <osgi:service ref="nonCensusPanchayatImportService" interface="org.motechproject.nms.region.csv.NonCensusPanchayatImportService" />
-    <osgi:service ref="healthBlockImportService" interface="org.motechproject.nms.region.csv.HealthBlockImportService" />
-    <osgi:service ref="healthFacilityImportService" interface="org.motechproject.nms.region.csv.HealthFacilityImportService" />
-    <osgi:service ref="healthSubFacilityImportService" interface="org.motechproject.nms.region.csv.HealthSubFacilityImportService" />
-
+    <osgi:service ref="panchayatImportService" interface="org.motechproject.nms.region.csv.PanchayatImportService" />
     <!-- Language Location Codes Import Service -->
     <osgi:service ref="languageLocationImportService" interface="org.motechproject.nms.region.csv.LanguageLocationImportService" />
 

@@ -1,6 +1,5 @@
 package org.motechproject.nms.api.web.service;
 
-import org.motechproject.nms.api.web.contract.AddFlwRequest;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 
 /**

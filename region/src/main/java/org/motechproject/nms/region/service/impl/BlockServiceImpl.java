@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.jdo.Query;
 
-@Service("talukaService")
+@Service("blockService")
 public class BlockServiceImpl implements BlockService {
 
     @Autowired
@@ -25,7 +25,7 @@ public class BlockServiceImpl implements BlockService {
 
             @Override
             public String getSqlQuery() {
-                return "select * from nms_talukas where district_id_oid = ? and code = ?";
+                return "select * from wash_blocks where district_id_oid = ? and code = ?";
             }
 
             @Override

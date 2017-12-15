@@ -28,7 +28,6 @@ import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.contract.SwcRecord;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.kilkari.contract.AnmAshaRecord;
-import org.motechproject.nms.kilkari.contract.RchAnmAshaRecord;
 import org.motechproject.nms.kilkari.domain.RejectionReasons;
 import org.motechproject.nms.kilkari.utils.FlwConstants;
 import org.motechproject.nms.swc.utils.SwcMapper;

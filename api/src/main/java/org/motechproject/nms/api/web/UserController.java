@@ -3,17 +3,17 @@ package org.motechproject.nms.api.web;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.nms.api.web.contract.SwcUserResponse;
 import org.motechproject.nms.api.web.contract.UserResponse;
-import org.motechproject.nms.api.web.domain.AnonymousCallAudit;
 import org.motechproject.nms.api.web.domain.InactiveJobCallAudit;
 import org.motechproject.nms.api.web.exception.NotAuthorizedException;
 import org.motechproject.nms.api.web.exception.NotDeployedException;
-import org.motechproject.nms.api.web.repository.AnonymousCallAuditDataService;
 import org.motechproject.nms.api.web.repository.InactiveJobCallAuditDataService;
-import org.motechproject.nms.flw.domain.*;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.service.SwcService;
-import org.motechproject.nms.flw.service.ServiceUsageCapService;
-import org.motechproject.nms.flw.service.ServiceUsageService;
+import org.motechproject.nms.swc.domain.ServiceUsage;
+import org.motechproject.nms.swc.domain.ServiceUsageCap;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.service.SwcService;
+import org.motechproject.nms.swc.service.ServiceUsageCapService;
+import org.motechproject.nms.swc.service.ServiceUsageService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.region.domain.Circle;
@@ -54,11 +54,6 @@ public class UserController extends BaseController {
 
     @Autowired
     private LanguageService languageService;
-
-    
-
-    @Autowired
-    private AnonymousCallAuditDataService anonymousCallAuditDataService;
 
     @Autowired
     private InactiveJobCallAuditDataService inactiveJobCallAuditDataService;
@@ -180,7 +175,6 @@ public class UserController extends BaseController {
 
         if (MOBILE_ACADEMY.equals(serviceName)) {
             // make sure that flw is authorized to use MA
-            restrictAnonymousMAUserCheck(flw, callingNumber, circle);
             restrictInactiveJobUserCheck(flw);
         }
 
@@ -207,25 +201,10 @@ public class UserController extends BaseController {
         return user;
     }
 
-    private void restrictAnonymousMAUserCheck(Swachchagrahi flw, Long callingNumber, Circle circle) {
-
-        if (flw == null || flw.getStatus() == SwachchagrahiStatus.ANONYMOUS ||
-                flw.getMctsFlwId() == null || flw.getMctsFlwId().isEmpty()) {
-            // New requirement - https://applab.atlassian.net/projects/NMS/issues/NMS-325 - Block anonymous FLWs
-            // if flw is null here, we don't already have a record from MCTS. return 403
-            // We might have a non-null flw with anonymous status from earlier calls, if so, still return 403 and
-            // force them to come through MCTS
-
-            String circleName = circle == null ? null : circle.getName();
-            anonymousCallAuditDataService.create(new AnonymousCallAudit(DateUtil.now(), circleName, callingNumber));
-            throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
-        }
-    }
-
     private void restrictInactiveJobUserCheck(Swachchagrahi flw) {
 
         if (flw != null && flw.getJobStatus() == SwcJobStatus.INACTIVE) {
-            inactiveJobCallAuditDataService.create(new InactiveJobCallAudit(DateUtil.now(), flw.getFlwId(), flw.getMctsFlwId(), flw.getContactNumber()));
+            inactiveJobCallAuditDataService.create(new InactiveJobCallAudit(DateUtil.now(), flw.getSwcId(), flw.getContactNumber()));
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
         } else if (flw == null) {
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));

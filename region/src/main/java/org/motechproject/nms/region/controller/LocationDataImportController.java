@@ -6,10 +6,9 @@ import org.motechproject.alerts.domain.AlertType;
 import org.motechproject.nms.csv.exception.CsvImportException;
 import org.motechproject.nms.csv.service.CsvAuditService;
 import org.motechproject.nms.region.csv.BlockImportService;
-import org.motechproject.nms.region.csv.CensusPanchayatImportService;
+import org.motechproject.nms.region.csv.PanchayatImportService;
 import org.motechproject.nms.region.csv.DistrictImportService;
 import org.motechproject.nms.region.csv.StateImportService;
-import org.motechproject.nms.region.csv.NonCensusPanchayatImportService;
 import org.motechproject.nms.region.csv.LocationDataImportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +38,7 @@ public class LocationDataImportController {
     private StateImportService stateImportService;
     private DistrictImportService districtImportService;
     private BlockImportService blockImportService;
-    private NonCensusPanchayatImportService nonCensusPanchayatImportService;
-    private CensusPanchayatImportService censusPanchayatImportService;
+    private PanchayatImportService panchayatImportService;
     private CsvAuditService csvAuditService;
 
     private Map<String, LocationDataImportService> locationDataImportServiceMapping;
@@ -102,15 +100,10 @@ public class LocationDataImportController {
     public void setBlockImportService(BlockImportService blockImportService) {
         this.blockImportService = blockImportService;
     }
-
+    
     @Autowired
-    public void setNonCensusPanchayatImportService(NonCensusPanchayatImportService nonCensusPanchayatImportService) {
-        this.nonCensusPanchayatImportService = nonCensusPanchayatImportService;
-    }
-
-    @Autowired
-    public void setCensusPanchayatImportService(CensusPanchayatImportService censusPanchayatImportService) {
-        this.censusPanchayatImportService = censusPanchayatImportService;
+    public void setPanchayatImportService(PanchayatImportService panchayatImportService) {
+        this.panchayatImportService = panchayatImportService;
     }
 
 
@@ -124,9 +117,8 @@ public class LocationDataImportController {
             locationDataImportServiceMapping = new HashMap<>();
             locationDataImportServiceMapping.put("state", stateImportService);
             locationDataImportServiceMapping.put("district", districtImportService);
-            locationDataImportServiceMapping.put("taluka", blockImportService);
-            locationDataImportServiceMapping.put("nonCensusVillage", nonCensusPanchayatImportService);
-            locationDataImportServiceMapping.put("censusVillage", censusPanchayatImportService);
+            locationDataImportServiceMapping.put("block", blockImportService);
+            locationDataImportServiceMapping.put("panchayat", panchayatImportService);
         }
         return locationDataImportServiceMapping;
     }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.jdo.Query;
 
-@Service("villageService")
+@Service("panchayatService")
 public class PanchayatServiceImpl implements PanchayatService {
 
     @Autowired
@@ -26,7 +26,7 @@ public class PanchayatServiceImpl implements PanchayatService {
 
             @Override
             public String getSqlQuery() {
-                return "select * from nms_villages where taluka_id_oid = ? and vcode = ? and svid = ?";
+                return "select * from wash_panchayats where block_id_oid = ? and vcode = ? and svid = ?";
             }
 
             @Override

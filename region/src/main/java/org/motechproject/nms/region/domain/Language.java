@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Represents... yep that's right. The languages that are supported by the system.
  */
-@Entity(tableName = "nms_languages")
+@Entity(tableName = "wash_languages")
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners

@@ -3,7 +3,6 @@ package org.motechproject.nms.swcUpdate.utils;
 import org.motechproject.nms.swcUpdate.contract.SwcRecord;
 import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
 
-import java.util.Map;
 
 public final class RejectedObjectConverter {
 

@@ -7,7 +7,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.nms.api.web.BaseController;
 import org.motechproject.nms.api.web.MobileAcademyController;
 import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
-import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
+import org.motechproject.nms.washacademy.service.WashAcademyService;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -21,7 +21,7 @@ public class MobileAcademyControllerUnitTest {
     private MobileAcademyController mobileAcademyController;
     
     @Mock
-    private MobileAcademyService mobileAcademyService;
+    private WashAcademyService mobileAcademyService;
 
     @Mock
     private EventRelay eventRelay;

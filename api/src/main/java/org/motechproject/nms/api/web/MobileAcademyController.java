@@ -11,13 +11,13 @@ import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
 import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfo;
 import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.api.web.validator.MobileAcademyValidator;
-import org.motechproject.nms.flw.domain.Swachchagrahi;
-import org.motechproject.nms.flw.service.SwcService;
-import org.motechproject.nms.mobileacademy.dto.MaBookmark;
-import org.motechproject.nms.mobileacademy.dto.MaCourse;
+import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.mobileacademy.exception.CourseNotCompletedException;
-import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
 import org.motechproject.nms.props.service.LogHelper;
+import org.motechproject.nms.washacademy.dto.WaBookmark;
+import org.motechproject.nms.washacademy.dto.WaCourse;
+import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class MobileAcademyController extends BaseController {
      * MA service to handle all business logic
      */
     @Autowired
-    private MobileAcademyService mobileAcademyService;
+    private WashAcademyService washAcademyService;
 
     @Autowired
     private SwcService swcService;
@@ -66,12 +66,12 @@ public class MobileAcademyController extends BaseController {
     }
     /**
      * Constructor for controller
-     * @param mobileAcademyService mobile academy service
+     * @param washAcademyService mobile academy service
      * @param eventRelay event relay service
      */
     @Autowired
-    public MobileAcademyController(MobileAcademyService mobileAcademyService, EventRelay eventRelay) {
-        this.mobileAcademyService = mobileAcademyService;
+    public MobileAcademyController(WashAcademyService washAcademyService, EventRelay eventRelay) {
+        this.washAcademyService = washAcademyService;
         this.eventRelay = eventRelay;
     }
 
@@ -91,7 +91,7 @@ public class MobileAcademyController extends BaseController {
 
         log("REQUEST: /mobileacademy/course");
 
-        MaCourse getCourse = mobileAcademyService.getCourse();
+        WaCourse getCourse = washAcademyService.getCourse();
 
         if (getCourse == null) {
             LOGGER.error("No course found in database. Check course ingestion and name");
@@ -124,7 +124,7 @@ public class MobileAcademyController extends BaseController {
 
         log("REQUEST: /mobileacademy/courseVersion");
 
-        CourseVersionResponse response = new CourseVersionResponse(mobileAcademyService.getCourseVersion());
+        CourseVersionResponse response = new CourseVersionResponse(washAcademyService.getCourseVersion());
         log("RESPONSE: /mobileacademy/courseVersion", response.toString());
         return response;
     }
@@ -157,7 +157,7 @@ public class MobileAcademyController extends BaseController {
             throw new IllegalArgumentException(errors.toString());
         }
 
-        MaBookmark bookmark = mobileAcademyService.getBookmark(callingNumber, callId);
+        WaBookmark bookmark = washAcademyService.getBookmark(callingNumber, callId);
 
         GetBookmarkResponse ret = WashAcademyConverter.convertBookmarkDto(bookmark);
         log("RESPONSE: /mobileacademy/bookmarkWithScore", String.format("callId=%s, %s", callId, ret.toString()));
@@ -201,8 +201,8 @@ public class MobileAcademyController extends BaseController {
         if (validateMAScores(bookmarkRequest.getScoresByChapter())) {
             Swachchagrahi flw = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
             Long flwId = flw.getId();
-            MaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, flwId);
-            mobileAcademyService.setBookmark(bookmark);
+            WaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, flwId);
+            washAcademyService.setBookmark(bookmark);
         }
     }
 
@@ -250,7 +250,7 @@ public class MobileAcademyController extends BaseController {
 
         // done with validation
         try {
-            mobileAcademyService.triggerCompletionNotification(flwId);
+            washAcademyService.triggerCompletionNotification(flwId);
         } catch (CourseNotCompletedException cnc) {
             LOGGER.error("Could not send notification: " + cnc.toString());
             throw cnc;

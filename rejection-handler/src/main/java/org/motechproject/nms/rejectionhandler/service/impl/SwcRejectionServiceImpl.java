@@ -65,13 +65,7 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
         swcImportRejection1.setRejectionReason(swcImportRejection.getRejectionReason());
         swcImportRejection1.setSource(swcImportRejection.getSource());
         swcImportRejection1.setAction(swcImportRejection.getAction());
-        swcImportRejection1.setModificationDate(swcImportRejection.getModificationDate());
-        swcImportRejection1.setCreatedBy(swcImportRejection.getCreatedBy());
-        swcImportRejection1.setCreationDate(swcImportRejection.getCreationDate());
-        swcImportRejection1.setOwner(swcImportRejection.getOwner());
         swcImportRejection1.setUpdateDateNic(swcImportRejection.getUpdateDateNic());
-        swcImportRejection1.setModifiedBy(swcImportRejection.getModifiedBy());
-
         return swcImportRejection1;
     }
 }

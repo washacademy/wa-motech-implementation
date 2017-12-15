@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.InstanceLifecycleListeners;
 import org.motechproject.mds.domain.MdsEntity;
-import org.motechproject.nms.region.domain.validation.ValidVillage;
+import org.motechproject.nms.region.domain.validation.ValidPanchayat;
 import org.motechproject.nms.tracking.annotation.TrackClass;
 import org.motechproject.nms.tracking.annotation.TrackFields;
 
@@ -31,9 +31,9 @@ import javax.validation.constraints.Size;
  * Name_G nvarchar 50 M Not null Regional language name
  *
  */
-@ValidVillage
-@Entity(tableName = "nms_villages")
-@Unique(name = "UNIQUE_TALUKA_VCODE_SVID", members = { "block", "vcode", "svid" })
+@ValidPanchayat
+@Entity(tableName = "wash_panchayats")
+@Unique(name = "UNIQUE_BLOCK_VCODE_SVID", members = { "block", "vcode", "svid" })
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners
@@ -93,7 +93,7 @@ public class Panchayat extends MdsEntity {
      * @return vcode for a census village.  vcode or svid for a non-census village
      */
     @Ignore
-    public long getVillageCode() {
+    public long getPanchayatCode() {
         if (vcode != 0) {
             return vcode;
         }

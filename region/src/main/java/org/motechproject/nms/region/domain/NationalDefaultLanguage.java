@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Table holds the national default language location code.
  */
-@Entity(tableName = "nms_national_default_language")
+@Entity(tableName = "wash_national_default_language")
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners

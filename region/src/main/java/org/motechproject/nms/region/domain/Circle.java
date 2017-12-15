@@ -12,7 +12,7 @@ import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
 import java.util.Set;
 
-@Entity(tableName = "nms_circles")
+@Entity(tableName = "wash_circles")
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners
