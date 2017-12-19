@@ -358,7 +358,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                 Swachchagrahi flw = swcService.getByContactNumber(msisdn);
                 if ((flw != null && (!flwId.equals(flw.getMctsFlwId()) || state != flw.getState()))  && flw.getStatus() != SwachchagrahiStatus.ANONYMOUS) {
                     LOGGER.error("Existing FLW with same MSISDN but different MCTS ID");
-                    flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                    flwRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                     rejected++;
                 } else {
                     if (!(FlwConstants.ASHA_TYPE.equalsIgnoreCase(designation))) {
