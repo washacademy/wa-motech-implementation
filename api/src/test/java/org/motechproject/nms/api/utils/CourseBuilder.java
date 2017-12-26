@@ -2,7 +2,7 @@ package org.motechproject.nms.api.utils;
 
 
 import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
-import org.motechproject.nms.mobileacademy.dto.MaCourse;
+import org.motechproject.nms.washacademy.dto.WaCourse;
 
 /**
  * Helper to generate a course response
@@ -17,8 +17,8 @@ public final class CourseBuilder {
         return response;
     }
 
-    public static MaCourse generateValidCourseDto() {
-        MaCourse course = new MaCourse();
+    public static WaCourse generateValidCourseDto() {
+        WaCourse course = new WaCourse();
         course.setName("MobileAcademyCourse");
         course.setVersion(20150526L); // random, supposed to be millis eventually
         course.setContent("[{}]");

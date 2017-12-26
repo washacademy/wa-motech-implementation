@@ -6,7 +6,7 @@ import org.motechproject.nms.api.web.service.SwcCsvService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.swc.domain.RejectionReasons;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
+import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.motechproject.nms.swc.utils.SwcConstants;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.region.repository.StateDataService;

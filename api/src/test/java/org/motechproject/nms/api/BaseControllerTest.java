@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import org.motechproject.nms.api.web.contract.BadRequest;
-import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.springframework.test.web.server.MockMvc;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 
@@ -24,7 +24,7 @@ public class BaseControllerTest {
 
    
     @Mock
-    private SubscriberService subscriberService;
+    private SwcService subscriberService;
 
     private MockMvc mockMvc;
 
@@ -38,7 +38,7 @@ public class BaseControllerTest {
         String message = "error";
         ObjectMapper objectMapper = new ObjectMapper();
         BadRequest badRequest = new BadRequest(message);
-        when(subscriberService.getSubscriber(anyLong())).thenThrow(new NullPointerException(message));
+        when(subscriberService.getByContactNumber(anyLong())).thenThrow(new NullPointerException(message));
 
         String url = "/kilkari/inbox?callingNumber=1111111111&callId=1234567891234561234512345";
 
