@@ -5,9 +5,9 @@ import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
-import org.motechproject.nms.kilkari.domain.RejectionReasons;
+import org.motechproject.nms.swc.domain.RejectionReasons;
 import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
-import org.motechproject.nms.kilkari.utils.FlwConstants;
+import org.motechproject.nms.swc.utils.SwcConstants;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
@@ -82,19 +82,19 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     @Transactional
     public void persistFlwRch(AddSwcRequest addSwcRequest) {
         Map<String, Object> flwProperties = new HashMap<>();
-        flwProperties.put(FlwConstants.NAME, addSwcRequest.getName());
-        flwProperties.put(FlwConstants.GF_ID, addSwcRequest.getSwcId());
-        flwProperties.put(FlwConstants.MOBILE_NO, addSwcRequest.getMsisdn());
-        flwProperties.put(FlwConstants.STATE_ID, addSwcRequest.getStateId());
-        flwProperties.put(FlwConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
-        flwProperties.put(FlwConstants.GF_STATUS, addSwcRequest.getGfStatus());
+        flwProperties.put(SwcConstants.NAME, addSwcRequest.getName());
+        flwProperties.put(SwcConstants.GF_ID, addSwcRequest.getSwcId());
+        flwProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
+        flwProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
+        flwProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
+        flwProperties.put(SwcConstants.GF_STATUS, addSwcRequest.getGfStatus());
 
         if (addSwcRequest.getGfType() != null) {
-            flwProperties.put(FlwConstants.GF_TYPE, addSwcRequest.getGfType());
+            flwProperties.put(SwcConstants.GF_TYPE, addSwcRequest.getGfType());
         }
 
         if (addSwcRequest.getBlockId() != null) {
-            flwProperties.put(FlwConstants.TALUKA_ID, addSwcRequest.getBlockId());
+            flwProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
         }
 
         swcImportService.createUpdate(flwProperties, SubscriptionOrigin.RCH_IMPORT);
@@ -108,8 +108,6 @@ public class SwcCsvServiceImpl implements SwcCsvService {
             flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.MOBILE_NUMBER_EMPTY_OR_WRONG_FORMAT.toString(), action));
         } else if (gfStatus.equals(fieldName)) {
             flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.GF_STATUS_EMPTY_OR_WRONG_FORMAT.toString(), action));
-        } else if ("type".equals(fieldName)) {
-            flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.FLW_TYPE_NOT_ASHA.toString(), action));
         } else {
             flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.FIELD_NOT_PRESENT.toString(), action));
         }

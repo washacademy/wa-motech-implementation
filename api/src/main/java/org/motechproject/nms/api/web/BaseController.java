@@ -9,7 +9,7 @@ import org.motechproject.nms.api.web.exception.NotFoundException;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swc.service.WhitelistService;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.swc.domain.DeactivationReason;
 import org.motechproject.nms.props.domain.CallDisconnectReason;
 import org.motechproject.nms.props.domain.FinalCallStatus;
 import org.motechproject.nms.props.domain.Service;

@@ -1,21 +1,16 @@
 package org.motechproject.nms.api.web;
 
-import org.motechproject.event.MotechEvent;
-import org.motechproject.event.listener.EventRelay;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
-import org.motechproject.nms.kilkari.utils.FlwConstants;
+import org.motechproject.nms.swc.utils.SwcConstants;
 import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
 import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.imi.service.CdrFileService;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.kilkari.utils.KilkariConstants;
+import org.motechproject.nms.swc.domain.DeactivationReason;
+import org.motechproject.nms.swc.repository.SwcDataService;
+import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.mcts.service.MctsWsImportService;
 import org.motechproject.nms.props.service.LogHelper;
-import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
 
 import org.motechproject.nms.washacademy.dto.WaBookmark;
 import org.motechproject.nms.washacademy.service.WashAcademyService;
@@ -42,25 +37,16 @@ public class OpsController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpsController.class);
 
     @Autowired
-    private SubscriptionDataService subscriptionDataService;
+    private SwcDataService swcDataService;
 
     @Autowired
-    private SubscriberService subscriberService;
-
-    @Autowired
-    private SubscriptionService subscriptionService;
+    private SwcService subscriberService;
 
     @Autowired
     private CdrFileService cdrFileService;
 
     @Autowired
     private MctsWsImportService mctsWsImportService;
-
-    @Autowired
-    private EventRelay eventRelay;
-
-    @Autowired
-    private MobileAcademyService mobileAcademyService;
 
     @Autowired
     private WashAcademyService washAcademyService;
@@ -78,7 +64,7 @@ public class OpsController extends BaseController {
             return false;
         }
         String designation = type.trim();
-        if (FlwConstants.ASHA_TYPE.equalsIgnoreCase(designation)) {
+        if (SwcConstants.ASHA_TYPE.equalsIgnoreCase(designation)) {
             return true;
         }
         errors.append(String.format(NON_ASHA_TYPE, mctsFlwId, contactNumber, type));
@@ -92,7 +78,7 @@ public class OpsController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void evictAllCache() {
         LOGGER.info("/evictAllCache()");
-        subscriptionDataService.evictAllCache();
+        swcDataService.evictAllCache();
     }
 
     @RequestMapping("/ping")
@@ -100,14 +86,6 @@ public class OpsController extends BaseController {
     public String ping() {
         LOGGER.info("/ping()");
         return "PING";
-    }
-
-    @RequestMapping("/cleanSubscriptions")
-    @ResponseStatus(HttpStatus.OK)
-    public void cleanSubscriptions() {
-
-        LOGGER.info("/cleanSubscriptions()");
-        subscriptionService.completePastDueSubscriptions();
     }
 
     @RequestMapping("/cleanCallRecords")
@@ -124,13 +102,6 @@ public class OpsController extends BaseController {
 
         LOGGER.info("/startMctsSync");
         mctsWsImportService.startMctsImport();
-    }
-
-    @RequestMapping("/upkeep")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void startUpkeep() {
-        LOGGER.info("/upkeep");
-        eventRelay.sendEventMessage(new MotechEvent(KilkariConstants.SUBSCRIPTION_UPKEEP_SUBJECT));
     }
 
     @RequestMapping(value = "/createUpdateRchFlw",
@@ -172,14 +143,15 @@ public class OpsController extends BaseController {
             throw new IllegalArgumentException(failureReasons.toString());
         }
         DeactivationReason reason = DeactivationReason.valueOf(deactivationReason);
-        subscriberService.deactivateAllSubscriptionsForSubscriber(msisdn, reason);
+        subscriberService.getRecords();
+        LOGGER.info(reason.name());
     }
 
     @RequestMapping("/getScores")
     @ResponseBody
     public String getScoresForNumber(@RequestParam(required = true) Long callingNumber) {
         LOGGER.info("/getScores Getting scores for user");
-        String scores = mobileAcademyService.getScoresForUser(callingNumber);
+        String scores = washAcademyService.getScoresForUser(callingNumber);
         LOGGER.info("Scores: " + scores);
         return scores;
     }
