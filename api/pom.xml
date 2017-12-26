@@ -47,23 +47,11 @@
             <groupId>org.motechproject.nms</groupId>
             <artifactId>swcUpdate</artifactId>
             <version>${project.version}</version>
-        </dependency> 
-
-        <dependency>
-            <groupId>org.motechproject.nms</groupId>
-            <artifactId>kilkari</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.motechproject.nms</groupId>
             <artifactId>wash-academy</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.motechproject.nms</groupId>
-            <artifactId>mcts</artifactId>
             <version>${project.version}</version>
         </dependency>
 

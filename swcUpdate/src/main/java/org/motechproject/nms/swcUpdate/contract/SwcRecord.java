@@ -2,7 +2,6 @@ package org.motechproject.nms.swcUpdate.contract;
 
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
-import org.motechproject.nms.kilkari.utils.FlwConstants;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -214,29 +213,5 @@ public class SwcRecord {
     @XmlElement(name = "GF_Status")
     public void setGfStatus(String gfStatus) {
         this.gfStatus = gfStatus;
-    }
-
-    public Map<String, Object> toFlwRecordMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put(FlwConstants.STATE_ID, getStateId());
-        map.put(FlwConstants.DISTRICT_ID, getDistrictId());
-        map.put(FlwConstants.DISTRICT_NAME, getDistrictName());
-        map.put(FlwConstants.TALUKA_ID, getTalukaId());
-        map.put(FlwConstants.TALUKA_NAME, getTalukaName());
-        map.put(FlwConstants.HEALTH_BLOCK_ID, getHealthBlockId());
-        map.put(FlwConstants.HEALTH_BLOCK_NAME, getHealthBlockName());
-        map.put(FlwConstants.PHC_ID, getPhcId());
-        map.put(FlwConstants.PHC_NAME, getPhcName());
-        map.put(FlwConstants.SUB_CENTRE_ID, getSubCentreId());
-        map.put(FlwConstants.SUB_CENTRE_NAME, getSubCentreName());
-        map.put(FlwConstants.CENSUS_VILLAGE_ID, getVillageId());
-        map.put(FlwConstants.VILLAGE_NAME, getVillageName());
-        map.put(FlwConstants.GF_ID, getGfId() == null ? null : getGfId().toString());
-        map.put(FlwConstants.MOBILE_NO, getMobileNo() == null ? null : Long.parseLong(getMobileNo()));
-        map.put(FlwConstants.GF_NAME, getGfName());
-        map.put(FlwConstants.GF_TYPE, getGfType());
-        map.put(FlwConstants.EXEC_DATE, "".equals(getExecDate()) ? null : LocalDate.parse(getExecDate(), DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
-        map.put(FlwConstants.GF_STATUS, getGfStatus());
-        return map;
     }
 }

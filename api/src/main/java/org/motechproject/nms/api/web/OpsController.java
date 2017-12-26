@@ -4,7 +4,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
-import org.motechproject.nms.kilkari.utils.FlwConstants;
+import org.motechproject.nms.swc.utils.SwcConstants;
 import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
 import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.imi.service.CdrFileService;
@@ -15,8 +15,6 @@ import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.utils.KilkariConstants;
 import org.motechproject.nms.mcts.service.MctsWsImportService;
 import org.motechproject.nms.props.service.LogHelper;
-import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
-
 import org.motechproject.nms.washacademy.dto.WaBookmark;
 import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.slf4j.Logger;
@@ -42,25 +40,10 @@ public class OpsController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpsController.class);
 
     @Autowired
-    private SubscriptionDataService subscriptionDataService;
-
-    @Autowired
-    private SubscriberService subscriberService;
-
-    @Autowired
-    private SubscriptionService subscriptionService;
-
-    @Autowired
     private CdrFileService cdrFileService;
 
     @Autowired
-    private MctsWsImportService mctsWsImportService;
-
-    @Autowired
     private EventRelay eventRelay;
-
-    @Autowired
-    private MobileAcademyService mobileAcademyService;
 
     @Autowired
     private WashAcademyService washAcademyService;
@@ -71,19 +54,7 @@ public class OpsController extends BaseController {
     private final String contactNumber = "contactNumber";
 
     //only for debugging purposes and will not be returned anywhere
-    public static final String NON_ASHA_TYPE = "<MctsId: %s,Contact Number: %s, Invalid Type: %s>";
 
-    protected static boolean validatetypeASHA(StringBuilder errors, String fieldName, String mctsFlwId, Long contactNumber, String type) {
-        if (!validateFieldPresent(errors, fieldName, type)) {
-            return false;
-        }
-        String designation = type.trim();
-        if (FlwConstants.ASHA_TYPE.equalsIgnoreCase(designation)) {
-            return true;
-        }
-        errors.append(String.format(NON_ASHA_TYPE, mctsFlwId, contactNumber, type));
-        return false;
-    }
 
     /**
      * Provided for OPS as a crutch to be able to empty all MDS cache directly after modifying the database by hand
@@ -105,7 +76,6 @@ public class OpsController extends BaseController {
     @RequestMapping("/cleanSubscriptions")
     @ResponseStatus(HttpStatus.OK)
     public void cleanSubscriptions() {
-
         LOGGER.info("/cleanSubscriptions()");
         subscriptionService.completePastDueSubscriptions();
     }
@@ -116,14 +86,6 @@ public class OpsController extends BaseController {
 
         LOGGER.info("/cleanCdr()");
         cdrFileService.cleanOldCallRecords();
-    }
-
-    @RequestMapping("/startMctsSync")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void startMctsSync() {
-
-        LOGGER.info("/startMctsSync");
-        mctsWsImportService.startMctsImport();
     }
 
     @RequestMapping("/upkeep")

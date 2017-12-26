@@ -12,6 +12,9 @@ public final class SwcConstants {
     public static final java.lang.String DISTRICT_ID = "District_ID";
     public static final java.lang.String BLOCK_ID = "Block_ID";
     public static final java.lang.String PANCHAYAT_ID = "Panchayat_ID";
+    public static final String TYPE = "Type";
+    public static final java.lang.String BLOCK_NAME = "Block_Name";
+    public static final java.lang.String PANCHAYAT_NAME = "Panchayat_Name";
     public static final java.lang.String DISTRICT_NAME = "District_Name";
     public static final java.lang.String QUALIFICATION = "Qualification";
     public static final java.lang.String UPDATED_ON = "Updated_On";

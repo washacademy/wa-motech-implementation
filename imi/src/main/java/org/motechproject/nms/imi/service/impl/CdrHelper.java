@@ -2,8 +2,8 @@ package org.motechproject.nms.imi.service.impl;
 
 import org.joda.time.DateTime;
 import org.motechproject.nms.imi.domain.CallDetailRecord;
-import org.motechproject.nms.kilkari.dto.CallDetailRecordDto;
-import org.motechproject.nms.kilkari.exception.InvalidCallRecordDataException;
+//import org.motechproject.nms.kilkari.dto.CallDetailRecordDto;
+//import org.motechproject.nms.kilkari.exception.InvalidCallRecordDataException;
 import org.motechproject.nms.props.domain.CallDisconnectReason;
 import org.motechproject.nms.props.domain.RequestId;
 import org.motechproject.nms.props.domain.StatusCode;
@@ -11,6 +11,7 @@ import org.motechproject.nms.props.domain.StatusCode;
 /**
  * Helper class to parse a CDR CSV line to a CallDetailRecordDTO or a CallDetailRecord
  */
+@SuppressWarnings("PMD")
 public final class CdrHelper {
 
     public static final String CDR_HEADER = "RequestId,Msisdn,CallId,AttemptNo,CallStartTime,CallAnswerTime," +
@@ -135,58 +136,58 @@ public final class CdrHelper {
      * @param line a CSV line from a CDR Detail File from IMI
      * @return a CallDetailRecordDto
      */
-    public static CallDetailRecordDto csvLineToCdrDto(String line) {
-        CallDetailRecordDto cdr = new CallDetailRecordDto();
-        String[] fields = line.split(",");
-
-        if (fields.length != FieldName.FIELD_COUNT.ordinal()) {
-            throw new IllegalArgumentException(String.format(
-                    "Invalid field count, expecting %d but received %d", FieldName.FIELD_COUNT.ordinal(),
-                    fields.length));
-        }
-
-
-        /*
-         * See API 4.4.3 - CDR Detail File Format
-         */
-
-        try {
-            cdr.setRequestId(RequestId.fromString(fields[FieldName.REQUEST_ID.ordinal()]));
-
-            cdr.setMsisdn(msisdnFromString(fields[FieldName.MSISDN.ordinal()]));
-
-            Long callAnswerTime = longOrNullFromString("CallAnswerTime",
-                    fields[FieldName.CALL_ANSWER_TIME.ordinal()]);
-            if (callAnswerTime != null) {
-                cdr.setCallAnswerTime(new DateTime(callAnswerTime));
-            } else {
-                cdr.setCallAnswerTime(null);
-            }
-
-            cdr.setMsgPlayDuration(calculateMsgPlayDuration(fields[FieldName.MSG_PLAY_START_TIME.ordinal()],
-                    fields[FieldName.MSG_PLAY_END_TIME.ordinal()]));
-
-            cdr.setStatusCode(StatusCode.fromInt(integerFromString("CallStatus",
-                    fields[FieldName.CALL_STATUS.ordinal()])));
-
-            cdr.setLanguageLocationId(fields[FieldName.LANGUAGE_LOCATION_ID.ordinal()]);
-
-            cdr.setContentFile(fields[FieldName.CONTENT_FILE.ordinal()]);
-
-            cdr.setCircleId(fields[FieldName.CIRCLE_ID.ordinal()]);
-
-            cdr.setOperatorId(fields[FieldName.OPERATOR_ID.ordinal()]);
-
-            cdr.setCallDisconnectReason(CallDisconnectReason.fromInt(integerFromString("CallDisconnectReason",
-                    fields[FieldName.CALL_DISCONNECT_REASON.ordinal()])));
-
-            cdr.setWeekId(fields[FieldName.WEEK_ID.ordinal()]);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidCallRecordDataException(e.getMessage(), e);
-        }
-
-        return cdr;
-    }
+//    public static CallDetailRecordDto csvLineToCdrDto(String line) {
+//        CallDetailRecordDto cdr = new CallDetailRecordDto();
+//        String[] fields = line.split(",");
+//
+//        if (fields.length != FieldName.FIELD_COUNT.ordinal()) {
+//            throw new IllegalArgumentException(String.format(
+//                    "Invalid field count, expecting %d but received %d", FieldName.FIELD_COUNT.ordinal(),
+//                    fields.length));
+//        }
+//
+//
+//        /*
+//         * See API 4.4.3 - CDR Detail File Format
+//         */
+//
+//        try {
+//            cdr.setRequestId(RequestId.fromString(fields[FieldName.REQUEST_ID.ordinal()]));
+//
+//            cdr.setMsisdn(msisdnFromString(fields[FieldName.MSISDN.ordinal()]));
+//
+//            Long callAnswerTime = longOrNullFromString("CallAnswerTime",
+//                    fields[FieldName.CALL_ANSWER_TIME.ordinal()]);
+//            if (callAnswerTime != null) {
+//                cdr.setCallAnswerTime(new DateTime(callAnswerTime));
+//            } else {
+//                cdr.setCallAnswerTime(null);
+//            }
+//
+//            cdr.setMsgPlayDuration(calculateMsgPlayDuration(fields[FieldName.MSG_PLAY_START_TIME.ordinal()],
+//                    fields[FieldName.MSG_PLAY_END_TIME.ordinal()]));
+//
+//            cdr.setStatusCode(StatusCode.fromInt(integerFromString("CallStatus",
+//                    fields[FieldName.CALL_STATUS.ordinal()])));
+//
+//            cdr.setLanguageLocationId(fields[FieldName.LANGUAGE_LOCATION_ID.ordinal()]);
+//
+//            cdr.setContentFile(fields[FieldName.CONTENT_FILE.ordinal()]);
+//
+//            cdr.setCircleId(fields[FieldName.CIRCLE_ID.ordinal()]);
+//
+//            cdr.setOperatorId(fields[FieldName.OPERATOR_ID.ordinal()]);
+//
+//            cdr.setCallDisconnectReason(CallDisconnectReason.fromInt(integerFromString("CallDisconnectReason",
+//                    fields[FieldName.CALL_DISCONNECT_REASON.ordinal()])));
+//
+//            cdr.setWeekId(fields[FieldName.WEEK_ID.ordinal()]);
+//        } catch (IllegalArgumentException e) {
+//            throw new InvalidCallRecordDataException(e.getMessage(), e);
+//        }
+//
+//        return cdr;
+//    }
 
 
     /**

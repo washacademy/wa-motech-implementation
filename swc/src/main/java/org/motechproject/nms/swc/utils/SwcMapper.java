@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.motechproject.nms.swc.domain.SwcJobStatus;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
+import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.State;
