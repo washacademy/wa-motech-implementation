@@ -24,14 +24,14 @@ import org.motechproject.nms.imi.repository.FileAuditRecordDataService;
 import org.motechproject.nms.imi.service.TargetFileService;
 import org.motechproject.nms.imi.service.contract.TargetFileNotification;
 import org.motechproject.nms.imi.web.contract.FileProcessedStatusRequest;
-import org.motechproject.nms.kilkari.domain.CallRetry;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-import org.motechproject.nms.kilkari.domain.SubscriptionPackMessage;
-import org.motechproject.nms.kilkari.service.CallRetryService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
+//import org.motechproject.nms.kilkari.domain.CallRetry;
+//import org.motechproject.nms.kilkari.domain.Subscriber;
+//import org.motechproject.nms.kilkari.domain.Subscription;
+//import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
+//import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+//import org.motechproject.nms.kilkari.domain.SubscriptionPackMessage;
+//import org.motechproject.nms.kilkari.service.CallRetryService;
+//import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.props.domain.DayOfTheWeek;
 import org.motechproject.nms.props.domain.RequestId;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+@SuppressWarnings("PMD")
 @Service("targetFileService")
 public class TargetFileServiceImpl implements TargetFileService {
     private static final String LOCAL_OBD_DIR = "imi.local_obd_dir";
@@ -75,8 +76,8 @@ public class TargetFileServiceImpl implements TargetFileService {
     private SettingsFacade settingsFacade;
     private MotechSchedulerService schedulerService;
     private AlertService alertService;
-    private SubscriptionService subscriptionService;
-    private CallRetryService callRetryService;
+//    private SubscriptionService subscriptionService;
+//    private CallRetryService callRetryService;
     private FileAuditRecordDataService fileAuditRecordDataService;
 
     private static String freshCheckDND;
@@ -132,14 +133,14 @@ public class TargetFileServiceImpl implements TargetFileService {
     @Autowired
     public TargetFileServiceImpl(@Qualifier("imiSettings") SettingsFacade settingsFacade,
                                  MotechSchedulerService schedulerService, AlertService alertService,
-                                 SubscriptionService subscriptionService,
-                                 CallRetryService callRetryService,
+//                                 SubscriptionService subscriptionService,
+//                                 CallRetryService callRetryService,
                                  FileAuditRecordDataService fileAuditRecordDataService) {
         this.schedulerService = schedulerService;
         this.settingsFacade = settingsFacade;
         this.alertService = alertService;
-        this.subscriptionService = subscriptionService;
-        this.callRetryService = callRetryService;
+//        this.subscriptionService = subscriptionService;
+//        this.callRetryService = callRetryService;
         this.fileAuditRecordDataService = fileAuditRecordDataService;
 
         scheduleTargetFileGeneration();
@@ -151,18 +152,18 @@ public class TargetFileServiceImpl implements TargetFileService {
     }
 
 
-    public String serviceIdFromOrigin(boolean freshCall, SubscriptionOrigin origin) {
-
-        if (origin == SubscriptionOrigin.MCTS_IMPORT || origin == SubscriptionOrigin.RCH_IMPORT) {
-            return freshCall ? freshCheckDND : retryCheckDND;
-        }
-
-        if (origin == SubscriptionOrigin.IVR) {
-            return freshCall ? freshNoCheckDND : retryNoCheckDND;
-        }
-
-        throw new IllegalStateException("Unexpected SubscriptionOrigin value");
-    }
+//    public String serviceIdFromOrigin(boolean freshCall, SubscriptionOrigin origin) {
+//
+//        if (origin == SubscriptionOrigin.MCTS_IMPORT || origin == SubscriptionOrigin.RCH_IMPORT) {
+//            return freshCall ? freshCheckDND : retryCheckDND;
+//        }
+//
+//        if (origin == SubscriptionOrigin.IVR) {
+//            return freshCall ? freshNoCheckDND : retryNoCheckDND;
+//        }
+//
+//        throw new IllegalStateException("Unexpected SubscriptionOrigin value");
+//    }
 
 
     private String targetFileName(String timestamp) {
@@ -358,132 +359,132 @@ public class TargetFileServiceImpl implements TargetFileService {
     }
 
 
-    private int generateFreshCalls(DateTime timestamp, int maxQueryBlock, String callFlowUrl,
-                                   OutputStreamWriter writer) throws IOException {
+//    private int generateFreshCalls(DateTime timestamp, int maxQueryBlock, String callFlowUrl,
+//                                   OutputStreamWriter writer) throws IOException {
+//
+//        LOGGER.info("generateFreshCalls({})", timestamp);
+//
+//        DayOfTheWeek dow = DayOfTheWeek.fromDateTime(timestamp);
+//        int recordsWritten = 0;
+//        Long offset = 0L;
+//        Timer timer = new Timer("overall fresh call", "overall fresh calls");
+//        do {
+//            List<Subscription> subscriptions = subscriptionService.findActiveSubscriptionsForDay(dow, offset, maxQueryBlock);
+//
+//            if (subscriptions.size() == 0) {
+//                break;
+//            }
+//
+//            Timer rowTimer = new Timer("file row", "file rows");
+//            for (Subscription subscription : subscriptions) {
+//
+//                offset = subscription.getId();
+//
+//                Subscriber subscriber = subscription.getSubscriber();
+//                RequestId requestId = new RequestId(subscription.getSubscriptionId(), TIME_FORMATTER.print(timestamp));
+//
+//                try {
+//                    SubscriptionPack pack = subscription.getSubscriptionPack();
+//                    int daysIntoPack = Days.daysBetween(subscription.getStartDate(), timestamp).getDays();
+//                    if (daysIntoPack == pack.getWeeks() * 7) {
+//                        //
+//                        // Do not add subscriptions on their last day to the fresh call list since we
+//                        // will try to fetch message for current +1 week, which wouldn't exist
+//                        // See https://applab.atlassian.net/browse/NMS-301
+//                        //
+//                        LOGGER.debug("Ignoring last day for subscription {} from fresh calls.",
+//                                subscription.getSubscriptionId());
+//                        continue;
+//                    }
+//
+//                    SubscriptionPackMessage msg = subscription.nextScheduledMessage(timestamp);
+//
+//                    writeSubscriptionRow(
+//                            requestId.toString(),
+//                            serviceIdFromOrigin(true, subscription.getOrigin()),
+//                            subscriber.getCallingNumber().toString(),
+//                            NORMAL_PRIORITY, //todo: how do we choose a priority?
+//                            callFlowUrl,
+//                            msg.getMessageFileName(),
+//                            msg.getWeekId(),
+//                            // we are happy with empty language and circle since they are optional
+//                            subscriber.getLanguage() == null ? "" : subscriber.getLanguage().getCode(),
+//                            subscriber.getCircle() == null ? "" : subscriber.getCircle().getName(),
+//                            subscription.getOrigin().getCode(),
+//                            writer);
+//
+//                    recordsWritten++;
+//                    if (recordsWritten % PROGRESS_INTERVAL == 0) {
+//                        LOGGER.debug(WROTE, rowTimer.frequency(recordsWritten));
+//                    }
+//
+//                } catch (IllegalStateException se) {
+//                    String message = se.toString();
+//                    alertService.create(subscription.getSubscriptionId(), "IllegalStateException", message,
+//                            AlertType.HIGH, AlertStatus.NEW, 0, null);
+//                    LOGGER.error(message);
+//                }
+//            }
+//
+//            if (recordsWritten % PROGRESS_INTERVAL != 0) {
+//                LOGGER.debug(WROTE, rowTimer.frequency(recordsWritten));
+//            }
+//
+//        } while (true);
+//
+//        LOGGER.info(WROTE, timer.frequency(recordsWritten));
+//
+//        return recordsWritten;
+//    }
 
-        LOGGER.info("generateFreshCalls({})", timestamp);
-
-        DayOfTheWeek dow = DayOfTheWeek.fromDateTime(timestamp);
-        int recordsWritten = 0;
-        Long offset = 0L;
-        Timer timer = new Timer("overall fresh call", "overall fresh calls");
-        do {
-            List<Subscription> subscriptions = subscriptionService.findActiveSubscriptionsForDay(dow, offset, maxQueryBlock);
-
-            if (subscriptions.size() == 0) {
-                break;
-            }
-
-            Timer rowTimer = new Timer("file row", "file rows");
-            for (Subscription subscription : subscriptions) {
-
-                offset = subscription.getId();
-
-                Subscriber subscriber = subscription.getSubscriber();
-                RequestId requestId = new RequestId(subscription.getSubscriptionId(), TIME_FORMATTER.print(timestamp));
-
-                try {
-                    SubscriptionPack pack = subscription.getSubscriptionPack();
-                    int daysIntoPack = Days.daysBetween(subscription.getStartDate(), timestamp).getDays();
-                    if (daysIntoPack == pack.getWeeks() * 7) {
-                        //
-                        // Do not add subscriptions on their last day to the fresh call list since we
-                        // will try to fetch message for current +1 week, which wouldn't exist
-                        // See https://applab.atlassian.net/browse/NMS-301
-                        //
-                        LOGGER.debug("Ignoring last day for subscription {} from fresh calls.",
-                                subscription.getSubscriptionId());
-                        continue;
-                    }
-
-                    SubscriptionPackMessage msg = subscription.nextScheduledMessage(timestamp);
-
-                    writeSubscriptionRow(
-                            requestId.toString(),
-                            serviceIdFromOrigin(true, subscription.getOrigin()),
-                            subscriber.getCallingNumber().toString(),
-                            NORMAL_PRIORITY, //todo: how do we choose a priority?
-                            callFlowUrl,
-                            msg.getMessageFileName(),
-                            msg.getWeekId(),
-                            // we are happy with empty language and circle since they are optional
-                            subscriber.getLanguage() == null ? "" : subscriber.getLanguage().getCode(),
-                            subscriber.getCircle() == null ? "" : subscriber.getCircle().getName(),
-                            subscription.getOrigin().getCode(),
-                            writer);
-
-                    recordsWritten++;
-                    if (recordsWritten % PROGRESS_INTERVAL == 0) {
-                        LOGGER.debug(WROTE, rowTimer.frequency(recordsWritten));
-                    }
-
-                } catch (IllegalStateException se) {
-                    String message = se.toString();
-                    alertService.create(subscription.getSubscriptionId(), "IllegalStateException", message,
-                            AlertType.HIGH, AlertStatus.NEW, 0, null);
-                    LOGGER.error(message);
-                }
-            }
-
-            if (recordsWritten % PROGRESS_INTERVAL != 0) {
-                LOGGER.debug(WROTE, rowTimer.frequency(recordsWritten));
-            }
-
-        } while (true);
-
-        LOGGER.info(WROTE, timer.frequency(recordsWritten));
-
-        return recordsWritten;
-    }
-
-    private int generateRetryCalls(DateTime timestamp, int maxQueryBlock, String callFlowUrl,
-                                   OutputStreamWriter writer) throws IOException {
-
-        LOGGER.info("generateRetryCalls({})", timestamp);
-
-        int count = 0;
-        Long offset = 0L;
-        Timer timer = new Timer("retry call", "retry calls");
-        do {
-            // All calls are rescheduled for the next day which means that we should query for all CallRetry records
-            List<CallRetry> callRetries = callRetryService.retrieveAll(offset, maxQueryBlock);
-
-            if (callRetries.size() == 0) {
-                break;
-            }
-
-            for (CallRetry callRetry : callRetries) {
-
-                offset = callRetry.getId();
-
-                RequestId requestId = new RequestId(callRetry.getSubscriptionId(), TIME_FORMATTER.print(timestamp));
-
-                writeSubscriptionRow(
-                        requestId.toString(),
-                        serviceIdFromOrigin(false, callRetry.getSubscriptionOrigin()),
-                        callRetry.getMsisdn().toString(),
-                        NORMAL_PRIORITY,
-                        callFlowUrl,
-                        callRetry.getContentFileName(),
-                        callRetry.getWeekId(),
-                        callRetry.getLanguageLocationCode(),
-                        callRetry.getCircle(),
-                        callRetry.getSubscriptionOrigin().getCode(),
-                        writer);
-
-                count++;
-                if (count % PROGRESS_INTERVAL == 0) {
-                    LOGGER.debug(WROTE, timer.frequency(count));
-                }
-
-            }
-
-        } while (true);
-
-        LOGGER.info(WROTE, timer.frequency(count));
-
-        return count;
-    }
+//    private int generateRetryCalls(DateTime timestamp, int maxQueryBlock, String callFlowUrl,
+//                                   OutputStreamWriter writer) throws IOException {
+//
+//        LOGGER.info("generateRetryCalls({})", timestamp);
+//
+//        int count = 0;
+//        Long offset = 0L;
+//        Timer timer = new Timer("retry call", "retry calls");
+//        do {
+//            // All calls are rescheduled for the next day which means that we should query for all CallRetry records
+//            List<CallRetry> callRetries = callRetryService.retrieveAll(offset, maxQueryBlock);
+//
+//            if (callRetries.size() == 0) {
+//                break;
+//            }
+//
+//            for (CallRetry callRetry : callRetries) {
+//
+//                offset = callRetry.getId();
+//
+//                RequestId requestId = new RequestId(callRetry.getSubscriptionId(), TIME_FORMATTER.print(timestamp));
+//
+//                writeSubscriptionRow(
+//                        requestId.toString(),
+//                        serviceIdFromOrigin(false, callRetry.getSubscriptionOrigin()),
+//                        callRetry.getMsisdn().toString(),
+//                        NORMAL_PRIORITY,
+//                        callFlowUrl,
+//                        callRetry.getContentFileName(),
+//                        callRetry.getWeekId(),
+//                        callRetry.getLanguageLocationCode(),
+//                        callRetry.getCircle(),
+//                        callRetry.getSubscriptionOrigin().getCode(),
+//                        writer);
+//
+//                count++;
+//                if (count % PROGRESS_INTERVAL == 0) {
+//                    LOGGER.debug(WROTE, timer.frequency(count));
+//                }
+//
+//            }
+//
+//        } while (true);
+//
+//        LOGGER.info(WROTE, timer.frequency(count));
+//
+//        return count;
+//    }
 
 
     private File localObdDir() {
@@ -519,10 +520,10 @@ public class TargetFileServiceImpl implements TargetFileService {
             writeHeader(writer);
 
             //Fresh calls
-            recordCount = generateFreshCalls(today, maxQueryBlock, callFlowUrl, writer);
-
-            //Retry calls
-            recordCount += generateRetryCalls(today, maxQueryBlock, callFlowUrl, writer);
+//            recordCount = generateFreshCalls(today, maxQueryBlock, callFlowUrl, writer);
+//
+//            //Retry calls
+//            recordCount += generateRetryCalls(today, maxQueryBlock, callFlowUrl, writer);
 
             LOGGER.info("Created targetFile with {} record{}", recordCount, recordCount == 1 ? "" : "s");
 
@@ -613,7 +614,7 @@ public class TargetFileServiceImpl implements TargetFileService {
      * @param request file name & status
      */
     @Override
-    public void handleFileProcessedStatusNotification(FileProcessedStatusRequest request) {
+    public void handleFileProcessedStatusNotification(FileProcessedStatusRequest request) { //NOPMD NcssMethodCount
         fileAuditRecordDataService.create(new FileAuditRecord(
                 FileType.TARGET_FILE,
                 request.getFileName(),

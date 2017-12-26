@@ -1,7 +1,7 @@
 package org.motechproject.nms.swcUpdate.service;
 
 import org.motechproject.nms.swc.exception.SwcExistingRecordException;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
+import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 

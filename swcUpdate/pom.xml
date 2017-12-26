@@ -47,12 +47,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
-            <artifactId>kilkari</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-commons-api</artifactId>
             <version>${motech.version}</version>

@@ -2,8 +2,8 @@ package org.motechproject.nms.imi.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.nms.kilkari.dto.CallSummaryRecordDto;
-import org.motechproject.nms.kilkari.exception.InvalidCallRecordDataException;
+//import org.motechproject.nms.kilkari.dto.CallSummaryRecordDto;
+//import org.motechproject.nms.kilkari.exception.InvalidCallRecordDataException;
 import org.motechproject.nms.props.domain.RequestId;
 
 import javax.jdo.annotations.Index;
@@ -11,6 +11,7 @@ import javax.jdo.annotations.Index;
 /**
  * See NMS API - 4.4.2 CDR Summary File Format
  */
+@SuppressWarnings("PMD")
 @Entity(tableName = "nms_imi_csrs")
 @Index(members = { "requestId" })
 public class CallSummaryRecord {
@@ -158,25 +159,25 @@ public class CallSummaryRecord {
         this.attempts = attempts;
     }
 
-    public CallSummaryRecordDto toDto() {
-        String subscriptionId;
-        String timestamp;
-        try {
-            RequestId r = RequestId.fromString(requestId);
-            subscriptionId = r.getSubscriptionId();
-            timestamp = r.getTimestamp();
-        } catch (IllegalArgumentException e) {
-            throw new InvalidCallRecordDataException(e);
-        }
-        return new CallSummaryRecordDto(
-                subscriptionId,
-                statusCode,
-                finalStatus,
-                contentFileName,
-                weekId,
-                languageLocationCode,
-                circle,
-                timestamp
-        );
-    }
+//    public CallSummaryRecordDto toDto() {
+//        String subscriptionId;
+//        String timestamp;
+//        try {
+//            RequestId r = RequestId.fromString(requestId);
+//            subscriptionId = r.getSubscriptionId();
+//            timestamp = r.getTimestamp();
+//        } catch (IllegalArgumentException e) {
+//            throw new InvalidCallRecordDataException(e);
+//        }
+//        return new CallSummaryRecordDto(
+//                subscriptionId,
+//                statusCode,
+//                finalStatus,
+//                contentFileName,
+//                weekId,
+//                languageLocationCode,
+//                circle,
+//                timestamp
+//        );
+//    }
 }

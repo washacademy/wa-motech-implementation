@@ -9,9 +9,7 @@ import org.motechproject.nms.imi.service.CdrFileService;
 import org.motechproject.nms.swc.domain.DeactivationReason;
 import org.motechproject.nms.swc.repository.SwcDataService;
 import org.motechproject.nms.swc.service.SwcService;
-import org.motechproject.nms.mcts.service.MctsWsImportService;
 import org.motechproject.nms.props.service.LogHelper;
-
 import org.motechproject.nms.washacademy.dto.WaBookmark;
 import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.slf4j.Logger;
@@ -46,9 +44,6 @@ public class OpsController extends BaseController {
     private CdrFileService cdrFileService;
 
     @Autowired
-    private MctsWsImportService mctsWsImportService;
-
-    @Autowired
     private WashAcademyService washAcademyService;
 
     @Autowired
@@ -57,19 +52,6 @@ public class OpsController extends BaseController {
     private final String contactNumber = "contactNumber";
 
     //only for debugging purposes and will not be returned anywhere
-    public static final String NON_ASHA_TYPE = "<MctsId: %s,Contact Number: %s, Invalid Type: %s>";
-
-    protected static boolean validatetypeASHA(StringBuilder errors, String fieldName, String mctsFlwId, Long contactNumber, String type) {
-        if (!validateFieldPresent(errors, fieldName, type)) {
-            return false;
-        }
-        String designation = type.trim();
-        if (SwcConstants.ASHA_TYPE.equalsIgnoreCase(designation)) {
-            return true;
-        }
-        errors.append(String.format(NON_ASHA_TYPE, mctsFlwId, contactNumber, type));
-        return false;
-    }
 
     /**
      * Provided for OPS as a crutch to be able to empty all MDS cache directly after modifying the database by hand
@@ -95,15 +77,6 @@ public class OpsController extends BaseController {
         LOGGER.info("/cleanCdr()");
         cdrFileService.cleanOldCallRecords();
     }
-
-    @RequestMapping("/startMctsSync")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public void startMctsSync() {
-
-        LOGGER.info("/startMctsSync");
-        mctsWsImportService.startMctsImport();
-    }
-
     @RequestMapping(value = "/createUpdateRchFlw",
             method = RequestMethod.POST,
             headers = { "Content-type=application/json" })

@@ -13,7 +13,7 @@ import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.api.web.validator.MobileAcademyValidator;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.service.SwcService;
-import org.motechproject.nms.mobileacademy.exception.CourseNotCompletedException;
+import org.motechproject.nms.washacademy.exception.CourseNotCompletedException;
 import org.motechproject.nms.props.service.LogHelper;
 import org.motechproject.nms.washacademy.dto.WaBookmark;
 import org.motechproject.nms.washacademy.dto.WaCourse;

@@ -8,7 +8,7 @@ import org.motechproject.nms.csv.exception.CsvImportException;
 import org.motechproject.nms.csv.service.CsvAuditService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.swcUpdate.service.SwcUpdateImportService;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
+import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+@SuppressWarnings("PMD")
 @Controller
 public class SwcImportController {
 
@@ -42,7 +43,6 @@ public class SwcImportController {
         return e.getMessage();
     }
 
-    @SuppressWarnings("PMD")
     @RequestMapping(value = "/update/language", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void updateFrontLineWorkersLanguage(@RequestParam MultipartFile csvFile) {
@@ -63,7 +63,6 @@ public class SwcImportController {
         }
     }
 
-    @SuppressWarnings("PMD")
     @RequestMapping(value = "/update/msisdn", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void updateFrontLineWorkersMSISDN(@RequestParam MultipartFile csvFile) {
@@ -84,7 +83,6 @@ public class SwcImportController {
         }
     }
 
-    @SuppressWarnings("PMD")
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void importFrontLineWorkers(@RequestParam MultipartFile csvFile) {
@@ -105,7 +103,6 @@ public class SwcImportController {
         }
     }
 
-    @SuppressWarnings("PMD")
     @RequestMapping(value = "/rchImport", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void importRchFrontLineWorkers(@RequestParam MultipartFile csvFile) {
