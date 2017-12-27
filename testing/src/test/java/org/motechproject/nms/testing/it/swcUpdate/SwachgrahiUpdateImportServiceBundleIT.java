@@ -1,4 +1,4 @@
-package org.motechproject.nms.testing.it.flwUpdate;
+package org.motechproject.nms.testing.it.swcUpdate;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang.StringUtils;
@@ -23,8 +23,8 @@ import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.repository.SwcDataService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.service.SwcUpdateImportService;
-import org.motechproject.nms.mobileacademy.domain.CourseCompletionRecord;
-import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
+import org.motechproject.nms.washacademy.domain.CourseCompletionRecord;
+import org.motechproject.nms.washacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.region.repository.CircleDataService;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.LanguageDataService;
@@ -117,8 +117,8 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test when state not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenStateNotInDatabase() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(9439986187L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(9439986187L);
+        swcService.add(swc);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,2");
         swcUpdateImportService.importLanguageData(reader);
@@ -134,8 +134,8 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test when language not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenLanguageNotInDatabase() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(9439986187L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(9439986187L);
+        swcService.add(swc);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,9439986187,en,1");
         swcUpdateImportService.importLanguageData(reader);
@@ -169,25 +169,25 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test NMS Id takes precedence over MSISDN
     @Test
     public void testImportWhenNMSIdTakesPrecedenceOverMSIDN() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(2000000000L);
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi(2000000000L);
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         Reader reader = createLanguageReaderWithHeaders("72185,,2000000000,hi,1");
         swcUpdateImportService.importLanguageData(reader);
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
+        swc = swcService.getByContactNumber(1000000000L);
+        assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
-        flw = swcService.getByContactNumber(2000000000L);
-        assertEquals(rh.kannadaLanguage(), flw.getLanguage());
+        swc = swcService.getByContactNumber(2000000000L);
+        assertEquals(rh.kannadaLanguage(), swc.getLanguage());
     }
 
     // Test MCTS Id takes precedence over MSISDN
@@ -195,46 +195,46 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test MSISDN only
     @Test
     public void testImportWhenMSISDNOnly() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(2000000000L);
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi(2000000000L);
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,1000000000,hi,1");
         swcUpdateImportService.importLanguageData(reader);
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
+        swc = swcService.getByContactNumber(1000000000L);
+        assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
-        flw = swcService.getByContactNumber(2000000000L);
-        assertEquals(rh.kannadaLanguage(), flw.getLanguage());
+        swc = swcService.getByContactNumber(2000000000L);
+        assertEquals(rh.kannadaLanguage(), swc.getLanguage());
     }
 
     @Test
     public void testImportFromSampleLanguageDataFile() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setSwcId("72185");
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setSwcId("72185");
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(2000000000L);
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi(2000000000L);
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        swcUpdateImportService.importLanguageData(read("csv/flw_language_update.csv"));
+        swcUpdateImportService.importLanguageData(read("csv/swc_language_update.csv"));
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
+        swc = swcService.getByContactNumber(1000000000L);
+        assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
-        flw = swcService.getByContactNumber(2000000000L);
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
+        swc = swcService.getByContactNumber(2000000000L);
+        assertEquals(rh.hindiLanguage(), swc.getLanguage());
     }
 
     /************************************************************************************************************
@@ -273,101 +273,101 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test NMS Id takes precedence over MSISDN
     @Test
     public void testMsisdnImportWhenNMSIdTakesPrecedenceOverMSIDN() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(2000000000L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi(2000000000L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,,2000000000,9439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
 
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNotNull(flw);
-        assertEquals("72185", flw.getSwcId());
+        swc = swcService.getByContactNumber(9439986187L);
+        assertNotNull(swc);
+        assertEquals("72185", swc.getSwcId());
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
+        swc = swcService.getByContactNumber(1000000000L);
+        assertNull(swc);
 
-        flw = swcService.getByContactNumber(2000000000L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(2000000000L);
+        assertNotNull(swc);
     }
 
     // Test MCTS Id takes precedence over MSISDN
 
-    // Test MSISDN only flw Update and Bookmark, Completion and Activity Record
+    // Test MSISDN only swc Update and Bookmark, Completion and Activity Record
     @Test
     public void testMsisdnImportWhenMSISDNOnly() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(2000000000L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi(2000000000L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         createMaRecords(1000000000L);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,9439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
 
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(9439986187L);
+        assertNotNull(swc);
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
+        swc = swcService.getByContactNumber(1000000000L);
+        assertNull(swc);
 
-        flw = swcService.getByContactNumber(2000000000L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(2000000000L);
+        assertNotNull(swc);
 
         assertMaRecords(1000000000L, 9439986187L);
     }
 
     @Test
     public void testMsisdnImportFromSampleDataFile() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(2000000000L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi(2000000000L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        swcUpdateImportService.importMSISDNData(read("csv/flw_msisdn_update.csv"));
+        swcUpdateImportService.importMSISDNData(read("csv/swc_msisdn_update.csv"));
 
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(9439986187L);
+        assertNotNull(swc);
 
-        flw = swcService.getByContactNumber(9439986188L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(9439986188L);
+        assertNotNull(swc);
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
+        swc = swcService.getByContactNumber(1000000000L);
+        assertNull(swc);
 
-        flw = swcService.getByContactNumber(2000000000L);
-        assertNull(flw);
+        swc = swcService.getByContactNumber(2000000000L);
+        assertNull(swc);
     }
 
     // Test new MSISDN larger than 10 digits
     @Test
     public void testMsisdnImportWhenNewMsisdnTooLong() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,09439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
 
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(9439986187L);
+        assertNotNull(swc);
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
+        swc = swcService.getByContactNumber(1000000000L);
+        assertNull(swc);
     }
 
     // NMS_FT_557
@@ -390,11 +390,11 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test new MSISDN associated with existing FLW
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButAlreadyInUse() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(9439986187L);
-        swcService.add(flw);
+        swc = new Swachchagrahi(9439986187L);
+        swcService.add(swc);
 
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,1000000000,1");
         swcUpdateImportService.importMSISDNData(reader);
@@ -403,11 +403,11 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test Ma Update when new MSISDN associated with existing FLW
     @Test
     public void testMaUpdateWhenMSISDNProvidedIsAlreadyInUse() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi(9439986187L);
-        swcService.add(flw);
+        swc = new Swachchagrahi(9439986187L);
+        swcService.add(swc);
 
         createMaRecords(9439986187L);
         createMaRecords(1000000000L);
@@ -458,11 +458,11 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         if (StringUtils.isBlank(option)) {
             // update using import
             httpPost = new HttpPost(String.format(
-                    "http://localhost:%d/flwUpdate/import",
+                    "http://localhost:%d/swcUpdate/import",
                     TestContext.getJettyPort()));
         } else {
             httpPost = new HttpPost(String.format(
-                    "http://localhost:%d/flwUpdate/update/%s",
+                    "http://localhost:%d/swcUpdate/update/%s",
                     TestContext.getJettyPort(), option));
         }
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -484,22 +484,22 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT550() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         assertEquals(
                 HttpStatus.SC_OK,
                 importCsvFileForFLWUpdate("language",
-                        "flw_language_update_only_flwId.csv").getStatusLine()
+                        "swc_language_update_only_swcId.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getBySwcId("72185");
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
+        swc = swcService.getBySwcId("72185");
+        assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
         assertEquals("Success", csvAuditRecordDataService.retrieveAll().get(0)
@@ -511,22 +511,22 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT551() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         assertEquals(
                 HttpStatus.SC_OK,
                 importCsvFileForFLWUpdate("language",
-                        "flw_language_update_only_MSISDN.csv").getStatusLine()
+                        "swc_language_update_only_MSISDN.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getBySwcId("72185");
-        assertEquals(rh.hindiLanguage(), flw.getLanguage());
+        swc = swcService.getBySwcId("72185");
+        assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
         assertEquals("Success", csvAuditRecordDataService.retrieveAll().get(0)
@@ -540,21 +540,21 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // TODO JIRA issue https://applab.atlassian.net/browse/NMS-252
     @Test
     public void verifyFT552() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swcService.add(swc);
 
         assertEquals(
                 HttpStatus.SC_BAD_REQUEST,
                 importCsvFileForFLWUpdate("language",
-                        "flw_language_update_lang_error.csv").getStatusLine()
+                        "swc_language_update_lang_error.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getBySwcId("72185");
-        assertEquals(rh.kannadaLanguage(), flw.getLanguage());
+        swc = swcService.getBySwcId("72185");
+        assertEquals(rh.kannadaLanguage(), swc.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
         assertTrue(csvAuditRecordDataService.retrieveAll().get(0).getOutcome()
@@ -566,25 +566,25 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT555() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi(1000000000L);
-        flw.setSwcId("72185");
-        flw.setLanguage(rh.kannadaLanguage());
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi(1000000000L);
+        swc.setSwcId("72185");
+        swc.setLanguage(rh.kannadaLanguage());
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         assertEquals(
                 HttpStatus.SC_OK,
                 importCsvFileForFLWUpdate("msisdn",
-                        "flw_msisdn_update_only_flwId.csv").getStatusLine()
+                        "swc_msisdn_update_only_swcId.csv").getStatusLine()
                         .getStatusCode());
 
-        flw = swcService.getByContactNumber(9439986187L);
-        assertNotNull(flw);
+        swc = swcService.getByContactNumber(9439986187L);
+        assertNotNull(swc);
 
-        flw = swcService.getByContactNumber(1000000000L);
-        assertNull(flw);
+        swc = swcService.getByContactNumber(1000000000L);
+        assertNull(swc);
 
         assertEquals(1, csvAuditRecordDataService.count());
         assertEquals("Success", csvAuditRecordDataService.retrieveAll().get(0)
@@ -598,35 +598,35 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT558() throws InterruptedException, IOException {
         // create FLW record having state as "Delhi" and district as "new delhi district"
-        Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Aisha Bibi", 1234567899L);
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         // update FLW district to "southDelhiDistrict"
         rh.southDelhiDistrict();
 
         HttpResponse response = importCsvFileForFLWUpdate(null,
-                "flw_FT_558.txt");
+                "swc_FT_558.txt");
         assertEquals(HttpStatus.SC_OK, response.getStatusLine()
                 .getStatusCode());
 
-        flw = swcService.getByContactNumber(1234567899L);
-        assertEquals(rh.southDelhiDistrict().getCode(), flw.getDistrict()
+        swc = swcService.getByContactNumber(1234567899L);
+        assertEquals(rh.southDelhiDistrict().getCode(), swc.getDistrict()
                 .getCode());
-        assertEquals(rh.delhiState().getCode(), flw.getState().getCode());
+        assertEquals(rh.delhiState().getCode(), swc.getState().getCode());
 
         // Language should not be updated
-        assertEquals(rh.hindiLanguage().getCode(), flw.getLanguage().getCode());
+        assertEquals(rh.hindiLanguage().getCode(), swc.getLanguage().getCode());
 
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
-        assertEquals("/flwUpdate/import", csvAuditRecord.getEndpoint());
+        assertEquals("/swcUpdate/import", csvAuditRecord.getEndpoint());
         assertTrue(csvAuditRecord.getOutcome().contains("Success"));
-        assertEquals("flw_FT_558.txt", csvAuditRecord.getFile());
+        assertEquals("swc_FT_558.txt", csvAuditRecord.getFile());
     }
 
     /*
@@ -636,24 +636,24 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT560() throws InterruptedException, IOException {
         // create FLW record
-        Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Aisha Bibi", 1234567899L);
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         // update state to "State 10" which doesn't exist in DB
         HttpResponse response = importCsvFileForFLWUpdate(null,
-                "flw_FT_560.txt");
+                "swc_FT_560.txt");
         assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
                 .getStatusCode());
 
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
-        assertEquals("/flwUpdate/import", csvAuditRecord.getEndpoint());
+        assertEquals("/swcUpdate/import", csvAuditRecord.getEndpoint());
         assertTrue(csvAuditRecord.getOutcome().contains("Failure: "));
-        assertEquals("flw_FT_560.txt", csvAuditRecord.getFile());
+        assertEquals("swc_FT_560.txt", csvAuditRecord.getFile());
     }
 
     /*
@@ -663,24 +663,24 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT561() throws InterruptedException, IOException {
         // create FLW record
-        Swachchagrahi flw = new Swachchagrahi("Aisha Bibi", 1234567899L);
-        flw.setState(rh.delhiState());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Aisha Bibi", 1234567899L);
+        swc.setState(rh.delhiState());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         // update FLW district to a value which doesn't exist in DB
         HttpResponse response = importCsvFileForFLWUpdate(null,
-                "flw_FT_561.txt");
+                "swc_FT_561.txt");
         assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
                 .getStatusCode());
 
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
-        assertEquals("/flwUpdate/import", csvAuditRecord.getEndpoint());
+        assertEquals("/swcUpdate/import", csvAuditRecord.getEndpoint());
         assertTrue(csvAuditRecord.getOutcome().contains("Failure: "));
-        assertEquals("flw_FT_561.txt", csvAuditRecord.getFile());
+        assertEquals("swc_FT_561.txt", csvAuditRecord.getFile());
     }
 
     /**

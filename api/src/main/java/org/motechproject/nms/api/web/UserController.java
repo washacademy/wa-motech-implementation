@@ -174,7 +174,7 @@ public class UserController extends BaseController {
         }
 
         if (MOBILE_ACADEMY.equals(serviceName)) {
-            // make sure that flw is authorized to use MA
+            // make sure that swc is authorized to use MA
             restrictInactiveJobUserCheck(flw);
         }
 

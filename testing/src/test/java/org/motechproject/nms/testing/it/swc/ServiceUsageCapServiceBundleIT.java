@@ -1,10 +1,10 @@
-package org.motechproject.nms.testing.it.flw;
+package org.motechproject.nms.testing.it.swc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.flw.domain.ServiceUsageCap;
-import org.motechproject.nms.flw.repository.ServiceUsageCapDataService;
-import org.motechproject.nms.flw.service.ServiceUsageCapService;
+import org.motechproject.nms.swc.domain.ServiceUsageCap;
+import org.motechproject.nms.swc.repository.ServiceUsageCapDataService;
+import org.motechproject.nms.swc.service.ServiceUsageCapService;
 import org.motechproject.nms.props.domain.Service;
 import org.motechproject.nms.props.repository.DeployedServiceDataService;
 import org.motechproject.nms.region.domain.State;

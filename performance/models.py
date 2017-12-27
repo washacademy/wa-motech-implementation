@@ -147,7 +147,7 @@ class NmsFrontLineWorker(Base):
     id = Column(BigInteger, primary_key=True, index=True)
     contactNumber = Column(BigInteger, nullable=False, unique=True)
     district_id_OID = Column(ForeignKey(u'nms_districts.id'), index=True)
-    flwId = Column(String(255, u'utf8_bin'), index=True)
+    swcId = Column(String(255, u'utf8_bin'), index=True)
     healthBlock_id_OID = Column(ForeignKey(u'nms_health_blocks.id'), index=True)
     healthFacility_id_OID = Column(ForeignKey(u'nms_health_facilities.id'), index=True)
     healthSubFacility_id_OID = Column(ForeignKey(u'nms_health_sub_facilities.id'), index=True)

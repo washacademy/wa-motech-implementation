@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Audit record for update of anonymous flw to active
+ * Audit record for update of anonymous swc to active
  */
 @Entity(tableName = "wash_swachgrahi_status_update_audit")
 public class SwcStatusUpdateAudit {

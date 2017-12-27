@@ -3,19 +3,17 @@ package org.motechproject.nms.testing.it;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.motechproject.nms.testing.it.api.*;
-import org.motechproject.nms.testing.it.flw.ServiceUsageCapServiceBundleIT;
-import org.motechproject.nms.testing.it.flw.ServiceUsageServiceBundleIT;
-import org.motechproject.nms.testing.it.flw.SwachgrahiServiceBundleIT;
-import org.motechproject.nms.testing.it.flw.WhiteListServiceBundleIT;
-import org.motechproject.nms.testing.it.flwUpdate.SwachgrahiImportServiceBundleIT;
-import org.motechproject.nms.testing.it.flwUpdate.SwachgrahiUpdateImportServiceBundleIT;
+import org.motechproject.nms.testing.it.swc.ServiceUsageCapServiceBundleIT;
+import org.motechproject.nms.testing.it.swc.ServiceUsageServiceBundleIT;
+import org.motechproject.nms.testing.it.swc.SwachgrahiServiceBundleIT;
+import org.motechproject.nms.testing.it.swc.WhiteListServiceBundleIT;
+import org.motechproject.nms.testing.it.swcUpdate.SwachgrahiImportServiceBundleIT;
+import org.motechproject.nms.testing.it.swcUpdate.SwachgrahiUpdateImportServiceBundleIT;
 import org.motechproject.nms.testing.it.imi.CdrFileServiceBundleIT;
 import org.motechproject.nms.testing.it.imi.ImiControllerCdrBundleIT;
 import org.motechproject.nms.testing.it.imi.ImiControllerObdBundleIT;
 import org.motechproject.nms.testing.it.imi.TargetFileServiceBundleIT;
-import org.motechproject.nms.testing.it.ma.MobileAcademyServiceBundleIT;
-import org.motechproject.nms.testing.it.mcts.MctsImportBundleIT;
-import org.motechproject.nms.testing.it.mcts.MctsWebServiceFacadeBundleIT;
+import org.motechproject.nms.testing.it.wa.WashAcademyServiceBundleIT;
 import org.motechproject.nms.testing.it.props.PropertyServiceBundleIT;
 import org.motechproject.nms.testing.it.rch.RchWebServiceFacadeBundleIT;
 import org.motechproject.nms.testing.it.region.CircleServiceBundleIT;
@@ -73,9 +71,9 @@ import org.motechproject.nms.testing.it.tracking.TrackOneToManyChangesBundleIT;
 //    MctsBeneficiaryUpdateServiceBundleIT.class,
 
     /**
-     * Mobile Academy
+     * Wash Academy
      */
-    MobileAcademyServiceBundleIT.class,
+    WashAcademyServiceBundleIT.class,
 
     /**
      * Props
@@ -95,8 +93,8 @@ import org.motechproject.nms.testing.it.tracking.TrackOneToManyChangesBundleIT;
     /**
      * MCTS
      */
-    MctsWebServiceFacadeBundleIT.class,
-    MctsImportBundleIT.class,
+//    MctsWebServiceFacadeBundleIT.class,
+//    MctsImportBundleIT.class,
 
     /**
      * RCH

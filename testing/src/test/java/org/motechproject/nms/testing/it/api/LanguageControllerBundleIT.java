@@ -111,9 +111,9 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         rh.karnatakaCircle();
     }
 
-    private void createFlwCappedServiceNoUsageNoLocationNoLanguage() {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1111111111l);
-        swcService.add(flw);
+    private void createSwcCappedServiceNoUsageNoLocationNoLanguage() {
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1111111111l);
+        swcService.add(swc);
 
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
@@ -234,10 +234,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
-        assertNotNull(flw);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
-        Language language = flw.getLanguage();
+        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
+        assertNotNull(swc);
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
+        Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
                 language.getCode());
@@ -245,7 +245,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSetLanguageLanguageNotFound() throws IOException, InterruptedException {
-        createFlwCappedServiceNoUsageNoLocationNoLanguage();
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
         HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity("{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":77}");
@@ -260,9 +260,9 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSetLanguageUndeployedState() throws IOException, InterruptedException {
-        createFlwCappedServiceNoUsageNoLocationNoLanguage();
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobileacademy/languageLocationCode", TestContext.getJettyPort()));
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/washacademy/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\""
                         + rh.tamilLanguage().getCode() + "\"}");
@@ -279,7 +279,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSetLanguageValid() throws IOException, InterruptedException {
-        createFlwCappedServiceNoUsageNoLocationNoLanguage();
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
         HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
@@ -292,10 +292,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
-        Language language = flw.getLanguage();
+        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
+        Language language = swc.getLanguage();
         assertNotNull(language);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
                 language.getCode());
     }
@@ -307,15 +307,15 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT463() throws IOException, InterruptedException {
         // create FLW record
-        Swachchagrahi flw = new Swachchagrahi(1111111112l);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
-        flw = swcService
+        Swachchagrahi swc = new Swachchagrahi(1111111112l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService
                 .getByContactNumber(1111111112l);
-        assertEquals(null, flw.getLanguage());// No Language
+        assertEquals(null, swc.getLanguage());// No Language
 
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111112,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\""
@@ -325,10 +325,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpPost, ADMIN_USERNAME, ADMIN_PASSWORD);
         
-        flw = swcService
+        swc = swcService
                 .getByContactNumber(1111111112l);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        assertEquals(rh.hindiLanguage().getCode(), flw.getLanguage().getCode());
+        assertEquals(rh.hindiLanguage().getCode(), swc.getLanguage().getCode());
     }
 
     /**
@@ -338,7 +338,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT464() throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\""
@@ -358,7 +358,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT465() throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111112,\"languageLocationCode\":\""
@@ -379,7 +379,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT466() throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111112,\"callId\":"+ VALID_CALL_ID + "}");
@@ -400,7 +400,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT467() throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":123456789,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\""
@@ -421,7 +421,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT468() throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1234567890,\"callId\":1234567890123456,\"languageLocationCode\":\""
@@ -444,7 +444,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT469() throws IOException, InterruptedException {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/mobileacademy/languageLocationCode",
+                "http://localhost:%d/api/washacademy/languageLocationCode",
                 TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1234567890,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\"TT\"}");
@@ -457,13 +457,13 @@ public class LanguageControllerBundleIT extends BasePaxIT {
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
     
-    private void createFlwWithStatusAnonymous(){
+    private void createSwcWithStatusAnonymous(){
     	Language language = new Language("99", "Papiamento");
         languageDataService.create(language);
         
     	// create anonymous FLW record
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swcService.add(swc);
         
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
@@ -477,7 +477,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT359() throws IOException, InterruptedException{
-    	createFlwWithStatusAnonymous();
+    	createSwcWithStatusAnonymous();
     	HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity("{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID +",\"languageLocationCode\":99}");
         httpPost.setEntity(params);
@@ -486,10 +486,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
-        Language language = flw.getLanguage();
+        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
+        Language language = swc.getLanguage();
         assertNotNull(language);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
         assertEquals("FLW Language Code", "99", language.getCode());
     }
 }

@@ -37,9 +37,8 @@ public class Block extends MdsEntity {
     private String regionalName;
 
     @Field
-    @Column(allowsNull = "false", length = 7)
+    @Column(allowsNull = "false")
     @NotNull
-    @Size(min = 1, max = 7)
     // File from MoH shows a 50 char string in taluka file, but a 7 char string in village.
     // Sample data shows string (i.e. '0005')
     // Email thread says number.   grrrr

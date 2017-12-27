@@ -8,7 +8,7 @@ import org.motechproject.nms.swc.domain.SwcError;
 import java.util.List;
 
 /**
- * Data service to add flw sync error audit logs
+ * Data service to add swc sync error audit logs
  */
 public interface SwcErrorDataService extends MotechDataService<SwcError> {
 

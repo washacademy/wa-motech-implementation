@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("PMD")
 @Controller
 public class TestingController {
 
@@ -52,32 +53,32 @@ public class TestingController {
     }
 
 
-    @RequestMapping(value = "/createSubscriptionPacks")
-    @ResponseBody
-    public String createSubscriptionPacks() {
-        testingService.createSubscriptionPacks();
-        return "OK";
-    }
-
-
-    @RequestMapping(value = "/createMctsMoms")
-    @ResponseBody
-    public String createMctsMoms(
-            @RequestParam(required = true) int count,
-            @RequestParam(required = true) boolean lmp)
-            throws IOException {
-        return testingService.createMctsMoms(count, lmp);
-    }
-
-
-    @RequestMapping(value = "/createMctsKids")
-    @ResponseBody
-    public String createMctsKids(
-            @RequestParam(required = true) int count,
-            @RequestParam(required = true) boolean dob)
-            throws IOException {
-        return testingService.createMctsKids(count, dob);
-    }
+//    @RequestMapping(value = "/createSubscriptionPacks")
+//    @ResponseBody
+//    public String createSubscriptionPacks() {
+//        testingService.createSubscriptionPacks();
+//        return "OK";
+//    }
+//
+//
+//    @RequestMapping(value = "/createMctsMoms")
+//    @ResponseBody
+//    public String createMctsMoms(
+//            @RequestParam(required = true) int count,
+//            @RequestParam(required = true) boolean lmp)
+//            throws IOException {
+//        return testingService.createMctsMoms(count, lmp);
+//    }
+//
+//
+//    @RequestMapping(value = "/createMctsKids")
+//    @ResponseBody
+//    public String createMctsKids(
+//            @RequestParam(required = true) int count,
+//            @RequestParam(required = true) boolean dob)
+//            throws IOException {
+//        return testingService.createMctsKids(count, dob);
+//    }
 
 
     //from http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc

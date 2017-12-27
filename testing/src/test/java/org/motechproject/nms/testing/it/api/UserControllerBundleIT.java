@@ -165,13 +165,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
 
     
-    private void createFlwCappedServiceNoUsageNoLocationNoLanguage() {
+    private void createSwcCappedServiceNoUsageNoLocationNoLanguage() {
 
         Language language = new Language("99", "Papiamento");
         languageDataService.create(language);
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1111111111L);
+        swcService.add(swc);
 
         Circle circle = new Circle("AA");
         circle.setDefaultLanguage(language);
@@ -198,7 +198,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(serviceUsageCap);
     }
 
-    private void createFlwWithLanguageServiceUsageAndCappedService() {
+    private void createSwcWithLanguageServiceUsageAndCappedService() {
 
         rh.delhiState();
         rh.delhiCircle();
@@ -206,17 +206,17 @@ public class UserControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
 
         // A service record without endOfService and WelcomePrompt played
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(1);
@@ -226,7 +226,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
     }
 
-    private void createFlwWithLanguageFullServiceUsageAndCappedService() {
+    private void createSwcWithLanguageFullServiceUsageAndCappedService() {
 
         rh.newDelhiDistrict();
         rh.southDelhiDistrict();
@@ -235,16 +235,16 @@ public class UserControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(1);
@@ -254,7 +254,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
     }
 
-    private void createFlwWithLanguageFullUsageOfBothServiceUncapped() {
+    private void createSwcWithLanguageFullUsageOfBothServiceUncapped() {
 
         // Make sure to create two districts (with two languages) for the delhi state
         District district = rh.newDelhiDistrict();
@@ -265,14 +265,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = ApiTestHelper.createFlw("Hillary Devi", 1111111111L, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setDistrict(district);
-        flw.setState(district.getState());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Hillary Devi", 1111111111L, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setDistrict(district);
+        swc.setState(district.getState());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(1);
@@ -284,7 +284,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // Academy doesn't have a welcome prompt
         cdr = new CallDetailRecord();
         cdr.setCallingNumber(1111111111l);
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(1);
         cdr.setEndOfUsagePromptCounter(1);
@@ -296,7 +296,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(serviceUsageCap);
     }
 
-    private void createFlwWithStateNotInWhitelist() {
+    private void createSwcWithStateNotInWhitelist() {
 
         circleDataService.create(new Circle("AA"));
 
@@ -320,14 +320,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         WhitelistEntry entry = new WhitelistEntry(0000000000l, whitelistState);
         whitelistEntryDataService.create(entry);
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111l);
-        flw.setState(whitelistState);
-        flw.setDistrict(district);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111l);
+        swc.setState(whitelistState);
+        swc.setDistrict(district);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
     }
 
-    private void createFlwWithLanguageLocationCodeNotInWhitelist() {
+    private void createSwcWithLanguageLocationCodeNotInWhitelist() {
 
         Language language = new Language("34", "Language From Whitelisted State");
         languageDataService.create(language);
@@ -358,10 +358,10 @@ public class UserControllerBundleIT extends BasePaxIT {
         WhitelistEntry entry = new WhitelistEntry(0000000000l, whitelist);
         whitelistEntryDataService.create(entry);
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111l);
-        flw.setLanguage(language);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111l);
+        swc.setLanguage(language);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
     }
 
     private void createCircleWithLanguage() {
@@ -453,7 +453,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         return httpPost;
     }
 
-       private SwcUserResponse createFlwUserResponse(String defaultLanguageLocationCode, String locationCode,
+       private SwcUserResponse createSwcUserResponse(String defaultLanguageLocationCode, String locationCode,
                                                      List<String> allowedLanguageLocations,
                                                      Long currentUsageInPulses, Long endOfUsagePromptCounter,
                                                      Boolean welcomePromptFlag, Integer maxAllowedUsageInPulses,
@@ -487,12 +487,12 @@ public class UserControllerBundleIT extends BasePaxIT {
         return userResponse;
     }
 
-    private String createFlwUserResponseJson(String defaultLanguageLocationCode, String locationCode,
+    private String createSwcUserResponseJson(String defaultLanguageLocationCode, String locationCode,
                                              List<String> allowedLanguageLocations,
                                              Long currentUsageInPulses, Long endOfUsagePromptCounter,
                                              Boolean welcomePromptFlag, Integer maxAllowedUsageInPulses,
                                              Integer maxAllowedEndOfUsagePrompt) throws IOException {
-        SwcUserResponse userResponse = createFlwUserResponse(defaultLanguageLocationCode, locationCode,
+        SwcUserResponse userResponse = createSwcUserResponse(defaultLanguageLocationCode, locationCode,
                                                              allowedLanguageLocations, currentUsageInPulses,
                 endOfUsagePromptCounter, welcomePromptFlag, maxAllowedUsageInPulses, maxAllowedEndOfUsagePrompt);
 
@@ -506,7 +506,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         return mapper.writeValueAsString(badRequest);
     }
 
-    private void createFlwWithLanguageNoDeployedServices() {
+    private void createSwcWithLanguageNoDeployedServices() {
 
         Language language = new Language("10", "English");
         languageDataService.create(language);
@@ -528,16 +528,16 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         stateDataService.create(state);
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(language);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(language);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
     }
 
     // Request undeployed service by language location
     @Test
     public void testUndeployedServiceByLanguageLocation() throws IOException, InterruptedException {
-        createFlwWithLanguageNoDeployedServices();
+        createSwcWithLanguageNoDeployedServices();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -554,7 +554,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(HttpStatus.SC_NOT_IMPLEMENTED, response.getStatusLine().getStatusCode());
     }
 
-    private void createFlwWithLocationNoLanguageNoDeployedServices() {
+    private void createSwcWithLocationNoLanguageNoDeployedServices() {
 
         District district = new District();
         district.setName("District 1");
@@ -568,17 +568,17 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         stateDataService.create(state);
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setState(state);
-        flw.setDistrict(district);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setState(state);
+        swc.setDistrict(district);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
     }
 
-    // Request undeployed service by flw location
+    // Request undeployed service by swc location
     @Test
     public void testUndeployedServiceByFLWLocation() throws IOException, InterruptedException {
-        createFlwWithLocationNoLanguageNoDeployedServices();
+        createSwcWithLocationNoLanguageNoDeployedServices();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -596,19 +596,19 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     // Request undeployed service by circle
-    private void createFlwWithNoLocationNoLanguageNoDeployedServices() {
+    private void createSwcWithNoLocationNoLanguageNoDeployedServices() {
 
         rh.newDelhiDistrict();
         rh.delhiCircle();
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swcService.add(swc);
     }
 
-    // Request undeployed service by flw location
+    // Request undeployed service by swc location
     @Test
     public void testUndeployedServiceByCircleLocation() throws IOException, InterruptedException {
-        createFlwWithNoLocationNoLanguageNoDeployedServices();
+        createSwcWithNoLocationNoLanguageNoDeployedServices();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",                //service
@@ -626,8 +626,8 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
       @Test
-    public void testFlwUserRequestWithoutServiceUsage() throws IOException, InterruptedException {
-        createFlwCappedServiceNoUsageNoLocationNoLanguage();
+    public void testSwcUserRequestWithoutServiceUsage() throws IOException, InterruptedException {
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -637,7 +637,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID     //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 "99",  //defaultLanguageLocationCode
                 null,  //locationCode
                 Collections.singletonList("99"), // allowedLanguageLocationCodes
@@ -654,8 +654,8 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testFlwUserRequestWithServiceUsageOnly() throws IOException, InterruptedException {
-        createFlwWithLanguageServiceUsageAndCappedService();
+    public void testSwcUserRequestWithServiceUsageOnly() throws IOException, InterruptedException {
+        createSwcWithLanguageServiceUsageAndCappedService();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",                //service
@@ -665,7 +665,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -682,8 +682,8 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testFlwUserRequestWithServiceUsageAndEndOfUsageAndWelcomeMsg() throws IOException, InterruptedException {
-        createFlwWithLanguageFullServiceUsageAndCappedService();
+    public void testSwcUserRequestWithServiceUsageAndEndOfUsageAndWelcomeMsg() throws IOException, InterruptedException {
+        createSwcWithLanguageFullServiceUsageAndCappedService();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",                //service
@@ -693,7 +693,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -740,7 +740,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID     //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 Arrays.asList(rh.tamilLanguage().getCode(), rh.hindiLanguage().getCode(), rh.kannadaLanguage()
@@ -772,7 +772,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 Arrays.asList(rh.hindiLanguage().getCode(), rh.kannadaLanguage()
@@ -803,7 +803,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID     //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 "99",  //defaultLanguageLocationCode
                 "99",  //locationCode
                 null, // allowedLanguageLocationCodes
@@ -818,9 +818,9 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
 
-        Swachchagrahi flw = swcService.getByContactNumber(1111111112l);
-        assertNotNull(flw);
-        Language language = flw.getLanguage();
+        Swachchagrahi swc = swcService.getByContactNumber(1111111112l);
+        assertNotNull(swc);
+        Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(), language.getCode());
     }
@@ -837,7 +837,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID     //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 Arrays.asList(rh.tamilLanguage().getCode(), rh.hindiLanguage().getCode(), rh.kannadaLanguage()
@@ -857,17 +857,17 @@ public class UserControllerBundleIT extends BasePaxIT {
     // An FLW with usage for both MA and MK
     @Test
     public void testGetUserDetailsUserOfBothServices() throws IOException, InterruptedException {
-        createFlwWithLanguageFullUsageOfBothServiceUncapped();
+        createSwcWithLanguageFullUsageOfBothServiceUncapped();
 
         HttpGet httpGet = createHttpGet(
-                true, "mobileacademy",              //service
+                true, "washacademy",              //service
                 true, "1111111111",                 //callingNumber
                 true, "OP",                         //operator
                 true, rh.delhiCircle().getName(),   //circle
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(),
@@ -886,7 +886,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     // An FLW with usage and a service with a cap
     @Test
     public void testGetUserDetailsServiceCapped() throws IOException, InterruptedException {
-        createFlwWithLanguageFullUsageOfBothServiceUncapped();
+        createSwcWithLanguageFullUsageOfBothServiceUncapped();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",                //service
@@ -896,7 +896,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(),
@@ -914,7 +914,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testGetUserNotInWhitelistByState() throws IOException, InterruptedException {
-        createFlwWithStateNotInWhitelist();
+        createSwcWithStateNotInWhitelist();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -933,7 +933,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testGetUserNotInWhitelistByLanguageLocationCode() throws IOException, InterruptedException {
-        createFlwWithLanguageLocationCodeNotInWhitelist();
+        createSwcWithLanguageLocationCodeNotInWhitelist();
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -1039,16 +1039,16 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost));
 
-        Swachchagrahi flw = swcService.getByContactNumber(1111111111l);
-        assertNotNull(flw);
-        Language language = flw.getLanguage();
+        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
+        assertNotNull(swc);
+        Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals("FLW Language Code", rh.hindiLanguage().getCode(), language.getCode());
     }
 
     @Test
     public void testSetLanguageLanguageNotFound() throws IOException, InterruptedException {
-        createFlwCappedServiceNoUsageNoLocationNoLanguage();
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
         HttpPost httpPost = createHttpPost("mobilekunji", new UserLanguageRequest(1111111111L, VALID_CALL_ID, "77"));
 
@@ -1061,14 +1061,14 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSetLanguageValid() throws IOException, InterruptedException {
-        createFlwCappedServiceNoUsageNoLocationNoLanguage();
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
         HttpPost httpPost = createHttpPost("mobilekunji", new UserLanguageRequest(1111111111L, VALID_CALL_ID, "99"));
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        Swachchagrahi flw = swcService.getByContactNumber(1111111111L);
-        Language language = flw.getLanguage();
+        Swachchagrahi swc = swcService.getByContactNumber(1111111111L);
+        Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals("FLW Language Code", "99", language.getCode());
     }
@@ -1240,7 +1240,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         setupWhiteListData();
 
         // create a FLW with non-whitelist number and whitelist state
-        Swachchagrahi notWhitelistWorker = ApiTestHelper.createFlw("Frank Llyod Wright", NOT_WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi notWhitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", NOT_WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
         notWhitelistWorker.setState(whitelistState);
         notWhitelistWorker.setDistrict(rh.newDelhiDistrict());
         notWhitelistWorker.setLanguage(rh.hindiLanguage());
@@ -1350,7 +1350,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT344() throws InterruptedException, IOException {
         setupWhiteListData();
         // user's number in whitelist, but state not whitelisted
-        Swachchagrahi whitelistWorker =  ApiTestHelper.createFlw("Test", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi whitelistWorker =  ApiTestHelper.createSwc("Test", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
         whitelistWorker.setDistrict(rh.bangaloreDistrict());
         whitelistWorker.setLanguage(rh.kannadaLanguage());
         whitelistWorker.setState(nonWhitelistState);
@@ -1551,7 +1551,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         setupWhiteListData();
 
         // create a FLW with whitelist number and whitelist state
-        Swachchagrahi whitelistWorker = ApiTestHelper.createFlw("Frank Llyod Wright", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ANONYMOUS);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ANONYMOUS);
         whitelistWorker.setState(whitelistState);
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
         whitelistWorker.setLanguage(rh.hindiLanguage());
@@ -1578,7 +1578,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         whitelistEntryDataService.create(entry);
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(WHITELIST_CONTACT_NUMBER), true, "A", true, rh
                         .delhiCircle().getName(), true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1598,7 +1598,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         setupWhiteListData();
 
         // create a FLW with whitelist number and whitelist state
-        Swachchagrahi whitelistWorker = ApiTestHelper.createFlw("Dingo Ate Baby", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Dingo Ate Baby", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
         whitelistWorker.setState(whitelistState);
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
         whitelistWorker.setLanguage(rh.hindiLanguage());
@@ -1620,7 +1620,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         whitelistEntryDataService.create(entry);
 
         // Check the response
-        HttpGet getRequest = createHttpGet(true, "mobileacademy", true,
+        HttpGet getRequest = createHttpGet(true, "washacademy", true,
                 String.valueOf(WHITELIST_CONTACT_NUMBER), true, "A", true, rh
                         .delhiCircle().getName(), true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1657,7 +1657,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_ACADEMY));
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(WHITELIST_CONTACT_NUMBER), false, "", true, "DE",
                 true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1704,7 +1704,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_ACADEMY));
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(NOT_WHITELIST_CONTACT_NUMBER), true, "A", true,
                 rh.delhiCircle().getName(), true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1743,7 +1743,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_ACADEMY));
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(NOT_WHITELIST_CONTACT_NUMBER), true, "A", true,
                 rh.delhiCircle().getName(), true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1775,7 +1775,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         transactionManager.commit(status);
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(NOT_WHITELIST_CONTACT_NUMBER), false, "", false,
                 "",
                 true, VALID_CALL_ID);
@@ -1795,7 +1795,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT447() throws InterruptedException, IOException {
         setupWhiteListData();
         // user's no in whitelist, but state not whitelisted
-        Swachchagrahi whitelistWorker = ApiTestHelper.createFlw("Baby Dingo", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Baby Dingo", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
         whitelistWorker.setDistrict(rh.bangaloreDistrict());
         whitelistWorker.setLanguage(rh.kannadaLanguage());
         whitelistWorker.setState(nonWhitelistState);
@@ -1821,7 +1821,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 nonWhitelistState, Service.MOBILE_ACADEMY));
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(WHITELIST_CONTACT_NUMBER), true, "A", true, rh
                         .karnatakaCircle().getName(), true, VALID_CALL_ID);
 
@@ -1841,7 +1841,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT448() throws InterruptedException, IOException {
         setupWhiteListData();
         // user's no in whitelist, but state not whitelisted
-        Swachchagrahi whitelistWorker = ApiTestHelper.createFlw("Kangaroo Jack", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Kangaroo Jack", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
         whitelistWorker.setDistrict(rh.bangaloreDistrict());
         whitelistWorker.setLanguage(rh.kannadaLanguage());
         whitelistWorker.setState(nonWhitelistState);
@@ -1862,7 +1862,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 nonWhitelistState, Service.MOBILE_ACADEMY));
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(WHITELIST_CONTACT_NUMBER), true, "A", true, rh
                         .karnatakaCircle().getName(), true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1919,7 +1919,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_ACADEMY));
 
         // Check the response
-        HttpGet request = createHttpGet(true, "mobileacademy", true,
+        HttpGet request = createHttpGet(true, "washacademy", true,
                 String.valueOf(WHITELIST_CONTACT_NUMBER), true, "A", true, rh
                         .delhiCircle().getName(), true, VALID_CALL_ID);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -1949,17 +1949,17 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         // Set maxallowedUsageInPulses to 3800
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(rh.delhiState(), Service.MOBILE_KUNJI, 3800);
         serviceUsageCapDataService.create(serviceUsageCap);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(1);
@@ -1976,7 +1976,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true,VALID_CALL_ID                  //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2004,9 +2004,9 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",                //service
@@ -2016,7 +2016,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2044,12 +2044,12 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(1);
@@ -2066,7 +2066,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2092,9 +2092,9 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ANONYMOUS);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ANONYMOUS);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",                //service
@@ -2104,7 +2104,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID                 //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2126,8 +2126,8 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT335() throws IOException, InterruptedException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swcService.add(swc);
 
         createCircleWithLanguage();
 
@@ -2143,7 +2143,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         allowedLLCCodes.add(rh.hindiLanguage().getCode());
         allowedLLCCodes.add(rh.kannadaLanguage().getCode());
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 allowedLLCCodes, // allowedLanguageLocationCodes
@@ -2176,11 +2176,11 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -2190,7 +2190,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2216,11 +2216,11 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -2230,7 +2230,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(),  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2254,9 +2254,9 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT337() throws IOException, InterruptedException {
         rh.delhiCircle();
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -2279,8 +2279,8 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT338() throws IOException, InterruptedException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swcService.add(swc);
 
         createCircleWithLanguage();
 
@@ -2296,7 +2296,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         allowedLLCCodes.add(rh.hindiLanguage().getCode());
         allowedLLCCodes.add(rh.kannadaLanguage().getCode());
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
             rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
             null,  //locationCode
             allowedLLCCodes, // allowedLanguageLocationCodes
@@ -2330,10 +2330,10 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT339_1() throws IOException, InterruptedException {
         rh.delhiCircle();
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -2358,10 +2358,10 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT339_2() throws IOException, InterruptedException {
         rh.delhiCircle();
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swcService.add(swc);
 
         HttpGet httpGet = createHttpGet(
                 true, "mobilekunji",    //service
@@ -2384,7 +2384,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT456() throws IOException, InterruptedException {
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 false, null, // callingNumber missing
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -2402,7 +2402,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT457() throws IOException, InterruptedException {
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -2423,7 +2423,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT458() throws IOException, InterruptedException {
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "123456789", // callingNumber Invalid
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -2444,7 +2444,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT460() throws IOException, InterruptedException {
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1234567890", // callingNumber Invalid
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -2468,15 +2468,15 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT461() throws IOException, InterruptedException {
         // create Invalid FLW record
-        Swachchagrahi flw = ApiTestHelper.createFlw("Baby Dingo", 1200000001l, "123", SwachchagrahiStatus.INACTIVE);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Baby Dingo", 1200000001l, "123", SwachchagrahiStatus.INACTIVE);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swcService.add(swc);
 
         // assert for FLW status
-        flw = swcService.getByContactNumber(1200000001l);
-        assertTrue(SwachchagrahiStatus.INACTIVE == flw.getCourseStatus());
+        swc = swcService.getByContactNumber(1200000001l);
+        assertTrue(SwachchagrahiStatus.INACTIVE == swc.getCourseStatus());
         
         Circle circle = rh.karnatakaCircle();
         circle.setDefaultLanguage(rh.kannadaLanguage());
@@ -2485,14 +2485,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new
                 DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
 
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000001", // callingNumber
                 true, "OP", // operator
                 true, circle.getName(),// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(rh
+        String expectedJsonResponse = createSwcUserResponseJson(rh
                 .kannadaLanguage().getCode(), // defaultLanguageLocationCode=circle default
                 rh.tamilLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
@@ -2516,19 +2516,19 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT462() throws IOException, InterruptedException {
         // create anonymous FLW record
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frankie Dingo", 1200000001l, "123", SwachchagrahiStatus.ANONYMOUS);
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frankie Dingo", 1200000001l, "123", SwachchagrahiStatus.ANONYMOUS);
+        swcService.add(swc);
 
         // update FLW status to ACTIVE
-        flw = swcService.getByContactNumber(1200000001l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        swcService.update(flw);
+        swc = swcService.getByContactNumber(1200000001l);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swcService.update(swc);
 
         // assert for FLW status
-        flw = swcService.getByContactNumber(1200000001l);
-        assertTrue(SwachchagrahiStatus.ACTIVE == flw.getCourseStatus());
+        swc = swcService.getByContactNumber(1200000001l);
+        assertTrue(SwachchagrahiStatus.ACTIVE == swc.getCourseStatus());
 
         Circle circle = rh.karnatakaCircle();
         circle.setDefaultLanguage(rh.kannadaLanguage());
@@ -2537,14 +2537,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh
                 .karnatakaState(), Service.MOBILE_ACADEMY));
 
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000001", // callingNumber
                 true, "OP", // operator
                 true, circle.getName(),// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(rh
+        String expectedJsonResponse = createSwcUserResponseJson(rh
                 .kannadaLanguage().getCode(), // defaultLanguageLocationCode=circle
                                               // default
                 rh.tamilLanguage().getCode(), // locationCode
@@ -2571,18 +2571,18 @@ public class UserControllerBundleIT extends BasePaxIT {
         
     }
     
-    private void createFlwWithStatusActive(){
+    private void createSwcWithStatusActive(){
     	// create anonymous FLW record
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         // update FLW status to ACTIVE
-        flw = swcService.getByContactNumber(1111111111L);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        swcService.update(flw);
+        swc = swcService.getByContactNumber(1111111111L);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swcService.update(swc);
 
         Circle circle = rh.karnatakaCircle();
         circle.setDefaultLanguage(rh.kannadaLanguage());
@@ -2592,14 +2592,14 @@ public class UserControllerBundleIT extends BasePaxIT {
                 .karnatakaState(), Service.MOBILE_KUNJI));
     }
     
-    private void createFlwWithStatusInactive(){
+    private void createSwcWithStatusInactive(){
     	// create Invalid FLW record
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         Circle circle = rh.karnatakaCircle();
         circle.setDefaultLanguage(rh.kannadaLanguage());
@@ -2625,7 +2625,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
@@ -2657,7 +2657,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        SwcUserResponse expectedResponse = createFlwUserResponse(
+        SwcUserResponse expectedResponse = createSwcUserResponse(
                 rh.kannadaLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 Arrays.asList(rh.kannadaLanguage().getCode(), rh.tamilLanguage().getCode()), // allowedLanguageLocationCodes
@@ -2694,7 +2694,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID   //callId
         );
 
-        SwcUserResponse expectedResponse = createFlwUserResponse(
+        SwcUserResponse expectedResponse = createSwcUserResponse(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 Arrays.asList(rh.hindiLanguage().getCode(), rh.kannadaLanguage().getCode(), rh.tamilLanguage()
@@ -2796,7 +2796,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 rh.hindiLanguage().getCode(),  //defaultLanguageLocationCode
                 null,  //locationCode
                 Arrays.asList(rh.tamilLanguage().getCode(), rh.hindiLanguage().getCode(), rh.kannadaLanguage().getCode()), // allowedLanguageLocationCodes
@@ -2843,7 +2843,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT357() throws IOException, InterruptedException {
-    	createFlwWithStatusInactive();
+    	createSwcWithStatusInactive();
 
         HttpGet httpGet = createHttpGet(true, "mobilekunji", // service
                 true, "1111111111", // callingNumber
@@ -2852,7 +2852,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(rh
+        String expectedJsonResponse = createSwcUserResponseJson(rh
                         .kannadaLanguage().getCode(), // defaultLanguageLocationCode=circle default
                 rh.tamilLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
@@ -2877,7 +2877,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT358() throws IOException, InterruptedException {
-    	createFlwWithStatusActive();
+    	createSwcWithStatusActive();
     	
         HttpGet httpGet = createHttpGet(true, "mobilekunji", // service
                 true, "1111111111", // callingNumber
@@ -2886,7 +2886,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(rh
+        String expectedJsonResponse = createSwcUserResponseJson(rh
                 .kannadaLanguage().getCode(), // defaultLanguageLocationCode=circle
                                               // default
                 rh.tamilLanguage().getCode(), // locationCode
@@ -2919,7 +2919,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_ACADEMY));
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -2944,7 +2944,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // service not deployed in delhi state
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -2984,7 +2984,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         transactionManager.commit(status);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
@@ -3055,7 +3055,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         rh.bangaloreDistrict();
 
         // invoke get user detail API without circle and operator
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 true, "KA",// circle
@@ -3079,27 +3079,27 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT430() throws IOException, InterruptedException {
         // add FLW with active status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcDataService.create(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcDataService.create(swc);
 
         // service deployed in Karnataka State
         deployedServiceDataService.create(new DeployedService(rh
                 .karnatakaState(), Service.MOBILE_ACADEMY));
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.tamilLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses
@@ -3123,28 +3123,28 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT431() throws IOException, InterruptedException {
         // add FLW with In active status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright",
                 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcDataService.create(flw);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcDataService.create(swc);
 
         // service deployed in Karnataka State
         deployedServiceDataService.create(new DeployedService(rh
                 .karnatakaState(), Service.MOBILE_ACADEMY));
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.tamilLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses
@@ -3171,19 +3171,19 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT432() throws IOException, InterruptedException {
         // add FLW with Invalid status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flw.setInvalidationDate(DateTime.now().minusDays(50));
-        swcDataService.create(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swc.setInvalidationDate(DateTime.now().minusDays(50));
+        swcDataService.create(swc);
 
         // service deployed in Karnataka State
         deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
@@ -3206,19 +3206,19 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT434() throws IOException, InterruptedException {
         // add FLW with active status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright",
                 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcDataService.create(flw);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcDataService.create(swc);
 
         // service not deployed in Karnataka State
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
@@ -3242,19 +3242,19 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT435() throws IOException, InterruptedException {
         // add FLW with In active status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright",
                 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcDataService.create(flw);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcDataService.create(swc);
 
         // service not deployed in Karnataka State
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
@@ -3281,18 +3281,18 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT436() throws IOException, InterruptedException {
         // add FLW with Invalid status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flw.setInvalidationDate(DateTime.now().minusDays(50));
-        swcDataService.create(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swc.setInvalidationDate(DateTime.now().minusDays(50));
+        swcDataService.create(swc);
 
         // service not deployed in Karnataka State
 
         // invoke get user detail API without circle and operator
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 true, "KA",// circle
@@ -3320,14 +3320,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(serviceUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Jingo Jango", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(district);
-        flw.setState(district.getState());
-        flw.setLanguage(district.getLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Jingo Jango", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
+        swc.setLanguage(district.getLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(80);
@@ -3337,14 +3337,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1111111111", // callingNumber
                 false, null, // operator
                 true, "DE",// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(
+        String expectedJsonResponse = createSwcUserResponseJson(
                 "hi", // defaultLanguageLocationCode
                 "hi", // locationCode
                 null, // allowedLanguageLocationCodes
@@ -3383,14 +3383,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(d);
-        flw.setState(d.getState());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(d);
+        swc.setState(d.getState());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(80);
@@ -3400,14 +3400,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 80L, // currentUsageInPulses
@@ -3437,21 +3437,21 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_ACADEMY));
         
         // Create FLW with no usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(district);
-        flw.setState(district.getState());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
         
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses
@@ -3470,7 +3470,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // Invoke Save call Detail
 
         HttpPost httpPost = ApiRequestHelper.createCallDetailsPost(
-                "mobileacademy",
+                "washacademy",
         /* callingNumber */true, 1200000000l,
         /* callId */true, VALID_CALL_ID,
         /* operator */false, null,
@@ -3500,14 +3500,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(1, cdr.getEndOfUsagePromptCounter());
 
         // invoke get user detail API To check updated usage and prompt
-        httpGet = createHttpGet(true, "mobileacademy", // service
+        httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 60L, // currentUsageInPulses=updated
@@ -3541,14 +3541,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(district);
-        flw.setState(district.getState());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(80);
@@ -3558,14 +3558,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 80L, // currentUsageInPulses
@@ -3587,14 +3587,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.update(cdr);
 
         // invoke get user detail API To check updated usage and prompt
-        httpGet = createHttpGet(true, "mobileacademy", // service
+        httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -3627,15 +3627,15 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(d);
-        flw.setState(d.getState());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(d);
+        swc.setState(d.getState());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         // Assume IVR already played endo of usage 1 time.
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1200000000l);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(110);// greater than max allowed pulses
@@ -3645,14 +3645,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 110L, // currentUsageInPulses
@@ -3672,7 +3672,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // endOfUsagePromptCounter 1
 
         HttpPost httpPost = ApiRequestHelper.createCallDetailsPost(
-                "mobileacademy",
+                "washacademy",
                 /* callingNumber */true, 1200000000l,
                 /* callId */true, VALID_CALL_ID,
                 /* operator */false, null,
@@ -3695,14 +3695,14 @@ public class UserControllerBundleIT extends BasePaxIT {
                 ADMIN_USERNAME, ADMIN_PASSWORD));
 
         // invoke get user detail API To check updated usage and prompt
-        httpGet = createHttpGet(true, "mobileacademy", // service
+        httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 150L, // currentUsageInPulses=updated
@@ -3735,15 +3735,15 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(district);
-        flw.setState(district.getState());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         // Assume IVR already played endo of usage 1 time.
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1200000000l);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(160);// greater than max allowed pulses
@@ -3753,14 +3753,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 160L, // currentUsageInPulses
@@ -3780,7 +3780,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // endOfUsagePromptCounter 1
 
         HttpPost httpPost = ApiRequestHelper.createCallDetailsPost(
-                "mobileacademy",
+                "washacademy",
                 /* callingNumber */true, 1200000000l,
                 /* callId */true, VALID_CALL_ID,
                 /* operator */false, null,
@@ -3803,14 +3803,14 @@ public class UserControllerBundleIT extends BasePaxIT {
                 ADMIN_USERNAME, ADMIN_PASSWORD));
 
         // invoke get user detail API To check updated usage and prompt
-        httpGet = createHttpGet(true, "mobileacademy", // service
+        httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 200L, // currentUsageInPulses=updated
@@ -3842,13 +3842,13 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ANONYMOUS);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ANONYMOUS);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         // Assume IVR already played end of usage 1 time.
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1200000000l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(110);// greater than max allowed pulses
@@ -3865,7 +3865,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 110L, // currentUsageInPulses
@@ -3914,7 +3914,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 150L, // currentUsageInPulses=updated
@@ -3947,13 +3947,13 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         // Assume IVR already played endo of usage 1 time.
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1200000000l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(160);// greater than max allowed pulses
@@ -3970,7 +3970,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 160L, // currentUsageInPulses
@@ -4020,7 +4020,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 200L, // currentUsageInPulses=updated
@@ -4053,12 +4053,12 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(80);
@@ -4075,7 +4075,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 80L, // currentUsageInPulses
@@ -4104,7 +4104,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -4137,12 +4137,12 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_KUNJI);
         cdr.setCallDurationInPulses(80);
@@ -4159,7 +4159,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 80L, // currentUsageInPulses
@@ -4188,7 +4188,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -4206,7 +4206,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void verifyDenialWhenMctsFlwIdMissing() throws IOException, InterruptedException {
+    public void verifyDenialWhenMctsSwcIdMissing() throws IOException, InterruptedException {
         District d = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
@@ -4218,14 +4218,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW
-        Swachchagrahi flw = ApiTestHelper.createFlw("Claire Underwood", 1200000000l, null, SwachchagrahiStatus.ACTIVE);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setDistrict(d);
-        flw.setState(d.getState());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Claire Underwood", 1200000000l, null, SwachchagrahiStatus.ACTIVE);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setDistrict(d);
+        swc.setState(d.getState());
+        swcService.add(swc);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 true, "DE",// circle
@@ -4259,14 +4259,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
-        Swachchagrahi flw = ApiTestHelper.createFlw("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(district);
-        flw.setState(district.getState());
-        flw.setLanguage(rh.hindiLanguage());
-        swcService.add(flw);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
+        swc.setLanguage(rh.hindiLanguage());
+        swcService.add(swc);
 
         CallDetailRecord cdr = new CallDetailRecord();
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
         cdr.setService(Service.MOBILE_ACADEMY);
         cdr.setCallDurationInPulses(80);
@@ -4277,14 +4277,14 @@ public class UserControllerBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(cdr);
 
         // invoke get user detail API
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 80L, // currentUsageInPulses
@@ -4309,14 +4309,14 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // invoke get user detail API To check updated usage and prompt
         httpGet = createHttpGet(
-                true, "mobileacademy",  // service
+                true, "washacademy",  // service
                 true, "1200000000",     // callingNumber
                 false, null,            // operator
                 false, null,            // circle
                 true, VALID_CALL_ID     //callId
         );
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -4334,7 +4334,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that status of flw must be set to "Anonymous" when user call first time
+     * To verify that status of swc must be set to "Anonymous" when user call first time
      * and its information does not exist in NMS DB.
      */
     @Test
@@ -4354,7 +4354,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         List<String> allowedLLCCodes = new ArrayList<>();
         allowedLLCCodes.add(rh.hindiLanguage().getCode());
 
-        String expectedJsonResponse = createFlwUserResponseJson(rh.hindiLanguage().getCode(), // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(rh.hindiLanguage().getCode(), // defaultLanguageLocationCode
                 null, // locationCode
                 allowedLLCCodes, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -4377,8 +4377,8 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-        Swachchagrahi flw = swcService.getByContactNumber(1200000000l);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
+        Swachchagrahi swc = swcService.getByContactNumber(1200000000l);
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
     }
 
     /** To verify if the anonymous call audit is done if an anonymous user
@@ -4388,22 +4388,22 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyAnonymousCallAuditRecord() throws IOException, InterruptedException{
         // add FLW with Anonymous status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
-        flw.setInvalidationDate(DateTime.now().minusDays(50));
-        swcDataService.create(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+        swc.setInvalidationDate(DateTime.now().minusDays(50));
+        swcDataService.create(swc);
 
         // add another FLW with Anonymous status
-        Swachchagrahi flw1 = new Swachchagrahi("Aisha Bibi", 1234567899l);
-        flw1.setLanguage(rh.tamilLanguage());
-        flw1.setDistrict(rh.southDelhiDistrict());
-        flw1.setState(rh.delhiState());
-        flw1.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
-        flw1.setInvalidationDate(DateTime.now().minusDays(50));
-        swcDataService.create(flw1);
+        Swachchagrahi swc1 = new Swachchagrahi("Aisha Bibi", 1234567899l);
+        swc1.setLanguage(rh.tamilLanguage());
+        swc1.setDistrict(rh.southDelhiDistrict());
+        swc1.setState(rh.delhiState());
+        swc1.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+        swc1.setInvalidationDate(DateTime.now().minusDays(50));
+        swcDataService.create(swc1);
 
 
         // service deployed in Karnataka State
@@ -4411,16 +4411,16 @@ public class UserControllerBundleIT extends BasePaxIT {
         // service deployed in Delhi State
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
 
-        // invoke get user detail API for first flw user
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        // invoke get user detail API for first swc user
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
                 true, VALID_CALL_ID // callId
         );
 
-        // invoke get user detail API for second flw user
-        HttpGet httpGet1 = createHttpGet(true, "mobileacademy", // service
+        // invoke get user detail API for second swc user
+        HttpGet httpGet1 = createHttpGet(true, "washacademy", // service
                 true, "1234567899", // callingNumber
                 false, null, // operator
                 true, "DE",// circle
@@ -4431,21 +4431,21 @@ public class UserControllerBundleIT extends BasePaxIT {
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 
-        // checking if record is created for first flw anonymous call
+        // checking if record is created for first swc anonymous call
         assertEquals(anonymousCallAuditDataService.count(),1l);
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
 
         HttpResponse response1 = SimpleHttpClient.httpRequestAndResponse(
                 httpGet1, ADMIN_USERNAME, ADMIN_PASSWORD);
 
-        // checking if record is created for first flw anonymous call
+        // checking if record is created for first swc anonymous call
         assertEquals(anonymousCallAuditDataService.count(),2l);
         assertEquals(HttpStatus.SC_FORBIDDEN, response1.getStatusLine().getStatusCode());
 
         HttpResponse response2 = SimpleHttpClient.httpRequestAndResponse(
                 httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 
-        // checking if record is created for first flw's second anonymous call
+        // checking if record is created for first swc's second anonymous call
         assertEquals(anonymousCallAuditDataService.count(),3l);
         assertEquals(anonymousCallAuditDataService.findByNumber(1200000000l).size(), 2);
         assertEquals(HttpStatus.SC_FORBIDDEN, response2.getStatusLine().getStatusCode());
@@ -4460,21 +4460,21 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyInactiveJobUserCallAuditRecord() throws IOException, InterruptedException {
 
         // add FLW with Anonymous status
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        flw.setLanguage(rh.tamilLanguage());
-        flw.setDistrict(rh.bangaloreDistrict());
-        flw.setState(rh.karnatakaState());
-        flw.setInvalidationDate(DateTime.now().minusDays(50));
-        flw.setJobStatus(SwcJobStatus.INACTIVE);
-        swcDataService.create(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setLanguage(rh.tamilLanguage());
+        swc.setDistrict(rh.bangaloreDistrict());
+        swc.setState(rh.karnatakaState());
+        swc.setInvalidationDate(DateTime.now().minusDays(50));
+        swc.setJobStatus(SwcJobStatus.INACTIVE);
+        swcDataService.create(swc);
 
 
         // service deployed in Karnataka State
         deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
 
 
-        // invoke get user detail API for first flw user
-        HttpGet httpGet = createHttpGet(true, "mobileacademy", // service
+        // invoke get user detail API for first swc user
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000000", // callingNumber
                 false, null, // operator
                 false, null,// circle
@@ -4484,7 +4484,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 
-        assertEquals(inactiveJobCallAuditDataService.findByNumber(flw.getContactNumber()).size(), 1);
+        assertEquals(inactiveJobCallAuditDataService.findByNumber(swc.getContactNumber()).size(), 1);
         assertEquals(HttpStatus.SC_FORBIDDEN, response.getStatusLine().getStatusCode());
 
 

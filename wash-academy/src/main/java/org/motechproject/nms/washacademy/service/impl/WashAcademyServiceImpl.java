@@ -56,7 +56,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String FINAL_BOOKMARK = "COURSE_COMPLETED";
 
-    private static final String COURSE_COMPLETED = "nms.ma.course.completed";
+    private static final String COURSE_COMPLETED = "nms.wa.course.completed";
 
     private static final String SCORES_KEY = "scoresByChapter";
 
@@ -184,12 +184,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     @Override
     public WaBookmark getBookmark(Long callingNumber, String callId) {
 
-        Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
-        if (flw == null) {
+        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        if (swc == null) {
             return null;
         }
-        Long flwId = flw.getId();
-        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(flwId.toString());
+        Long swcId = swc.getId();
+        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId.toString());
 
         if (existingBookmark != null) {
             WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
@@ -227,10 +227,10 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             throw new IllegalArgumentException("Invalid bookmark, cannot be null");
         }
 
-        String flwId = saveBookmark.getSwcId().toString();
-        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(flwId);
-        Swachchagrahi flw = swcService.getById(saveBookmark.getSwcId());
-        String callingNumber = flw.getContactNumber().toString();
+        String swcId = saveBookmark.getSwcId().toString();
+        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId);
+        Swachchagrahi swc = swcService.getById(saveBookmark.getSwcId());
+        String callingNumber = swc.getContactNumber().toString();
 
         // write a new activity record if existing bookmark is null or
         // existing bookmark has no progress from earlier reset
@@ -265,11 +265,11 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public void triggerCompletionNotification(final Long flwId) {
+    public void triggerCompletionNotification(final Long swcId) {
 
-        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findByFlwId(flwId);
+        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
         if (ccrs == null || ccrs.isEmpty()) {
-            throw new CourseNotCompletedException(String.format(NOT_COMPLETE, flwId));
+            throw new CourseNotCompletedException(String.format(NOT_COMPLETE, swcId));
         }
 
         final CourseCompletionRecord ccr = ccrs.get(ccrs.size() - 1);
@@ -286,22 +286,22 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
                 @Override
                 public void afterCommit() {
-                    sendEvent(ccr.getFlwId());
+                    sendEvent(ccr.getSwcId());
                 }
             });
         } else {
-            sendEvent(ccr.getFlwId());
+            sendEvent(ccr.getSwcId());
         }
     }
 
     /**
      * Send event to notify
-     * @param flwId flw ID to notify
+     * @param swcId swc ID to notify
      */
-    private void sendEvent(Long flwId) {
+    private void sendEvent(Long swcId) {
 
         Map<String, Object> eventParams = new HashMap<>();
-        eventParams.put("flwId", flwId);
+        eventParams.put("swcId", swcId);
         MotechEvent motechEvent = new MotechEvent(COURSE_COMPLETED, eventParams);
         eventRelay.sendEventMessage(motechEvent);
         LOGGER.debug("Sent event message to process completion notification");
@@ -358,17 +358,17 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     /**
      * Helper method to check whether a course meets completion criteria
-     * @param flwId flw Id of flw
+     * @param swcId swc Id of swc
      * @param scores scores in quiz
      */
-    private void evaluateCourseCompletion(Long flwId, Map<String, Integer> scores) {
+    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores) {
 
         int totalScore = getTotalScore(scores);
-        CourseCompletionRecord ccr = new CourseCompletionRecord(flwId, totalScore, scores.toString());
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, totalScore, scores.toString());
         courseCompletionRecordDataService.create(ccr);
 
         if (totalScore < PASS_SCORE) {
-            LOGGER.debug("User with flwId: " + LogHelper.obscure(flwId) + " failed with score: " + totalScore);
+            LOGGER.debug("User with swcId: " + LogHelper.obscure(swcId) + " failed with score: " + totalScore);
             ccr.setPassed(false);
             courseCompletionRecordDataService.update(ccr);
             return;
@@ -376,7 +376,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // we updated the completion record. Start event message to trigger notification workflow
             ccr.setPassed(true);
             courseCompletionRecordDataService.update(ccr);
-            triggerCompletionNotification(flwId);
+            triggerCompletionNotification(swcId);
         }
     }
 

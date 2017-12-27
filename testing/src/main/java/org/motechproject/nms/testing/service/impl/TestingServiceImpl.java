@@ -2,11 +2,6 @@ package org.motechproject.nms.testing.service.impl;
 
 import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.metrics.service.Timer;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-import org.motechproject.nms.kilkari.domain.SubscriptionPackMessage;
-import org.motechproject.nms.kilkari.domain.SubscriptionPackType;
-import org.motechproject.nms.kilkari.repository.SubscriptionPackDataService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.region.repository.DistrictDataService;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.region.service.LanguageService;
@@ -23,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("PMD")
 @Service("testingService")
 public class TestingServiceImpl implements TestingService {
 
@@ -64,8 +60,8 @@ public class TestingServiceImpl implements TestingService {
         "MTRAINING_MODULE_QUESTION__TRASH",
         "MTRAINING_MODULE_QUIZ",
         "MTRAINING_MODULE_QUIZ__TRASH",
-        "nms_flw_status_update_audit",
-        "nms_flw_status_update_audit__TRASH",
+        "nms_swc_status_update_audit",
+        "nms_swc_status_update_audit__TRASH",
         "nms_anonymous_call_details_audit",
         "nms_anonymous_call_details_audit__TRASH",
         "nms_inactive_job_call_audit",
@@ -92,13 +88,13 @@ public class TestingServiceImpl implements TestingService {
         "nms_csv_audit_records__TRASH",
         "nms_deployed_services",
         "nms_deployed_services__TRASH",
-        "nms_flw_cdrs",
-        "nms_flw_cdrs__TRASH",
+        "nms_swc_cdrs",
+        "nms_swc_cdrs__TRASH",
         "nms_front_line_workers",
         "nms_front_line_workers__TRASH",
         "nms_districts",
         "nms_districts__TRASH",
-        "nms_flw_errors",
+        "nms_swc_errors",
         "nms_health_blocks",
         "nms_health_blocks__TRASH",
         "nms_health_facilities",
@@ -156,8 +152,8 @@ public class TestingServiceImpl implements TestingService {
         "TRACKING_MODULE_CHANGELOG__TRASH",
         "nms_deactivated_beneficiary",
         "nms_deactivated_beneficiary__TRASH",
-        "nms_flw_rejects",
-        "nms_flw_rejects__TRASH",
+        "nms_swc_rejects",
+        "nms_swc_rejects__TRASH",
         "nms_child_rejects",
         "nms_child_rejects__TRASH",
         "nms_mother_rejects",
@@ -165,14 +161,6 @@ public class TestingServiceImpl implements TestingService {
         "nms_rch_import_facilitator",
         "nms_rch_import_facilitator__TRASH"
     };
-
-    /**
-     * Kilkari
-     */
-    @Autowired
-    private SubscriptionService subscriptionService;
-    @Autowired
-    private SubscriptionPackDataService subscriptionPackDataService;
 
     /**
      * Region
@@ -308,81 +296,6 @@ public class TestingServiceImpl implements TestingService {
     }
 
 
-    public SubscriptionPack childPack() {
-        if (subscriptionPackDataService.byName(CHILD_PACK) == null) {
-            createSubscriptionPack(CHILD_PACK, SubscriptionPackType.CHILD, CHILD_PACK_WEEKS, 1);
-        }
-        return subscriptionService.getSubscriptionPack(CHILD_PACK);
-    }
-
-
-    public SubscriptionPack pregnancyPack() {
-        if (subscriptionPackDataService.byName(PREGNANCY_PACK) == null) {
-            createSubscriptionPack(PREGNANCY_PACK, SubscriptionPackType.PREGNANCY, PREGNANCY_PACK_WEEKS, 2);
-        }
-        return subscriptionService.getSubscriptionPack(PREGNANCY_PACK);
-    }
-
-
-    private void createSubscriptionPack(String name, SubscriptionPackType type, int weeks,
-                                        int messagesPerWeek) {
-        List<SubscriptionPackMessage> messages = genratePackMessageList(weeks, messagesPerWeek);
-        subscriptionPackDataService.create(new SubscriptionPack(name, type, weeks, messagesPerWeek, messages));
-    }
-
-
-    private List<SubscriptionPackMessage> genratePackMessageList(int packWeeks, int messagesPerWeek) {
-        List<SubscriptionPackMessage> messages = new ArrayList<>();
-        for (int week = 1; week <= packWeeks; week++) {
-            messages.add(new SubscriptionPackMessage(String.format("w%s_1", week),
-                    String.format("w%s_1.wav", week),
-                    TWO_MINUTES - TEN_SECS + (int) (Math.random() * 2 * TEN_SECS)));
-
-            if (messagesPerWeek == 2) {
-                messages.add(new SubscriptionPackMessage(String.format("w%s_2", week),
-                        String.format("w%s_2.wav", week),
-                        TWO_MINUTES - TEN_SECS + (int) (Math.random() * 2 * TEN_SECS)));
-            }
-        }
-        return messages;
-    }
-
-
-    @Override
-    public void createSubscriptionPacks() {
-
-        LOGGER.debug("createSubscriptionPacks()");
-
-        Timer timer = new Timer();
-
-        if (!Boolean.parseBoolean(settingsFacade.getProperty(TESTING_ENVIRONMENT))) {
-            throw new IllegalStateException(TESTING_SERVICE_FORBIDDEN);
-        }
-
-        subscriptionPackDataService.create(
-                new SubscriptionPack(
-                        CHILD_PACK,
-                        SubscriptionPackType.CHILD,
-                        CHILD_PACK_WEEKS,
-                        1,
-                        genratePackMessageList(CHILD_PACK_WEEKS, 1)
-                )
-        );
-        subscriptionPackDataService.create(
-                new SubscriptionPack(
-                        PREGNANCY_PACK,
-                        SubscriptionPackType.PREGNANCY,
-                        PREGNANCY_PACK_WEEKS,
-                        2,
-                        genratePackMessageList(PREGNANCY_PACK_WEEKS, 2)
-                )
-        );
-
-        LOGGER.debug("createSubscriptionPacks: {}", timer.time());
-    }
-
-
-    @Override
     public String createMctsMoms(int count, boolean staticLMP) throws IOException {
 
         LOGGER.debug("createMctsMoms(count={}, lmp={})", count, staticLMP);
@@ -396,7 +309,6 @@ public class TestingServiceImpl implements TestingService {
     }
 
 
-    @Override
     public String createMctsKids(int count, boolean staticDOB) throws IOException {
 
         LOGGER.debug("createMctsKids(count={}, dob={})", count, staticDOB);

@@ -11,7 +11,7 @@ import org.motechproject.mds.domain.MdsEntity;
 public class CourseCompletionRecord extends MdsEntity {
 
     @Field
-    private Long flwId;
+    private Long swcId;
 
     @Field
     private int score;
@@ -38,17 +38,17 @@ public class CourseCompletionRecord extends MdsEntity {
     private int notificationRetryCount;
 
 
-    public CourseCompletionRecord(long flwId, int score, String chapterWiseScores) {
-        this(flwId, score, chapterWiseScores, false);
+    public CourseCompletionRecord(long swcId, int score, String chapterWiseScores) {
+        this(swcId, score, chapterWiseScores, false);
     }
 
-    public CourseCompletionRecord(long flwId, int score, String chapterWiseScores, boolean sentNotification) {
-        this(flwId, score, chapterWiseScores, false, sentNotification, 0);
+    public CourseCompletionRecord(long swcId, int score, String chapterWiseScores, boolean sentNotification) {
+        this(swcId, score, chapterWiseScores, false, sentNotification, 0);
 
     }
 
-    public CourseCompletionRecord(Long flwId, int score, String chapterWiseScores, boolean passed, boolean sentNotification, int notificationRetryCount) {
-        this.flwId = flwId;
+    public CourseCompletionRecord(Long swcId, int score, String chapterWiseScores, boolean passed, boolean sentNotification, int notificationRetryCount) {
+        this.swcId = swcId;
         this.score = score;
         this.chapterWiseScores = chapterWiseScores;
         this.passed = passed;
@@ -56,12 +56,12 @@ public class CourseCompletionRecord extends MdsEntity {
         this.notificationRetryCount = notificationRetryCount;
     }
 
-    public Long getFlwId() {
-        return flwId;
+    public Long getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(Long flwId) {
-        this.flwId = flwId;
+    public void setSwcId(Long swcId) {
+        this.swcId = swcId;
     }
 
     public int getScore() {

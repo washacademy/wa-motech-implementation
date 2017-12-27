@@ -36,7 +36,7 @@ public interface SwcService {
 
     /**
      * MotechEvent handler that responds to scheduler events.  Purges FLW records that are in invalid state
-     * and have been for more than flw.weeks_to_keep_invalid_flws weeks
+     * and have been for more than swc.weeks_to_keep_invalid_flws weeks
      *
      * @param event
      */

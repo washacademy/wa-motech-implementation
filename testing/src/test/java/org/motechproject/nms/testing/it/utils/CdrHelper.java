@@ -10,12 +10,6 @@ import org.motechproject.nms.imi.repository.FileAuditRecordDataService;
 import org.motechproject.nms.imi.service.SettingsService;
 import org.motechproject.nms.imi.web.contract.CdrFileNotificationRequest;
 import org.motechproject.nms.imi.web.contract.FileInfo;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
-import org.motechproject.nms.kilkari.dto.CallDetailRecordDto;
-import org.motechproject.nms.kilkari.repository.SubscriberDataService;
-import org.motechproject.nms.kilkari.repository.SubscriptionPackDataService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.props.domain.CallDisconnectReason;
 import org.motechproject.nms.props.domain.FinalCallStatus;
 import org.motechproject.nms.props.domain.RequestId;
@@ -78,16 +72,16 @@ public class CdrHelper {
     private SubscriptionHelper sh;
     private RegionHelper rh;
 
-    private List<CallDetailRecordDto> cdrs = new ArrayList<>();
+//    private List<CallDetailRecordDto> cdrs = new ArrayList<>();
 
     private List<CallSummaryRecord> csrs = new ArrayList<>();
 
 
     public CdrHelper(
             SettingsService settingsService,
-            SubscriptionService subscriptionService,
-            SubscriberDataService subscriberDataService,
-            SubscriptionPackDataService subscriptionPackDataService,
+//            SubscriptionService subscriptionService,
+//            SubscriberDataService subscriberDataService,
+//            SubscriptionPackDataService subscriptionPackDataService,
             LanguageDataService languageDataService,
             LanguageService languageService,
             CircleDataService circleDataService,
@@ -98,7 +92,8 @@ public class CdrHelper {
             String obdFileName
     ) throws IOException {
 
-        sh = new SubscriptionHelper(subscriptionService, subscriberDataService, subscriptionPackDataService,
+        sh = new SubscriptionHelper(
+//                subscriptionService, subscriberDataService, subscriptionPackDataService,
                 languageDataService, languageService, circleDataService, stateDataService, districtDataService,
                 districtService);
 
@@ -119,9 +114,9 @@ public class CdrHelper {
 
     public CdrHelper(
             SettingsService settingsService,
-            SubscriptionService subscriptionService,
-            SubscriberDataService subscriberDataService,
-            SubscriptionPackDataService subscriptionPackDataService,
+//            SubscriptionService subscriptionService,
+//            SubscriberDataService subscriberDataService,
+//            SubscriptionPackDataService subscriptionPackDataService,
             LanguageDataService languageDataService,
             LanguageService languageService,
             CircleDataService circleDataService,
@@ -130,39 +125,40 @@ public class CdrHelper {
             FileAuditRecordDataService fileAuditRecordDataService,
             DistrictService districtService
     ) throws IOException {
-        this(settingsService, subscriptionService, subscriberDataService, subscriptionPackDataService,
+        this(settingsService,
+//                subscriptionService, subscriberDataService, subscriptionPackDataService,
                 languageDataService, languageService, circleDataService, stateDataService, districtDataService,
                 fileAuditRecordDataService, districtService,
                 String.format(OBD_FILENAME_FORMAT, DateTime.now().toString(TIME_FORMATTER)));
     }
 
 
-    public List<CallDetailRecordDto> getCdrs() {
-        return cdrs;
-    }
+//    public List<CallDetailRecordDto> getCdrs() {
+//        return cdrs;
+//    }
 
 
-    private CallDetailRecordDto makeCdrDto(Subscription sub) {
-        CallDetailRecordDto cdr = new CallDetailRecordDto();
-        cdr.setRequestId(new RequestId(sub.getSubscriptionId(), timestamp()));
-        cdr.setMsisdn(sub.getSubscriber().getCallingNumber());
-        cdr.setCallAnswerTime(DateTime.now().minusHours(5));
-        cdr.setMsgPlayDuration(110 + (int) (Math.random() * 20));
-        cdr.setLanguageLocationId(rh.hindiLanguage().getCode());
-        cdr.setCircleId(rh.delhiCircle().getName());
-        cdr.setOperatorId("xx");
-        return cdr;
-    }
-
-
-    private CallSummaryRecord makeCsr(Subscription sub) {
-        CallSummaryRecord csr = new CallSummaryRecord();
-        csr.setRequestId(new RequestId(sub.getSubscriptionId(), timestamp()).toString());
-        csr.setMsisdn(sub.getSubscriber().getCallingNumber());
-        csr.setLanguageLocationCode(rh.hindiLanguage().getCode());
-        csr.setCircle(rh.delhiCircle().getName());
-        return csr;
-    }
+//    private CallDetailRecordDto makeCdrDto(Subscription sub) {
+//        CallDetailRecordDto cdr = new CallDetailRecordDto();
+//        cdr.setRequestId(new RequestId(sub.getSubscriptionId(), timestamp()));
+//        cdr.setMsisdn(sub.getSubscriber().getCallingNumber());
+//        cdr.setCallAnswerTime(DateTime.now().minusHours(5));
+//        cdr.setMsgPlayDuration(110 + (int) (Math.random() * 20));
+//        cdr.setLanguageLocationId(rh.hindiLanguage().getCode());
+//        cdr.setCircleId(rh.delhiCircle().getName());
+//        cdr.setOperatorId("xx");
+//        return cdr;
+//    }
+//
+//
+//    private CallSummaryRecord makeCsr(Subscription sub) {
+//        CallSummaryRecord csr = new CallSummaryRecord();
+//        csr.setRequestId(new RequestId(sub.getSubscriptionId(), timestamp()).toString());
+//        csr.setMsisdn(sub.getSubscriber().getCallingNumber());
+//        csr.setLanguageLocationCode(rh.hindiLanguage().getCode());
+//        csr.setCircle(rh.delhiCircle().getName());
+//        return csr;
+//    }
 
 
     private static final StatusCode[] failureReasons = {
@@ -179,124 +175,124 @@ public class CdrHelper {
     }
 
 
-    public void makeSingleCallCdrs(int numFailure, boolean eventuallySuccessful) {
-        if (cdrs == null) { cdrs = new ArrayList<>(); }
-
-        Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(30));
-        for (int i = 0; i < numFailure; i++) {
-            CallDetailRecordDto cdr = makeCdrDto(sub);
-            cdr.setStatusCode(randomFailureStatusCode());
-            cdr.setContentFile(sh.childPack().getMessages().get(5).getMessageFileName());
-            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
-            cdr.setWeekId("w5_1");
-            cdrs.add(cdr);
-        }
-
-        if (eventuallySuccessful) {
-            CallDetailRecordDto cdr = makeCdrDto(sub);
-            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
-            cdr.setContentFile(sh.childPack().getMessages().get(5).getMessageFileName());
-            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
-            cdr.setWeekId("w5_1");
-            cdrs.add(cdr);
-        }
-    }
-
-
-    public void makeCdrs(int numSuccess, int numFailed, int numComplete, int numIvr) {
-        if (cdrs == null) { cdrs = new ArrayList<>(); }
-
-        for (int i=0 ; i<numSuccess ; i++) {
-            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(30));
-            CallDetailRecordDto cdr = makeCdrDto(sub);
-            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
-            cdr.setContentFile(sh.childPack().getMessages().get(4).getMessageFileName());
-            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
-            cdr.setWeekId("w4_1");
-            cdrs.add(cdr);
-        }
-
-        for (int i=0 ; i<numFailed ; i++) {
-            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(30));
-            CallDetailRecordDto cdr = makeCdrDto(sub);
-            cdr.setStatusCode(StatusCode.OBD_FAILED_NOANSWER);
-            cdr.setContentFile(sh.childPack().getMessages().get(5).getMessageFileName());
-            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
-            cdr.setWeekId("w5_1");
-            cdrs.add(cdr);
-        }
-
-        for (int i=0 ; i<numComplete ; i++) {
-            int days = CHILD_PACK_WEEKS * 7;
-            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(days));
-            CallDetailRecordDto cdr = makeCdrDto(sub);
-            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
-            cdr.setContentFile(sh.childPack().getMessages().get(CHILD_PACK_WEEKS-1).getMessageFileName());
-            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
-            cdr.setWeekId(String.format("w%d_1", CHILD_PACK_WEEKS));
-            cdrs.add(cdr);
-        }
-
-        for (int i=0 ; i<numIvr ; i++) {
-            Subscription sub = sh.mksub(SubscriptionOrigin.IVR, DateTime.now().minusDays(30));
-            CallDetailRecordDto cdr = makeCdrDto(sub);
-            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
-            cdr.setContentFile(sh.childPack().getMessages().get(6).getMessageFileName());
-            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
-            cdr.setWeekId("w6_1");
-            cdrs.add(cdr);
-        }
-    }
-
-
-    public void makeCsrs(int numFailed, int numSuccess, int numInvalid) {
-        if (csrs == null) { csrs = new ArrayList<>(); }
-
-        for (int i=0 ; i<numFailed ; i++) {
-            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(100));
-            CallSummaryRecord csr = makeCsr(sub);
-            csr.setStatusCode(StatusCode.OBD_FAILED_NOATTEMPT.getValue());
-            csr.setContentFileName(sh.childPack().getMessages().get(7).getMessageFileName());
-            csr.setWeekId(sh.childPack().getMessages().get(7).getWeekId());
-            csr.setPriority(NORMAL_PRIORITY);
-            csr.setFinalStatus(FinalCallStatus.FAILED.getValue());
-            csr.setAttempts(1);
-            csr.setCallFlowUrl("url");
-            csr.setCli("cli");
-            csr.setServiceId("id");
-            csrs.add(csr);
-        }
-
-        for (int i=0 ; i<numSuccess ; i++) {
-            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(110));
-            CallSummaryRecord csr = makeCsr(sub);
-            csr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED.getValue());
-            csr.setContentFileName(sh.childPack().getMessages().get(5).getMessageFileName());
-            csr.setWeekId(sh.childPack().getMessages().get(5).getWeekId());
-            csr.setPriority(NORMAL_PRIORITY);
-            csr.setFinalStatus(FinalCallStatus.SUCCESS.getValue());
-            csr.setAttempts(1);
-            csr.setCallFlowUrl("url");
-            csr.setCli("cli");
-            csr.setServiceId("id");
-            csrs.add(csr);
-        }
-
-        for (int i=0 ; i<numInvalid ; i++) {
-            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(110));
-            CallSummaryRecord csr = makeCsr(sub);
-            csr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED.getValue());
-            csr.setContentFileName(sh.childPack().getMessages().get(5).getMessageFileName());
-            csr.setWeekId("xxx");
-            csr.setPriority(NORMAL_PRIORITY);
-            csr.setFinalStatus(FinalCallStatus.SUCCESS.getValue());
-            csr.setAttempts(1);
-            csr.setCallFlowUrl("url");
-            csr.setCli("cli");
-            csr.setServiceId("id");
-            csrs.add(csr);
-        }
-    }
+//    public void makeSingleCallCdrs(int numFailure, boolean eventuallySuccessful) {
+//        if (cdrs == null) { cdrs = new ArrayList<>(); }
+//
+//        Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(30));
+//        for (int i = 0; i < numFailure; i++) {
+//            CallDetailRecordDto cdr = makeCdrDto(sub);
+//            cdr.setStatusCode(randomFailureStatusCode());
+//            cdr.setContentFile(sh.childPack().getMessages().get(5).getMessageFileName());
+//            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
+//            cdr.setWeekId("w5_1");
+//            cdrs.add(cdr);
+//        }
+//
+//        if (eventuallySuccessful) {
+//            CallDetailRecordDto cdr = makeCdrDto(sub);
+//            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
+//            cdr.setContentFile(sh.childPack().getMessages().get(5).getMessageFileName());
+//            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
+//            cdr.setWeekId("w5_1");
+//            cdrs.add(cdr);
+//        }
+//    }
+//
+//
+//    public void makeCdrs(int numSuccess, int numFailed, int numComplete, int numIvr) {
+//        if (cdrs == null) { cdrs = new ArrayList<>(); }
+//
+//        for (int i=0 ; i<numSuccess ; i++) {
+//            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(30));
+//            CallDetailRecordDto cdr = makeCdrDto(sub);
+//            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
+//            cdr.setContentFile(sh.childPack().getMessages().get(4).getMessageFileName());
+//            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
+//            cdr.setWeekId("w4_1");
+//            cdrs.add(cdr);
+//        }
+//
+//        for (int i=0 ; i<numFailed ; i++) {
+//            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(30));
+//            CallDetailRecordDto cdr = makeCdrDto(sub);
+//            cdr.setStatusCode(StatusCode.OBD_FAILED_NOANSWER);
+//            cdr.setContentFile(sh.childPack().getMessages().get(5).getMessageFileName());
+//            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
+//            cdr.setWeekId("w5_1");
+//            cdrs.add(cdr);
+//        }
+//
+//        for (int i=0 ; i<numComplete ; i++) {
+//            int days = CHILD_PACK_WEEKS * 7;
+//            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(days));
+//            CallDetailRecordDto cdr = makeCdrDto(sub);
+//            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
+//            cdr.setContentFile(sh.childPack().getMessages().get(CHILD_PACK_WEEKS-1).getMessageFileName());
+//            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
+//            cdr.setWeekId(String.format("w%d_1", CHILD_PACK_WEEKS));
+//            cdrs.add(cdr);
+//        }
+//
+//        for (int i=0 ; i<numIvr ; i++) {
+//            Subscription sub = sh.mksub(SubscriptionOrigin.IVR, DateTime.now().minusDays(30));
+//            CallDetailRecordDto cdr = makeCdrDto(sub);
+//            cdr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED);
+//            cdr.setContentFile(sh.childPack().getMessages().get(6).getMessageFileName());
+//            cdr.setCallDisconnectReason(CallDisconnectReason.NORMAL_DROP);
+//            cdr.setWeekId("w6_1");
+//            cdrs.add(cdr);
+//        }
+//    }
+//
+//
+//    public void makeCsrs(int numFailed, int numSuccess, int numInvalid) {
+//        if (csrs == null) { csrs = new ArrayList<>(); }
+//
+//        for (int i=0 ; i<numFailed ; i++) {
+//            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(100));
+//            CallSummaryRecord csr = makeCsr(sub);
+//            csr.setStatusCode(StatusCode.OBD_FAILED_NOATTEMPT.getValue());
+//            csr.setContentFileName(sh.childPack().getMessages().get(7).getMessageFileName());
+//            csr.setWeekId(sh.childPack().getMessages().get(7).getWeekId());
+//            csr.setPriority(NORMAL_PRIORITY);
+//            csr.setFinalStatus(FinalCallStatus.FAILED.getValue());
+//            csr.setAttempts(1);
+//            csr.setCallFlowUrl("url");
+//            csr.setCli("cli");
+//            csr.setServiceId("id");
+//            csrs.add(csr);
+//        }
+//
+//        for (int i=0 ; i<numSuccess ; i++) {
+//            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(110));
+//            CallSummaryRecord csr = makeCsr(sub);
+//            csr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED.getValue());
+//            csr.setContentFileName(sh.childPack().getMessages().get(5).getMessageFileName());
+//            csr.setWeekId(sh.childPack().getMessages().get(5).getWeekId());
+//            csr.setPriority(NORMAL_PRIORITY);
+//            csr.setFinalStatus(FinalCallStatus.SUCCESS.getValue());
+//            csr.setAttempts(1);
+//            csr.setCallFlowUrl("url");
+//            csr.setCli("cli");
+//            csr.setServiceId("id");
+//            csrs.add(csr);
+//        }
+//
+//        for (int i=0 ; i<numInvalid ; i++) {
+//            Subscription sub = sh.mksub(SubscriptionOrigin.MCTS_IMPORT, DateTime.now().minusDays(110));
+//            CallSummaryRecord csr = makeCsr(sub);
+//            csr.setStatusCode(StatusCode.OBD_SUCCESS_CALL_CONNECTED.getValue());
+//            csr.setContentFileName(sh.childPack().getMessages().get(5).getMessageFileName());
+//            csr.setWeekId("xxx");
+//            csr.setPriority(NORMAL_PRIORITY);
+//            csr.setFinalStatus(FinalCallStatus.SUCCESS.getValue());
+//            csr.setAttempts(1);
+//            csr.setCallFlowUrl("url");
+//            csr.setCli("cli");
+//            csr.setServiceId("id");
+//            csrs.add(csr);
+//        }
+//    }
 
 
     public String timestamp() {
@@ -319,9 +315,11 @@ public class CdrHelper {
     }
 
 
+/*
     public int cdrCount() {
         return cdrs.size();
     }
+*/
 
 
     public int csrCount() {
@@ -329,83 +327,83 @@ public class CdrHelper {
     }
 
 
-    public static String csvLineFromCdr(CallDetailRecordDto cdr) {
-        StringBuilder sb = new StringBuilder();
-
-        //REQUEST_ID,
-        sb.append(cdr.getRequestId().toString());
-        sb.append(',');
-
-        //MSISDN,
-        sb.append(cdr.getMsisdn());
-        sb.append(',');
-
-        //CALL_ID,
-        sb.append("xxx");
-        sb.append(',');
-
-        //ATTEMPT_NO,
-        sb.append(1);
-        sb.append(',');
-
-        //CALL_START_TIME,
-        sb.append(1);
-        sb.append(',');
-
-        //CALL_ANSWER_TIME,
-        sb.append(cdr.getCallAnswerTime().getMillis() / 1000);
-        sb.append(',');
-
-        //CALL_END_TIME,
-        sb.append(1);
-        sb.append(',');
-
-        //CALL_DURATION_IN_PULSE,
-        sb.append(1);
-        sb.append(',');
-
-        //CALL_STATUS,
-        sb.append(cdr.getStatusCode().getValue());
-        sb.append(',');
-
-        //LANGUAGE_LOCATION_ID,
-        sb.append(cdr.getLanguageLocationId());
-        sb.append(',');
-
-        //CONTENT_FILE,
-        sb.append(cdr.getContentFile());
-        sb.append(',');
-
-        //MSG_PLAY_START_TIME,
-        sb.append(1);
-        sb.append(',');
-
-        //MSG_PLAY_END_TIME,
-        sb.append(1 + cdr.getMsgPlayDuration());
-        sb.append(',');
-
-        //CIRCLE_ID,
-        sb.append(cdr.getCircleId());
-        sb.append(',');
-
-        //OPERATOR_ID,
-        sb.append(cdr.getOperatorId());
-        sb.append(',');
-
-        //PRIORITY,
-        sb.append(0);
-        sb.append(',');
-
-        //CALL_DISCONNECT_REASON,
-        sb.append(cdr.getCallDisconnectReason().getValue());
-        sb.append(',');
-
-        //WEEK_ID,
-        sb.append(cdr.getWeekId());
-
-
-        return sb.toString();
-    }
+//    public static String csvLineFromCdr(CallDetailRecordDto cdr) {
+//        StringBuilder sb = new StringBuilder();
+//
+//        //REQUEST_ID,
+//        sb.append(cdr.getRequestId().toString());
+//        sb.append(',');
+//
+//        //MSISDN,
+//        sb.append(cdr.getMsisdn());
+//        sb.append(',');
+//
+//        //CALL_ID,
+//        sb.append("xxx");
+//        sb.append(',');
+//
+//        //ATTEMPT_NO,
+//        sb.append(1);
+//        sb.append(',');
+//
+//        //CALL_START_TIME,
+//        sb.append(1);
+//        sb.append(',');
+//
+//        //CALL_ANSWER_TIME,
+//        sb.append(cdr.getCallAnswerTime().getMillis() / 1000);
+//        sb.append(',');
+//
+//        //CALL_END_TIME,
+//        sb.append(1);
+//        sb.append(',');
+//
+//        //CALL_DURATION_IN_PULSE,
+//        sb.append(1);
+//        sb.append(',');
+//
+//        //CALL_STATUS,
+//        sb.append(cdr.getStatusCode().getValue());
+//        sb.append(',');
+//
+//        //LANGUAGE_LOCATION_ID,
+//        sb.append(cdr.getLanguageLocationId());
+//        sb.append(',');
+//
+//        //CONTENT_FILE,
+//        sb.append(cdr.getContentFile());
+//        sb.append(',');
+//
+//        //MSG_PLAY_START_TIME,
+//        sb.append(1);
+//        sb.append(',');
+//
+//        //MSG_PLAY_END_TIME,
+//        sb.append(1 + cdr.getMsgPlayDuration());
+//        sb.append(',');
+//
+//        //CIRCLE_ID,
+//        sb.append(cdr.getCircleId());
+//        sb.append(',');
+//
+//        //OPERATOR_ID,
+//        sb.append(cdr.getOperatorId());
+//        sb.append(',');
+//
+//        //PRIORITY,
+//        sb.append(0);
+//        sb.append(',');
+//
+//        //CALL_DISCONNECT_REASON,
+//        sb.append(cdr.getCallDisconnectReason().getValue());
+//        sb.append(',');
+//
+//        //WEEK_ID,
+//        sb.append(cdr.getWeekId());
+//
+//
+//        return sb.toString();
+//    }
 
 
     public static String csvLineFromCsr(CallSummaryRecord csr) {
@@ -517,47 +515,47 @@ public class CdrHelper {
     }
 
 
-    private File doMakeCdrFile(String dir, int numInvalidLines) throws IOException {
-        File file = new File(dir, cdr());
-        LOGGER.debug("Creating detail file {}...", file);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
-        int remainingInvalidLines = numInvalidLines;
-
-        writer.write(org.motechproject.nms.imi.service.impl.CdrHelper.CDR_HEADER);
-        writer.write("\n");
-        for(CallDetailRecordDto cdr : cdrs) {
-            writer.write(csvLineFromCdr(cdr));
-            if (remainingInvalidLines > 0) {
-                writer.write(",invalid_field");
-                remainingInvalidLines--;
-            }
-            writer.write("\n");
-        }
-
-        writer.close();
-        return file;
-    }
-
-
-    public File makeLocalCdrFile() throws IOException {
-        return doMakeCdrFile(localDir(), 0);
-    }
+//    private File doMakeCdrFile(String dir, int numInvalidLines) throws IOException {
+//        File file = new File(dir, cdr());
+//        LOGGER.debug("Creating detail file {}...", file);
+//        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+//
+//        int remainingInvalidLines = numInvalidLines;
+//
+//        writer.write(org.motechproject.nms.imi.service.impl.CdrHelper.CDR_HEADER);
+//        writer.write("\n");
+//        for(CallDetailRecordDto cdr : cdrs) {
+//            writer.write(csvLineFromCdr(cdr));
+//            if (remainingInvalidLines > 0) {
+//                writer.write(",invalid_field");
+//                remainingInvalidLines--;
+//            }
+//            writer.write("\n");
+//        }
+//
+//        writer.close();
+//        return file;
+//    }
 
 
-    public File makeLocalCdrFile(int numInvalidLines) throws IOException {
-        return doMakeCdrFile(localDir(), numInvalidLines);
-    }
+//    public File makeLocalCdrFile() throws IOException {
+//        return doMakeCdrFile(localDir(), 0);
+//    }
+//
+//
+//    public File makeLocalCdrFile(int numInvalidLines) throws IOException {
+//        return doMakeCdrFile(localDir(), numInvalidLines);
+//    }
 
 
-    public File makeRemoteCdrFile() throws IOException {
-        return doMakeCdrFile(remoteDir(), 0);
-    }
-
-
-    public File makeRemoteCdrFile(String dir, int numInvalidLines) throws IOException {
-        return doMakeCdrFile(remoteDir(), numInvalidLines);
-    }
+//    public File makeRemoteCdrFile() throws IOException {
+//        return doMakeCdrFile(remoteDir(), 0);
+//    }
+//
+//
+//    public File makeRemoteCdrFile(String dir, int numInvalidLines) throws IOException {
+//        return doMakeCdrFile(remoteDir(), numInvalidLines);
+//    }
 
 
     public String csrLocalChecksum() throws IOException, NoSuchAlgorithmException {
@@ -611,12 +609,12 @@ public class CdrHelper {
     }
 
 
-    public CdrFileNotificationRequest cdrFileNotificationRequest() throws IOException, NoSuchAlgorithmException {
-        FileInfo cdrFileInfo = new FileInfo(cdr(), cdrLocalChecksum(), cdrCount());
-        FileInfo csrFileInfo = new FileInfo(csr(), csrLocalChecksum(), csrCount());
-        return new CdrFileNotificationRequest(obd(), csrFileInfo, cdrFileInfo);
-    }
-
+//    public CdrFileNotificationRequest cdrFileNotificationRequest() throws IOException, NoSuchAlgorithmException {
+//        FileInfo cdrFileInfo = new FileInfo(cdr(), cdrLocalChecksum(), cdrCount());
+//        FileInfo csrFileInfo = new FileInfo(csr(), csrLocalChecksum(), csrCount());
+//        return new CdrFileNotificationRequest(obd(), csrFileInfo, cdrFileInfo);
+//    }
+//
 
     public static CdrFileNotificationRequest requestFromParams(Map<String, Object> params) {
         return new CdrFileNotificationRequest(
@@ -643,7 +641,7 @@ public class CdrHelper {
         params.put(CSR_COUNT_PARAM_KEY, csrCount());
         params.put(CDR_FILE_PARAM_KEY, cdr());
         params.put(CDR_CHECKSUM_PARAM_KEY, cdrLocalChecksum());
-        params.put(CDR_COUNT_PARAM_KEY, cdrCount());
+//        params.put(CDR_COUNT_PARAM_KEY, cdrCount());
         return params;
     }
 

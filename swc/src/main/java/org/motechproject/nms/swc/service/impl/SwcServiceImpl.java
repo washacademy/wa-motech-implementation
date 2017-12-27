@@ -69,8 +69,8 @@ public class SwcServiceImpl implements SwcService {
 
     /**
      * Use the MOTECH scheduler to setup a repeating job
-     * The job will start today at the time stored in flw.purge_invalid_flw_start_time in swc.properties
-     * It will repeat every flw.purge_invalid_flw_sec_interval seconds (default value is a day)
+     * The job will start today at the time stored in swc.purge_invalid_flw_start_time in swc.properties
+     * It will repeat every swc.purge_invalid_flw_sec_interval seconds (default value is a day)
      */
     private void schedulePurgeOfOldSwc() {
         //Calculate today's fire time

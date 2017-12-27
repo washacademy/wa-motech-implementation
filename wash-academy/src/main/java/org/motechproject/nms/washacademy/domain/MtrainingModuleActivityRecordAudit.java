@@ -19,7 +19,7 @@ public class MtrainingModuleActivityRecordAudit extends MdsEntity {
 
     @Field
     @Unique
-    private long flwId;
+    private long swcId;
 
     @Field
     @Min(value = 1000000000L, message = "callingNumber must be 10 digits")
@@ -33,8 +33,8 @@ public class MtrainingModuleActivityRecordAudit extends MdsEntity {
     @Column(length = 10)
     private long newMsisdn;
 
-    public MtrainingModuleActivityRecordAudit(long flwId, long existingMsisdn, long newMsisdn) {
-        this.flwId = flwId;
+    public MtrainingModuleActivityRecordAudit(long swcId, long existingMsisdn, long newMsisdn) {
+        this.swcId = swcId;
         this.existingMsisdn = existingMsisdn;
         this.newMsisdn = newMsisdn;
     }
@@ -55,11 +55,11 @@ public class MtrainingModuleActivityRecordAudit extends MdsEntity {
         this.newMsisdn = newMsisdn;
     }
 
-    public long getFlwId() {
-        return flwId;
+    public long getSwcId() {
+        return swcId;
     }
 
-    public void setFlwId(long flwId) {
-        this.flwId = flwId;
+    public void setSwcId(long swcId) {
+        this.swcId = swcId;
     }
 }

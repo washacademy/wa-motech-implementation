@@ -1,4 +1,4 @@
-package org.motechproject.nms.testing.it.flwUpdate;
+package org.motechproject.nms.testing.it.swcUpdate;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -22,9 +22,9 @@ import org.motechproject.nms.swc.repository.SwcDataService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swc.domain.SubscriptionOrigin;
-import org.motechproject.nms.mobileacademy.dto.MaBookmark;
-import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
-import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
+import org.motechproject.nms.washacademy.dto.WaBookmark;
+import org.motechproject.nms.washacademy.repository.CourseCompletionRecordDataService;
+import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.motechproject.nms.region.domain.*;
 import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.repository.CircleDataService;
@@ -101,7 +101,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     @Inject
     ActivityDataService activityDataService;
     @Inject
-    MobileAcademyService maService;
+    WashAcademyService maService;
     @Inject
     CourseCompletionRecordDataService courseCompletionRecordDataService;
 
@@ -186,17 +186,17 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         State state = stateDataService.findByName("State 1");
         District district = state.getDistricts().iterator().next();
 
-        Swachchagrahi flw = new Swachchagrahi("Existing With MSISDN", 1234567890L);
-        flw.setState(state);
-        flw.setDistrict(district);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Existing With MSISDN", 1234567890L);
+        swc.setState(state);
+        swc.setDistrict(district);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        flw = new Swachchagrahi("Will Update Conflict MSISDN", 1111111111L);
-        flw.setState(state);
-        flw.setDistrict(district);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        swc = new Swachchagrahi("Will Update Conflict MSISDN", 1111111111L);
+        swc.setState(state);
+        swc.setDistrict(district);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
         transactionManager.commit(status);
 
         Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
@@ -208,9 +208,9 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     //NMS_FT_538
     @Test(expected = CsvImportDataException.class)
     public void testImportByMSISDNConflictWithMCTSId() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
@@ -219,12 +219,12 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     @Test
     public void testASHAvalidation() throws Exception {
         swcImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
-        List<Swachchagrahi> flws = swcDataService.retrieveAll();
-        assertEquals(9,flws.size());
+        List<Swachchagrahi> swcs = swcDataService.retrieveAll();
+        assertEquals(9,swcs.size());
     }
 
     /**
-     * VerifyFT513  verify that status of flw must be set to "inactive" when the flw data is imported into
+     * VerifyFT513  verify that status of swc must be set to "inactive" when the swc data is imported into
      * the NMS DB and the user has not yet called
      */
     @Test
@@ -232,9 +232,9 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
-        Swachchagrahi flw = swcService.getByContactNumber(1234567890L);
-        assertFLW(flw, "#0", 1234567890L, "FLW 0", "District 11", "L1");
-        assertEquals(SwachchagrahiStatus.INACTIVE, flw.getCourseStatus());
+        Swachchagrahi swc = swcService.getByContactNumber(1234567890L);
+        assertFLW(swc, "#0", 1234567890L, "FLW 0", "District 11", "L1");
+        assertEquals(SwachchagrahiStatus.INACTIVE, swc.getCourseStatus());
     }
 
     @Test
@@ -242,8 +242,8 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t12\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
-        Swachchagrahi flw = swcService.getByContactNumber(1234567890L);
-        assertFLW(flw, "#0", 1234567890L, "FLW 0", "District 12", null);
+        Swachchagrahi swc = swcService.getByContactNumber(1234567890L);
+        assertFLW(swc, "#0", 1234567890L, "FLW 0", "District 12", null);
     }
 
     /**
@@ -260,8 +260,8 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     public void testImportFromSampleDataFile() throws Exception {
         swcImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
 
-        Swachchagrahi flw1 = swcService.getByContactNumber(9999999996L);
-        assertFLW(flw1, "72185", 9999999996L, "Bishnu Priya Behera", "Koraput", null);
+        Swachchagrahi swc1 = swcService.getByContactNumber(9999999996L);
+        assertFLW(swc1, "72185", 9999999996L, "Bishnu Priya Behera", "Koraput", null);
 
         // verify location data was created on the fly
         State state = stateDataService.findByCode(1L);
@@ -278,17 +278,17 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT535() throws Exception {
-        importCsvFileForFLW("flw.txt");
-        Swachchagrahi flw1 = swcService.getByContactNumber(1234567899L);
-        assertFLW(flw1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
-        assertEquals("State{name='State 1', code=1}", flw1.getState().toString());
-        assertEquals(SwachchagrahiStatus.INACTIVE, flw1.getCourseStatus());
+        importCsvFileForFLW("swc.txt");
+        Swachchagrahi swc1 = swcService.getByContactNumber(1234567899L);
+        assertFLW(swc1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
+        assertEquals("State{name='State 1', code=1}", swc1.getState().toString());
+        assertEquals(SwachchagrahiStatus.INACTIVE, swc1.getCourseStatus());
         // Assert audit trail log
         CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                 .get(0);
-        assertEquals("/flwUpdate/import", csvAuditRecord.getEndpoint());
+        assertEquals("/swcUpdate/import", csvAuditRecord.getEndpoint());
         assertEquals(SUCCESS, csvAuditRecord.getOutcome());
-        assertEquals("flw.txt", csvAuditRecord.getFile());
+        assertEquals("swc.txt", csvAuditRecord.getFile());
     }
 
     /**
@@ -296,15 +296,15 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT536() throws Exception {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
-        Swachchagrahi flw1 = swcService.getByContactNumber(1234567890L);
-        assertFLW(flw1, "#0", 1234567890L, "FLW 0", "District 11", "L1");
-        assertEquals("State{name='State 1', code=1}", flw1.getState().toString());
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw1.getCourseStatus());
+        Swachchagrahi swc1 = swcService.getByContactNumber(1234567890L);
+        assertFLW(swc1, "#0", 1234567890L, "FLW 0", "District 11", "L1");
+        assertEquals("State{name='State 1', code=1}", swc1.getState().toString());
+        assertEquals(SwachchagrahiStatus.ACTIVE, swc1.getCourseStatus());
     }
 
     /**
@@ -330,13 +330,13 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT542() throws Exception {
-            importCsvFileForFLW("flw_name_missing.txt");
+            importCsvFileForFLW("swc_name_missing.txt");
             // Assert audit trail log
             CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                     .get(0);
-            assertEquals("/flwUpdate/import", csvAuditRecord.getEndpoint());
+            assertEquals("/swcUpdate/import", csvAuditRecord.getEndpoint());
             assertEquals("Failure: The number of columns to be processed (4) must match the number of CellProcessors (5): check that the number of CellProcessors you have defined matches the expected number of columns being read/written", csvAuditRecord.getOutcome());
-            assertEquals("flw_name_missing.txt", csvAuditRecord.getFile());
+            assertEquals("swc_name_missing.txt", csvAuditRecord.getFile());
     }
 
     /**
@@ -377,12 +377,12 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
-    private void assertFLW(Swachchagrahi flw, String mctsFlwId, Long contactNumber, String name, String districtName, String languageLocationCode) {
-        assertNotNull(flw);
-        assertEquals(contactNumber, null != flw.getContactNumber() ? flw.getContactNumber() : null);
-        assertEquals(name, flw.getName());
-        assertEquals(districtName, null != flw.getDistrict() ? flw.getDistrict().getName() : null);
-        assertEquals(languageLocationCode, null != flw.getLanguage() ? flw.getLanguage().getCode() : null);
+    private void assertFLW(Swachchagrahi swc, String mctsSwcId, Long contactNumber, String name, String districtName, String languageLocationCode) {
+        assertNotNull(swc);
+        assertEquals(contactNumber, null != swc.getContactNumber() ? swc.getContactNumber() : null);
+        assertEquals(name, swc.getName());
+        assertEquals(districtName, null != swc.getDistrict() ? swc.getDistrict().getName() : null);
+        assertEquals(languageLocationCode, null != swc.getLanguage() ? swc.getLanguage().getCode() : null);
     }
 
     private Reader createReaderWithHeaders(String... lines) {
@@ -429,7 +429,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
      * Method used to import CSV File For FLW Data
      */
     private void importCsvFileForFLW(String fileName) throws InterruptedException, IOException {
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/flwUpdate/import", TestContext.getJettyPort()));
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/swcUpdate/import", TestContext.getJettyPort()));
         FileBody fileBody = new FileBody(new File(String.format("src/test/resources/csv/%s", fileName)));
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -449,24 +449,24 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         District district1 = districtService.findByStateAndName(state, "District 11");
         Language language1 = languageService.getForCode("L1");
 
-        Swachchagrahi flw = new Swachchagrahi("Test MSISDN", 1234567890L);
-        flw.setState(state);
-        flw.setDistrict(district1);
-        flw.setLanguage(language1);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Test MSISDN", 1234567890L);
+        swc.setState(state);
+        swc.setDistrict(district1);
+        swc.setLanguage(language1);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        importCsvFileForFLW("flw_location_update_msisdn.txt");
+        importCsvFileForFLW("swc_location_update_msisdn.txt");
 
-        flw = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumber(1234567890L);
 
         // deleting the FLW to avoid conflicts at later stage
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flw.setInvalidationDate(DateTime.now().minusYears(1));
-        swcService.update(flw);
-        swcService.delete(flw);
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swc.setInvalidationDate(DateTime.now().minusYears(1));
+        swcService.update(swc);
+        swcService.delete(swc);
 
-        assertFLW(flw, "#0", null, "Test MSISDN", "District 12", language1.getCode());
+        assertFLW(swc, "#0", null, "Test MSISDN", "District 12", language1.getCode());
 
         List<CsvAuditRecord> auditRecords = csvAuditRecordDataService.retrieveAll();
         assertNotNull(auditRecords);
@@ -474,7 +474,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
 
         CsvAuditRecord auditRecord = auditRecords.get(0);
         assertEquals("Success", auditRecord.getOutcome());
-        assertEquals("flw_location_update_msisdn.txt", auditRecord.getFile());
+        assertEquals("swc_location_update_msisdn.txt", auditRecord.getFile());
     }
 
     /**
@@ -491,18 +491,18 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         state2.getDistricts().add(district22);
         stateDataService.create(state2);
 
-        Swachchagrahi flw = new Swachchagrahi("Test MSISDN", 1234567890L);
-        flw.setState(state);
-        flw.setDistrict(district1);
-        flw.setLanguage(language1);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Test MSISDN", 1234567890L);
+        swc.setState(state);
+        swc.setDistrict(district1);
+        swc.setLanguage(language1);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        importCsvFileForFLW("flw_update_state_by_msisdn.txt");
+        importCsvFileForFLW("swc_update_state_by_msisdn.txt");
 
-        flw = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumber(1234567890L);
 
-        assertFLW(flw, "#0", 1234567890L, "Test MSISDN", "District 22", language1.getCode());
+        assertFLW(swc, "#0", 1234567890L, "Test MSISDN", "District 22", language1.getCode());
 
         List<CsvAuditRecord> auditRecords = csvAuditRecordDataService.retrieveAll();
         assertNotNull(auditRecords);
@@ -510,27 +510,27 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
 
         CsvAuditRecord auditRecord = auditRecords.get(0);
         assertEquals("Success", auditRecord.getOutcome());
-        assertEquals("flw_update_state_by_msisdn.txt", auditRecord.getFile());
+        assertEquals("swc_update_state_by_msisdn.txt", auditRecord.getFile());
 
         // deleting the FLW to avoid conflicts at later stage
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flw.setInvalidationDate(DateTime.now().minusYears(1));
-        swcService.update(flw);
-        swcService.delete(flw);
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swc.setInvalidationDate(DateTime.now().minusYears(1));
+        swcService.update(swc);
+        swcService.delete(swc);
     }
 
-    // Test whether MSISDN is updated in Bookmark, Activity and Course Completion Records along with Flw
+    // Test whether MSISDN is updated in Bookmark, Activity and Course Completion Records along with Swc
     @Test
     public void testMsisdnUpdateInMa() throws Exception {
         Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long oldMsisdn = 1234567890L;
 
-        Swachchagrahi flw = swcService.getByContactNumber(oldMsisdn);
-        assertFLW(flw, "#0", oldMsisdn, "FLW 0", "District 11", "L1");
+        Swachchagrahi swc = swcService.getByContactNumber(oldMsisdn);
+        assertFLW(swc, "#0", oldMsisdn, "FLW 0", "District 11", "L1");
 
-        Long flwId = flw.getId();
-        MaBookmark bookmark = new MaBookmark(flwId, VALID_CALL_ID, null, null);
+        Long swcId = swc.getId();
+        WaBookmark bookmark = new WaBookmark(swcId, VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark);
         assertNotNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID));
         assertEquals(1, activityDataService.findRecordsForUserByState(oldMsisdn.toString(), ActivityState.STARTED).size());
@@ -548,8 +548,8 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long newMsisdn = 9876543210L;
 
-        flw = swcService.getByContactNumber(newMsisdn);
-        assertFLW(flw, "#0", newMsisdn, "FLW 0", "District 11", "L1");
+        swc = swcService.getByContactNumber(newMsisdn);
+        assertFLW(swc, "#0", newMsisdn, "FLW 0", "District 11", "L1");
 
         assertNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID));
         assertNotNull(maService.getBookmark(newMsisdn, VALID_CALL_ID));
@@ -559,7 +559,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
 
         List<ContactNumberAudit> contactNumberAudits = contactNumberAuditDataService.retrieveAll();
         assertEquals(1, contactNumberAudits.size());
-        assertEquals(flwId, contactNumberAudits.get(0).getSwcId());
+        assertEquals(swcId, contactNumberAudits.get(0).getSwcId());
         assertEquals(oldMsisdn, contactNumberAudits.get(0).getOldCallingNumber());
         assertEquals(newMsisdn, contactNumberAudits.get(0).getNewCallingNumber());
     }

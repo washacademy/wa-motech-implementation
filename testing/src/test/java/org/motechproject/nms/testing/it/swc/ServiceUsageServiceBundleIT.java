@@ -1,4 +1,4 @@
-package org.motechproject.nms.testing.it.flw;
+package org.motechproject.nms.testing.it.swc;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -51,11 +51,11 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
     private void setupData() {
         testingService.clearDatabase();
 
-        for (Swachchagrahi flw: swcDataService.retrieveAll()) {
-            flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-            flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
+        for (Swachchagrahi swc: swcDataService.retrieveAll()) {
+            swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+            swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
 
-            swcDataService.update(flw);
+            swcDataService.update(swc);
         }
 
         callDetailRecordDataService.deleteAll();
@@ -70,14 +70,14 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
     @Test
     public void testGetCurrentMonthlyUsageForFLWAndService() throws Exception {
         setupData();
-        Swachchagrahi flw = new Swachchagrahi("Valid Worker", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Valid Worker", 1111111111L);
+        swcService.add(swc);
 
-        Swachchagrahi flwIgnored = new Swachchagrahi("Ignored Worker", 2222222222L);
-        swcService.add(flwIgnored);
+        Swachchagrahi swcIgnored = new Swachchagrahi("Ignored Worker", 2222222222L);
+        swcService.add(swcIgnored);
 
         CallDetailRecord lastMonth = new CallDetailRecord();
-        lastMonth.setSwachchagrahi(flw);
+        lastMonth.setSwachchagrahi(swc);
         lastMonth.setCallingNumber(1111111111l);
         lastMonth.setService(Service.MOBILE_ACADEMY);
         lastMonth.setCallDurationInPulses(1);
@@ -88,7 +88,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         // A usage record for a different service that should be ignored
         CallDetailRecord differentService = new CallDetailRecord();
-        differentService.setSwachchagrahi(flw);
+        differentService.setSwachchagrahi(swc);
         differentService.setCallingNumber(1111111111l);
         differentService.setService(Service.MOBILE_KUNJI);
         differentService.setCallDurationInPulses(1);
@@ -99,7 +99,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         // A usage record for a different FLW that should be ignored
         CallDetailRecord differentFLW = new CallDetailRecord();
-        differentFLW.setSwachchagrahi(flwIgnored);
+        differentFLW.setSwachchagrahi(swcIgnored);
         differentFLW.setCallingNumber(1111111111l);
         differentFLW.setService(Service.MOBILE_KUNJI);
         differentFLW.setCallDurationInPulses(1);
@@ -110,7 +110,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         // Two valid records that should get aggregated
         CallDetailRecord recordOne = new CallDetailRecord();
-        recordOne.setSwachchagrahi(flw);
+        recordOne.setSwachchagrahi(swc);
         recordOne.setCallingNumber(1111111111l);
         recordOne.setService(Service.MOBILE_ACADEMY);
         recordOne.setCallDurationInPulses(1);
@@ -120,7 +120,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         callDetailRecordDataService.create(recordOne);
 
         CallDetailRecord recordTwo = new CallDetailRecord();
-        recordTwo.setSwachchagrahi(flw);
+        recordTwo.setSwachchagrahi(swc);
         recordTwo.setCallingNumber(1111111111l);
         recordTwo.setService(Service.MOBILE_ACADEMY);
         recordTwo.setCallDurationInPulses(1);
@@ -129,9 +129,9 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         recordTwo.setCallStartTime(DateTime.now());
         callDetailRecordDataService.create(recordTwo);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(flw, Service.MOBILE_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.MOBILE_ACADEMY);
 
-        assertEquals(flw, serviceUsage.getSwachchagrahi());
+        assertEquals(swc, serviceUsage.getSwachchagrahi());
         assertEquals(Service.MOBILE_ACADEMY, serviceUsage.getService());
         assertEquals(2, serviceUsage.getUsageInPulses());
         assertEquals(1, serviceUsage.getEndOfUsage());
@@ -143,26 +143,26 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         callDetailRecordDataService.delete(recordOne);
         callDetailRecordDataService.delete(recordTwo);
 
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
-        swcService.update(flw);
-        swcService.delete(flw);
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
+        swcService.update(swc);
+        swcService.delete(swc);
 
-        flwIgnored.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flwIgnored.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
-        swcService.update(flwIgnored);
-        swcService.delete(flwIgnored);
+        swcIgnored.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swcIgnored.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
+        swcService.update(swcIgnored);
+        swcService.delete(swcIgnored);
     }
 
     @Test
     public void testGetCurrentMonthlyUsageForFLWAndServiceWithNoService() throws Exception {
         setupData();
-        Swachchagrahi flw = new Swachchagrahi("Valid Worker", 1111111111L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Valid Worker", 1111111111L);
+        swcService.add(swc);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(flw, Service.MOBILE_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.MOBILE_ACADEMY);
 
-        assertEquals(flw, serviceUsage.getSwachchagrahi());
+        assertEquals(swc, serviceUsage.getSwachchagrahi());
         assertEquals(Service.MOBILE_ACADEMY, serviceUsage.getService());
         assertEquals(0, serviceUsage.getUsageInPulses());
         assertEquals(0, serviceUsage.getEndOfUsage());
@@ -170,10 +170,10 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         callDetailRecordDataService.deleteAll();
 
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
-        flw.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
-        swcService.update(flw);
-        swcService.delete(flw);
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
+        swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
+        swcService.update(swc);
+        swcService.delete(swc);
     }
 
 }

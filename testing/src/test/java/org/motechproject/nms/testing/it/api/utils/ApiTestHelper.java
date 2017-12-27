@@ -9,10 +9,10 @@ import org.motechproject.nms.swc.domain.Swachchagrahi;
  */
 public final class ApiTestHelper {
 
-    public static Swachchagrahi createFlw(String name, Long phoneNumber, String mctsFlwId, SwachchagrahiStatus status) {
-        Swachchagrahi flw = new Swachchagrahi(name, phoneNumber);
-        flw.setCourseStatus(status);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        return flw;
+    public static Swachchagrahi createSwc(String name, Long phoneNumber, String mctsSwcId, SwachchagrahiStatus status) {
+        Swachchagrahi swc = new Swachchagrahi(name, phoneNumber);
+        swc.setCourseStatus(status);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        return swc;
     }
 }

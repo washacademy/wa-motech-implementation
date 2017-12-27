@@ -132,11 +132,11 @@ public class WashAcademyServiceUnitTest {
     public void getBookmarkTest() {
         Bookmark newBookmark = new Bookmark("55", "getBookmarkTest", null, null, null);
 
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(55L);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(55L);
         when(bookmarkService.getLatestBookmarkByUserId(anyString()))
                 .thenReturn(newBookmark);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
+        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
 
         WaBookmark mab = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID);
         assertTrue(mab.getSwcId() == 55L);
@@ -152,11 +152,11 @@ public class WashAcademyServiceUnitTest {
     public void setNewBookmarkTest() {
         WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
 
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(123456L);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(123456L);
         when(bookmarkService.createBookmark(any(Bookmark.class))).thenReturn(new Bookmark());
         when(bookmarkService.getLatestBookmarkByUserId(anyString())).thenReturn(null);
-        when(swcService.getById(anyLong())).thenReturn(flw);
+        when(swcService.getById(anyLong())).thenReturn(swc);
         washAcademyService.setBookmark(mab);
     }
 
@@ -164,13 +164,13 @@ public class WashAcademyServiceUnitTest {
     public void setUpdateBookmarkTest() {
         WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
 
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(123456L);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(123456L);
         when(bookmarkService.createBookmark(any(Bookmark.class)))
                 .thenReturn(new Bookmark());
         when(bookmarkService.getLatestBookmarkByUserId(anyString()))
                 .thenReturn(new Bookmark());
-        when(swcService.getById(anyLong())).thenReturn(flw);
+        when(swcService.getById(anyLong())).thenReturn(swc);
         washAcademyService.setBookmark(mab);
     }
 
@@ -186,10 +186,10 @@ public class WashAcademyServiceUnitTest {
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, scores.toString(), false);
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(123456L);
-        when(swcService.getById(anyLong())).thenReturn(flw);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(123456L);
+        when(swcService.getById(anyLong())).thenReturn(swc);
         washAcademyService.setBookmark(mab);
     }
 
@@ -201,9 +201,9 @@ public class WashAcademyServiceUnitTest {
         }
         WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "COURSE_COMPLETED", scores);
         doNothing().when(eventRelay).sendEventMessage(any(MotechEvent.class));
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(123456L);
-        when(swcService.getById(anyLong())).thenReturn(flw);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(123456L);
+        when(swcService.getById(anyLong())).thenReturn(swc);
         washAcademyService.setBookmark(mab);
     }
 
@@ -221,9 +221,9 @@ public class WashAcademyServiceUnitTest {
         Bookmark newBookmark = new Bookmark("55", "getBookmarkTest", null, null, progress);
         when(bookmarkService.getLatestBookmarkByUserId(anyString()))
                 .thenReturn(newBookmark);
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(55L);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(55L);
+        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
         WaBookmark retrieved = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID);
         assertNull(retrieved.getBookmark());
         assertNull(retrieved.getScoresByChapter());
@@ -240,11 +240,11 @@ public class WashAcademyServiceUnitTest {
 
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
         when(settingsFacade.getProperty(anyString())).thenReturn("1");
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setSwcId("123456");
-        when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setSwcId("123456");
+        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveredToTerminal"));
     }
@@ -261,7 +261,7 @@ public class WashAcademyServiceUnitTest {
 
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
         when(settingsFacade.getProperty(anyString())).thenReturn("1");
         doNothing().when(schedulerService).safeScheduleRepeatingJob(any(RepeatingSchedulableJob.class));
         when(swcService.getById(anyLong())).thenReturn(getFrontLineWorker());
@@ -273,16 +273,16 @@ public class WashAcademyServiceUnitTest {
     }
 
     private Swachchagrahi getFrontLineWorker() {
-        Swachchagrahi flw = new Swachchagrahi("Unit Test Babu", 12L);
+        Swachchagrahi swc = new Swachchagrahi("Unit Test Babu", 12L);
         State state = new State("TN", 333L);
         District district = new District();
         district.setState(state);
         district.setCode(444L);
         state.setDistricts(new HashSet<>(Arrays.asList(district)));
-        flw.setId(123456L);
-        flw.setState(state);
-        flw.setDistrict(district);
-        return flw;
+        swc.setId(123456L);
+        swc.setState(state);
+        swc.setDistrict(district);
+        return swc;
     }
 
     @Test
@@ -297,14 +297,14 @@ public class WashAcademyServiceUnitTest {
 
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
         when(settingsFacade.getProperty(anyString())).thenReturn("1");
         doNothing().when(schedulerService).safeScheduleRepeatingJob(any(RepeatingSchedulableJob.class));
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(123456L);
-        when(swcService.getById(anyLong())).thenReturn(flw);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
-        when(swcService.getById(anyLong())).thenReturn(flw);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(123456L);
+        when(swcService.getById(anyLong())).thenReturn(swc);
+        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        when(swcService.getById(anyLong())).thenReturn(swc);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveryImpossible"));
         assertEquals(1, ccr.getNotificationRetryCount());
@@ -322,14 +322,14 @@ public class WashAcademyServiceUnitTest {
 
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
         when(settingsFacade.getProperty(anyString())).thenReturn("1");
         doNothing().when(schedulerService).safeScheduleRepeatingJob(any(RepeatingSchedulableJob.class));
-        Swachchagrahi flw = new Swachchagrahi(1234567890L);
-        flw.setId(123456L);
-        when(swcService.getById(anyLong())).thenReturn(flw);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(flw);
-        when(swcService.getById(anyLong())).thenReturn(flw);
+        Swachchagrahi swc = new Swachchagrahi(1234567890L);
+        swc.setId(123456L);
+        when(swcService.getById(anyLong())).thenReturn(swc);
+        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        when(swcService.getById(anyLong())).thenReturn(swc);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveryImpossible"));
         assertEquals(0, ccr.getNotificationRetryCount());
@@ -337,7 +337,7 @@ public class WashAcademyServiceUnitTest {
 
     @Test(expected = CourseNotCompletedException.class)
     public void testNotificationTriggerException() {
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(null);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(null);
         washAcademyService.triggerCompletionNotification(123456L);
     }
 
@@ -346,7 +346,7 @@ public class WashAcademyServiceUnitTest {
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, "score");
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
         washAcademyService.triggerCompletionNotification(123456L);
         washAcademyService.triggerCompletionNotification(123456L);
         assertFalse(ccr.isSentNotification());
@@ -357,7 +357,7 @@ public class WashAcademyServiceUnitTest {
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, "score", true);
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findByFlwId(anyLong())).thenReturn(records);
+        when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(records);
 
         when(courseCompletionRecordDataService.update(any(CourseCompletionRecord.class))).thenAnswer(
                 new Answer<CourseCompletionRecord>() {

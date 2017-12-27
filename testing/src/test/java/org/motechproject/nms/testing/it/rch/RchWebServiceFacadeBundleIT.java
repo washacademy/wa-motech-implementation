@@ -6,10 +6,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.imi.service.SettingsService;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-import org.motechproject.nms.kilkari.domain.SubscriptionPackMessage;
-import org.motechproject.nms.kilkari.domain.SubscriptionPackType;
-import org.motechproject.nms.kilkari.repository.SubscriptionPackDataService;
 import org.motechproject.nms.rch.service.RchWebServiceFacade;
 import org.motechproject.nms.region.domain.*;
 import org.motechproject.nms.region.repository.DistrictDataService;
@@ -54,9 +50,6 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
     private DistrictDataService districtDataService;
 
     @Inject
-    private SubscriptionPackDataService subscriptionPackDataService;
-
-    @Inject
     private TestingService testingService;
 
     @Inject
@@ -93,14 +86,14 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
 
         districtDataService.create(district);
 
-        SubscriptionPack pregnancyPack = new SubscriptionPack("prg", SubscriptionPackType.PREGNANCY, 70, 10,
-                Collections.<SubscriptionPackMessage>emptyList());
-        SubscriptionPack childPack = new SubscriptionPack("child", SubscriptionPackType.CHILD, 5000, 6,
-                Collections.<SubscriptionPackMessage>emptyList());
-
-
-        subscriptionPackDataService.create(pregnancyPack);
-        subscriptionPackDataService.create(childPack);
+//        SubscriptionPack pregnancyPack = new SubscriptionPack("prg", SubscriptionPackType.PREGNANCY, 70, 10,
+//                Collections.<SubscriptionPackMessage>emptyList());
+//        SubscriptionPack childPack = new SubscriptionPack("child", SubscriptionPackType.CHILD, 5000, 6,
+//                Collections.<SubscriptionPackMessage>emptyList());
+//
+//
+//        subscriptionPackDataService.create(pregnancyPack);
+//        subscriptionPackDataService.create(childPack);
     }
 
 

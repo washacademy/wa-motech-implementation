@@ -1,13 +1,13 @@
-package org.motechproject.nms.testing.it.flw;
+package org.motechproject.nms.testing.it.swc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.flw.domain.WhitelistEntry;
-import org.motechproject.nms.flw.domain.WhitelistState;
-import org.motechproject.nms.flw.repository.ServiceUsageCapDataService;
-import org.motechproject.nms.flw.repository.WhitelistEntryDataService;
-import org.motechproject.nms.flw.repository.WhitelistStateDataService;
-import org.motechproject.nms.flw.service.WhitelistService;
+import org.motechproject.nms.swc.domain.WhitelistEntry;
+import org.motechproject.nms.swc.domain.WhitelistState;
+import org.motechproject.nms.swc.repository.ServiceUsageCapDataService;
+import org.motechproject.nms.swc.repository.WhitelistEntryDataService;
+import org.motechproject.nms.swc.repository.WhitelistStateDataService;
+import org.motechproject.nms.swc.service.WhitelistService;
 import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.testing.service.TestingService;

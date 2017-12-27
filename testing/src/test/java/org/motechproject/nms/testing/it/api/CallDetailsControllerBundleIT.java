@@ -14,14 +14,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.api.web.contract.SwcUserResponse;
-import org.motechproject.nms.flw.domain.*;
-import org.motechproject.nms.flw.repository.CallDetailRecordDataService;
+import org.motechproject.nms.swc.domain.*;
+import org.motechproject.nms.swc.repository.CallDetailRecordDataService;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
 import org.motechproject.nms.swc.domain.SwcJobStatus;
 import org.motechproject.nms.swc.domain.SwcStatusUpdateAudit;
 import org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService;
-import org.motechproject.nms.flw.service.CallDetailRecordService;
+import org.motechproject.nms.swc.service.CallDetailRecordService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.props.domain.DeployedService;
 import org.motechproject.nms.props.domain.Service;
@@ -441,7 +441,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         return contentTemplate.toString();
     }
 
-    private String createFlwUserResponseJson(String defaultLanguageLocationCode, String locationCode,
+    private String createSwcUserResponseJson(String defaultLanguageLocationCode, String locationCode,
                                              List<String> allowedLanguageLocations,
                                              Long currentUsageInPulses, Long endOfUsagePromptCounter,
                                              Boolean welcomePromptFlag, Integer maxAllowedUsageInPulses,
@@ -479,9 +479,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void testCallDetailsValidMobileKunji() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
 
         ArrayList<String> array = new ArrayList<>();
@@ -533,7 +533,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertNull(cdr.getContent().get(1).getType());
         assertNull(cdr.getContent().get(1).getCompletionFlag());
 
-        assertEquals(flw.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
+        assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
                 "frontLineWorker")).getId());
 
         transactionManager.commit(status);
@@ -545,9 +545,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void testCallDetailsValidMobileAcademy() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */ true, "lesson",
@@ -566,7 +566,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* endTime */ true, 1222222221l,
                 /* completionFlag */ true, true,
         /* correctAnswerEntered */true, false));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -613,7 +613,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertNull(cdr.getWelcomePrompt());
         assertNull(cc.getMobileKunjiCardCode());
 
-        assertEquals(flw.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
+        assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
                 "frontLineWorker")).getId());
 
         transactionManager.commit(status);
@@ -626,11 +626,11 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void testCallDetailsValidNoContent() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -678,7 +678,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Ignore
     public void testCallDetailsFLWNotFound() throws IOException, InterruptedException {
 
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -694,13 +694,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
-        Swachchagrahi flw = swcService.getByContactNumber(9810320300l);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, flw.getCourseStatus());
+        Swachchagrahi swc = swcService.getByContactNumber(9810320300l);
+        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
     }
 
     @Test
     public void testCallDetailsNullCallDisconnectReason() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -721,7 +721,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullCallStatus() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -742,7 +742,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullEndOfUsagePromptCount() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -763,7 +763,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullCallDurationInPulses() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -784,7 +784,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullCallEndTime() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -805,7 +805,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullCallStartTime() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -826,7 +826,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullCallingNumber() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ false, null,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -847,7 +847,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsInvalidCallingNumber() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -868,7 +868,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsNullCallId() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ false, null,
                 /* operator */ true, "A",
@@ -889,7 +889,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testCallDetailsInvalidCallId() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID.substring(1),
                 /* operator */ true, "A",
@@ -916,7 +916,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT491() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID + "12",
         /* operator */true, "A",
@@ -942,10 +942,10 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT499() throws IOException, InterruptedException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        swcService.add(swc);
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -972,10 +972,10 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT500() throws IOException, InterruptedException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        swcService.add(swc);
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1003,11 +1003,11 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     public void verifyFT494() throws IOException,
             InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, "9810320300",
         /* callId */true, "234000011111111",
         /* operator */true, "A",
@@ -1037,11 +1037,11 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     public void verifyFT495() throws IOException,
             InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, "9810320300",
         /* callId */true, "234000011111111",
         /* operator */true, "A",
@@ -1071,11 +1071,11 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      public void verifyFT496() throws IOException,
              InterruptedException {
 
-         Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                  9810320300L);
-         swcService.add(flw);
+         swcService.add(swc);
 
-         HttpPost httpPost = createCallDetailsPost("mobileacademy",
+         HttpPost httpPost = createCallDetailsPost("washacademy",
          /* callingNumber */true, "9810320300",
          /* callId */true, "234000011111111",
          /* operator */true, "A",
@@ -1105,11 +1105,11 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      public void verifyFT497() throws IOException,
              InterruptedException {
 
-         Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                  9810320300L);
-         swcService.add(flw);
+         swcService.add(swc);
 
-         HttpPost httpPost = createCallDetailsPost("mobileacademy",
+         HttpPost httpPost = createCallDetailsPost("washacademy",
          /* callingNumber */true, "9810320300",
          /* callId */true, "234000011111111",
          /* operator */true, "A",
@@ -1154,7 +1154,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* endTime */ true, 1222222221l,
                 /* completionFlag */ true, true,
                 /* correctAnswerEntered */ true, true));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1192,7 +1192,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* endTime */ true, 1222222221l,
                 /* completionFlag */ false, null,
                 /* correctAnswerEntered */ false, null));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1226,7 +1226,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, 1222222221l,
         /* completionFlag */true, true,
         /* correctAnswerEntered */true, true));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1261,7 +1261,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, 1222222221l,
         /* completionFlag */true, true,
         /* correctAnswerEntered */true, true));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1296,7 +1296,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, 1222222221l,
         /* completionFlag */true, true,
         /* correctAnswerEntered */true, true));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1331,7 +1331,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */false, null,
         /* completionFlag */true, true,
         /* correctAnswerEntered */true, true));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1357,9 +1357,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT503() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "question",
@@ -1370,7 +1370,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "1222222221",
         /* completionFlag */true, "true",
         /* correctAnswerEntered */true, "false"));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1396,9 +1396,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT504() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "question",
@@ -1409,7 +1409,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "122ss2222221",// Invalid
         /* completionFlag */true, "true",
         /* correctAnswerEntered */true, "false"));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1437,9 +1437,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Ignore
     @Test
     public void verifyFT505() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "bookmark",// Type can be "lesson", "chapter", "question"
@@ -1450,7 +1450,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "1222222221",
         /* completionFlag */true, "true",
         /* correctAnswerEntered */true, "false"));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1476,9 +1476,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT506() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "question",
@@ -1489,7 +1489,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "1222222221",
         /* completionFlag */true, "t1",// Invalid
         /* correctAnswerEntered */true, "false"));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1515,9 +1515,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT507() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "question",
@@ -1528,7 +1528,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "1222222221",
         /* completionFlag */true, "true",
         /* correctAnswerEntered */true, "10"));//Invalid
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -1610,9 +1610,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT367() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 9810320300l,
@@ -1660,8 +1660,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT368() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ false, null,
@@ -1688,8 +1688,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT369() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1716,8 +1716,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT372() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1744,8 +1744,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT373() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1772,8 +1772,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT374() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1800,8 +1800,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT375() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1828,8 +1828,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT376() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1856,8 +1856,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT377() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1884,8 +1884,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT378() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -1912,8 +1912,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT379() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(false, null,                   // type
@@ -1951,8 +1951,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT380() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(false, null,                   // type
@@ -1990,8 +1990,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT381() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(false, null,                   // type
@@ -2029,8 +2029,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT382() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(false, null,                   // type
@@ -2068,8 +2068,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT383() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(false, null,                   // type
@@ -2108,8 +2108,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT384() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 12356789L,
@@ -2137,8 +2137,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT385() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
                 /* callingNumber */ true, 1234567890L,
@@ -2167,9 +2167,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     public void verifyFT388() throws IOException,
             InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
         /* callingNumber */true, "9810320300",
@@ -2201,9 +2201,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     public void verifyFT389() throws IOException,
             InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
         /* callingNumber */true, "9810320300",
@@ -2234,9 +2234,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     public void verifyFT390() throws IOException,
             InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
          /* callingNumber */true, "9810320300",
@@ -2268,9 +2268,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     public void verifyFT391() throws IOException,
             InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
          /* callingNumber */true, "9810320300",
@@ -2301,8 +2301,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT392() throws IOException, InterruptedException {
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swcService.add(swc);
 
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
          /* callingNumber */true, "9810320300",
@@ -2329,9 +2329,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT393() throws IOException, InterruptedException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
@@ -2359,9 +2359,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT394() throws IOException, InterruptedException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
         HttpPost httpPost = createCallDetailsPost("mobilekunji",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
@@ -2388,9 +2388,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT397() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "question",
@@ -2427,9 +2427,9 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT398() throws InterruptedException, IOException {
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright",
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
-        swcService.add(flw);
+        swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson(/* type */true, "question",
@@ -2471,10 +2471,10 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_KUNJI));
 
         // FLW usage
-        Swachchagrahi flw = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         // invoke get user detail API
         StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
@@ -2486,7 +2486,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
         HttpGet httpGet = new HttpGet(sb.toString());
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses
@@ -2540,7 +2540,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
         httpGet = new HttpGet(sb.toString());
 
-        expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 60L, // currentUsageInPulses
@@ -2558,7 +2558,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that status of flw must be set to "Active" when user call first time and
+     * To verify that status of swc must be set to "Active" when user call first time and
      * its information exists in NMS DB and status as "Inactive"
      */
     @Test
@@ -2569,13 +2569,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.MOBILE_KUNJI));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1200000001L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setState(rh.delhiState());
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1200000001L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setState(rh.delhiState());
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         // invoke get user detail API
         StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
@@ -2587,7 +2587,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
         HttpGet httpGet = new HttpGet(sb.toString());
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -2629,13 +2629,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
-        flw = swcService.getByContactNumber(1200000001l);
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getCourseStatus());
+        swc = swcService.getByContactNumber(1200000001l);
+        assertEquals(SwachchagrahiStatus.ACTIVE, swc.getCourseStatus());
     }
 
     /**
-     * To verify that the flw status update audit record is created
-     * along with the change of status of a flw from INACTIVE to ACTIVE
+     * To verify that the swc status update audit record is created
+     * along with the change of status of a swc from INACTIVE to ACTIVE
      * upon calling for first time.
      *
      * @throws IOException
@@ -2649,25 +2649,25 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.MOBILE_ACADEMY));
 
-        Swachchagrahi flw = new Swachchagrahi("Frank Lloyd Wright", 1200000001L);
-        flw.setLanguage(rh.hindiLanguage());
-        flw.setDistrict(rh.newDelhiDistrict());
-        flw.setState(rh.delhiState());
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
-        flw.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(flw);
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1200000001L);
+        swc.setLanguage(rh.hindiLanguage());
+        swc.setDistrict(rh.newDelhiDistrict());
+        swc.setState(rh.delhiState());
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
 
         // invoke get user detail API
         StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
         String sep = "";
-        sb.append(String.format("%s/", "mobileacademy"));
+        sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
         sb.append(String.format("callingNumber=%s", "1200000001"));
         sep = "&";
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
         HttpGet httpGet = new HttpGet(sb.toString());
 
-        String expectedJsonResponse = createFlwUserResponseJson(null, // defaultLanguageLocationCode
+        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -2700,7 +2700,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* endTime */ true, 1222222221l,
                 /* completionFlag */ true, true,
         /* correctAnswerEntered */true, false));
-        HttpPost httpPost = createCallDetailsPost("mobileacademy",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1200000001l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -2716,10 +2716,10 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
-        flw = swcService.getByContactNumber(1200000001l);
-        assertEquals(SwachchagrahiStatus.ACTIVE, flw.getCourseStatus());
+        swc = swcService.getByContactNumber(1200000001l);
+        assertEquals(SwachchagrahiStatus.ACTIVE, swc.getCourseStatus());
         assertEquals(swcStatusUpdateAuditDataService.count(), 1l);
-        List<SwcStatusUpdateAudit> swcStatusUpdateAuditList = swcStatusUpdateAuditDataService.findBySwcId(flw.getSwcId());
+        List<SwcStatusUpdateAudit> swcStatusUpdateAuditList = swcStatusUpdateAuditDataService.findBySwcId(swc.getSwcId());
         assertEquals(swcStatusUpdateAuditList.size(), 1);
 
     }
@@ -2728,7 +2728,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     // Test with empty content
     // Test with invalid callingNumber
     // Test with null callingNumber
-    // Test with no flw for callingNumber
+    // Test with no swc for callingNumber
     // Test with invalid callId
     // Test with missing callId
 }

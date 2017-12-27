@@ -1,7 +1,7 @@
 package org.motechproject.nms.swc.domain;
 
 /**
- * Reason codes for flw sync errors
+ * Reason codes for swc sync errors
  */
 public enum SwcErrorReason {
     PHONE_NUMBER_IN_USE,

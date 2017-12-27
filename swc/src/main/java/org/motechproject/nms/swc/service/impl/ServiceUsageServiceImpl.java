@@ -34,8 +34,8 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
             public List<CallDetailRecord> execute(Query query, InstanceSecurityRestriction restriction) {
                 DateTime monthStart = DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay();
 
-                query.setFilter("swachchagrahi == flw && service == flw_service && callStartTime >= monthStart");
-                query.declareParameters("Swachchagrahi flw, org.joda.time.DateTime monthStart, org.motechproject.nms.props.domain.Service flw_service");
+                query.setFilter("swachchagrahi == swc && service == flw_service && callStartTime >= monthStart");
+                query.declareParameters("Swachchagrahi swc, org.joda.time.DateTime monthStart, org.motechproject.nms.props.domain.Service flw_service");
 
                 return (List<CallDetailRecord>) query.execute(swachchagrahi, monthStart, service);
             }

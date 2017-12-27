@@ -50,9 +50,9 @@ public interface WashAcademyService {
 
     /**
      * Retrigger the sms notification for course completion for user
-     * @param flwId
+     * @param swcId
      */
-    void triggerCompletionNotification(Long flwId);
+    void triggerCompletionNotification(Long swcId);
 
     /**
      * Get scores for a user

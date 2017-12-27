@@ -152,7 +152,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                     Swachchagrahi flwInstance = updateSwc(flw, record, location, SubscriptionOrigin.RCH_IMPORT);
                     swcService.update(flwInstance);
                 } else {
-                    LOGGER.debug("New flw but phone number(update) already in use");
+                    LOGGER.debug("New swc but phone number(update) already in use");
                     swcErrorDataService.create(new SwcError(flwId, (long) record.get(SwcConstants.STATE_ID), (long) record.get(SwcConstants.DISTRICT_ID), SwcErrorReason.PHONE_NUMBER_IN_USE));
                     throw new SwcExistingRecordException("Msisdn already in use.");
                 }
@@ -197,7 +197,7 @@ public class SwcImportServiceImpl implements SwcImportService {
         State state = locationService.getState(stateId);
         if (state == null) {
             swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_STATE));
-//                action = this.flwActionFinder(convertMapToAsha(flw));
+//                action = this.flwActionFinder(convertMapToAsha(swc));
                 flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
             return false;
         }
@@ -237,7 +237,7 @@ public class SwcImportServiceImpl implements SwcImportService {
 
                     if (existingFlwByFlwId.getSwcId().equalsIgnoreCase(existingFlwByNumber.getSwcId()) &&
                             existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) {
-                        // we are trying to update the same existing flw. set fields and update
+                        // we are trying to update the same existing swc. set fields and update
                         LOGGER.debug("Updating existing user with same phone number");
                         swcService.update(SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
                         flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
@@ -250,16 +250,16 @@ public class SwcImportServiceImpl implements SwcImportService {
                         return true;
                     } else {
                         // we are trying to update 2 different users and/or phone number used by someone else
-                        LOGGER.debug("Existing flw but phone number(update) already in use");
+                        LOGGER.debug("Existing swc but phone number(update) already in use");
                         swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
                         flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
                     }
                 } else if (existingFlwByFlwId != null && existingFlwByNumber == null) {
                     // trying to update the phone number of the person. possible migration scenario
-                    // making design decision that flw will lose all progress when phone number is changed. Usage and tracking is not
-                    // worth the effort & we don't really know that its the same flw
-                    LOGGER.debug("Updating phone number for flw");
+                    // making design decision that swc will lose all progress when phone number is changed. Usage and tracking is not
+                    // worth the effort & we don't really know that its the same swc
+                    LOGGER.debug("Updating phone number for swc");
                     long existingContactNumber = existingFlwByFlwId.getContactNumber();
                     Swachchagrahi flwInstance = SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT);
                     updateFlwMaMsisdn(flwInstance, existingContactNumber, contactNumber);
@@ -275,7 +275,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else if (existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
-                        LOGGER.debug("Adding new RCH flw user");
+                        LOGGER.debug("Adding new RCH swc user");
                         Swachchagrahi swachchagrahi = SwcMapper.createRchSwc(flw, location);
                         if (swachchagrahi != null) {
                             swcService.add(swachchagrahi);
@@ -286,7 +286,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         }
                     } else {
                         // phone number used by someone else.
-                        LOGGER.debug("New flw but phone number(update) already in use");
+                        LOGGER.debug("New swc but phone number(update) already in use");
                         swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
                         flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                         return false;
@@ -294,7 +294,7 @@ public class SwcImportServiceImpl implements SwcImportService {
 
                 } else { // existingFlwByMctsFlwId & existingFlwByNumber are null)
                     // new user. set fields and add
-                    LOGGER.debug("Adding new RCH flw user");
+                    LOGGER.debug("Adding new RCH swc user");
                     Swachchagrahi swachchagrahi = SwcMapper.createRchSwc(flw, location);
                     if (swachchagrahi != null) {
                         swcService.add(swachchagrahi);
@@ -348,7 +348,7 @@ public class SwcImportServiceImpl implements SwcImportService {
         if (flw == null && msisdn != null) {
             flw = swcService.getByContactNumber(msisdn);
 
-            // If we loaded the flw by msisdn but the flw we found has a different mcts id
+            // If we loaded the swc by msisdn but the swc we found has a different mcts id
             // then the data needs to be hand corrected since we don't know if the msisdn has changed or
             // if the mcts id has changed.
             if (flw != null && mctsFlwId != null && flw.getSwcId() != null && !mctsFlwId.equals(flw.getSwcId())) {

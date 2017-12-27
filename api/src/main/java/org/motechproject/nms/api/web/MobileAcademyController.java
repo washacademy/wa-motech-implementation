@@ -44,7 +44,7 @@ public class MobileAcademyController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MobileAcademyController.class);
 
-    private static final String SMS_STATUS_SUBJECT = "nms.ma.sms.deliveryStatus";
+    private static final String SMS_STATUS_SUBJECT = "nms.wa.sms.deliveryStatus";
 
     /**
      * MA service to handle all business logic

@@ -107,8 +107,8 @@ public class CallDetailsController extends BaseController {
 
         Swachchagrahi swc = swcService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
         if (null == swc) {
-            // If the flw doesn't exist it is possible they hung up before providing their language.  We
-            // create an anonymous stub flw here
+            // If the swc doesn't exist it is possible they hung up before providing their language.  We
+            // create an anonymous stub swc here
             swc = new Swachchagrahi(callDetailRecordRequest.getCallingNumber());
             swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
             swcService.add(swc);

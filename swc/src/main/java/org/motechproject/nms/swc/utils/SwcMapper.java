@@ -16,7 +16,7 @@ import org.motechproject.nms.region.exception.InvalidLocationException;
 import java.util.Map;
 
 /**
- * Helper class to set flw properties
+ * Helper class to set swc properties
  */
 public final class SwcMapper {
 

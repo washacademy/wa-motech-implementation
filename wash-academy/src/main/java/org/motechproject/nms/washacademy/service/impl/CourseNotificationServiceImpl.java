@@ -32,12 +32,12 @@ import java.util.List;
 @Service("courseNotificationService")
 public class CourseNotificationServiceImpl implements CourseNotificationService {
 
-    private static final String COURSE_COMPLETED_SUBJECT = "nms.ma.course.completed";
-    private static final String SMS_STATUS_SUBJECT = "nms.ma.sms.deliveryStatus";
+    private static final String COURSE_COMPLETED_SUBJECT = "nms.wa.course.completed";
+    private static final String SMS_STATUS_SUBJECT = "nms.wa.sms.deliveryStatus";
     private static final String SMS_RETRY_COUNT = "sms.retry.count";
     private static final String DELIVERY_IMPOSSIBLE = "DeliveryImpossible";
     private static final String RETRY_FLAG = "retry.flag";
-    private static final String FLWID = "flwId";
+    private static final String FLWID = "swcId";
     private static final String SMS_CONTENT = "smsContent";
     private static final String DELIVERY_STATUS = "deliveryStatus";
     private static final String ADDRESS = "address";
@@ -60,7 +60,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
     private SettingsFacade settingsFacade;
 
     /**
-     * Used to get flw information
+     * Used to get swc information
      */
     private SwcService swcService;
 
@@ -72,7 +72,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
     private MotechSchedulerService schedulerService;
 
     /**
-     * Used to pull completion activity for flw
+     * Used to pull completion activity for swc
      */
     private ActivityService activityService;
 
@@ -105,12 +105,12 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         try {
             LOGGER.debug("Handling course completion notification event");
-            Long flwId = (Long) event.getParameters().get(FLWID);
+            Long swcId = (Long) event.getParameters().get(FLWID);
 
-            List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findByFlwId(flwId);
+            List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
             if (ccrs == null || ccrs.isEmpty()) {
                 // this should never be possible since the event dispatcher upstream adds the record
-                LOGGER.error("No completion record found for flwId: " + flwId);
+                LOGGER.error("No completion record found for swcId: " + swcId);
                 return;
             }
 
@@ -121,8 +121,8 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                 ccr.setNotificationRetryCount(ccr.getNotificationRetryCount() + 1);
             }
 
-            String smsContent = buildSmsContent(flwId, ccr);
-            long callingNumber = swcService.getById(flwId).getContactNumber();
+            String smsContent = buildSmsContent(swcId, ccr);
+            long callingNumber = swcService.getById(swcId).getContactNumber();
             ccr.setSentNotification(smsNotificationService.sendSms(callingNumber, smsContent));
             courseCompletionRecordDataService.update(ccr);
         } catch (IllegalStateException se) {
@@ -140,16 +140,16 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         String callingNumber = (String) event.getParameters().get(ADDRESS);
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);
-        Swachchagrahi flw = swcService.getByContactNumber(Long.parseLong(callingNumber));
-        Long flwId = null;
-        if (flw != null) {
-             flwId= flw.getId();
+        Swachchagrahi swc = swcService.getByContactNumber(Long.parseLong(callingNumber));
+        Long swcId = null;
+        if (swc != null) {
+             swcId= swc.getId();
         }
-        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findByFlwId(flwId);
+        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
 
         if (ccrs == null || ccrs.isEmpty()) {
             // this should never be possible since the event dispatcher upstream adds the record
-            LOGGER.error("No completion record found for flwId: " + flwId);
+            LOGGER.error("No completion record found for swcId: " + swcId);
             return;
         }
         CourseCompletionRecord ccr = ccrs.get(ccrs.size() - 1);
@@ -168,9 +168,9 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                 ccr.getNotificationRetryCount() < Integer.parseInt(settingsFacade.getProperty(SMS_RETRY_COUNT))) {
 
             try {
-                String smsContent = buildSmsContent(flwId, ccr);
+                String smsContent = buildSmsContent(swcId, ccr);
                 MotechEvent retryEvent = new MotechEvent(COURSE_COMPLETED_SUBJECT);
-                retryEvent.getParameters().put(FLWID, flwId);
+                retryEvent.getParameters().put(FLWID, swcId);
                 retryEvent.getParameters().put(SMS_CONTENT, smsContent);
                 retryEvent.getParameters().put(RETRY_FLAG, true);
 
@@ -196,23 +196,23 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
     }
 
     /**
-     * Helper to generate the completion sms content for an flw
-     * @param flwId calling number of the flw
-     * @return localized sms content based on flw preferences or national default otherwise
+     * Helper to generate the completion sms content for an swc
+     * @param swcId calling number of the swc
+     * @return localized sms content based on swc preferences or national default otherwise
      */
-    private String buildSmsContent(Long flwId, CourseCompletionRecord ccr) {
+    private String buildSmsContent(Long swcId, CourseCompletionRecord ccr) {
 
-        Swachchagrahi flw = swcService.getById(flwId);
+        Swachchagrahi swc = swcService.getById(swcId);
         String locationCode = "XX"; // unknown location id
         String smsLanguageProperty = null;
 
-        if (flw == null) {
-            throw new IllegalStateException("Unable to find flw for flwId: " + flwId);
+        if (swc == null) {
+            throw new IllegalStateException("Unable to find swc for swcId: " + swcId);
         }
 
         // Build location code
-        if (flw.getState() != null && flw.getDistrict() != null) {
-            locationCode = flw.getState().getCode().toString() + flw.getDistrict().getCode();
+        if (swc.getState() != null && swc.getDistrict() != null) {
+            locationCode = swc.getState().getCode().toString() + swc.getDistrict().getCode();
         }
 
         if (smsLanguageProperty == null || smsLanguageProperty.isEmpty()) {
@@ -223,11 +223,11 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         // fetch sms content
         String smsContent = settingsFacade.getProperty(SMS_CONTENT_PREFIX + smsLanguageProperty);
         if (smsContent == null) {
-            throw new IllegalStateException("Unable to get sms content for flw language: " +
+            throw new IllegalStateException("Unable to get sms content for swc language: " +
                     SMS_CONTENT_PREFIX + smsLanguageProperty);
         }
 
-        Long callingNumber = flw.getContactNumber();
+        Long callingNumber = swc.getContactNumber();
         int attempts = activityService.getCompletedActivityForUser(callingNumber.toString()).size();
         String smsReferenceNumber = locationCode + callingNumber + attempts;
         ccr.setSmsReferenceNumber(smsReferenceNumber);

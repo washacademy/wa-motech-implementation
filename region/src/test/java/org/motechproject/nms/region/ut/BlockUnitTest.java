@@ -84,24 +84,24 @@ public class BlockUnitTest {
         assertEquals("may not be null", constraintViolations.iterator().next().getMessage());
     }
 
-    @Test
-    public void testCodeSize() {
-        Block block = new Block();
-        block.setCode((long)00000001);
-
-        Set<ConstraintViolation<Block>> constraintViolations = validator
-                .validateProperty(block, "code");
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
-
-        block.setCode(null);
-
-        constraintViolations = validator.validateProperty(block, "code");
-
-        assertEquals(1, constraintViolations.size());
-        assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
-    }
+//    @Test
+//    public void testCodeSize() {
+//        Block block = new Block();
+//        block.setCode((long)00000001);
+//
+//        Set<ConstraintViolation<Block>> constraintViolations = validator
+//                .validateProperty(block, "code");
+//
+//        assertEquals(1, constraintViolations.size());
+//        assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
+//
+//        block.setCode(null);
+//
+//        constraintViolations = validator.validateProperty(block, "code");
+//
+//        assertEquals(1, constraintViolations.size());
+//        assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
+//    }
 
     @Test
     public void testDistrictNull() {
