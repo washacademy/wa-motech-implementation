@@ -63,19 +63,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     @Inject
     BlockImportService blockImportService;
     @Inject
-    NonCensusPanchayatImportService nonCensusPanchayatImportService;
-    @Inject
-<<<<<<< HEAD
-    CensusPanchayatImportService censusPanchayatImportService;
-=======
     PanchayatImportService panchayatImportService;
-    @Inject
-    HealthBlockImportService healthBlockImportService;
-    @Inject
-    HealthFacilityImportService healthFacilityImportService;
-    @Inject
-    HealthSubFacilityImportService healthSubFacilityImportService;
->>>>>>> e9ef806257fb7bfcfa15a6a46c515323f0d313e2
 
     
     State exampleState;
@@ -106,7 +94,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         exampleDistrict = createDistrict(exampleState, 2L, "EXAMPLE DISTRICT");
         districtDataService.create(exampleDistrict);
 
-        exampleBlock = createTaluka(exampleDistrict, "00003", "EXAMPLE TALUKA", 1);
+        exampleBlock = createTaluka(exampleDistrict, (long)00003, "EXAMPLE TALUKA", 1);
         blockDataService.create(exampleBlock);
 
 //        HealthFacilityType facilityType = createHealthFacilityType("EXAMPLE FACILITY TYPE", 5678L);
@@ -148,24 +136,24 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         assertEquals("census panchayat regional name", censusPanchayat.getRegionalName());
         assertNotNull(censusPanchayat.getBlock());
 
-        nonCensusPanchayatImportService.importData(read("csv/non_census_village_associated.csv"));
-        Panchayat nonCensusPanchayatAssociated = panchayatService.findByBlockAndVcodeAndSvid(block, 3L, 4L);
-        assertNotNull(nonCensusPanchayatAssociated);
-        assertEquals(4L, nonCensusPanchayatAssociated.getSvid());
-        assertEquals("non census panchayat associated name", nonCensusPanchayatAssociated.getName());
-        assertEquals("non census panchayat associated regional name", nonCensusPanchayatAssociated.getRegionalName());
-        assertNotNull(nonCensusPanchayatAssociated.getBlock());
-        assertEquals(3L, nonCensusPanchayatAssociated.getVcode());
-
-        nonCensusPanchayatImportService.importData(read("csv/non_census_village_non_associated.csv"));
-        Panchayat nonCensusPanchayatNonAssociated = panchayatService.findByBlockAndVcodeAndSvid(block, 0L, 5L);
-        assertNotNull(nonCensusPanchayatNonAssociated);
-        assertEquals(5L, nonCensusPanchayatNonAssociated.getSvid());
-        assertEquals("non census panchayat non associated name", nonCensusPanchayatNonAssociated.getName());
-        assertEquals("non census panchayat non associated regional name",
-                nonCensusPanchayatNonAssociated.getRegionalName());
-        assertNotNull(nonCensusPanchayatNonAssociated.getBlock());
-        assertEquals(0, nonCensusPanchayatNonAssociated.getVcode());
+//        nonCensusPanchayatImportService.importData(read("csv/non_census_village_associated.csv"));
+//        Panchayat nonCensusPanchayatAssociated = panchayatService.findByBlockAndVcodeAndSvid(block, 3L, 4L);
+//        assertNotNull(nonCensusPanchayatAssociated);
+//        assertEquals(4L, nonCensusPanchayatAssociated.getSvid());
+//        assertEquals("non census panchayat associated name", nonCensusPanchayatAssociated.getName());
+//        assertEquals("non census panchayat associated regional name", nonCensusPanchayatAssociated.getRegionalName());
+//        assertNotNull(nonCensusPanchayatAssociated.getBlock());
+//        assertEquals(3L, nonCensusPanchayatAssociated.getVcode());
+//
+//        nonCensusPanchayatImportService.importData(read("csv/non_census_village_non_associated.csv"));
+//        Panchayat nonCensusPanchayatNonAssociated = panchayatService.findByBlockAndVcodeAndSvid(block, 0L, 5L);
+//        assertNotNull(nonCensusPanchayatNonAssociated);
+//        assertEquals(5L, nonCensusPanchayatNonAssociated.getSvid());
+//        assertEquals("non census panchayat non associated name", nonCensusPanchayatNonAssociated.getName());
+//        assertEquals("non census panchayat non associated regional name",
+//                nonCensusPanchayatNonAssociated.getRegionalName());
+//        assertNotNull(nonCensusPanchayatNonAssociated.getBlock());
+//        assertEquals(0, nonCensusPanchayatNonAssociated.getVcode());
 
     }
 

@@ -3,13 +3,13 @@ package org.motechproject.nms.api.web.service.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
+import org.motechproject.nms.region.repository.PanchayatDataService;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.swc.domain.RejectionReasons;
 import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.motechproject.nms.swc.utils.SwcConstants;
 import org.motechproject.nms.props.service.LogHelper;
-import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
 import org.motechproject.nms.rejectionhandler.service.SwcRejectionService;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     private SwcService swcService;
 
     @Autowired
-    private StateDataService stateDataService;
+    private PanchayatDataService panchayatDataService;
 
     @Autowired
     private SwcImportService swcImportService;
@@ -115,7 +115,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
 
     private String rchFlwActionFinder(AddSwcRequest record) {
-        if (swcService.getByMctsFlwIdAndState(record.getSwcId(), stateDataService.findByCode(record.getStateId())) == null) {
+        if (swcService.getByMctsFlwIdAndPanchayat(record.getSwcId(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";

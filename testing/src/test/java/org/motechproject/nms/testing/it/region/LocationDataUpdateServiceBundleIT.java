@@ -87,7 +87,7 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
     private Block createTaluka(District district) {
         Block block = new Block();
         block.setDistrict(district);
-        block.setCode("TALUKA");
+        block.setCode((long)0001);
         block.setName("block name");
         block.setRegionalName("block regional name");
         block.setIdentity(2);
@@ -444,7 +444,7 @@ public class LocationDataUpdateServiceBundleIT extends BasePaxIT {
         // add block
         Block originalBlock = new Block();
         originalBlock.setDistrict(district);
-        originalBlock.setCode("TALUKA");
+        originalBlock.setCode((long)0001);
         originalBlock.setName("name");
         originalBlock.setRegionalName("rn");
         originalBlock.setIdentity(2);

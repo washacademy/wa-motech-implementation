@@ -24,7 +24,5 @@ public interface RchWsImportService {
     void importFromRch(List<Long> stateIds, LocalDate referenceDate, URL endpoint);
 
     // TEST HOOK ONLY. Do not call directly in production.
-    void importRchMothersData(MotechEvent motechEvent);
-    void importRchChildrenData(MotechEvent motechEvent);
     void importRchAshaData(MotechEvent motechEvent);
 }

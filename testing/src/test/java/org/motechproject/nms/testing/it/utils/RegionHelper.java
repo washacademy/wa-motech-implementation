@@ -264,7 +264,7 @@ public class RegionHelper {
         return new Language(code, name);
     }
 
-    public static Block createTaluka(District district, String code, String name, int identity) {
+    public static Block createTaluka(District district, Long code, String name, int identity) {
         Block block = new Block();
         block.setDistrict(district);
         block.setCode(code);

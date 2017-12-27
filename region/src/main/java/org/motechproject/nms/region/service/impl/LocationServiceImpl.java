@@ -105,7 +105,7 @@ public class LocationServiceImpl implements LocationService {
         Block block = blockService.findByDistrictAndCode(district, (String) map.get(BLOCK_ID));
         if (block == null && createIfNotExists) {
             block = new Block();
-            block.setCode((String) map.get(BLOCK_ID));
+            block.setCode((Long) map.get(BLOCK_ID));
             block.setName((String) map.get(BLOCK_NAME));
             block.setDistrict(district);
             district.getBlocks().add(block);

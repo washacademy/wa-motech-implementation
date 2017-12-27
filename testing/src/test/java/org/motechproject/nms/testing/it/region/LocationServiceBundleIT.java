@@ -80,7 +80,7 @@ public class LocationServiceBundleIT extends BasePaxIT {
         block.setName("Block 1");
         block.setRegionalName("Block 1");
         block.setIdentity(1);
-        block.setCode("0004");
+        block.setCode((long)0004);
         block.getPanchayats().add(panchayat);
 
         district = new District();
@@ -189,7 +189,7 @@ public class LocationServiceBundleIT extends BasePaxIT {
         otherBlock.setRegionalName("Block 2");
         otherBlock.setDistrict(district);
         otherBlock.setIdentity(2);
-        otherBlock.setCode("0005");
+        otherBlock.setCode((long)0005);
         blockDataService.create(otherBlock);
 
         Panchayat otherPanchayat = new Panchayat();

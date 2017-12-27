@@ -76,77 +76,12 @@ public class RchWsImportServiceImpl implements RchWsImportService {
         }
 
         for (Long stateId : stateIds) {
-            sendImportEventForAUserType(stateId, RchUserType.MOTHER, referenceDate, endpoint, Constants.RCH_MOTHER_IMPORT_SUBJECT);
-            sendImportEventForAUserType(stateId, RchUserType.CHILD, referenceDate, endpoint, Constants.RCH_CHILD_IMPORT_SUBJECT);
             sendImportEventForAUserType(stateId, RchUserType.ASHA, referenceDate, endpoint, Constants.RCH_ASHA_IMPORT_SUBJECT);
         }
 
         LOGGER.info("Initiated import workflow from RCH for mothers and children");
     }
 
-    @MotechListener(subjects = { Constants.RCH_MOTHER_IMPORT_SUBJECT })
-    @Transactional
-    @Override
-    public void importRchMothersData(MotechEvent motechEvent) {
-        Long stateId = (Long) motechEvent.getParameters().get(Constants.STATE_ID_PARAM);
-        LocalDate startDate = (LocalDate) motechEvent.getParameters().get(Constants.START_DATE_PARAM);
-        LocalDate endDate = (LocalDate) motechEvent.getParameters().get(Constants.END_DATE_PARAM);
-        URL endpoint = (URL) motechEvent.getParameters().get(Constants.ENDPOINT_PARAM);
-
-        State state = stateDataService.findByCode(stateId);
-        if (state == null) {
-            String error = String.format("State with code %s doesn't exist in database. Skipping RCH Mother import for this state", stateId);
-            LOGGER.error(error);
-            rchImportAuditDataService.create(new RchImportAudit(startDate, endDate, RchUserType.MOTHER, stateId, null, 0, 0, error));
-            return;
-        }
-
-        String stateName = state.getName();
-        Long stateCode = state.getCode();
-        try {
-            if (rchWebServiceFacade.getMothersData(startDate, endDate, endpoint, stateId)) {
-                LOGGER.info("RCH Responses for state id {} recorded to file successfully.", stateId);
-            }
-        } catch (RchWebServiceException e) {
-            String error = String.format("Cannot read RCH mothers data from %s state with state id: %d", stateName, stateId);
-            LOGGER.error(error, e);
-            alertService.create(RCH_WEB_SERVICE, "RCH Web Service Mother Import", e
-                    .getMessage() + " " + error, AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-            rchImportAuditDataService.create(new RchImportAudit(startDate, endDate, RchUserType.MOTHER, stateCode, stateName, 0, 0, error));
-            rchImportFailRecordDataService.create(new RchImportFailRecord(endDate, RchUserType.MOTHER, stateId));
-        }
-    }
-
-    @MotechListener(subjects = { Constants.RCH_CHILD_IMPORT_SUBJECT })
-    @Transactional
-    public void importRchChildrenData(MotechEvent motechEvent) {
-        Long stateId = (Long) motechEvent.getParameters().get(Constants.STATE_ID_PARAM);
-        LocalDate startReferenceDate = (LocalDate) motechEvent.getParameters().get(Constants.START_DATE_PARAM);
-        LocalDate endReferenceDate = (LocalDate) motechEvent.getParameters().get(Constants.END_DATE_PARAM);
-        URL endpoint = (URL) motechEvent.getParameters().get(Constants.ENDPOINT_PARAM);
-
-        State state = stateDataService.findByCode(stateId);
-        if (state == null) {
-            String error = String.format("State with code %s does not exist in database. Skipping RCH Children import for this state", stateId);
-            LOGGER.error(error);
-            rchImportAuditDataService.create(new RchImportAudit(startReferenceDate, endReferenceDate, RchUserType.CHILD, stateId, null, 0, 0, error));
-            return;
-        }
-        String stateName = state.getName();
-        Long stateCode = state.getCode();
-        try {
-
-            if (rchWebServiceFacade.getChildrenData(startReferenceDate, endReferenceDate, endpoint, stateId)) {
-                LOGGER.info("RCH Child responses for state id {} recorded to file successfully.");
-            }
-        } catch (RchWebServiceException e) {
-            String error = String.format("Cannot read RCH children data from %s state with state id: %d", stateName, stateCode);
-            LOGGER.error(error, e);
-            alertService.create(RCH_WEB_SERVICE, "RCH Web Service Child Import", e.getMessage() + " " + error, AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-            rchImportAuditDataService.create(new RchImportAudit(startReferenceDate, endReferenceDate, RchUserType.CHILD, stateCode, stateName, 0, 0, error));
-            rchImportFailRecordDataService.create(new RchImportFailRecord(endReferenceDate, RchUserType.CHILD, stateId));
-        }
-    }
 
     @MotechListener(subjects = { Constants.RCH_ASHA_IMPORT_SUBJECT })
     @Transactional

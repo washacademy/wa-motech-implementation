@@ -18,10 +18,10 @@ public final class RejectedObjectConverter {
         swcImportRejection.setMsisdn(record.getMobileNo());
         swcImportRejection.setSource("RCH-Import");
         swcImportRejection.setAccepted(accepted);
-        swcImportRejection.setBlockId(record.getHealthBlockId());
-        swcImportRejection.setBlockName(record.getHealthBlockName());
-        swcImportRejection.setPanchayatId(record.getPhcId());
-        swcImportRejection.setPanchayatName(record.getPhcName());
+        swcImportRejection.setBlockId(record.getBlockId());
+        swcImportRejection.setBlockName(record.getBlockName());
+        swcImportRejection.setPanchayatId(record.getPanchayatId());
+        swcImportRejection.setPanchayatName(record.getPanchayatName());
         swcImportRejection.setSwcID(record.getGfId());
         swcImportRejection.setRejectionReason(rejectionReason);
         swcImportRejection.setAction(action);

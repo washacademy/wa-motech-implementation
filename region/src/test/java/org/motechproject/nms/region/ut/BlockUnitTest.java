@@ -87,7 +87,7 @@ public class BlockUnitTest {
     @Test
     public void testCodeSize() {
         Block block = new Block();
-        block.setCode("00000001");
+        block.setCode((long)00000001);
 
         Set<ConstraintViolation<Block>> constraintViolations = validator
                 .validateProperty(block, "code");
@@ -95,7 +95,7 @@ public class BlockUnitTest {
         assertEquals(1, constraintViolations.size());
         assertEquals("size must be between 1 and 7", constraintViolations.iterator().next().getMessage());
 
-        block.setCode("");
+        block.setCode(null);
 
         constraintViolations = validator.validateProperty(block, "code");
 

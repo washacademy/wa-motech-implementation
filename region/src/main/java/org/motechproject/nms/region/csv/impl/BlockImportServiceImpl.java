@@ -49,7 +49,7 @@ public class BlockImportServiceImpl extends BaseLocationImportService<Block>
 
     @Override
     protected void createOrUpdateInstance(Block instance) {
-        Block existing = blockService.findByDistrictAndCode(instance.getDistrict(), instance.getCode());
+        Block existing = blockService.findByDistrictAndCode(instance.getDistrict(), instance.getCode().toString());
 
         if (existing != null) {
             existing.setIdentity(instance.getIdentity());

@@ -8,6 +8,7 @@ import org.motechproject.nms.csv.utils.GetInstanceByLong;
 import org.motechproject.nms.csv.utils.GetInstanceByString;
 import org.motechproject.nms.csv.utils.GetLong;
 import org.motechproject.nms.csv.utils.GetString;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.service.SwcUpdateImportService;
@@ -147,7 +148,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
 
         String nmsFlWId = (String) record.get(NMS_FLW_ID);
         String mctsFlwId = (String) record.get(MCTS_FLW_ID);
-        State state = (State) record.get(STATE);
+        Panchayat state = (Panchayat) record.get(STATE);
         Long msisdn = (Long) record.get(MSISDN);
 
         if (nmsFlWId != null) {
@@ -155,7 +156,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         }
 
         if (flw == null && mctsFlwId != null) {
-            flw = swcService.getByMctsFlwIdAndState(mctsFlwId, state);
+            flw = swcService.getByMctsFlwIdAndPanchayat(mctsFlwId, state);
         }
 
         if (flw == null && msisdn != null) {

@@ -91,7 +91,7 @@ public class CircleServiceBundleIT extends BasePaxIT {
         block.setName("Block 1");
         block.setRegionalName("Block 1");
         block.setIdentity(1);
-        block.setCode("0004");
+        block.setCode((long)0004);
         block.getPanchayats().add(panchayat);
 
         district = new District();

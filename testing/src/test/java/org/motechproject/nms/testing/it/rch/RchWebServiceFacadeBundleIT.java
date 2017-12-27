@@ -76,7 +76,7 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
         Block block = new Block();
         block.setRegionalName("Block Regional");
         block.setName("Taluka_Name 1");
-        block.setCode("0046");
+        block.setCode((long)0046);
         block.setIdentity(55);
 
         block.setDistrict(district);
@@ -103,43 +103,6 @@ public class RchWebServiceFacadeBundleIT extends BasePaxIT {
         subscriptionPackDataService.create(childPack);
     }
 
-    @Test
-    @Ignore
-    public void shouldSerializeMothersDataFromSoapResponse() throws IOException {
-        String response = RchImportTestHelper.getRchMothersResponseData();
-
-        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
-        String url = simpleServer.start("rchEndpoint", 200, response);
-
-        URL endpoint = new URL(url);
-        LocalDate referenceDate = LocalDate.now().minusDays(1);
-
-        //TODO resolve problem with class loader
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(rchWebServiceFacade.getClass().getClassLoader());
-        boolean status = rchWebServiceFacade.getMothersData(referenceDate, referenceDate, endpoint, 21l);
-        Thread.currentThread().setContextClassLoader(cl);
-
-        assertTrue(status);
-    }
-
-    @Test
-    @Ignore
-    public void shouldSerializeChildrenDataFromSoapResponse() throws IOException {
-        String response = RchImportTestHelper.getRchChildrenResponseData();
-
-        SimpleHttpServer simpleServer = SimpleHttpServer.getInstance();
-        String url = simpleServer.start("rchEndpoint", 200, response);
-
-        URL endpoint = new URL(url);
-        LocalDate referenceDate = LocalDate.now().minusDays(1);
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(rchWebServiceFacade.getClass().getClassLoader());
-        boolean status = rchWebServiceFacade.getChildrenData(referenceDate, referenceDate, endpoint, 21l);
-        Thread.currentThread().setContextClassLoader(cl);
-
-        assertTrue(status);
-    }
 
     @Test
     @Ignore

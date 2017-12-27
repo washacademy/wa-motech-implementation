@@ -3,6 +3,7 @@ package org.motechproject.nms.swc.service;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.mds.annotations.InstanceLifecycleListener;
 import org.motechproject.mds.annotations.InstanceLifecycleListenerType;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.region.domain.State;
 
@@ -23,7 +24,7 @@ public interface SwcService {
 
     Swachchagrahi getBySwcId(String swcId);
 
-    Swachchagrahi getByMctsFlwIdAndState(String mctsFlwId, State state);
+    Swachchagrahi getByMctsFlwIdAndPanchayat(String mctsFlwId, Panchayat state);
 
     Swachchagrahi getById(Long id);
 

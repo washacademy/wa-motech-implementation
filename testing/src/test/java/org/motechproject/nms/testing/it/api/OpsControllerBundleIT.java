@@ -15,6 +15,7 @@ import org.motechproject.mtraining.domain.ActivityState;
 import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.BookmarkService;
+import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.swc.domain.SwcError;
 import org.motechproject.nms.swc.domain.SwcErrorReason;
 import org.motechproject.nms.swc.domain.SwcJobStatus;
@@ -155,16 +156,16 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
     // Test flw update with empty flw request
     @Test
-    public void testEmptyAddFlwRequest() throws IOException, InterruptedException {
-        HttpPost request = RequestBuilder.createPostRequest(addFlwEndpoint, new AddFlwRequest());
+    public void testEmptyAddSwcRequest() throws IOException, InterruptedException {
+        HttpPost request = RequestBuilder.createPostRequest(addFlwEndpoint, new AddSwcRequest());
         assertTrue(SimpleHttpClient.execHttpRequest(request, HttpStatus.SC_BAD_REQUEST, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
     }
 
     // flw udpate failes with not all required fields present
     @Test
-    public void testBadContactNumberAddFlwRequest() throws IOException, InterruptedException {
-        AddFlwRequest addRequest = new AddFlwRequest();
-        addRequest.setContactNumber(9876543210L);
+    public void testBadContactNumberAddSwcRequest() throws IOException, InterruptedException {
+        AddSwcRequest addRequest = new AddSwcRequest();
+        addRequest.setMsisdn(9876543210L);
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_BAD_REQUEST, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
     }
@@ -172,7 +173,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     // Create valid new flw
     @Test
     public void testCreateNewFlw() throws IOException, InterruptedException {
-        AddFlwRequest addFlwRequest = getAddRequestASHA();
+        AddSwcRequest addFlwRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
     }
@@ -180,7 +181,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     // Validating whether the type is ASHA or not
     @Test
     public void testASHAValidation() throws IOException, InterruptedException {
-        AddFlwRequest addFlwRequest = getAddRequestANM();
+        AddSwcRequest addFlwRequest = getAddRequestANM();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertFalse(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
     }
@@ -189,7 +190,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testInactiveGfValidation() throws IOException, InterruptedException {
         stateDataService.create(state);
         districtDataService.create(district);
-        AddFlwRequest addFlwRequest = getAddRequestInactiveGfStatus();
+        AddSwcRequest addFlwRequest = getAddRequestInactiveGfStatus();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
         Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
@@ -200,7 +201,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testInactiveGfUpdate() throws IOException, InterruptedException {
         stateDataService.create(state);
         districtDataService.create(district);
-        AddFlwRequest addFlwRequest = getAddRequestASHA();
+        AddSwcRequest addFlwRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
         Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
@@ -223,9 +224,9 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertNull(flw.getBlock());    // null since we don't create it by default in helper
         assertNull(flw.getPanchayat());   // null since we don't create it by default in helper
 
-        AddFlwRequest addFlwRequest = getAddRequestASHA();
-        addFlwRequest.setTalukaId(block.getCode());
-        addFlwRequest.setVillageId(panchayat.getVcode());
+        AddSwcRequest addFlwRequest = getAddRequestASHA();
+        addFlwRequest.setBlockId(block.getCode());
+        addFlwRequest.setPanchayatId(panchayat.getVcode());
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
@@ -242,7 +243,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testCheckPhoneNumber() throws IOException, InterruptedException {
 
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        AddFlwRequest addFlwRequest = getAddRequestASHAInvalid();
+        AddSwcRequest addFlwRequest = getAddRequestASHAInvalid();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_BAD_REQUEST, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
         transactionManager.commit(status);
@@ -258,7 +259,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw
         createFlwHelper("Kookoo Devi", 9876543210L, "123");
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
+        AddSwcRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
         Swachchagrahi flw = swcService.getByContactNumber(9876543210L);
@@ -273,8 +274,8 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw
         createFlwHelper("Chinkoo Devi", 9876543210L, "123");
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
-        updateRequest.setContactNumber(9876543211L);    // update
+        AddSwcRequest updateRequest = getAddRequestASHA();
+        updateRequest.setMsisdn(9876543211L);    // update
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
     }
@@ -288,7 +289,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         long before = swcErrorDataService.count();
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
+        AddSwcRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
@@ -297,7 +298,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertEquals("No new expected flw error created", before + 1, after);
 
         List<SwcError> swcErrors = swcErrorDataService.findBySwcId(
-                updateRequest.getMctsFlwId(),
+                updateRequest.getSwcId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
@@ -312,12 +313,12 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw with null mcts id
         createFlwHelper("Chinkoo Devi", 9876543210L, null);
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
+        AddSwcRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
         Swachchagrahi flwByNumber = swcService.getByContactNumber(9876543210L);
-        assertEquals("Anonymous user was not merged", updateRequest.getMctsFlwId(), flwByNumber.getSwcId());
+        assertEquals("Anonymous user was not merged", updateRequest.getSwcId(), flwByNumber.getSwcId());
     }
 
 
@@ -329,7 +330,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         long before = swcErrorDataService.count();
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
+        AddSwcRequest updateRequest = getAddRequestASHA();
         updateRequest.setStateId(5L);    // 5 doesn't exist since setup only creates state '1'
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
@@ -339,7 +340,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertEquals("No new expected flw error created", before + 1, after);
 
         List<SwcError> swcErrors = swcErrorDataService.findBySwcId(
-                updateRequest.getMctsFlwId(),
+                updateRequest.getSwcId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
@@ -355,7 +356,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         long before = swcErrorDataService.count();
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
+        AddSwcRequest updateRequest = getAddRequestASHA();
         updateRequest.setDistrictId(5L);    // 5 doesn't exist since setup only creates district '1'
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
@@ -365,7 +366,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertEquals("No new expected flw error created", before + 1, after);
 
         List<SwcError> swcErrors = swcErrorDataService.findBySwcId(
-                updateRequest.getMctsFlwId(),
+                updateRequest.getSwcId(),
                 updateRequest.getStateId(),
                 updateRequest.getDistrictId());
 
@@ -422,7 +423,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         // create flw with null mcts id
         createFlwHelper("Chinkoo Devi", 9876543210L, null);
 
-        AddFlwRequest updateRequest = getAddRequestASHA();
+        AddSwcRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
@@ -449,52 +450,48 @@ public class OpsControllerBundleIT extends BasePaxIT {
     }
 
     // helper to create a valid flw add/update request with designation ASHA
-    private AddFlwRequest getAddRequestASHA() {
-        AddFlwRequest request = new AddFlwRequest();
-        request.setContactNumber(9876543210L);
+    private AddSwcRequest getAddRequestASHA() {
+        AddSwcRequest request = new AddSwcRequest();
+        request.setMsisdn(9876543210L);
         request.setName("Chinkoo Devi");
-        request.setMctsFlwId("123");
+        request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setType("ASHA");
         request.setGfStatus("Active");
         return request;
     }
 
     // helper to create a invalid flw add/update request with designation ASHA
-    private AddFlwRequest getAddRequestASHAInvalid() {
-        AddFlwRequest request = new AddFlwRequest();
-        request.setContactNumber(987643210L);
+    private AddSwcRequest getAddRequestASHAInvalid() {
+        AddSwcRequest request = new AddSwcRequest();
+        request.setMsisdn(987643210L);
         request.setName("Chinkoo Devi");
-        request.setMctsFlwId("123");
+        request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setType("ASHA");
         request.setGfStatus("Active");
         return request;
     }
 
     // helper to create an flw add/update request with designation ANM
-    private AddFlwRequest getAddRequestANM() {
-        AddFlwRequest request = new AddFlwRequest();
-        request.setContactNumber(9876543210L);
+    private AddSwcRequest getAddRequestANM() {
+        AddSwcRequest request = new AddSwcRequest();
+        request.setMsisdn(9876543210L);
         request.setName("Chinkoo Devi");
-        request.setMctsFlwId("123");
+        request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setType("ANM");
         request.setGfStatus("Active");
         return request;
     }
 
-    private AddFlwRequest getAddRequestInactiveGfStatus() {
-            AddFlwRequest request = new AddFlwRequest();
-            request.setContactNumber(9876543210L);
+    private AddSwcRequest getAddRequestInactiveGfStatus() {
+            AddSwcRequest request = new AddSwcRequest();
+            request.setMsisdn(9876543210L);
             request.setName("Chinkoo Devi");
-            request.setMctsFlwId("123");
+            request.setSwcId("123");
             request.setStateId(state.getCode());
             request.setDistrictId(district.getCode());
-            request.setType("ASHA");
             request.setGfStatus("Inactive");
             return request;
     }
@@ -514,7 +511,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         block.setName("Block 1");
         block.setRegionalName("Block 1");
         block.setIdentity(1);
-        block.setCode("0004");
+        block.setCode((long)0004);
         block.getPanchayats().add(panchayat);
 
         district = new District();
@@ -650,7 +647,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         stateDataService.create(state);
         transactionManager.commit(status);
-        AddFlwRequest addFlwRequest = getAddRequestASHA();
+        AddSwcRequest addFlwRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, addFlwRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
@@ -674,13 +671,12 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertEquals(1, ncrs.size());
 
         // Update Msisdn and verify MA records
-        AddFlwRequest request = new AddFlwRequest();
-        request.setContactNumber(7896543210L);
+        AddSwcRequest request = new AddSwcRequest();
+        request.setMsisdn(7896543210L);
         request.setName("Chinkoo Devi");
-        request.setMctsFlwId("123");
+        request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setType("ASHA");
         request.setGfStatus("Active");
         httpRequest = RequestBuilder.createPostRequest(addFlwEndpoint, request);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));

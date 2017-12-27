@@ -9,6 +9,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
 import org.motechproject.nms.swc.domain.SwcJobStatus;
@@ -169,10 +170,10 @@ public class SwcServiceImpl implements SwcService {
     }
 
     @Override
-    public Swachchagrahi getByMctsFlwIdAndState(final String mctsFlwId, final State state) {
-        if (mctsFlwId == null || state == null) {
-            LOGGER.error(String.format("Attempt to look up SWC by a null mctsFlwId (%s) or state (%s)",
-                    mctsFlwId, state == null ? "null" : state.getName()));
+    public Swachchagrahi getByMctsFlwIdAndPanchayat(final String mctsFlwId, final Panchayat panchayat) {
+        if (mctsFlwId == null || panchayat == null) {
+            LOGGER.error(String.format("Attempt to look up SWC by a null mctsFlwId (%s) or panchayat (%s)",
+                    mctsFlwId, panchayat == null ? "null" : panchayat.getName()));
             return null;
         }
 
@@ -180,12 +181,12 @@ public class SwcServiceImpl implements SwcService {
         QueryExecution<Swachchagrahi> queryExecution = new QueryExecution<Swachchagrahi>() {
             @Override
             public Swachchagrahi execute(Query query, InstanceSecurityRestriction restriction) {
-                query.setFilter("mctsFlwId == _mctsFlwId && state == _state");
-                query.declareParameters("String _mctsFlwId, org.motechproject.nms.region.domain.State _state");
+                query.setFilter("mctsFlwId == _mctsFlwId && panchayat == _panchayat");
+                query.declareParameters("String _mctsFlwId, org.motechproject.nms.region.domain.Panchayat _panchayat");
                 query.setClass(Swachchagrahi.class);
                 query.setUnique(true);
 
-                return (Swachchagrahi) query.execute(mctsFlwId, state);
+                return (Swachchagrahi) query.execute(mctsFlwId, panchayat);
             }
         };
 

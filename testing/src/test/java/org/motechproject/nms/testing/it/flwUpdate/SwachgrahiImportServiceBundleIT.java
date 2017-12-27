@@ -21,7 +21,7 @@ import org.motechproject.nms.swc.repository.ContactNumberAuditDataService;
 import org.motechproject.nms.swc.repository.SwcDataService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.swc.service.SwcService;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
+import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.motechproject.nms.mobileacademy.dto.MaBookmark;
 import org.motechproject.nms.mobileacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.nms.mobileacademy.service.MobileAcademyService;
@@ -64,10 +64,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createCircle;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createDistrict;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthBlock;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthFacility;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthFacilityType;
-import static org.motechproject.nms.testing.it.utils.RegionHelper.createHealthSubFacility;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createLanguage;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createState;
 import static org.motechproject.nms.testing.it.utils.RegionHelper.createTaluka;
@@ -140,14 +136,14 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         District bargarh = createDistrict(state1, 1L, "Bargarh");
         District puri = createDistrict(state1, 18L, "Puri");
 
-        Block similiguda = createTaluka(kuraput, "0463", "Similiguda", 1);
-        Block Phulabani = createTaluka(kandhamal, "0360", "Phulabani Town", 1);
-        Block kotagarh = createTaluka(kandhamal, "0371", "Kotagarh", 1);
-        Block digapahandi = createTaluka(ganjam, "0343", "DIGAPAHANDI", 1);
-        Block lakhanpur = createTaluka(jharsuguda, "0017", "Lakhanpur P.S.", 1);
-        Block baliguda = createTaluka(kandhamal, "0367", "Baliguda", 1);
-        Block bhatli = createTaluka(bargarh, "0013", "Bhatli", 1);
-        Block pipili = createTaluka(puri, "0304", "Pipili", 1);
+        Block similiguda = createTaluka(kuraput, (long)0463, "Similiguda", 1);
+        Block Phulabani = createTaluka(kandhamal, (long)0360, "Phulabani Town", 1);
+        Block kotagarh = createTaluka(kandhamal, (long)0371, "Kotagarh", 1);
+        Block digapahandi = createTaluka(ganjam, (long)0343, "DIGAPAHANDI", 1);
+        Block lakhanpur = createTaluka(jharsuguda, (long)0017, "Lakhanpur P.S.", 1);
+        Block baliguda = createTaluka(kandhamal, (long)0367, "Baliguda", 1);
+        Block bhatli = createTaluka(bargarh, (long)0013, "Bhatli", 1);
+        Block pipili = createTaluka(puri, (long)0304, "Pipili", 1);
 
 
 

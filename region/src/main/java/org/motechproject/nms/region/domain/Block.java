@@ -43,7 +43,7 @@ public class Block extends MdsEntity {
     // File from MoH shows a 50 char string in taluka file, but a 7 char string in village.
     // Sample data shows string (i.e. '0005')
     // Email thread says number.   grrrr
-    private String code;
+    private Long code;
 
     @Field
     private Integer identity;
@@ -80,11 +80,11 @@ public class Block extends MdsEntity {
         this.regionalName = regionalName;
     }
 
-    public String getCode() {
+    public Long getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Long code) {
         this.code = code;
     }
 

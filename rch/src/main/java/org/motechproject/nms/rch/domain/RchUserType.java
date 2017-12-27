@@ -5,6 +5,4 @@ package org.motechproject.nms.rch.domain;
  */
 public enum RchUserType {
     ASHA,
-    MOTHER,
-    CHILD
 }

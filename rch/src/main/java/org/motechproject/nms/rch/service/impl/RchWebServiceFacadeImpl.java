@@ -19,24 +19,16 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.util.Order;
+import org.motechproject.nms.rch.contract.SwcDataSet;
+import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
 import org.motechproject.nms.swc.exception.SwcExistingRecordException;
 import org.motechproject.nms.swc.exception.SwcImportException;
 import org.motechproject.nms.swc.service.SwcService;
-import org.motechproject.nms.kilkari.utils.FlwConstants;
+import org.motechproject.nms.swcUpdate.contract.SwcRecord;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
-import org.motechproject.nms.kilkari.domain.SubscriptionOrigin;
-import org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService;
-import org.motechproject.nms.kilkari.service.MctsBeneficiaryValueProcessor;
-import org.motechproject.nms.kilkari.utils.KilkariConstants;
-import org.motechproject.nms.kilkari.domain.RejectionReasons;
-import org.motechproject.nms.rch.contract.RchAnmAshaDataSet;
-import org.motechproject.nms.kilkari.contract.RchAnmAshaRecord;
-import org.motechproject.nms.kilkari.contract.RchChildRecord;
-import org.motechproject.nms.rch.contract.RchChildrenDataSet;
-import org.motechproject.nms.kilkari.contract.RchMotherRecord;
-import org.motechproject.nms.rch.contract.RchMothersDataSet;
+import org.motechproject.nms.swc.domain.RejectionReasons;
 import org.motechproject.nms.rch.domain.RchImportAudit;
 import org.motechproject.nms.rch.domain.RchImportFacilitator;
 import org.motechproject.nms.rch.domain.RchImportFailRecord;
@@ -58,7 +50,7 @@ import org.motechproject.nms.rch.utils.MarshallUtils;
 import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.kilkari.service.ActionFinderService;
+import org.motechproject.nms.region.repository.PanchayatDataService;
 import org.motechproject.nms.rejectionhandler.service.SwcRejectionService;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
@@ -91,7 +83,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-import static org.motechproject.nms.kilkari.utils.ObjectListCleaner.cleanRchFlwRecords;
+import static org.motechproject.nms.rch.utils.ObjectListCleaner.cleanSwcRecords;
 import static org.motechproject.nms.swcUpdate.utils.RejectedObjectConverter.swcRejection;
 
 @Service("rchWebServiceFacade")
@@ -127,6 +119,9 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     private StateDataService stateDataService;
 
     @Autowired
+    private PanchayatDataService panchayatDataService;
+
+    @Autowired
     private SwcImportService swcImportService;
 
     @Autowired
@@ -136,16 +131,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     private AlertService alertService;
 
     @Autowired
-    private MctsBeneficiaryValueProcessor mctsBeneficiaryValueProcessor;
-
-    @Autowired
-    private MctsBeneficiaryImportService mctsBeneficiaryImportService;
-
-    @Autowired
-    private SwcRejectionService flwRejectionService;
-
-    @Autowired
-    private ActionFinderService actionFinderService;
+    private SwcRejectionService swcRejectionService;
 
     @Autowired
     private SwcService swcService;
@@ -216,9 +202,9 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                 try {
                     validAnmAshaDataResponse(result, stateId);
                     List ashaResultFeed = result.get_any()[1].getChildren();
-                    RchAnmAshaDataSet ashaDataSet = (ashaResultFeed == null) ?
+                    SwcDataSet ashaDataSet = (ashaResultFeed == null) ?
                             null :
-                            (RchAnmAshaDataSet) MarshallUtils.unmarshall(ashaResultFeed.get(0).toString(), RchAnmAshaDataSet.class);
+                            (SwcDataSet) MarshallUtils.unmarshall(ashaResultFeed.get(0).toString(), SwcDataSet.class);
 
                     LOGGER.info("Starting RCH FLW import for stateId: {}", stateId);
                     StopWatch stopWatch = new StopWatch();
@@ -269,26 +255,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
             throw new RchWebServiceException("Cannot retrieve RCH Service for the endpoint", e);
         }
     }
-
-    private void validMothersDataResponse(DS_DataResponseDS_DataResult data, Long stateId) {
-        if (data.get_any().length != 2) {
-            throw new RchInvalidResponseStructureException("Invalid mothers data response for location " + stateId);
-        }
-
-        if (data.get_any()[1].getChildren() != null && data.get_any()[1].getChildren().size() < 1) {
-            throw new RchInvalidResponseStructureException("Invalid mothers data response " + stateId);
-        }
-    }
-
-    private void validChildrenDataResponse(DS_DataResponseDS_DataResult data, Long stateId) {
-        if (data.get_any().length != 2) {
-            throw new RchInvalidResponseStructureException("Invalid children data response for location " + stateId);
-        }
-
-        if (data.get_any()[1].getChildren() != null && data.get_any()[1].getChildren().size() < 1) {
-            throw new RchInvalidResponseStructureException("Invalid children data response " + stateId);
-        }
-    }
+    
 
     private void validAnmAshaDataResponse(DS_DataResponseDS_DataResult data, Long stateId) {
         if (data.get_any().length != 2) {
@@ -301,13 +268,9 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     }
 
     private String targetFileName(String timeStamp, RchUserType userType, Long stateId) {
-        if (userType.equals(RchUserType.MOTHER)) {
-            return String.format("RCH_StateID_%d_Mother_Response_%s.xml", stateId, timeStamp);
-        } else if (userType.equals(RchUserType.CHILD)) {
-            return String.format("RCH_StateID_%d_Child_Response_%s.xml", stateId, timeStamp);
-        } else {
-            return String.format("RCH_StateID_%d_Asha_Response_%s.xml", stateId, timeStamp);
-        }
+            LOGGER.info(userType.name());
+            return String.format("RCH_StateID_%d_Swachgrahi_Response_%s.xml", stateId, timeStamp);
+
     }
 
     private File generateResponseFile(DS_DataResponseDS_DataResult result, RchUserType userType, Long stateId) {
@@ -332,23 +295,23 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
 
 
 
-    private RchImportAudit saveImportedAshaData(RchAnmAshaDataSet anmAshaDataSet, String stateName, Long stateCode, LocalDate startReferenceDate, LocalDate endReferenceDate) { //NOPMD NcssMethodCount // NO CHECKSTYLE Cyclomatic Complexity
+    private RchImportAudit saveImportedAshaData(SwcDataSet anmAshaDataSet, String stateName, Long stateCode, LocalDate startReferenceDate, LocalDate endReferenceDate) { //NOPMD NcssMethodCount // NO CHECKSTYLE Cyclomatic Complexity
         LOGGER.info("Starting RCH ASHA import for state {}", stateName);
-        List<List<RchAnmAshaRecord>> rchAshaRecordsSet = cleanRchFlwRecords(anmAshaDataSet.getRecords());
-        List<RchAnmAshaRecord> rejectedRchAshas = rchAshaRecordsSet.get(0);
+        List<List<SwcRecord>> rchAshaRecordsSet = cleanSwcRecords(anmAshaDataSet.getRecords());
+        List<SwcRecord> rejectedRchAshas = rchAshaRecordsSet.get(0);
         String action = "";
-        for (RchAnmAshaRecord record : rejectedRchAshas) {
+        for (SwcRecord record : rejectedRchAshas) {
             action = this.rchFlwActionFinder(record);
             LOGGER.error("Existing Asha Record with same MSISDN in the data set");
-            flwRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.DUPLICATE_MOBILE_NUMBER_IN_DATASET.toString(), action));
+            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.DUPLICATE_MOBILE_NUMBER_IN_DATASET.toString(), action));
         }
-        List<RchAnmAshaRecord> acceptedRchAshas = rchAshaRecordsSet.get(1);
+        List<SwcRecord> acceptedRchAshas = rchAshaRecordsSet.get(1);
 
         int saved = 0;
         int rejected = 0;
-        State state = stateDataService.findByCode(stateCode);
+        Panchayat panchayat = panchayatDataService.findById(stateCode);
 
-        for (RchAnmAshaRecord record : acceptedRchAshas) {
+        for (SwcRecord record : acceptedRchAshas) {
             try {
                 action = this.rchFlwActionFinder(record);
                 String designation = record.getGfType();
@@ -356,163 +319,46 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                 Long msisdn = Long.parseLong(record.getMobileNo());
                 String flwId = record.getGfId().toString();
                 Swachchagrahi flw = swcService.getByContactNumber(msisdn);
-                if ((flw != null && (!flwId.equals(flw.getMctsFlwId()) || state != flw.getState()))  && flw.getStatus() != SwachchagrahiStatus.ANONYMOUS) {
+                if ((flw != null && (!flwId.equals(flw.getSwcId()) || panchayat != flw.getPanchayat()))  && flw.getCourseStatus() != SwachchagrahiStatus.ANONYMOUS) {
                     LOGGER.error("Existing FLW with same MSISDN but different MCTS ID");
-                    flwRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                    swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                     rejected++;
                 } else {
-                    if (!(FlwConstants.ASHA_TYPE.equalsIgnoreCase(designation))) {
-                        flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.FLW_TYPE_NOT_ASHA.toString(), action));
-                        rejected++;
-                    } else {
                         try {
                             // get user property map
-                            Map<String, Object> recordMap = record.toFlwRecordMap();    // temp var used for debugging
-                            swcImportService.importRchFrontLineWorker(recordMap, state);
-                            flwRejectionService.createUpdate(flwRejectionRch(record, true, null, action));
+                            Map<String, Object> recordMap = record.toSwcRecordMap();    // temp var used for debugging
+                            swcImportService.importRchFrontLineWorker(recordMap, panchayat);
+                            swcRejectionService.createUpdate(swcRejection(record, true, null, action));
                             saved++;
                         } catch (InvalidLocationException e) {
                             LOGGER.warn("Invalid location for FLW: ", e);
-                            flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.INVALID_LOCATION.toString(), action));
+                            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.INVALID_LOCATION.toString(), action));
                             rejected++;
                         } catch (SwcImportException e) {
                             LOGGER.error("Existing FLW with same MSISDN but different RCH ID", e);
-                            flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                             rejected++;
                         } catch (SwcExistingRecordException e) {
                             LOGGER.error("Cannot import FLW with ID: {}, and MSISDN (Mobile_No): {}", record.getGfId(), record.getMobileNo(), e);
-                            flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.UPDATED_RECORD_ALREADY_EXISTS.toString(), action));
+                            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.UPDATED_RECORD_ALREADY_EXISTS.toString(), action));
                             rejected++;
                         } catch (Exception e) {
                             LOGGER.error("RCH Flw import Error. Cannot import FLW with ID: {}, and MSISDN (Mobile_No): {}",
                                     record.getGfId(), record.getMobileNo(), e);
-                            flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.FLW_IMPORT_ERROR.toString(), action));
+                            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.FLW_IMPORT_ERROR.toString(), action));
                             rejected++;
                         }
-                    }
                     if ((saved + rejected) % THOUSAND == 0) {
                         LOGGER.debug("RCH import: {} state, Progress: {} Ashas imported, {} Ashas rejected", stateName, saved, rejected);
                     }
                 }
             } catch (NumberFormatException e) {
                 LOGGER.error("Mobile number either not present or is not in number format");
-                flwRejectionService.createUpdate(flwRejectionRch(record, false, RejectionReasons.MOBILE_NUMBER_EMPTY_OR_WRONG_FORMAT.toString(), action));
+                swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_EMPTY_OR_WRONG_FORMAT.toString(), action));
             }
         }
         LOGGER.info("RCH import: {} state, Total: {} Ashas imported, {} Ashas rejected", stateName, saved, rejected);
         return new RchImportAudit(startReferenceDate, endReferenceDate, RchUserType.ASHA, stateCode, stateName, saved, rejected, null);
-    }
-
-    private Map<String, Object> toMap(RchMotherRecord motherRecord) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(KilkariConstants.STATE_ID, motherRecord.getStateId());
-        map.put(KilkariConstants.DISTRICT_ID, motherRecord.getDistrictId());
-        map.put(KilkariConstants.DISTRICT_NAME, motherRecord.getDistrictName());
-        map.put(KilkariConstants.TALUKA_ID, motherRecord.getTalukaId());
-        map.put(KilkariConstants.TALUKA_NAME, motherRecord.getTalukaName());
-        map.put(KilkariConstants.HEALTH_BLOCK_ID, motherRecord.getHealthBlockId());
-        map.put(KilkariConstants.HEALTH_BLOCK_NAME, motherRecord.getHealthBlockName());
-        map.put(KilkariConstants.PHC_ID, motherRecord.getPhcId());
-        map.put(KilkariConstants.PHC_NAME, motherRecord.getPhcName());
-        map.put(KilkariConstants.SUB_CENTRE_ID, motherRecord.getSubCentreId());
-        map.put(KilkariConstants.SUB_CENTRE_NAME, motherRecord.getSubCentreName());
-        map.put(KilkariConstants.CENSUS_VILLAGE_ID, motherRecord.getVillageId());
-        map.put(KilkariConstants.VILLAGE_NAME, motherRecord.getVillageName());
-
-        map.put(KilkariConstants.MCTS_ID, motherRecord.getMctsIdNo());
-        map.put(KilkariConstants.RCH_ID, motherRecord.getRegistrationNo());
-        map.put(KilkariConstants.BENEFICIARY_NAME, motherRecord.getName());
-        map.put(KilkariConstants.MOBILE_NO, mctsBeneficiaryValueProcessor.getMsisdnByString(motherRecord.getMobileNo()));
-        map.put(KilkariConstants.LMP, mctsBeneficiaryValueProcessor.getDateByString(motherRecord.getLmpDate()));
-        map.put(KilkariConstants.MOTHER_DOB, mctsBeneficiaryValueProcessor.getDateByString(motherRecord.getBirthDate()));
-        map.put(KilkariConstants.ABORTION_TYPE, mctsBeneficiaryValueProcessor.getAbortionDataFromString(motherRecord.getAbortionType()));
-        map.put(KilkariConstants.DELIVERY_OUTCOMES, mctsBeneficiaryValueProcessor.getStillBirthFromString(String.valueOf(motherRecord.getDeliveryOutcomes())));
-        map.put(KilkariConstants.DEATH, mctsBeneficiaryValueProcessor.getDeathFromString(String.valueOf(motherRecord.getEntryType())));
-        map.put(KilkariConstants.EXECUTION_DATE, "".equals(motherRecord.getExecDate()) ? null : LocalDate.parse(motherRecord.getExecDate(), DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
-        map.put(KilkariConstants.CASE_NO, mctsBeneficiaryValueProcessor.getCaseNoByString(motherRecord.getCaseNo().toString()));
-
-        return map;
-    }
-
-    private Map<String, Object> toMap(RchChildRecord childRecord) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put(KilkariConstants.STATE_ID, childRecord.getStateId());
-        map.put(KilkariConstants.DISTRICT_ID, childRecord.getDistrictId());
-        map.put(KilkariConstants.DISTRICT_NAME, childRecord.getDistrictName());
-        map.put(KilkariConstants.TALUKA_ID, childRecord.getTalukaId());
-        map.put(KilkariConstants.TALUKA_NAME, childRecord.getTalukaName());
-        map.put(KilkariConstants.HEALTH_BLOCK_ID, childRecord.getHealthBlockId());
-        map.put(KilkariConstants.HEALTH_BLOCK_NAME, childRecord.getHealthBlockName());
-        map.put(KilkariConstants.PHC_ID, childRecord.getPhcId());
-        map.put(KilkariConstants.PHC_NAME, childRecord.getPhcName());
-        map.put(KilkariConstants.SUB_CENTRE_ID, childRecord.getSubCentreId());
-        map.put(KilkariConstants.SUB_CENTRE_NAME, childRecord.getSubCentreName());
-        map.put(KilkariConstants.CENSUS_VILLAGE_ID, childRecord.getVillageId());
-        map.put(KilkariConstants.VILLAGE_NAME, childRecord.getVillageName());
-
-        map.put(KilkariConstants.BENEFICIARY_NAME, childRecord.getName());
-
-        map.put(KilkariConstants.MOBILE_NO, mctsBeneficiaryValueProcessor.getMsisdnByString(childRecord.getMobileNo()));
-        map.put(KilkariConstants.DOB, mctsBeneficiaryValueProcessor.getDateByString(childRecord.getBirthdate()));
-
-        map.put(KilkariConstants.MCTS_ID, childRecord.getMctsId());
-        map.put(KilkariConstants.MCTS_MOTHER_ID,
-                mctsBeneficiaryValueProcessor.getMotherInstanceByBeneficiaryId(childRecord.getMctsMotherIdNo()));
-        map.put(KilkariConstants.RCH_ID, childRecord.getRegistrationNo());
-        map.put(KilkariConstants.RCH_MOTHER_ID, childRecord.getMotherRegistrationNo());
-        map.put(KilkariConstants.DEATH,
-                mctsBeneficiaryValueProcessor.getDeathFromString(String.valueOf(childRecord.getEntryType())));
-        map.put(KilkariConstants.EXECUTION_DATE, "".equals(childRecord.getExecDate()) ? null : LocalDate.parse(childRecord.getExecDate(), DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
-
-        return map;
-    }
-
-    private Map<Long, Set<Long>> getHpdFilters() {
-        Map<Long, Set<Long>> hpdMap = new HashMap<>();
-        String locationProp = settingsFacade.getProperty(Constants.HPD_STATES);
-        if (StringUtils.isBlank(locationProp)) {
-            return hpdMap;
-        }
-
-        String[] locationParts = StringUtils.split(locationProp, ',');
-        for (String locationPart : locationParts) {
-            Long stateId = Long.valueOf(locationPart);
-            hpdMap.put(stateId, getHpdForState(stateId));
-        }
-
-        return hpdMap;
-    }
-
-
-    private Set<Long> getHpdForState(Long stateId) {
-
-        Set<Long> districtSet = new HashSet<>();
-        String hpdProp = settingsFacade.getProperty(Constants.BASE_HPD_CONFIG + stateId);
-        if (StringUtils.isBlank(hpdProp)) {
-            return districtSet;
-        }
-
-        String[] districtParts = StringUtils.split(hpdProp, ',');
-        for (String districtPart : districtParts) {
-            districtSet.add(Long.valueOf(districtPart));
-        }
-
-        return districtSet;
-    }
-
-    private boolean validateHpdUser(Map<Long, Set<Long>> hpdFilters, long stateId, long districtId) {
-
-        // if we have the state for hpd filter
-        if (hpdFilters.containsKey(stateId)) {
-            // if district exists in the hpd filter set
-            Set<Long> districtSet = hpdFilters.get(stateId);
-            if (districtSet != null) {
-                return districtSet.contains(districtId);
-            }
-        }
-
-        return true;
     }
 
     private void deleteRchImportFailRecords(final LocalDate startReferenceDate, final LocalDate endReferenceDate, final RchUserType rchUserType, final Long stateId) {
@@ -674,8 +520,8 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
         }
     }
 
-    private String rchFlwActionFinder(RchAnmAshaRecord record) {
-        if (swcService.getByMctsFlwIdAndState(record.getGfId().toString(), stateDataService.findByCode(record.getStateId())) == null) {
+    private String rchFlwActionFinder(SwcRecord record) {
+        if (swcService.getByMctsFlwIdAndPanchayat(record.getGfId().toString(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
