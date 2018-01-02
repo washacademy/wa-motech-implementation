@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.nms.api.web.BaseController;
-import org.motechproject.nms.api.web.MobileAcademyController;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
+import org.motechproject.nms.api.web.WashAcademyController;
+import org.motechproject.nms.api.web.contract.washAcademy.SaveBookmarkRequest;
 import org.motechproject.nms.washacademy.service.WashAcademyService;
 
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -14,21 +14,21 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * Unit tests for Mobile academy controller
  */
-public class MobileAcademyControllerUnitTest {
+public class WashAcademyControllerUnitTest {
 
     private static final String VALID_CALL_ID = "1234567890123456789012345";
 
-    private MobileAcademyController mobileAcademyController;
+    private WashAcademyController washAcademyController;
     
     @Mock
-    private WashAcademyService mobileAcademyService;
+    private WashAcademyService washAcademyService;
 
     @Mock
     private EventRelay eventRelay;
 
     @Before
     public void setup() {
-        mobileAcademyController = new MobileAcademyController(mobileAcademyService, eventRelay);
+        washAcademyController = new WashAcademyController(washAcademyService, eventRelay);
         initMocks(this);
     }
 
@@ -37,7 +37,7 @@ public class MobileAcademyControllerUnitTest {
         SaveBookmarkRequest sb = new SaveBookmarkRequest();
         sb.setCallingNumber(null);
         sb.setCallId(VALID_CALL_ID);
-        mobileAcademyController.saveBookmarkWithScore(sb);
+        washAcademyController.saveBookmarkWithScore(sb);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -45,12 +45,12 @@ public class MobileAcademyControllerUnitTest {
         SaveBookmarkRequest sb = new SaveBookmarkRequest();
         sb.setCallingNumber(999999999L);
         sb.setCallId(VALID_CALL_ID);
-        mobileAcademyController.saveBookmarkWithScore(sb);
+        washAcademyController.saveBookmarkWithScore(sb);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullBookmark() {
-        mobileAcademyController.saveBookmarkWithScore(null);
+        washAcademyController.saveBookmarkWithScore(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -58,7 +58,7 @@ public class MobileAcademyControllerUnitTest {
         SaveBookmarkRequest sb = new SaveBookmarkRequest();
         sb.setCallingNumber(10000000000L);
         sb.setCallId(VALID_CALL_ID);
-        mobileAcademyController.saveBookmarkWithScore(sb);
+        washAcademyController.saveBookmarkWithScore(sb);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -66,7 +66,7 @@ public class MobileAcademyControllerUnitTest {
         SaveBookmarkRequest sb = new SaveBookmarkRequest();
         sb.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
         sb.setCallId(null);
-        mobileAcademyController.saveBookmarkWithScore(sb);
+        washAcademyController.saveBookmarkWithScore(sb);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -74,7 +74,7 @@ public class MobileAcademyControllerUnitTest {
         SaveBookmarkRequest sb = new SaveBookmarkRequest();
         sb.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
         sb.setCallId(VALID_CALL_ID.substring(1));
-        mobileAcademyController.saveBookmarkWithScore(sb);
+        washAcademyController.saveBookmarkWithScore(sb);
     }
 
 }

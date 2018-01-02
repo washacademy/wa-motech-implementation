@@ -1,4 +1,4 @@
-package org.motechproject.nms.api.web.contract.mobileAcademy;
+package org.motechproject.nms.api.web.contract.washAcademy;
 
 /**
  * Request object to save language location code for a user

@@ -3,14 +3,14 @@ package org.motechproject.nms.api.web;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseVersionResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfo;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseVersionResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.GetBookmarkResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.SaveBookmarkRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.SmsStatusRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryInfo;
 import org.motechproject.nms.api.web.converter.WashAcademyConverter;
-import org.motechproject.nms.api.web.validator.MobileAcademyValidator;
+import org.motechproject.nms.api.web.validator.WashAcademyValidator;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.washacademy.exception.CourseNotCompletedException;
@@ -38,11 +38,11 @@ import java.util.Map;
 /**
  * Mobile Academy controller
  */
-@RequestMapping("mobileacademy")
+@RequestMapping("washacademy")
 @Controller
-public class MobileAcademyController extends BaseController {
+public class WashAcademyController extends BaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MobileAcademyController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WashAcademyController.class);
 
     private static final String SMS_STATUS_SUBJECT = "nms.wa.sms.deliveryStatus";
 
@@ -61,7 +61,7 @@ public class MobileAcademyController extends BaseController {
     private EventRelay eventRelay;
 
     // Default constructor for CGLIB generation
-    public MobileAcademyController() {
+    public WashAcademyController() {
         super();
     }
     /**
@@ -70,7 +70,7 @@ public class MobileAcademyController extends BaseController {
      * @param eventRelay event relay service
      */
     @Autowired
-    public MobileAcademyController(WashAcademyService washAcademyService, EventRelay eventRelay) {
+    public WashAcademyController(WashAcademyService washAcademyService, EventRelay eventRelay) {
         this.washAcademyService = washAcademyService;
         this.eventRelay = eventRelay;
     }
@@ -89,7 +89,7 @@ public class MobileAcademyController extends BaseController {
     @ResponseBody
     public CourseResponse getCourse() {
 
-        log("REQUEST: /mobileacademy/course");
+        log("REQUEST: /washacademy/course");
 
         WaCourse getCourse = washAcademyService.getCourse();
 
@@ -105,7 +105,7 @@ public class MobileAcademyController extends BaseController {
             throw new InternalError(String.format(INVALID, "CourseResponse"));
         }
 
-        log("RESPONSE: /mobileacademy/course", response.toString());
+        log("RESPONSE: /washacademy/course", response.toString());
         return response;
     }
 
@@ -122,10 +122,10 @@ public class MobileAcademyController extends BaseController {
     @ResponseBody
     public CourseVersionResponse getCourseVersion() {
 
-        log("REQUEST: /mobileacademy/courseVersion");
+        log("REQUEST: /washacademy/courseVersion");
 
         CourseVersionResponse response = new CourseVersionResponse(washAcademyService.getCourseVersion());
-        log("RESPONSE: /mobileacademy/courseVersion", response.toString());
+        log("RESPONSE: /washacademy/courseVersion", response.toString());
         return response;
     }
 
@@ -143,7 +143,7 @@ public class MobileAcademyController extends BaseController {
     public GetBookmarkResponse getBookmarkWithScore(@RequestParam(required = false) Long callingNumber,
                                                     @RequestParam(required = false) String callId) {
 
-        log("REQUEST: /mobileacademy/bookmarkWithScore", String.format("callingNumber=%s, callId=%s",
+        log("REQUEST: /washacademy/bookmarkWithScore", String.format("callingNumber=%s, callId=%s",
                 LogHelper.obscure(callingNumber), callId));
 
         StringBuilder errors = new StringBuilder();
@@ -160,7 +160,7 @@ public class MobileAcademyController extends BaseController {
         WaBookmark bookmark = washAcademyService.getBookmark(callingNumber, callId);
 
         GetBookmarkResponse ret = WashAcademyConverter.convertBookmarkDto(bookmark);
-        log("RESPONSE: /mobileacademy/bookmarkWithScore", String.format("callId=%s, %s", callId, ret.toString()));
+        log("RESPONSE: /washacademy/bookmarkWithScore", String.format("callId=%s, %s", callId, ret.toString()));
         return ret;
     }
 
@@ -177,7 +177,7 @@ public class MobileAcademyController extends BaseController {
     @Transactional
     public void saveBookmarkWithScore(@RequestBody SaveBookmarkRequest bookmarkRequest) {
 
-        log("REQUEST: /mobileacademy/bookmarkWithScore (POST)", LogHelper.nullOrString(bookmarkRequest));
+        log("REQUEST: /washacademy/bookmarkWithScore (POST)", LogHelper.nullOrString(bookmarkRequest));
 
         // validate bookmark
         if (bookmarkRequest == null) {
@@ -219,9 +219,9 @@ public class MobileAcademyController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void saveSmsStatus(@RequestBody SmsStatusRequest smsDeliveryStatus) {
 
-        log("REQUEST: /mobileacademy/sms/status/imi (POST)", LogHelper.nullOrString(smsDeliveryStatus));
+        log("REQUEST: /washacademy/sms/status/imi (POST)", LogHelper.nullOrString(smsDeliveryStatus));
 
-        String errors = MobileAcademyValidator.validateSmsStatus(smsDeliveryStatus);
+        String errors = WashAcademyValidator.validateSmsStatus(smsDeliveryStatus);
 
         if (errors != null) {
             throw new IllegalArgumentException(errors);
@@ -246,7 +246,7 @@ public class MobileAcademyController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void sendNotification(@RequestBody Long flwId) {
 
-        log("REQUEST: /mobileacademy/notify (POST)", String.format("flwId=%s", String.valueOf(flwId)));
+        log("REQUEST: /washacademy/notify (POST)", String.format("flwId=%s", String.valueOf(flwId)));
 
         // done with validation
         try {

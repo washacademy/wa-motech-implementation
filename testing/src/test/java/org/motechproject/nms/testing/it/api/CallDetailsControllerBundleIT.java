@@ -543,7 +543,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      * verifyFT470, verifyFT489
      */
     @Test
-    public void testCallDetailsValidMobileAcademy() throws IOException, InterruptedException {
+    public void testCallDetailsValidWashAcademy() throws IOException, InterruptedException {
 
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);

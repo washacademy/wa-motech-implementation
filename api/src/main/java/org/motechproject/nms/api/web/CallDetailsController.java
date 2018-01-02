@@ -49,7 +49,7 @@ public class CallDetailsController extends BaseController {
     /**
      * 2.2.6 Save CallDetails API
      * IVR shall invoke this API to send MA call details to MoTech.
-     * /api/mobileacademy/callDetails
+     * /api/washacademy/callDetails
      *
      * 3.2.2 Save Call Details API
      * This API enables IVR to send call details to NMS_MoTech_MK. This data is further saved in NMS database and used
@@ -87,7 +87,7 @@ public class CallDetailsController extends BaseController {
             service = Service.MOBILE_ACADEMY;
 
             // Verify MA elements
-            failureReasons.append(validateCallDetailsMobileAcademyElements(callDetailRecordRequest));
+            failureReasons.append(validateCallDetailsWashAcademyElements(callDetailRecordRequest));
         }
 
         if (MOBILE_KUNJI.equals(serviceName)) {
@@ -226,7 +226,7 @@ public class CallDetailsController extends BaseController {
         return failureReasons.toString();
     }
 
-    private String validateCallDetailsMobileAcademyElements(CallDetailRecordRequest callDetailRecordRequest) {
+    private String validateCallDetailsWashAcademyElements(CallDetailRecordRequest callDetailRecordRequest) {
         StringBuilder failureReasons = new StringBuilder();
 
         // validate content type. No validation on correctAnswered because a disconnect during question

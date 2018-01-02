@@ -1,4 +1,4 @@
-package org.motechproject.nms.api.web.contract.mobileAcademy;
+package org.motechproject.nms.api.web.contract.washAcademy;
 
 import java.util.List;
 

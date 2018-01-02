@@ -96,8 +96,8 @@
                         <Export-Package>
                             org.motechproject.nms.api.web.contract,
                             org.motechproject.nms.api.web.contract.kilkari,
-                            org.motechproject.nms.api.web.contract.mobileAcademy,
-                            org.motechproject.nms.api.web.contract.mobileAcademy.sms,
+                            org.motechproject.nms.api.web.contract.washAcademy,
+                            org.motechproject.nms.api.web.contract.washAcademy.sms,
                             org.motechproject.nms.api.web.converter,
                             org.motechproject.nms.api.web.repository,
                             org.motechproject.nms.api.web.domain,

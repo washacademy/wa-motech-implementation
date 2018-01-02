@@ -121,10 +121,10 @@ public class WashAcademyServiceUnitTest {
     @Test
     public void getCourseTest() {
 
-        NmsCourse newCourse = new NmsCourse("MobileAcademyCourse", "[]");
+        NmsCourse newCourse = new NmsCourse("WashAcademyCourse", "[]");
         newCourse.setModificationDate(DateTime.now());
         nmsCourseDataService.create(newCourse);
-        when(nmsCourseDataService.getCourseByName("MobileAcademyCourse")).thenReturn(newCourse);
+        when(nmsCourseDataService.getCourseByName("WashAcademyCourse")).thenReturn(newCourse);
         assertTrue(washAcademyService.getCourse().getContent().equals(newCourse.getContent()));
     }
 

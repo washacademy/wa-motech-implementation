@@ -7,7 +7,7 @@ import org.motechproject.nms.props.service.LogHelper;
  *
  * 2.2.7 Set User Language Location Code API
  * IVR shall invoke this API to provide user languageLocation preference to MoTech.
- * /api/mobileacademy/languageLocationCode
+ * /api/washacademy/languageLocationCode
  *
  * 3.2.3 Set User Language Location Code API
  * IVR shall invoke this API to set the language location code of the user in NMS database.

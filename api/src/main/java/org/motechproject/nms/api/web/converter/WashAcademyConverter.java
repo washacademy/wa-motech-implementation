@@ -1,8 +1,8 @@
 package org.motechproject.nms.api.web.converter;
 
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.GetBookmarkResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.SaveBookmarkRequest;
 import org.motechproject.nms.washacademy.dto.WaBookmark;
 import org.motechproject.nms.washacademy.dto.WaCourse;
 import org.slf4j.Logger;

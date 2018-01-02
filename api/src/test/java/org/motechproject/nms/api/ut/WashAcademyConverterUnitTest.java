@@ -2,7 +2,7 @@ package org.motechproject.nms.api.ut;
 
 import org.junit.Test;
 import org.motechproject.nms.api.utils.CourseBuilder;
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
 import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.washacademy.dto.WaCourse;
 

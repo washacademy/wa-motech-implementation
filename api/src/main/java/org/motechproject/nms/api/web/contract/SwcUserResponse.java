@@ -7,7 +7,7 @@ package org.motechproject.nms.api.web.contract;
  * IVR shall invoke this API when to retrieve details specific to the user identified by callingNumber.
  * In case user specific details are not available in the database, the API will attempt to load system
  * defaults based on the operator and circle provided.
- * /api/mobileacademy/user?callingNumber=9999999900&operator=A&circle=AP&callId=123456789012345
+ * /api/washacademy/user?callingNumber=9999999900&operator=A&circle=AP&callId=123456789012345
  *
  * 3.2.1 Get User Details API
  * IVR shall invoke this API when to retrieve details specific to the user identified by callingNumber.

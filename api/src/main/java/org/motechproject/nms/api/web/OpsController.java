@@ -3,7 +3,7 @@ package org.motechproject.nms.api.web;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
 import org.motechproject.nms.swc.utils.SwcConstants;
-import org.motechproject.nms.api.web.contract.mobileAcademy.GetBookmarkResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.GetBookmarkResponse;
 import org.motechproject.nms.api.web.converter.WashAcademyConverter;
 import org.motechproject.nms.imi.service.CdrFileService;
 import org.motechproject.nms.swc.domain.DeactivationReason;
