@@ -8,6 +8,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mtraining.service.ActivityService;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
+import org.motechproject.nms.swc.domain.SwachchagrahiStatus;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.imi.service.SmsNotificationService;
 import org.motechproject.nms.washacademy.domain.CourseCompletionRecord;
@@ -42,6 +43,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
     private static final String DELIVERY_STATUS = "deliveryStatus";
     private static final String ADDRESS = "address";
     private static final String SMS_CONTENT_PREFIX = "sms.content.";
+    private static final String SMS_CONTENT_PREFIX_ANONYMOUS = "sms.content.anonymous.";
     private static final String SMS_DEFAULT_LANGUAGE_PROPERTY = "default";
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseNotificationServiceImpl.class);
 
@@ -205,6 +207,8 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         Swachchagrahi swc = swcService.getById(swcId);
         String locationCode = "XX"; // unknown location id
         String smsLanguageProperty = null;
+        String smsContent = null;
+
 
         if (swc == null) {
             throw new IllegalStateException("Unable to find swc for swcId: " + swcId);
@@ -221,11 +225,21 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         }
 
         // fetch sms content
-        String smsContent = settingsFacade.getProperty(SMS_CONTENT_PREFIX + smsLanguageProperty);
-        if (smsContent == null) {
-            throw new IllegalStateException("Unable to get sms content for swc language: " +
-                    SMS_CONTENT_PREFIX + smsLanguageProperty);
+        if(swc.getCourseStatus() == SwachchagrahiStatus.ANONYMOUS) {
+             smsContent = settingsFacade.getProperty(SMS_CONTENT_PREFIX_ANONYMOUS + smsLanguageProperty);
+            if (smsContent == null) {
+                throw new IllegalStateException("Unable to get sms content for swc language: " +
+                        SMS_CONTENT_PREFIX + smsLanguageProperty);
+            }
+        } else {
+             smsContent = settingsFacade.getProperty(SMS_CONTENT_PREFIX + smsLanguageProperty);
+            if (smsContent == null) {
+                throw new IllegalStateException("Unable to get sms content for swc language: " +
+                        SMS_CONTENT_PREFIX_ANONYMOUS + smsLanguageProperty);
+            }
         }
+
+
 
         Long callingNumber = swc.getContactNumber();
         int attempts = activityService.getCompletedActivityForUser(callingNumber.toString()).size();

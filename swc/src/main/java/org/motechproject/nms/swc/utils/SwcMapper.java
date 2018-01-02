@@ -81,7 +81,7 @@ public final class SwcMapper {
         }
 
         if (gfStatus != null && !gfStatus.isEmpty()) {
-            SwcJobStatus jobStatus = ACTIVE.equals(gfStatus) ? SwcJobStatus.ACTIVE : SwcJobStatus.INACTIVE;
+            SwcJobStatus jobStatus = SwcJobStatus.ACTIVE;
             swc.setJobStatus(jobStatus);
         }
 

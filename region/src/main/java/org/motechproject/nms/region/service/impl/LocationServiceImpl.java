@@ -4,12 +4,10 @@ import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.domain.State;
+import org.motechproject.nms.region.domain.Circle;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
-import org.motechproject.nms.region.service.BlockService;
-import org.motechproject.nms.region.service.DistrictService;
-import org.motechproject.nms.region.service.LocationService;
-import org.motechproject.nms.region.service.PanchayatService;
+import org.motechproject.nms.region.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,8 @@ public class LocationServiceImpl implements LocationService {
     private BlockService blockService;
 
     private PanchayatService panchayatService;
+
+    private CircleService circleService;
 
     @Autowired
     public LocationServiceImpl(StateDataService stateDataService, DistrictService districtService,
@@ -144,6 +144,12 @@ public class LocationServiceImpl implements LocationService {
     public State getState(Long stateId) {
 
         return stateDataService.findByCode(stateId);
+    }
+
+    @Override
+    public Circle getCircle(String circleName) {
+
+        return circleService.getByName(circleName);
     }
 
     @Override

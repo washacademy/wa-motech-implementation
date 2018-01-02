@@ -9,6 +9,7 @@ public final class SwcConstants {
     public static final java.lang.String NAME = "Name";
     public static final java.lang.String STATE_ID = "StateID";
     public static final java.lang.String STATE_NAME = "State_Name";
+    public static final java.lang.String CIRCLE_NAME = "Circle_Name";
     public static final java.lang.String DISTRICT_ID = "District_ID";
     public static final java.lang.String BLOCK_ID = "Block_ID";
     public static final java.lang.String PANCHAYAT_ID = "Panchayat_ID";
@@ -28,6 +29,8 @@ public final class SwcConstants {
     public static final java.lang.String GF_ID = "GF_ID";
     public static final java.lang.String MOBILE_NO = "Mobile_no";
     public static final java.lang.String GF_NAME = "GF_Name";
+    public static final java.lang.String GF_AGE = "GF_AGE";
+    public static final java.lang.String GF_SEX = "GF_SEX";
     public static final java.lang.String GF_TYPE = "GF_type";
     public static final java.lang.String EXEC_DATE = "Exec_Date";
 

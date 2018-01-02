@@ -182,7 +182,7 @@ public class SwcServiceImpl implements SwcService {
         QueryExecution<Swachchagrahi> queryExecution = new QueryExecution<Swachchagrahi>() {
             @Override
             public Swachchagrahi execute(Query query, InstanceSecurityRestriction restriction) {
-                query.setFilter("mctsFlwId == _mctsFlwId && panchayat == _panchayat");
+                query.setFilter("swcId == _mctsFlwId && panchayat == _panchayat");
                 query.declareParameters("String _mctsFlwId, org.motechproject.nms.region.domain.Panchayat _panchayat");
                 query.setClass(Swachchagrahi.class);
                 query.setUnique(true);

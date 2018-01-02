@@ -27,6 +27,8 @@ public final class RejectedObjectConverter {
         swcImportRejection.setAction(action);
         swcImportRejection.setSwcName(record.getGfName());
         swcImportRejection.setSwcStatus(record.getGfStatus());
+        swcImportRejection.setSex(record.getGfSex());
+
 
         return swcImportRejection;
     }

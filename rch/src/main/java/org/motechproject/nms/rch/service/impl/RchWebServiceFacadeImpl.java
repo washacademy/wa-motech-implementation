@@ -314,13 +314,11 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
         for (SwcRecord record : acceptedRchAshas) {
             try {
                 action = this.rchFlwActionFinder(record);
-                String designation = record.getGfType();
-                designation = (designation != null ? designation.trim() : designation);
                 Long msisdn = Long.parseLong(record.getMobileNo());
                 String flwId = record.getGfId().toString();
                 Swachchagrahi flw = swcService.getByContactNumber(msisdn);
                 if ((flw != null && (!flwId.equals(flw.getSwcId()) || panchayat != flw.getPanchayat()))  && flw.getCourseStatus() != SwachchagrahiStatus.ANONYMOUS) {
-                    LOGGER.error("Existing FLW with same MSISDN but different MCTS ID");
+                    LOGGER.error("Existing SWC with same MSISDN but different ID");
                     swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                     rejected++;
                 } else {

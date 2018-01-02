@@ -5,6 +5,8 @@ import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.domain.Block;
 import org.motechproject.nms.region.domain.Panchayat;
 import org.motechproject.nms.region.exception.InvalidLocationException;
+import org.motechproject.nms.region.domain.Circle;
+
 
 import java.util.Map;
 
@@ -31,6 +33,8 @@ public interface LocationService {
     Map<String, Object> getLocations(Map<String, Object> locationMapping, boolean createIfNotExist) throws InvalidLocationException;
 
     State getState(Long stateId);
+
+    Circle getCircle(String circleId);
 
     District getDistrict(Long stateId, Long districtId);
 

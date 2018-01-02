@@ -14,8 +14,7 @@ import org.motechproject.nms.csv.utils.GetLocalDate;
 import org.motechproject.nms.csv.utils.CsvImporterBuilder;
 import org.motechproject.nms.csv.utils.ConstraintViolationUtils;
 
-import org.motechproject.nms.region.domain.Block;
-import org.motechproject.nms.region.domain.Panchayat;
+import org.motechproject.nms.region.domain.*;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.domain.ContactNumberAudit;
 import org.motechproject.nms.swc.domain.SwcJobStatus;
@@ -36,8 +35,6 @@ import org.motechproject.nms.swc.domain.SubscriptionOrigin;
 import org.motechproject.nms.swcUpdate.utils.RejectedObjectConverter;
 import org.motechproject.nms.washacademy.service.WashAcademyService;
 import org.motechproject.nms.props.service.LogHelper;
-import org.motechproject.nms.region.domain.District;
-import org.motechproject.nms.region.domain.State;
 import org.motechproject.nms.region.exception.InvalidLocationException;
 import org.motechproject.nms.region.repository.StateDataService;
 import org.motechproject.nms.region.repository.PanchayatDataService;
@@ -98,7 +95,6 @@ public class SwcImportServiceImpl implements SwcImportService {
 
         Panchayat panchayat = importHeader(bufferedReader);
         CsvMapImporter csvImporter;
-        String designation;
             csvImporter = new CsvImporterBuilder()
                     .setProcessorMapping(getRchProcessorMapping())
                     .setPreferences(CsvPreference.TAB_PREFERENCE)
@@ -106,11 +102,8 @@ public class SwcImportServiceImpl implements SwcImportService {
             try {
                 Map<String, Object> record;
                 while (null != (record = csvImporter.read())) {
-                    designation = (String) record.get(SwcConstants.GF_TYPE);
-                    designation = (designation != null) ? designation.trim() : designation;
-                    if (SwcConstants.ASHA_TYPE.equalsIgnoreCase(designation)) {
                         importRchFrontLineWorker(record, panchayat);
-                    }
+
                 }
             } catch (ConstraintViolationException e) {
                 throw new CsvImportDataException(createErrorMessage(e.getConstraintViolations(), csvImporter.getRowNumber()), e);
@@ -130,7 +123,7 @@ public class SwcImportServiceImpl implements SwcImportService {
     @Override //NO CHECKSTYLE CyclomaticComplexity
     @Transactional
     public void importRchFrontLineWorker(Map<String, Object> record, Panchayat state) throws InvalidLocationException, SwcExistingRecordException {
-        String flwId = (String) record.get(SwcConstants.GF_ID);
+        String flwId = (String) record.get(SwcConstants.ID);
         Long msisdn = (Long) record.get(SwcConstants.MOBILE_NO);
 
         record.put(SwcConstants.PANCHAYAT_ID, state.getPanchayatCode());
@@ -139,12 +132,11 @@ public class SwcImportServiceImpl implements SwcImportService {
         Swachchagrahi flw = swcService.getByMctsFlwIdAndPanchayat(flwId, state);
         if (flw != null) {
             Swachchagrahi flw2 = swcService.getByContactNumber(msisdn);
-            if (flw2 == null || flw2.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
+            if (flw2 == null) {
                 // update msisdn of existing asha worker
-                Swachchagrahi newFlw = createRchSwc(record, location);
-                if (newFlw != null) {
-                    swcService.add(newFlw);
-                }
+                    Swachchagrahi flwInstance = updateSwc(flw, record, location, SubscriptionOrigin.RCH_IMPORT);
+                    swcService.update(flwInstance);
+
             } else {
                 //we got here because an FLW exists with active job status and the same msisdn
                 //check if both these records are the same or not
@@ -188,6 +180,7 @@ public class SwcImportServiceImpl implements SwcImportService {
 
         long stateId = (long) flw.get(SwcConstants.STATE_ID);
         long districtId = (long) flw.get(SwcConstants.DISTRICT_ID);
+        String circleName = (String) flw.get(SwcConstants.CIRCLE_NAME);
         String blockId = (String) flw.get(SwcConstants.BLOCK_ID);
         long panchayatId = (long) flw.get(SwcConstants.PANCHAYAT_ID);
         String flwId = importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT) ? flw.get(SwcConstants.ID).toString() : flw.get(SwcConstants.GF_ID).toString();
@@ -211,7 +204,7 @@ public class SwcImportServiceImpl implements SwcImportService {
         }
         Block block = locationService.getBlock(stateId, districtId, blockId);
         if (block == null) {
-            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_DISTRICT));
+            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_BLOCK));
             action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
             flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
 
@@ -219,7 +212,16 @@ public class SwcImportServiceImpl implements SwcImportService {
         }
         Panchayat panchayat = locationService.getPanchayat(stateId, districtId, blockId, panchayatId, panchayatId);
         if (panchayat == null) {
-            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_DISTRICT));
+            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_PANCHAYAT));
+            action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
+            flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+
+            return false;
+        }
+
+        Circle circle = locationService.getCircle(circleName);
+        if(circle == null) {
+            swcErrorDataService.create(new SwcError(flwId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_CIRCLE));
             action = this.rchFlwActionFinder(convertMapToRchAsha(flw));
             flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), false, RejectionReasons.INVALID_LOCATION.toString(), action));
 
@@ -236,14 +238,14 @@ public class SwcImportServiceImpl implements SwcImportService {
                 if (existingFlwByFlwId != null && existingFlwByNumber != null) {
 
                     if (existingFlwByFlwId.getSwcId().equalsIgnoreCase(existingFlwByNumber.getSwcId()) &&
-                            existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) {
+                            existingFlwByFlwId.getPanchayat().equals(existingFlwByNumber.getPanchayat())) {
                         // we are trying to update the same existing swc. set fields and update
                         LOGGER.debug("Updating existing user with same phone number");
                         swcService.update(SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
                         flwRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(flw), true, null, action));
                         return true;
                     } else if ((!existingFlwByFlwId.getSwcId().equalsIgnoreCase(existingFlwByNumber.getSwcId()) ||
-                            !existingFlwByFlwId.getState().equals(existingFlwByNumber.getState())) &&
+                            !existingFlwByFlwId.getPanchayat().equals(existingFlwByNumber.getPanchayat())) &&
                             existingFlwByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Updating existing user with same phone number");
                         swcService.update(SwcMapper.updateSwc(existingFlwByFlwId, flw, location, SubscriptionOrigin.RCH_IMPORT));
@@ -394,6 +396,7 @@ public class SwcImportServiceImpl implements SwcImportService {
 
     private void getMapping(Map<String, CellProcessor> mapping) {
         mapping.put(SwcConstants.STATE_ID, new Optional(new GetLong()));
+        mapping.put(SwcConstants.STATE_NAME, new Optional(new GetString()));
 
         mapping.put(SwcConstants.DISTRICT_ID, new Optional(new GetLong()));
         mapping.put(SwcConstants.DISTRICT_NAME, new Optional(new GetString()));
@@ -443,20 +446,17 @@ public class SwcImportServiceImpl implements SwcImportService {
 
     private Map<String, CellProcessor> getRchProcessorMapping() {
         Map<String, CellProcessor> mapping = new HashMap<>();
-        mapping.put(SwcConstants.GF_ID, new GetString());
+        mapping.put(SwcConstants.ID, new GetString());
         mapping.put(SwcConstants.MOBILE_NO, new GetLong());
-        mapping.put(SwcConstants.GF_NAME, new GetString());
+        mapping.put(SwcConstants.NAME, new GetString());
         getMapping(mapping);
-        mapping.put(SwcConstants.GF_TYPE, new Optional(new GetString()));
-        mapping.put(SwcConstants.EXEC_DATE, new Optional(new GetLocalDate()));
-        mapping.put(SwcConstants.GF_STATUS, new Optional(new GetString()));
-
         return mapping;
     }
 
     private static SwcRecord convertMapToRchAsha(Map<String, Object> record) { //NO CHECKSTYLE CyclomaticComplexity
         SwcRecord rchAnmAshaRecord = new SwcRecord();
         rchAnmAshaRecord.setStateId(record.get(SwcConstants.STATE_ID) == null ? null : (Long) record.get(SwcConstants.STATE_ID));
+        rchAnmAshaRecord.setStateName(record.get(SwcConstants.STATE_NAME) == null ? null : (String) record.get(SwcConstants.STATE_NAME));
         rchAnmAshaRecord.setDistrictId(record.get(SwcConstants.DISTRICT_ID) == null ? null : (Long) record.get(SwcConstants.DISTRICT_ID));
         rchAnmAshaRecord.setDistrictName(record.get(SwcConstants.DISTRICT_NAME) == null ? null : (String) record.get(SwcConstants.DISTRICT_NAME));
 
@@ -465,10 +465,11 @@ public class SwcImportServiceImpl implements SwcImportService {
 
         rchAnmAshaRecord.setPanchayatId(record.get(SwcConstants.PANCHAYAT_ID) == null ? null : (Long) record.get(SwcConstants.PANCHAYAT_ID));
         rchAnmAshaRecord.setPanchayatName(record.get(SwcConstants.PANCHAYAT_NAME) == null ? null : (String) record.get(SwcConstants.PANCHAYAT_NAME));
-        rchAnmAshaRecord.setGfId(record.get(SwcConstants.GF_ID) == null ? null : (Long) record.get(SwcConstants.GF_ID));
+        rchAnmAshaRecord.setGfId(record.get(SwcConstants.ID) == null ? null : (Long) record.get(SwcConstants.ID));
         rchAnmAshaRecord.setMobileNo(record.get(SwcConstants.MOBILE_NO) == null ? null : (String) record.get(SwcConstants.MOBILE_NO));
         rchAnmAshaRecord.setGfName(record.get(SwcConstants.GF_NAME) == null ? null : (String) record.get(SwcConstants.GF_NAME));
-        rchAnmAshaRecord.setGfType(record.get(SwcConstants.GF_TYPE) == null ? null : (String) record.get(SwcConstants.GF_TYPE));
+        rchAnmAshaRecord.setGfAge(record.get(SwcConstants.GF_AGE) == null ? null : (String) record.get(SwcConstants.GF_AGE));
+        rchAnmAshaRecord.setGfSex(record.get(SwcConstants.GF_SEX) == null ? null : (String) record.get(SwcConstants.GF_SEX));
         rchAnmAshaRecord.setExecDate(record.get(SwcConstants.EXEC_DATE) == null ? null : (String) record.get(SwcConstants.EXEC_DATE));
         rchAnmAshaRecord.setGfStatus(record.get(SwcConstants.GF_STATUS) == null ? null : (String) record.get(SwcConstants.GF_STATUS));
         return rchAnmAshaRecord;
