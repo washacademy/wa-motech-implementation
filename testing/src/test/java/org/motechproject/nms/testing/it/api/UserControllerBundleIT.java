@@ -191,7 +191,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         stateDataService.create(state);
 
-        deployedServiceDataService.create(new DeployedService(state, Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(state, Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(state, Service.MOBILE_KUNJI));
 
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
@@ -203,7 +203,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         rh.delhiState();
         rh.delhiCircle();
 
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
@@ -232,7 +232,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         rh.southDelhiDistrict();
         rh.delhiCircle();
 
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
@@ -262,7 +262,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // And a circle
         rh.delhiCircle();
 
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
 
         Swachchagrahi swc = ApiTestHelper.createSwc("Hillary Devi", 1111111111L, "123", SwachchagrahiStatus.ACTIVE);
@@ -285,7 +285,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         cdr = new CallDetailRecord();
         cdr.setCallingNumber(1111111111l);
         cdr.setSwachchagrahi(swc);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(1);
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -312,7 +312,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         stateDataService.create(whitelistState);
 
-        deployedServiceDataService.create(new DeployedService(whitelistState, Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(whitelistState, Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(whitelistState, Service.MOBILE_KUNJI));
 
         whitelistStateDataService.create(new WhitelistState(whitelistState));
@@ -349,7 +349,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         stateDataService.create(whitelist);
 
-        deployedServiceDataService.create(new DeployedService(whitelist, Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(whitelist, Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(whitelist, Service.MOBILE_KUNJI));
 
 
@@ -1085,7 +1085,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         circleDataService.update(c);
 
        
-        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.WASH_ACADEMY));
         deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_KUNJI));
     }
 
@@ -1570,7 +1570,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Deploy the service in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // Create the whitelist number entry in whitelist table
         WhitelistEntry entry = new WhitelistEntry(WHITELIST_CONTACT_NUMBER,
@@ -1612,7 +1612,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Deploy the service in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // Create the whitelist number entry in whitelist table
         WhitelistEntry entry = new WhitelistEntry(WHITELIST_CONTACT_NUMBER,
@@ -1654,7 +1654,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Deploy the service in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // Check the response
         HttpGet request = createHttpGet(true, "washacademy", true,
@@ -1701,7 +1701,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Deploy the service in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // Check the response
         HttpGet request = createHttpGet(true, "washacademy", true,
@@ -1740,7 +1740,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Deploy the service in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // Check the response
         HttpGet request = createHttpGet(true, "washacademy", true,
@@ -1771,7 +1771,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Deploy the service in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
         transactionManager.commit(status);
 
         // Check the response
@@ -1818,7 +1818,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // service deployed in user's state
         deployedServiceDataService.create(new DeployedService(
-                nonWhitelistState, Service.MOBILE_ACADEMY));
+                nonWhitelistState, Service.WASH_ACADEMY));
 
         // Check the response
         HttpGet request = createHttpGet(true, "washacademy", true,
@@ -1859,7 +1859,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // service deployed in user's state
         deployedServiceDataService.create(new DeployedService(
-                nonWhitelistState, Service.MOBILE_ACADEMY));
+                nonWhitelistState, Service.WASH_ACADEMY));
 
         // Check the response
         HttpGet request = createHttpGet(true, "washacademy", true,
@@ -1916,7 +1916,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // service deployed in user's state
         deployedServiceDataService.create(new DeployedService(whitelistState,
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // Check the response
         HttpGet request = createHttpGet(true, "washacademy", true,
@@ -2483,7 +2483,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         circleDataService.update(circle);
         
         deployedServiceDataService.create(new
-                DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
+                DeployedService(rh.karnatakaState(), Service.WASH_ACADEMY));
 
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000001", // callingNumber
@@ -2535,7 +2535,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         circleDataService.update(circle);
 
         deployedServiceDataService.create(new DeployedService(rh
-                .karnatakaState(), Service.MOBILE_ACADEMY));
+                .karnatakaState(), Service.WASH_ACADEMY));
 
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
                 true, "1200000001", // callingNumber
@@ -2916,7 +2916,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // invoke get user detail API
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
@@ -2979,7 +2979,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // service deployed only in delhi state
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         transactionManager.commit(status);
 
@@ -3089,7 +3089,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // service deployed in Karnataka State
         deployedServiceDataService.create(new DeployedService(rh
-                .karnatakaState(), Service.MOBILE_ACADEMY));
+                .karnatakaState(), Service.WASH_ACADEMY));
 
         // invoke get user detail API
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
@@ -3134,7 +3134,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // service deployed in Karnataka State
         deployedServiceDataService.create(new DeployedService(rh
-                .karnatakaState(), Service.MOBILE_ACADEMY));
+                .karnatakaState(), Service.WASH_ACADEMY));
 
         // invoke get user detail API
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
@@ -3180,7 +3180,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         swcDataService.create(swc);
 
         // service deployed in Karnataka State
-        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.WASH_ACADEMY));
 
         // invoke get user detail API
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
@@ -3312,11 +3312,11 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT421_480() throws IOException, InterruptedException {
         District district = rh.newDelhiDistrict();
-        deployedServiceDataService.create(new DeployedService(district.getState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(district.getState(), Service.WASH_ACADEMY));
 
         // National Capping set maxallowedUsageInPulses
         ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null,
-                Service.MOBILE_ACADEMY, 5000);
+                Service.WASH_ACADEMY, 5000);
         serviceUsageCapDataService.create(serviceUsageCap);
 
         // FLW usage
@@ -3329,7 +3329,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(80);
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -3370,16 +3370,16 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT423() throws IOException, InterruptedException {
         District d = rh.newDelhiDistrict();
         deployedServiceDataService.create(new DeployedService(rh
-                .delhiState(), Service.MOBILE_ACADEMY));
+                .delhiState(), Service.WASH_ACADEMY));
         
         // State Capping
         ServiceUsageCap stateUsageCap = new ServiceUsageCap(rh.delhiState(),
-                Service.MOBILE_ACADEMY, 6000);
+                Service.WASH_ACADEMY, 6000);
         serviceUsageCapDataService.create(stateUsageCap);
         
         //national capping
         ServiceUsageCap nationalUsageCap = new ServiceUsageCap(null,
-                Service.MOBILE_ACADEMY, 5000);
+                Service.WASH_ACADEMY, 5000);
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
@@ -3392,7 +3392,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(80);
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -3434,7 +3434,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         District district = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
         
         // Create FLW with no usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
@@ -3533,11 +3533,11 @@ public class UserControllerBundleIT extends BasePaxIT {
         District district = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
         
         // national capping
         ServiceUsageCap nationalUsageCap = new ServiceUsageCap(null,
-                Service.MOBILE_ACADEMY, 500);
+                Service.WASH_ACADEMY, 500);
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
@@ -3550,7 +3550,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(80);
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -3619,11 +3619,11 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT422() throws IOException, InterruptedException {
         District d = rh.newDelhiDistrict();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // national capping
         ServiceUsageCap nationalUsageCap = new ServiceUsageCap(null,
-                Service.MOBILE_ACADEMY, 100);
+                Service.WASH_ACADEMY, 100);
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // FLW usage
@@ -3637,7 +3637,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1200000000l);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(110);// greater than max allowed pulses
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -3727,11 +3727,11 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT425() throws IOException, InterruptedException {
         District district = rh.newDelhiDistrict();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // State Capping
         ServiceUsageCap stateUsageCap = new ServiceUsageCap(rh.delhiState(),
-                Service.MOBILE_ACADEMY, 150);
+                Service.WASH_ACADEMY, 150);
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
@@ -3745,7 +3745,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1200000000l);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(160);// greater than max allowed pulses
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -4210,7 +4210,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         District d = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // National Capping
         ServiceUsageCap stateUsageCap = new ServiceUsageCap(null,
@@ -4246,16 +4246,16 @@ public class UserControllerBundleIT extends BasePaxIT {
         District district = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         // national capping
         ServiceUsageCap nationalUsageCap = new ServiceUsageCap(null,
-                Service.MOBILE_ACADEMY, 500);
+                Service.WASH_ACADEMY, 500);
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // State capping
         ServiceUsageCap stateUsageCap = new ServiceUsageCap(rh.delhiState(),
-                Service.MOBILE_ACADEMY, 250);
+                Service.WASH_ACADEMY, 250);
         serviceUsageCapDataService.create(stateUsageCap);
 
         // FLW usage
@@ -4268,7 +4268,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(1111111111l);
-        cdr.setService(Service.MOBILE_ACADEMY);
+        cdr.setService(Service.WASH_ACADEMY);
         cdr.setCallDurationInPulses(80);
         cdr.setEndOfUsagePromptCounter(1);
         cdr.setWelcomePrompt(false);
@@ -4407,9 +4407,9 @@ public class UserControllerBundleIT extends BasePaxIT {
 
 
         // service deployed in Karnataka State
-        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.WASH_ACADEMY));
         // service deployed in Delhi State
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
         // invoke get user detail API for first swc user
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
@@ -4470,7 +4470,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
 
         // service deployed in Karnataka State
-        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.karnatakaState(), Service.WASH_ACADEMY));
 
 
         // invoke get user detail API for first swc user

@@ -2647,7 +2647,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_ACADEMY));
+                Service.WASH_ACADEMY));
 
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1200000001L);
         swc.setLanguage(rh.hindiLanguage());

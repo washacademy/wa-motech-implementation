@@ -387,7 +387,7 @@ public class BaseController {
         Service service = null;
 
         if (WASH_ACADEMY.equals(serviceName)) {
-            service = Service.MOBILE_ACADEMY;
+            service = Service.WASH_ACADEMY;
         }
 
         if (MOBILE_KUNJI.equals(serviceName)) {

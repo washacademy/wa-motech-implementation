@@ -84,7 +84,7 @@ public class CallDetailsController extends BaseController {
         failureReasons.append(validateCallDetailsCommonElements(callDetailRecordRequest));
 
         if (WASH_ACADEMY.equals(serviceName)) {
-            service = Service.MOBILE_ACADEMY;
+            service = Service.WASH_ACADEMY;
 
             // Verify MA elements
             failureReasons.append(validateCallDetailsWashAcademyElements(callDetailRecordRequest));
@@ -172,7 +172,7 @@ public class CallDetailsController extends BaseController {
                 content.setMobileKunjiCardCode(callContentRequest.getMkCardCode());
             }
 
-            if (service == Service.MOBILE_ACADEMY) {
+            if (service == Service.WASH_ACADEMY) {
                 content.setType(callContentRequest.getType());
                 content.setCorrectAnswerEntered(callContentRequest.isCorrectAnswerEntered()); // this could be null, if not question
                 content.setCompletionFlag(callContentRequest.getCompletionFlag());
@@ -272,7 +272,7 @@ public class CallDetailsController extends BaseController {
         }
 
         // MA elements (type, completionFlag)
-        if (service == Service.MOBILE_ACADEMY) {
+        if (service == Service.WASH_ACADEMY) {
             if (null == callContentRequest.getType()) {
                 failureReasons.append(String.format(NOT_PRESENT, "type"));
             }

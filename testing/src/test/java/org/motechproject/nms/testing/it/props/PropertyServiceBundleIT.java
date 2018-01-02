@@ -61,9 +61,9 @@ public class PropertyServiceBundleIT extends BasePaxIT {
         cleanUp();
 
         State state = makeState(1L, "State 1");
-        deployedServiceDataService.create(new DeployedService(state, Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(state, Service.WASH_ACADEMY));
 
-        assertTrue(propertyService.isServiceDeployedInState(Service.MOBILE_ACADEMY, state));
+        assertTrue(propertyService.isServiceDeployedInState(Service.WASH_ACADEMY, state));
     }
 
     // Test a state that has a deployed service but not the one being queried
@@ -72,7 +72,7 @@ public class PropertyServiceBundleIT extends BasePaxIT {
         cleanUp();
 
         State state = makeState(1L, "State 1");
-        deployedServiceDataService.create(new DeployedService(state, Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(state, Service.WASH_ACADEMY));
 
         assertFalse(propertyService.isServiceDeployedInState(Service.KILKARI, state));
     }
@@ -83,11 +83,11 @@ public class PropertyServiceBundleIT extends BasePaxIT {
         cleanUp();
 
         State deployed = makeState(1L, "State 1");
-        deployedServiceDataService.create(new DeployedService(deployed, Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(deployed, Service.WASH_ACADEMY));
 
         State notDeployed = makeState(2L, "State 2");
 
-        assertFalse(propertyService.isServiceDeployedInState(Service.MOBILE_ACADEMY, notDeployed));
+        assertFalse(propertyService.isServiceDeployedInState(Service.WASH_ACADEMY, notDeployed));
     }
 
     // Test with neither state or service deployed
@@ -97,6 +97,6 @@ public class PropertyServiceBundleIT extends BasePaxIT {
 
         State notDeployed = makeState(2L, "State 2");
 
-        assertFalse(propertyService.isServiceDeployedInState(Service.MOBILE_ACADEMY, notDeployed));
+        assertFalse(propertyService.isServiceDeployedInState(Service.WASH_ACADEMY, notDeployed));
     }
 }
