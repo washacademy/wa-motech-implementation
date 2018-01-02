@@ -30,12 +30,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 
+@SuppressWarnings("PMD")
 @Controller
 public class UserController extends BaseController {
 
     public static final String SERVICE_NAME = "serviceName";
-
- 
+    
 
     @Autowired
     private SwcService swcService;
