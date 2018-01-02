@@ -49,7 +49,7 @@ public class CallDetailsController extends BaseController {
     /**
      * 2.2.6 Save CallDetails API
      * IVR shall invoke this API to send MA call details to MoTech.
-     * /api/mobileacademy/callDetails
+     * /api/washacademy/callDetails
      *
      * 3.2.2 Save Call Details API
      * This API enables IVR to send call details to NMS_MoTech_MK. This data is further saved in NMS database and used
@@ -84,10 +84,10 @@ public class CallDetailsController extends BaseController {
         failureReasons.append(validateCallDetailsCommonElements(callDetailRecordRequest));
 
         if (WASH_ACADEMY.equals(serviceName)) {
-            service = Service.MOBILE_ACADEMY;
+            service = Service.WASH_ACADEMY;
 
             // Verify MA elements
-            failureReasons.append(validateCallDetailsMobileAcademyElements(callDetailRecordRequest));
+            failureReasons.append(validateCallDetailsWashAcademyElements(callDetailRecordRequest));
         }
 
         if (MOBILE_KUNJI.equals(serviceName)) {
@@ -172,7 +172,7 @@ public class CallDetailsController extends BaseController {
                 content.setMobileKunjiCardCode(callContentRequest.getMkCardCode());
             }
 
-            if (service == Service.MOBILE_ACADEMY) {
+            if (service == Service.WASH_ACADEMY) {
                 content.setType(callContentRequest.getType());
                 content.setCorrectAnswerEntered(callContentRequest.isCorrectAnswerEntered()); // this could be null, if not question
                 content.setCompletionFlag(callContentRequest.getCompletionFlag());
@@ -226,7 +226,7 @@ public class CallDetailsController extends BaseController {
         return failureReasons.toString();
     }
 
-    private String validateCallDetailsMobileAcademyElements(CallDetailRecordRequest callDetailRecordRequest) {
+    private String validateCallDetailsWashAcademyElements(CallDetailRecordRequest callDetailRecordRequest) {
         StringBuilder failureReasons = new StringBuilder();
 
         // validate content type. No validation on correctAnswered because a disconnect during question
@@ -272,7 +272,7 @@ public class CallDetailsController extends BaseController {
         }
 
         // MA elements (type, completionFlag)
-        if (service == Service.MOBILE_ACADEMY) {
+        if (service == Service.WASH_ACADEMY) {
             if (null == callContentRequest.getType()) {
                 failureReasons.append(String.format(NOT_PRESENT, "type"));
             }

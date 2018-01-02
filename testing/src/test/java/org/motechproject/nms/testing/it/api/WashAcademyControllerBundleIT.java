@@ -16,11 +16,11 @@ import org.junit.runner.RunWith;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.motechproject.nms.api.web.BaseController;
 import org.motechproject.nms.api.web.contract.BadRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SaveBookmarkRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryStatus;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.RequestData;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.SaveBookmarkRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.SmsStatusRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryStatus;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.RequestData;
 import org.motechproject.nms.swc.domain.SwcJobStatus;
 import org.motechproject.nms.swc.domain.Swachchagrahi;
 import org.motechproject.nms.swc.service.SwcService;
@@ -79,7 +79,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Inject
     PlatformTransactionManager transactionManager;
 
-    private static final String COURSE_NAME = "MobileAcademyCourse";
+    private static final String COURSE_NAME = "WashAcademyCourse";
 
     private static final String FINAL_BOOKMARK = "COURSE_COMPLETED";
 

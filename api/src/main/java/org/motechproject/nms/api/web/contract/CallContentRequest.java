@@ -5,7 +5,7 @@ package org.motechproject.nms.api.web.contract;
  *
  * 2.2.6 Save CallDetails API
  * IVR shall invoke this API to send MA call details to MoTech.
- * /api/mobileacademy/callDetails
+ * /api/washacademy/callDetails
  *
  * 3.2.2 Save Call Details API
  * This API enables IVR to send call details to NMS_MoTech_MK. This data is further saved in NMS database and used

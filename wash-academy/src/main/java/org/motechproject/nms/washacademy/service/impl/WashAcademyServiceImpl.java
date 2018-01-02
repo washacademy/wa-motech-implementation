@@ -47,12 +47,12 @@ import java.util.Map;
 /**
  * Simple implementation of the {@link WashAcademyService} interface.
  */
-@Service("mobileAcademyService")
+@Service("washAcademyService")
 public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String COURSE_CONTENT_FILE = "nmsCourse.json";
 
-    private static final String COURSE_NAME = "MobileAcademyCourse";
+    private static final String COURSE_NAME = "WashAcademyCourse";
 
     private static final String FINAL_BOOKMARK = "COURSE_COMPLETED";
 

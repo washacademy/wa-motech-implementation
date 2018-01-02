@@ -1,4 +1,4 @@
-package org.motechproject.nms.api.web.contract.mobileAcademy.sms;
+package org.motechproject.nms.api.web.contract.washAcademy.sms;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

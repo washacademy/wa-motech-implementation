@@ -3,13 +3,13 @@ package org.motechproject.nms.api.ut;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.nms.api.utils.CourseBuilder;
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfo;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfoNotification;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryStatus;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.RequestData;
-import org.motechproject.nms.api.web.validator.MobileAcademyValidator;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.SmsStatusRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryInfo;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryInfoNotification;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryStatus;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.RequestData;
+import org.motechproject.nms.api.web.validator.WashAcademyValidator;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
@@ -18,7 +18,7 @@ import static junit.framework.Assert.assertTrue;
 /**
  * Unit test for course structure validation
  */
-public class MobileAcademyValidatorUnitTest {
+public class WashAcademyValidatorUnitTest {
 
     private CourseResponse courseResponse;
 
@@ -30,21 +30,21 @@ public class MobileAcademyValidatorUnitTest {
     @Test
     public void TestValidCourseStructure() {
 
-        assertNull(MobileAcademyValidator.validateCourseResponse(courseResponse));
+        assertNull(WashAcademyValidator.validateCourseResponse(courseResponse));
     }
 
     @Test
     public void TestValidateChapterNull() {
 
         courseResponse.setChapters(null);
-        assertNotNull(MobileAcademyValidator.validateCourseResponse(courseResponse));
+        assertNotNull(WashAcademyValidator.validateCourseResponse(courseResponse));
     }
 
     @Test
     public void TestSmsStatusClientCorrelatorNull() {
         SmsStatusRequest status = GenerateValidSmsStatus();
         status.getRequestData().getDeliveryInfoNotification().setClientCorrelator(null);
-        String errors = MobileAcademyValidator.validateSmsStatus(status);
+        String errors = WashAcademyValidator.validateSmsStatus(status);
         assertNotNull(errors);
         assertTrue(errors.contains("ClientCorrelator"));
     }
@@ -54,7 +54,7 @@ public class MobileAcademyValidatorUnitTest {
 
         SmsStatusRequest status = GenerateValidSmsStatus();
         status.getRequestData().getDeliveryInfoNotification().getDeliveryInfo().setDeliveryStatus(null);
-        String errors = MobileAcademyValidator.validateSmsStatus(status);
+        String errors = WashAcademyValidator.validateSmsStatus(status);
         assertNotNull(errors);
         assertTrue(errors.contains("DeliveryStatus"));
     }
@@ -64,7 +64,7 @@ public class MobileAcademyValidatorUnitTest {
 
         SmsStatusRequest status = GenerateValidSmsStatus();
         status.getRequestData().getDeliveryInfoNotification().getDeliveryInfo().setAddress("987654321");
-        String errors = MobileAcademyValidator.validateSmsStatus(status);
+        String errors = WashAcademyValidator.validateSmsStatus(status);
         assertNotNull(errors);
         assertTrue(errors.contains("Address"));
     }
@@ -74,7 +74,7 @@ public class MobileAcademyValidatorUnitTest {
 
         SmsStatusRequest status = GenerateValidSmsStatus();
         status.getRequestData().getDeliveryInfoNotification().getDeliveryInfo().setAddress(null);
-        String errors = MobileAcademyValidator.validateSmsStatus(status);
+        String errors = WashAcademyValidator.validateSmsStatus(status);
         assertNotNull(errors);
         assertTrue(errors.contains("Address"));
     }

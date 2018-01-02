@@ -1,4 +1,4 @@
-package org.motechproject.nms.api.web.contract.mobileAcademy;
+package org.motechproject.nms.api.web.contract.washAcademy;
 
 /**
  * Call data object to track individual call data files played during a call

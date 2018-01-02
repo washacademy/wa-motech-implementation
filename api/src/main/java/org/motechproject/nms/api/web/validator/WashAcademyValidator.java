@@ -1,10 +1,10 @@
 package org.motechproject.nms.api.web.validator;
 
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
-import org.motechproject.nms.api.web.contract.mobileAcademy.SmsStatusRequest;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfo;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.DeliveryInfoNotification;
-import org.motechproject.nms.api.web.contract.mobileAcademy.sms.RequestData;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.SmsStatusRequest;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryInfo;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.DeliveryInfoNotification;
+import org.motechproject.nms.api.web.contract.washAcademy.sms.RequestData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,18 +13,18 @@ import java.util.regex.Pattern;
 /**
  * Validator helper class for API request and response
  */
-public final class MobileAcademyValidator {
+public final class WashAcademyValidator {
 
     public static final String INVALID = "<%s: Invalid>";
 
     public static final String ADDRESS_PATTERN = "tel: \\d{10}$";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MobileAcademyValidator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WashAcademyValidator.class);
 
     /**
      * Private constructor for static validation helpers
      */
-    private MobileAcademyValidator() {
+    private WashAcademyValidator() {
 
     }
 

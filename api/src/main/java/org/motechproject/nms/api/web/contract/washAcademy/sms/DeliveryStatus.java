@@ -1,4 +1,4 @@
-package org.motechproject.nms.api.web.contract.mobileAcademy.sms;
+package org.motechproject.nms.api.web.contract.washAcademy.sms;
 
 /**
  * Sms delivery status

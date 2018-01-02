@@ -49,7 +49,7 @@
 
     <osgi:reference id="propertyService" interface="org.motechproject.nms.props.service.PropertyService"/>
 
-    <osgi:reference id="mobileAcademyService" interface="org.motechproject.nms.mobileacademy.service.WashAcademyService"/>
+    <osgi:reference id="washAcademyService" interface="org.motechproject.nms.washacademy.service.WashAcademyService"/>
 
     <osgi:reference id="languageService" interface="org.motechproject.nms.region.service.LanguageService"/>
 

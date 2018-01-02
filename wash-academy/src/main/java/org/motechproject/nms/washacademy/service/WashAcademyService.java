@@ -10,7 +10,7 @@ import org.motechproject.nms.washacademy.dto.WaCourse;
 public interface WashAcademyService {
 
     /**
-     * Get the MA course structure for the given course name. This defaults to "MobileAcademyCourse" name
+     * Get the MA course structure for the given course name. This defaults to "WashAcademyCourse" name
      * @return Course data object with the course name
      */
     WaCourse getCourse();
@@ -22,7 +22,7 @@ public interface WashAcademyService {
     void setCourse(WaCourse course);
 
     /**
-     * Gets the course modification date as an epoch representation. This defaults to MobileAcademyCourse name
+     * Gets the course modification date as an epoch representation. This defaults to WashAcademyCourse name
      * @return int representation (epoch) of modified course date
      */
     long getCourseVersion();

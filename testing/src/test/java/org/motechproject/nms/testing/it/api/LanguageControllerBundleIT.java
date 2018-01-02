@@ -104,7 +104,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         // All 3 services deployed in DELHI
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.KILKARI));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_ACADEMY));
+        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
         // Services not deployed in KARNATAKA
 //        rh.bangaloreDistrict();  karnatakaCircle creates bangalore district

@@ -1,7 +1,7 @@
 [
   {
     "active": true,
-    "pattern": "/**/mobileacademy/**",
+    "pattern": "/**/washacademy/**",
     "supportedSchemes": [
       "NO_SECURITY"
     ],
@@ -47,7 +47,7 @@
 
   {
     "active": true,
-    "pattern": "/**/mobileacademy/**",
+    "pattern": "/**/washacademy/**",
     "supportedSchemes": [
       "NO_SECURITY"
     ],

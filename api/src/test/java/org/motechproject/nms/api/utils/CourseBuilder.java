@@ -1,7 +1,7 @@
 package org.motechproject.nms.api.utils;
 
 
-import org.motechproject.nms.api.web.contract.mobileAcademy.CourseResponse;
+import org.motechproject.nms.api.web.contract.washAcademy.CourseResponse;
 import org.motechproject.nms.washacademy.dto.WaCourse;
 
 /**
@@ -11,7 +11,7 @@ public final class CourseBuilder {
 
     public static CourseResponse generateValidCourseResponse() {
         CourseResponse response = new CourseResponse();
-        response.setName("MobileAcademyCourse");
+        response.setName("WashAcademyCourse");
         response.setCourseVersion(20150526L);
         response.setChapters("[]");
         return response;
@@ -19,7 +19,7 @@ public final class CourseBuilder {
 
     public static WaCourse generateValidCourseDto() {
         WaCourse course = new WaCourse();
-        course.setName("MobileAcademyCourse");
+        course.setName("WashAcademyCourse");
         course.setVersion(20150526L); // random, supposed to be millis eventually
         course.setContent("[{}]");
         return course;

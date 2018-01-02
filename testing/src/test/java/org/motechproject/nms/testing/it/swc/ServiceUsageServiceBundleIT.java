@@ -79,7 +79,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         CallDetailRecord lastMonth = new CallDetailRecord();
         lastMonth.setSwachchagrahi(swc);
         lastMonth.setCallingNumber(1111111111l);
-        lastMonth.setService(Service.MOBILE_ACADEMY);
+        lastMonth.setService(Service.WASH_ACADEMY);
         lastMonth.setCallDurationInPulses(1);
         lastMonth.setEndOfUsagePromptCounter(1);
         lastMonth.setWelcomePrompt(true);
@@ -112,7 +112,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         CallDetailRecord recordOne = new CallDetailRecord();
         recordOne.setSwachchagrahi(swc);
         recordOne.setCallingNumber(1111111111l);
-        recordOne.setService(Service.MOBILE_ACADEMY);
+        recordOne.setService(Service.WASH_ACADEMY);
         recordOne.setCallDurationInPulses(1);
         recordOne.setEndOfUsagePromptCounter(0);
         recordOne.setWelcomePrompt(true);
@@ -122,17 +122,17 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         CallDetailRecord recordTwo = new CallDetailRecord();
         recordTwo.setSwachchagrahi(swc);
         recordTwo.setCallingNumber(1111111111l);
-        recordTwo.setService(Service.MOBILE_ACADEMY);
+        recordTwo.setService(Service.WASH_ACADEMY);
         recordTwo.setCallDurationInPulses(1);
         recordTwo.setEndOfUsagePromptCounter(1);
         recordTwo.setWelcomePrompt(false);
         recordTwo.setCallStartTime(DateTime.now());
         callDetailRecordDataService.create(recordTwo);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.MOBILE_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.WASH_ACADEMY);
 
         assertEquals(swc, serviceUsage.getSwachchagrahi());
-        assertEquals(Service.MOBILE_ACADEMY, serviceUsage.getService());
+        assertEquals(Service.WASH_ACADEMY, serviceUsage.getService());
         assertEquals(2, serviceUsage.getUsageInPulses());
         assertEquals(1, serviceUsage.getEndOfUsage());
         assertEquals(true, serviceUsage.getWelcomePrompt());
@@ -160,10 +160,10 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Valid Worker", 1111111111L);
         swcService.add(swc);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.MOBILE_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.WASH_ACADEMY);
 
         assertEquals(swc, serviceUsage.getSwachchagrahi());
-        assertEquals(Service.MOBILE_ACADEMY, serviceUsage.getService());
+        assertEquals(Service.WASH_ACADEMY, serviceUsage.getService());
         assertEquals(0, serviceUsage.getUsageInPulses());
         assertEquals(0, serviceUsage.getEndOfUsage());
         assertEquals(false, serviceUsage.getWelcomePrompt());
