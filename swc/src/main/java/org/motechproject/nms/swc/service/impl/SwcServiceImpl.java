@@ -45,6 +45,7 @@ public class SwcServiceImpl implements SwcService {
     private static final String SWC_PURGE_TIME = "swc.purge_invalid_swc_start_time";
     private static final String SWC_PURGE_SEC_INTERVAL = "swc.purge_invalid_swc_sec_interval";
     private static final String WEEKS_TO_KEEP_INVALID_SWCS = "swc.weeks_to_keep_invalid_swcs";
+    private static final String ALLOW_ANONYMOUS_CALLS = "allow_anonymous_calls";
 
     private static final String SWC_PURGE_EVENT_SUBJECT = "wa.swc.purge_invalid_swc";
 
@@ -304,6 +305,16 @@ public class SwcServiceImpl implements SwcService {
         if (Math.abs(Weeks.weeksBetween(now, swachchagrahi.getInvalidationDate()).getWeeks()) < weeksToKeepInvalidSWCs) {
             throw new IllegalStateException(String.format("SWC must be in %s state for %s weeks before deleting",
                     status, weeksToKeepInvalidSWCs));
+        }
+    }
+
+    @Override
+    public Boolean isAnonymousAllowed(){
+        String flag = settingsFacade.getProperty(ALLOW_ANONYMOUS_CALLS);
+        if(flag.equalsIgnoreCase("true")) {
+           return true;
+        } else {
+            return false;
         }
     }
 }

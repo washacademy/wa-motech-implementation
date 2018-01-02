@@ -12,7 +12,7 @@ import org.motechproject.nms.region.domain.FullLocation;
 import org.motechproject.nms.region.domain.District;
 import org.motechproject.nms.region.domain.Language;
 import org.motechproject.nms.region.domain.State;
-
+import org.motechproject.nms.region.domain.Circle;
 import org.motechproject.nms.swc.domain.validation.ValidSwachchagrahi;
 import org.motechproject.nms.region.domain.validation.ValidFullLocation;
 import org.motechproject.nms.tracking.annotation.TrackClass;
@@ -98,6 +98,9 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     @Persistent(defaultFetchGroup = "true")
     private Panchayat panchayat;
 
+    @Field
+    @Persistent(defaultFetchGroup = "true")
+    private Circle circle;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
@@ -208,6 +211,11 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
         this.contactNumber = contactNumber;
     }
 
+    public Swachchagrahi(Long contactNumber, Circle circle){
+        this.contactNumber = contactNumber;
+        this.circle = circle;
+    }
+
     public Swachchagrahi(String name, Long contactNumber) {
         this.name = name;
         this.contactNumber = contactNumber;
@@ -291,6 +299,14 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     public SwcJobStatus getJobStatus() { return jobStatus; }
 
     public void setJobStatus(SwcJobStatus jobStatus) { this.jobStatus = jobStatus; }
+
+    public Circle getCircle() {
+        return circle;
+    }
+
+    public void setCircle(Circle circle) {
+        this.circle = circle;
+    }
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public boolean equals(Object o) {

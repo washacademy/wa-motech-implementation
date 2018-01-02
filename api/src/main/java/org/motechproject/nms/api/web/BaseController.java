@@ -38,7 +38,7 @@ import java.util.Set;
  *
  */
 public class BaseController {
-    public static final String MOBILE_ACADEMY = "mobileacademy";
+    public static final String WASH_ACADEMY = "washacademy";
     public static final String MOBILE_KUNJI = "mobilekunji";
     public static final String KILKARI = "kilkari";
 
@@ -386,7 +386,7 @@ public class BaseController {
     protected Service getServiceFromName(String serviceName) {
         Service service = null;
 
-        if (MOBILE_ACADEMY.equals(serviceName)) {
+        if (WASH_ACADEMY.equals(serviceName)) {
             service = Service.MOBILE_ACADEMY;
         }
 

@@ -62,7 +62,7 @@ public class LanguageController extends BaseController {
         StringBuilder failureReasons = validate(callingNumber, callId);
         validateFieldPresent(failureReasons, LANGUAGE_LOCATION_CODE, userLanguageRequest.getLanguageLocationCode());
 
-        if (!(MOBILE_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName))) {
+        if (!(WASH_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName))) {
             failureReasons.append(String.format(INVALID, SERVICE_NAME));
         }
 

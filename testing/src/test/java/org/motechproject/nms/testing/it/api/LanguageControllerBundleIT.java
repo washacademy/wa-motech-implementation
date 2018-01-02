@@ -270,10 +270,10 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         httpPost.addHeader("content-type", "application/json");
 
-        // the MOBILE_ACADEMY service hasn't been deployed for KARNATAKA, so this request should fail
+        // the WASH_ACADEMY service hasn't been deployed for KARNATAKA, so this request should fail
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpPost, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(HttpStatus.SC_NOT_IMPLEMENTED, response.getStatusLine().getStatusCode());
-        assertEquals("{\"failureReason\":\"<MOBILE_ACADEMY: Not Deployed In State>\"}", EntityUtils.toString(response.getEntity()));
+        assertEquals("{\"failureReason\":\"<WASH_ACADEMY: Not Deployed In State>\"}", EntityUtils.toString(response.getEntity()));
 
     }
 

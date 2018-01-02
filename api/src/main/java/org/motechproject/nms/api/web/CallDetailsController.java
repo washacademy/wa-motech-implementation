@@ -70,7 +70,7 @@ public class CallDetailsController extends BaseController {
         Service service = null;
         StringBuilder failureReasons;
 
-        if (!(MOBILE_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName))) {
+        if (!(WASH_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName))) {
             throw new IllegalArgumentException(String.format(INVALID, "serviceName"));
         }
 
@@ -83,7 +83,7 @@ public class CallDetailsController extends BaseController {
         // callDisconnectReason)
         failureReasons.append(validateCallDetailsCommonElements(callDetailRecordRequest));
 
-        if (MOBILE_ACADEMY.equals(serviceName)) {
+        if (WASH_ACADEMY.equals(serviceName)) {
             service = Service.MOBILE_ACADEMY;
 
             // Verify MA elements

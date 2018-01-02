@@ -2951,7 +2951,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFailureResponseJson("<MOBILE_ACADEMY: Not Deployed In State>");
+        String expectedJsonResponse = createFailureResponseJson("<WASH_ACADEMY: Not Deployed In State>");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(expectedJsonResponse,
@@ -3225,7 +3225,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFailureResponseJson("<MOBILE_ACADEMY: Not Deployed In State>");
+        String expectedJsonResponse = createFailureResponseJson("<WASH_ACADEMY: Not Deployed In State>");
 
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
@@ -3261,7 +3261,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID // callId
         );
 
-        String expectedJsonResponse = createFailureResponseJson("<MOBILE_ACADEMY: Not Deployed In State>");
+        String expectedJsonResponse = createFailureResponseJson("<WASH_ACADEMY: Not Deployed In State>");
 
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);

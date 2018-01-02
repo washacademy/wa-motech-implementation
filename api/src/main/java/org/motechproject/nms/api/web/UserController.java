@@ -7,10 +7,7 @@ import org.motechproject.nms.api.web.domain.InactiveJobCallAudit;
 import org.motechproject.nms.api.web.exception.NotAuthorizedException;
 import org.motechproject.nms.api.web.exception.NotDeployedException;
 import org.motechproject.nms.api.web.repository.InactiveJobCallAuditDataService;
-import org.motechproject.nms.swc.domain.ServiceUsage;
-import org.motechproject.nms.swc.domain.ServiceUsageCap;
-import org.motechproject.nms.swc.domain.Swachchagrahi;
-import org.motechproject.nms.swc.domain.SwcJobStatus;
+import org.motechproject.nms.swc.domain.*;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swc.service.ServiceUsageCapService;
 import org.motechproject.nms.swc.service.ServiceUsageService;
@@ -98,8 +95,7 @@ public class UserController extends BaseController {
         /*
         Make sure the url the user hit corresponds to a service we are expecting
          */
-        if (!(MOBILE_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName) ||
-                KILKARI.equals(serviceName))) {
+        if (!(WASH_ACADEMY.equals(serviceName))) {
             failureReasons.append(String.format(INVALID, SERVICE_NAME));
         }
 
@@ -110,7 +106,7 @@ public class UserController extends BaseController {
         /*
         Handle the FLW services
          */
-        if (MOBILE_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName)) {
+        if (WASH_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName)) {
             user = getFrontLineWorkerResponseUser(serviceName, callingNumber, circleObj);
         }
 
@@ -155,12 +151,18 @@ public class UserController extends BaseController {
         SwcUserResponse user = new SwcUserResponse();
         Service service = getServiceFromName(serviceName);
         ServiceUsage serviceUsage = new ServiceUsage(null, service, 0, 0, false);
-        Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
-        if (flw == null) {
-            flw = swcService.getInctiveByContactNumber(callingNumber);
+        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+//        if (swc == null) {
+//            swc = swcService.getInctiveByContactNumber(callingNumber);
+//        }
+
+        if(swc == null && circle != null && swcService.isAnonymousAllowed()){
+            swc = new Swachchagrahi(callingNumber, circle);
+            swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+            swcService.add(swc);
         }
 
-        State state = getStateForFrontLineWorker(flw, circle);
+        State state = getStateForFrontLineWorker(swc, circle);
 
         if (state != null) {
             if (!serviceDeployedInUserState(service, state)) {
@@ -173,20 +175,20 @@ public class UserController extends BaseController {
             }
         }
 
-        if (MOBILE_ACADEMY.equals(serviceName)) {
+        if (WASH_ACADEMY.equals(serviceName)) {
             // make sure that swc is authorized to use MA
-            restrictInactiveJobUserCheck(flw);
+            restrictInactiveJobUserCheck(swc);
         }
 
-        if (flw != null) {
-            Language language = flw.getLanguage();
+        if (swc != null) {
+            Language language = swc.getLanguage();
             if (null != language) {
                 user.setLanguageLocationCode(language.getCode());
             }
 
-            serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(flw, service);
+            serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, service);
 
-            if (!frontLineWorkerAuthorizedForAccess(flw, state)) {
+            if (!frontLineWorkerAuthorizedForAccess(swc, state)) {
                 throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
             }
         }
@@ -201,12 +203,12 @@ public class UserController extends BaseController {
         return user;
     }
 
-    private void restrictInactiveJobUserCheck(Swachchagrahi flw) {
+    private void restrictInactiveJobUserCheck(Swachchagrahi swc) {
 
-        if (flw != null && flw.getJobStatus() == SwcJobStatus.INACTIVE) {
-            inactiveJobCallAuditDataService.create(new InactiveJobCallAudit(DateUtil.now(), flw.getSwcId(), flw.getContactNumber()));
+        if (swc != null && swc.getJobStatus() == SwcJobStatus.INACTIVE) {
+            inactiveJobCallAuditDataService.create(new InactiveJobCallAudit(DateUtil.now(), swc.getSwcId(), swc.getContactNumber()));
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
-        } else if (flw == null) {
+        } else if (swc == null) {
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
         }
     }
