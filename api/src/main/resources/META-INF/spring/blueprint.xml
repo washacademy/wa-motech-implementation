@@ -13,11 +13,11 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <osgi:service ref="flwRejectionCsvService"
+    <osgi:service ref="swcRejectionCsvService"
                   interface="org.motechproject.nms.api.web.service.SwcCsvService" />
 
     <osgi:reference id="swcStatusUpdateAuditDataService"
-                    interface="org.motechproject.nms.flw.repository.SwcStatusUpdateAuditDataService" />
+                    interface="org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService" />
 
     <osgi:reference id="anonymousCallAuditDataService" interface="org.motechproject.nms.api.web.repository.AnonymousCallAuditDataService"/>
 
@@ -31,21 +31,21 @@
 
     <osgi:reference id="inboxService" interface="org.motechproject.nms.kilkari.service.InboxService"/>
 
-    <osgi:reference id="swcService" interface="org.motechproject.nms.flw.service.SwcService"/>
+    <osgi:reference id="swcService" interface="org.motechproject.nms.swc.service.SwcService"/>
 
-    <osgi:reference id="swcDataService" interface="org.motechproject.nms.flw.repository.SwcDataService"/>
+    <osgi:reference id="swcDataService" interface="org.motechproject.nms.swc.repository.SwcDataService"/>
 
-    <osgi:reference id="swcImportService" interface="org.motechproject.nms.flwUpdate.service.SwcImportService"/>
+    <osgi:reference id="swcImportService" interface="org.motechproject.nms.swcUpdate.service.SwcImportService"/>
 
-    <osgi:reference id="serviceUsageService" interface="org.motechproject.nms.flw.service.ServiceUsageService"/>
+    <osgi:reference id="serviceUsageService" interface="org.motechproject.nms.swc.service.ServiceUsageService"/>
 
-    <osgi:reference id="serviceUsageCapService" interface="org.motechproject.nms.flw.service.ServiceUsageCapService"/>
+    <osgi:reference id="serviceUsageCapService" interface="org.motechproject.nms.swc.service.ServiceUsageCapService"/>
 
-    <osgi:reference id="callDetailRecordService" interface="org.motechproject.nms.flw.service.CallDetailRecordService"/>
+    <osgi:reference id="callDetailRecordService" interface="org.motechproject.nms.swc.service.CallDetailRecordService"/>
 
-    <osgi:reference id="callContentService" interface="org.motechproject.nms.flw.service.CallContentService"/>
+    <osgi:reference id="callContentService" interface="org.motechproject.nms.swc.service.CallContentService"/>
 
-    <osgi:reference id="whitelistService" interface="org.motechproject.nms.flw.service.WhitelistService"/>
+    <osgi:reference id="whitelistService" interface="org.motechproject.nms.swc.service.WhitelistService"/>
 
     <osgi:reference id="propertyService" interface="org.motechproject.nms.props.service.PropertyService"/>
 
@@ -59,7 +59,7 @@
 
     <osgi:reference id="stateDataService" interface="org.motechproject.nms.region.repository.StateDataService"/>
 
-    <osgi:reference id="flwRejectionService" interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
+    <osgi:reference id="swcRejectionService" interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 

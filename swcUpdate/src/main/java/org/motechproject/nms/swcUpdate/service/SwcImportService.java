@@ -18,8 +18,8 @@ public interface SwcImportService {
 
     void importRchFrontLineWorker(Map<String, Object> record, Panchayat panchayat) throws InvalidLocationException, SwcExistingRecordException;
     /**
-     * Used to create or update an FLW from mcts or other sync services
-     * @param flwRecord key-value pair of properties for swc
+     * Used to create or update an SWC from mcts or other sync services
+     * @param swcRecord key-value pair of properties for swc
      */
-    boolean createUpdate(Map<String, Object> flwRecord, SubscriptionOrigin importOrigin);
+    boolean createUpdate(Map<String, Object> swcRecord, SubscriptionOrigin importOrigin);
 }

@@ -77,16 +77,16 @@ public class OpsController extends BaseController {
         LOGGER.info("/cleanCdr()");
         cdrFileService.cleanOldCallRecords();
     }
-    @RequestMapping(value = "/createUpdateRchFlw",
+    @RequestMapping(value = "/createUpdateRchSwc",
             method = RequestMethod.POST,
             headers = { "Content-type=application/json" })
     @ResponseStatus(HttpStatus.OK)
-    public void createUpdateRchFlw(@RequestBody AddSwcRequest addSwcRequest) {
+    public void createUpdateRchSwc(@RequestBody AddSwcRequest addSwcRequest) {
         StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
         if (failureReasons != null) {
             throw new IllegalArgumentException(failureReasons.toString());
         } else {
-            swcCsvService.persistFlwRch(addSwcRequest);
+            swcCsvService.persistSwcRch(addSwcRequest);
         }
     }
 

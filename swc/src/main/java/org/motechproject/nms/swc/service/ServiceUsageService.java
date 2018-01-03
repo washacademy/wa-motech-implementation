@@ -6,5 +6,5 @@ import org.motechproject.nms.props.domain.Service;
 
 
 public interface ServiceUsageService {
-    ServiceUsage getCurrentMonthlyUsageForFLWAndService(final Swachchagrahi swachchagrahi, final Service service);
+    ServiceUsage getCurrentMonthlyUsageForSWCAndService(final Swachchagrahi swachchagrahi, final Service service);
 }

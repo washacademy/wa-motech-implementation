@@ -23,7 +23,7 @@ class NmsCallContent(Base):
     __tablename__ = 'nms_call_content'
 
     id = Column(BigInteger, primary_key=True, index=True)
-    callDetailRecord_id_OID = Column(ForeignKey(u'nms_flw_cdrs.id', ondelete=u'CASCADE'), index=True)
+    callDetailRecord_id_OID = Column(ForeignKey(u'nms_swc_cdrs.id', ondelete=u'CASCADE'), index=True)
     completionFlag = Column(BIT(1))
     contentFile = Column(String(255, u'utf8_bin'))
     contentName = Column(String(255, u'utf8_bin'))
@@ -38,7 +38,7 @@ class NmsCallContent(Base):
     startTime = Column(DateTime)
     type = Column(String(255, u'utf8_bin'))
 
-    nms_flw_cdr = relationship(u'NmsFlwCdr')
+    nms_swc_cdr = relationship(u'NmsSwcCdr')
 
 
 class NmsCircle(Base):
@@ -111,8 +111,8 @@ class NmsDistrict(Base):
     nms_state = relationship(u'NmsState')
 
 
-class NmsFlwCdr(Base):
-    __tablename__ = 'nms_flw_cdrs'
+class NmsSwcCdr(Base):
+    __tablename__ = 'nms_swc_cdrs'
 
     id = Column(BigInteger, primary_key=True, index=True)
     callDisconnectReason = Column(String(255, u'utf8_bin'))
@@ -153,7 +153,7 @@ class NmsFrontLineWorker(Base):
     healthSubFacility_id_OID = Column(ForeignKey(u'nms_health_sub_facilities.id'), index=True)
     invalidationDate = Column(DateTime)
     language_id_OID = Column(ForeignKey(u'nms_languages.id'), index=True)
-    mctsFlwId = Column(String(255, u'utf8_bin'))
+    mctsSwcId = Column(String(255, u'utf8_bin'))
     name = Column(String(255, u'utf8_bin'))
     state_id_OID = Column(ForeignKey(u'nms_states.id'), index=True)
     status = Column(String(255, u'utf8_bin'))

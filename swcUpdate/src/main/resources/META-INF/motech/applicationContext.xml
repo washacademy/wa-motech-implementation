@@ -7,15 +7,15 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="org.motechproject.nms.flwUpdate" />
+    <context:component-scan base-package="org.motechproject.nms.swcUpdate" />
 
     <mvc:annotation-driven />
 
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-        <constructor-arg name="moduleName" value="flwUpdate" />
+        <constructor-arg name="moduleName" value="swcUpdate" />
         <constructor-arg name="i18n">
             <map>
-                <entry key="messages" value="../flwUpdate/resources/messages/" />
+                <entry key="messages" value="../swcUpdate/resources/messages/" />
             </map>
         </constructor-arg>
     </bean>

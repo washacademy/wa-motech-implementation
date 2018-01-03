@@ -93,7 +93,7 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
 
     private static final String WEEKS_TO_KEEP_INVALID_SWCS = "swc.weeks_to_keep_invalid_swcs";
 
-    private static final String FLW_PURGE_EVENT_SUBJECT = "nms.swc.purge_invalid_swc";
+    private static final String SWC_PURGE_EVENT_SUBJECT = "nms.swc.purge_invalid_swc";
 
     @Inject
     private SwcSettingsService swcSettingsService;
@@ -103,21 +103,21 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     @Inject
     private EventRelay eventRelay;
 
-    String oldWeeksToKeepInvalidFLWs;
+    String oldWeeksToKeepInvalidSWCs;
 
     @Before
     public void doTheNeedful() {
         testingService.clearDatabase();
 
         settingsFacade = swcSettingsService.getSettingsFacade();
-        oldWeeksToKeepInvalidFLWs = settingsFacade
+        oldWeeksToKeepInvalidSWCs = settingsFacade
                 .getProperty(WEEKS_TO_KEEP_INVALID_SWCS);
     }
 
     @After
     public void restore() {
         settingsFacade.setProperty(WEEKS_TO_KEEP_INVALID_SWCS,
-                oldWeeksToKeepInvalidFLWs);
+                oldWeeksToKeepInvalidSWCs);
     }
 
     private void createLanguageLocationData() {
@@ -148,7 +148,7 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     @Test
     @Ignore
     public void testPurgeOldInvalidFrontLineWorkers() {
-        // FLW1 & 2 Should be purged, the others should remain
+        // SWC1 & 2 Should be purged, the others should remain
 
         Swachchagrahi swc1 = new Swachchagrahi("Test Worker", 1111111110L);
         swc1.setJobStatus(SwcJobStatus.ACTIVE);
@@ -344,7 +344,7 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     @Test
     public void verifyFT548() throws InterruptedException {
         Map<String, Object> eventParams = new HashMap<>();
-        MotechEvent motechEvent = new MotechEvent(FLW_PURGE_EVENT_SUBJECT,
+        MotechEvent motechEvent = new MotechEvent(SWC_PURGE_EVENT_SUBJECT,
                 eventParams);
 
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);

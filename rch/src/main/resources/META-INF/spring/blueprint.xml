@@ -33,10 +33,10 @@
                     interface="org.motechproject.nms.kilkari.service.MctsBeneficiaryValueProcessor"/>
 
     <osgi:reference id="swcImportService"
-                    interface="org.motechproject.nms.flwUpdate.service.SwcImportService" />
+                    interface="org.motechproject.nms.swcUpdate.service.SwcImportService" />
 
     <osgi:reference id="swcService"
-                    interface="org.motechproject.nms.flw.service.SwcService" />
+                    interface="org.motechproject.nms.swc.service.SwcService" />
 
     <osgi:reference id="mctsBeneficiaryImportService"
                     interface="org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService"/>
@@ -44,7 +44,7 @@
     <osgi:reference id="actionFinderService"
                     interface="org.motechproject.nms.kilkari.service.ActionFinderService"/>
 
-    <osgi:reference id="flwRejectionService"
+    <osgi:reference id="swcRejectionService"
                     interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
 
     <osgi:reference id="childRejectionService"

@@ -39,12 +39,12 @@ public class ValidSwachchagrahiUnitTest {
     // Test Valid
     @Test
     public void testActiveValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        flw.setState(state);
-        flw.setDistrict(district);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swc.setState(state);
+        swc.setDistrict(district);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         assertEquals(0, constraintViolations.size());
     }
@@ -52,11 +52,11 @@ public class ValidSwachchagrahiUnitTest {
     // Test Active no state
     @Test
     public void testActiveNoStateInValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        flw.setDistrict(district);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         // One violation is Active without state and district the other is from @FullLocatinValidator
         assertEquals(2, constraintViolations.size());
@@ -65,11 +65,11 @@ public class ValidSwachchagrahiUnitTest {
     // Test Active no district
     @Test
     public void testActiveNoDistrictInValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
-        flw.setState(state);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        swc.setState(state);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         // One violation is Active without state and district the other is from @FullLocatinValidator
         assertEquals(2, constraintViolations.size());
@@ -78,10 +78,10 @@ public class ValidSwachchagrahiUnitTest {
     // Test Active no district and state
     @Test
     public void testActiveNoDistrictNoStateInValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.ACTIVE);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         assertEquals(1, constraintViolations.size());
         assertEquals("Active SWCs must have Location set.", constraintViolations.iterator().next().getMessage());
@@ -90,10 +90,10 @@ public class ValidSwachchagrahiUnitTest {
     // Test ANONYMOUS no location
     @Test
     public void testANONYMOUSValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         assertEquals(0, constraintViolations.size());
     }
@@ -101,10 +101,10 @@ public class ValidSwachchagrahiUnitTest {
     // Test INACTIVE no location
     @Test
     public void testINACTIVEValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         assertEquals(0, constraintViolations.size());
     }
@@ -113,10 +113,10 @@ public class ValidSwachchagrahiUnitTest {
     @Test
     @Ignore
     public void testINVALIDValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
-        flw.setCourseStatus(SwachchagrahiStatus.INVALID);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
+        swc.setCourseStatus(SwachchagrahiStatus.INVALID);
 
-        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(flw);
+        Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator.validate(swc);
 
         assertEquals(1, constraintViolations.size());
     }

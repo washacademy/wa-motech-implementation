@@ -1,7 +1,7 @@
 package org.motechproject.nms.swc.exception;
 
 /**
- * Signals an issue with importing an FLW which already exits in database.
+ * Signals an issue with importing an SWC which already exits in database.
  */
 public class SwcExistingRecordException extends Exception {
 

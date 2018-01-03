@@ -70,8 +70,8 @@ public class SwcServiceImpl implements SwcService {
 
     /**
      * Use the MOTECH scheduler to setup a repeating job
-     * The job will start today at the time stored in swc.purge_invalid_flw_start_time in swc.properties
-     * It will repeat every swc.purge_invalid_flw_sec_interval seconds (default value is a day)
+     * The job will start today at the time stored in swc.purge_invalid_swc_start_time in swc.properties
+     * It will repeat every swc.purge_invalid_swc_sec_interval seconds (default value is a day)
      */
     private void schedulePurgeOfOldSwc() {
         //Calculate today's fire time
@@ -124,7 +124,7 @@ public class SwcServiceImpl implements SwcService {
         };
 
         Long purgedRecordCount = swcDataService.executeQuery(queryExecution);
-        LOGGER.info(String.format("Purged %s FLWs with status %s and invalidation date before %s",
+        LOGGER.info(String.format("Purged %s SWCs with status %s and invalidation date before %s",
                 purgedRecordCount, status, cutoff.toString()));
     }
 
@@ -147,18 +147,18 @@ public class SwcServiceImpl implements SwcService {
     @Override
     public void add(Swachchagrahi record) {
 
-        // TODO: also check for FLWDesignation, once we add that field
+        // TODO: also check for SWCDesignation, once we add that field
         // TODO: find out which language/location fields are mandatory
         if ((record.getName() != null) && (record.getContactNumber() != null) &&
                 (record.getDistrict() != null)) {
 
 //            (record.getLanguage() != null)
-            // the record was added via CSV upload and the FLW hasn't called the service yet
+            // the record was added via CSV upload and the SWC hasn't called the service yet
             record.setCourseStatus(SwachchagrahiStatus.INACTIVE);
 
         } else if (record.getContactNumber() != null) {
 
-            // the record was added when the FLW called the IVR service for the first time
+            // the record was added when the SWC called the IVR service for the first time
             record.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
         }
 
@@ -201,8 +201,8 @@ public class SwcServiceImpl implements SwcService {
 
     @Override
     public Swachchagrahi getByContactNumber(Long contactNumber) {
-        List<Swachchagrahi> flws = swcDataService.findByContactNumberAndJobStatus(contactNumber, SwcJobStatus.ACTIVE);
-        Collections.sort(flws, new Comparator<Swachchagrahi>() {
+        List<Swachchagrahi> swcs = swcDataService.findByContactNumberAndJobStatus(contactNumber, SwcJobStatus.ACTIVE);
+        Collections.sort(swcs, new Comparator<Swachchagrahi>() {
             @Override
             public int compare(Swachchagrahi t1, Swachchagrahi t2) {
                 if (t1.getCreationDate().isBefore(t2.getCreationDate())) {
@@ -214,8 +214,8 @@ public class SwcServiceImpl implements SwcService {
                 }
             }
         });
-        if (flws.size() != 0) {
-            return flws.get(flws.size() - 1);
+        if (swcs.size() != 0) {
+            return swcs.get(swcs.size() - 1);
         } else {
             return null;
         }
@@ -223,9 +223,9 @@ public class SwcServiceImpl implements SwcService {
 
     @Override
     public Swachchagrahi getInctiveByContactNumber(Long contactNumber) {
-        List<Swachchagrahi> flws = swcDataService.findByContactNumberAndJobStatus(contactNumber, SwcJobStatus.INACTIVE);
-        if (flws.size() != 0) {
-            return flws.get(flws.size() - 1);
+        List<Swachchagrahi> swcs = swcDataService.findByContactNumberAndJobStatus(contactNumber, SwcJobStatus.INACTIVE);
+        if (swcs.size() != 0) {
+            return swcs.get(swcs.size() - 1);
         } else {
             return null;
         }
@@ -255,9 +255,9 @@ public class SwcServiceImpl implements SwcService {
         SwachchagrahiStatus oldStatus = retrievedSwc.getCourseStatus();
 
         if (oldStatus == SwachchagrahiStatus.ANONYMOUS) {
-            // if the FLW was ANONYMOUS and the required fields get added, update her status to ACTIVE
+            // if the SWC was ANONYMOUS and the required fields get added, update her status to ACTIVE
 
-            // TODO: also check for FLWDesignation once we get spec clarity on what that is
+            // TODO: also check for SWCDesignation once we get spec clarity on what that is
             if ((record.getName() != null) && (record.getContactNumber() != null) &&
                     (record.getDistrict() != null)) {
 

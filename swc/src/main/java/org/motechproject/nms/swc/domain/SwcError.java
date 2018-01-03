@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Audit log object for tracking failed FLW updates
+ * Audit log object for tracking failed SWC updates
  */
 @Entity(tableName = "wa_swc_errors")
 public class SwcError {

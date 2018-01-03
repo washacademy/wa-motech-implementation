@@ -8,7 +8,7 @@ import org.motechproject.nms.api.web.domain.InactiveJobCallAudit;
 import java.util.List;
 
 /**
- * Data service to CRUD on Inactive Job Flw Call audit
+ * Data service to CRUD on Inactive Job Swc Call audit
  */
 
 public interface InactiveJobCallAuditDataService extends MotechDataService<InactiveJobCallAudit> {

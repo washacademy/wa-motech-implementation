@@ -38,7 +38,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
     private static final String SMS_RETRY_COUNT = "sms.retry.count";
     private static final String DELIVERY_IMPOSSIBLE = "DeliveryImpossible";
     private static final String RETRY_FLAG = "retry.flag";
-    private static final String FLWID = "swcId";
+    private static final String SWCID = "swcId";
     private static final String SMS_CONTENT = "smsContent";
     private static final String DELIVERY_STATUS = "deliveryStatus";
     private static final String ADDRESS = "address";
@@ -107,7 +107,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         try {
             LOGGER.debug("Handling course completion notification event");
-            Long swcId = (Long) event.getParameters().get(FLWID);
+            Long swcId = (Long) event.getParameters().get(SWCID);
 
             List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
             if (ccrs == null || ccrs.isEmpty()) {
@@ -172,7 +172,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             try {
                 String smsContent = buildSmsContent(swcId, ccr);
                 MotechEvent retryEvent = new MotechEvent(COURSE_COMPLETED_SUBJECT);
-                retryEvent.getParameters().put(FLWID, swcId);
+                retryEvent.getParameters().put(SWCID, swcId);
                 retryEvent.getParameters().put(SMS_CONTENT, smsContent);
                 retryEvent.getParameters().put(RETRY_FLAG, true);
 

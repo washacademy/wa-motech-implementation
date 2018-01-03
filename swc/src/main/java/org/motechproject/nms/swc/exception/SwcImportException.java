@@ -1,7 +1,7 @@
 package org.motechproject.nms.swc.exception;
 
 /**
- * Signals an issue with importing an FLW.
+ * Signals an issue with importing an SWC.
  */
 public class SwcImportException extends RuntimeException {
 

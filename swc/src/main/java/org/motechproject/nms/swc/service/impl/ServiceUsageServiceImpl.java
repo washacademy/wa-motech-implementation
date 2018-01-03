@@ -25,7 +25,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
     }
 
     @Override
-    public ServiceUsage getCurrentMonthlyUsageForFLWAndService(final Swachchagrahi swachchagrahi, final org.motechproject.nms.props.domain.Service service) {
+    public ServiceUsage getCurrentMonthlyUsageForSWCAndService(final Swachchagrahi swachchagrahi, final org.motechproject.nms.props.domain.Service service) {
         ServiceUsage serviceUsage = new ServiceUsage(swachchagrahi, service, 0, 0, false);
 
         @SuppressWarnings("unchecked")
@@ -34,8 +34,8 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
             public List<CallDetailRecord> execute(Query query, InstanceSecurityRestriction restriction) {
                 DateTime monthStart = DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay();
 
-                query.setFilter("swachchagrahi == swc && service == flw_service && callStartTime >= monthStart");
-                query.declareParameters("Swachchagrahi swc, org.joda.time.DateTime monthStart, org.motechproject.nms.props.domain.Service flw_service");
+                query.setFilter("swachchagrahi == swc && service == swc_service && callStartTime >= monthStart");
+                query.declareParameters("Swachchagrahi swc, org.joda.time.DateTime monthStart, org.motechproject.nms.props.domain.Service swc_service");
 
                 return (List<CallDetailRecord>) query.execute(swachchagrahi, monthStart, service);
             }
