@@ -156,9 +156,12 @@ public class UserController extends BaseController {
 //            swc = swcService.getInctiveByContactNumber(callingNumber);
 //        }
 
-        if(swc == null && circle != null && swcService.isAnonymousAllowed()){
-            swc = new Swachchagrahi(callingNumber, circle);
-            swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+        if(swc == null && swcService.isAnonymousAllowed()){
+            swc = swcService.getInctiveByContactNumber(callingNumber);
+            if (swc == null && circle != null) {
+                swc = new Swachchagrahi(callingNumber, circle);
+                swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+            }
             swcService.add(swc);
         }
 
