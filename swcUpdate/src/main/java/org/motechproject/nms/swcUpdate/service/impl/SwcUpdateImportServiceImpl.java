@@ -156,7 +156,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         }
 
         if (flw == null && mctsFlwId != null) {
-            flw = swcService.getByMctsFlwIdAndPanchayat(mctsFlwId, state);
+            flw = swcService.getBySwcIdAndPanchayat(mctsFlwId, state);
         }
 
         if (flw == null && msisdn != null) {

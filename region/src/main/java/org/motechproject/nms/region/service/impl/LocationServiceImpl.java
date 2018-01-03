@@ -115,13 +115,11 @@ public class LocationServiceImpl implements LocationService {
 
 
         // set and/or create panchayat
-        Long svid = map.get(NON_CENSUS_PANCHAYAT) == null ? 0 : (Long) map.get(NON_CENSUS_PANCHAYAT);
         Long vcode = map.get(PANCHAYAT_ID) == null ? 0 : (Long) map.get(PANCHAYAT_ID);
-        if (vcode != 0 || svid != 0) {
-            Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, vcode, svid);
+        if (vcode != 0) {
+            Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, vcode, vcode);
             if (panchayat == null && createIfNotExists) {
                 panchayat = new Panchayat();
-                panchayat.setSvid(svid);
                 panchayat.setVcode(vcode);
                 panchayat.setBlock(block);
                 panchayat.setName((String) map.get(PANCHAYAT_NAME));

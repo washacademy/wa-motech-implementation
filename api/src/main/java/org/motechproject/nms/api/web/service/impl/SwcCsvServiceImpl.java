@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.motechproject.nms.api.web.contract.AddSwcRequest;
 import org.motechproject.nms.api.web.service.SwcCsvService;
 import org.motechproject.nms.region.repository.PanchayatDataService;
+import org.motechproject.nms.swc.domain.SwcJobStatus;
 import org.motechproject.nms.swc.service.SwcService;
 import org.motechproject.nms.swcUpdate.service.SwcImportService;
 import org.motechproject.nms.swc.domain.RejectionReasons;
@@ -69,7 +70,8 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         validateFieldPresent(failureReasons, "stateId", addSwcRequest.getStateId());
         validateFieldPresent(failureReasons, "districtId", addSwcRequest.getDistrictId());
         validateFieldString(failureReasons, "name", addSwcRequest.getName());
-        validateFieldGfStatus(failureReasons, gfStatus, addSwcRequest.getGfStatus());
+        validateFieldPresent(failureReasons, "blockId", addSwcRequest.getBlockId());
+        validateFieldPresent(failureReasons, "panchayatId", addSwcRequest.getPanchayatId());
         if (failureReasons.length() > 0) {
             String fieldName = failureReasons.toString().split("[\\W]")[1];
             csvRejectionsRch(fieldName, addSwcRequest);
@@ -83,19 +85,14 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     public void persistFlwRch(AddSwcRequest addSwcRequest) {
         Map<String, Object> flwProperties = new HashMap<>();
         flwProperties.put(SwcConstants.NAME, addSwcRequest.getName());
-        flwProperties.put(SwcConstants.GF_ID, addSwcRequest.getSwcId());
+        flwProperties.put(SwcConstants.ID, addSwcRequest.getSwcId());
         flwProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
         flwProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
         flwProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
-        flwProperties.put(SwcConstants.GF_STATUS, addSwcRequest.getGfStatus());
+        flwProperties.put(SwcConstants.GF_STATUS, SwcJobStatus.ACTIVE.toString());
+        flwProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
+        flwProperties.put(SwcConstants.PANCHAYAT_ID, addSwcRequest.getPanchayatId());
 
-        if (addSwcRequest.getGfType() != null) {
-            flwProperties.put(SwcConstants.GF_TYPE, addSwcRequest.getGfType());
-        }
-
-        if (addSwcRequest.getBlockId() != null) {
-            flwProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
-        }
 
         swcImportService.createUpdate(flwProperties, SubscriptionOrigin.RCH_IMPORT);
     }
@@ -115,7 +112,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
 
     private String rchFlwActionFinder(AddSwcRequest record) {
-        if (swcService.getByMctsFlwIdAndPanchayat(record.getSwcId(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
+        if (swcService.getBySwcIdAndPanchayat(record.getSwcId(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
@@ -131,7 +128,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcImportRejection.setDistrictId(record.getDistrictId());
         swcImportRejection.setBlockId(record.getBlockId());
         swcImportRejection.setPanchayatId(record.getPanchayatId());
-        swcImportRejection.setSwcStatus(record.getGfStatus());
+        swcImportRejection.setSwcStatus(SwcJobStatus.ACTIVE.toString());
         swcImportRejection.setSource("RCH-Import");
         swcImportRejection.setAccepted(accepted);
         swcImportRejection.setRejectionReason(rejectionReason);
@@ -175,18 +172,6 @@ public class SwcCsvServiceImpl implements SwcCsvService {
             return false;
         }
         if (value.length() > 0) {
-            return true;
-        }
-        errors.append(String.format(INVALID, fieldName));
-        return false;
-    }
-
-
-    private static boolean validateFieldGfStatus(StringBuilder errors, String fieldName, String value) {
-        if (!validateFieldPresent(errors, fieldName, value)) {
-            return false;
-        }
-        if (("Active").equals(value) || ("Inactive").equals(value)) {
             return true;
         }
         errors.append(String.format(INVALID, fieldName));

@@ -26,9 +26,8 @@ public class SwcRecord {
     private String mobileNo;
     private String gfName;
     private String gfSex;
-    private String gfAge;
+    private Long gfAge;
     private String execDate;
-    private String gfStatus;
 
     @XmlElement(name = "Block_Name")
     public void setBlockName(String talukaName) {
@@ -140,12 +139,12 @@ public class SwcRecord {
         this.gfSex = gfType;
     }
 
-    public String getGfAge() {
+    public Long getGfAge() {
         return gfAge;
     }
 
     @XmlElement(name = "GF_age")
-    public void setGfAge(String gfType) {
+    public void setGfAge(Long gfType) {
         this.gfAge = gfType;
     }
 
@@ -158,14 +157,6 @@ public class SwcRecord {
         this.execDate = execDate;
     }
 
-    public String getGfStatus() {
-        return gfStatus;
-    }
-
-    @XmlElement(name = "GF_Status")
-    public void setGfStatus(String gfStatus) {
-        this.gfStatus = gfStatus;
-    }
 
     public Map<String, Object> toSwcRecordMap() {
         Map<String, Object> map = new HashMap<>();
@@ -179,8 +170,9 @@ public class SwcRecord {
         map.put(SwcConstants.GF_ID, getGfId() == null ? null : getGfId().toString());
         map.put(SwcConstants.MOBILE_NO, getMobileNo() == null ? null : Long.parseLong(getMobileNo()));
         map.put(SwcConstants.GF_NAME, getGfName());
+        map.put(SwcConstants.GF_SEX, "".equals(getGfSex()) || getGfSex() == null ? null : getGfSex());
+        map.put(SwcConstants.GF_AGE, "".equals(getGfAge()) || getGfAge() == null ? null : getGfAge());
         map.put(SwcConstants.EXEC_DATE, "".equals(getExecDate()) ? null : LocalDate.parse(getExecDate(), DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
-        map.put(SwcConstants.GF_STATUS, getGfStatus());
         return map;
     }
 }

@@ -1,5 +1,6 @@
 package org.motechproject.nms.swcUpdate.utils;
 
+import org.motechproject.nms.swc.domain.SwcJobStatus;
 import org.motechproject.nms.swcUpdate.contract.SwcRecord;
 import org.motechproject.nms.rejectionhandler.domain.SwcImportRejection;
 
@@ -26,8 +27,9 @@ public final class RejectedObjectConverter {
         swcImportRejection.setRejectionReason(rejectionReason);
         swcImportRejection.setAction(action);
         swcImportRejection.setSwcName(record.getGfName());
-        swcImportRejection.setSwcStatus(record.getGfStatus());
+        swcImportRejection.setSwcStatus(SwcJobStatus.ACTIVE.toString());
         swcImportRejection.setSex(record.getGfSex());
+        swcImportRejection.setUpdateDateNic(record.getExecDate());
 
 
         return swcImportRejection;

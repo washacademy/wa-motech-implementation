@@ -24,7 +24,7 @@ public interface SwcService {
 
     Swachchagrahi getBySwcId(String swcId);
 
-    Swachchagrahi getByMctsFlwIdAndPanchayat(String mctsFlwId, Panchayat state);
+    Swachchagrahi getBySwcIdAndPanchayat(String mctsFlwId, Panchayat state);
 
     Swachchagrahi getById(Long id);
 

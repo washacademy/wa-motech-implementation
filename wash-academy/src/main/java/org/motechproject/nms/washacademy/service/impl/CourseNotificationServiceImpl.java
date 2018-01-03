@@ -211,7 +211,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
 
         if (swc == null) {
-            throw new IllegalStateException("Unable to find swc for swcId: " + swcId);
+            throw new IllegalStateException("Unable to find swc for Id: " + swcId);
         }
 
         // Build location code
@@ -220,7 +220,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         }
 
         if (smsLanguageProperty == null || smsLanguageProperty.isEmpty()) {
-            LOGGER.debug("No language code found in FLW. Reverting to national default");
+            LOGGER.debug("No language code found in SWC. Reverting to national default");
             smsLanguageProperty = SMS_DEFAULT_LANGUAGE_PROPERTY;
         }
 

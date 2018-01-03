@@ -309,13 +309,13 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
 
         int saved = 0;
         int rejected = 0;
-        Panchayat panchayat = panchayatDataService.findById(stateCode);
 
         for (SwcRecord record : acceptedRchAshas) {
             try {
                 action = this.rchFlwActionFinder(record);
                 Long msisdn = Long.parseLong(record.getMobileNo());
                 String flwId = record.getGfId().toString();
+                Panchayat panchayat = panchayatDataService.findByCode(record.getPanchayatId());
                 Swachchagrahi flw = swcService.getByContactNumber(msisdn);
                 if ((flw != null && (!flwId.equals(flw.getSwcId()) || panchayat != flw.getPanchayat()))  && flw.getCourseStatus() != SwachchagrahiStatus.ANONYMOUS) {
                     LOGGER.error("Existing SWC with same MSISDN but different ID");
@@ -519,7 +519,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
     }
 
     private String rchFlwActionFinder(SwcRecord record) {
-        if (swcService.getByMctsFlwIdAndPanchayat(record.getGfId().toString(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
+        if (swcService.getBySwcIdAndPanchayat(record.getGfId().toString(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";

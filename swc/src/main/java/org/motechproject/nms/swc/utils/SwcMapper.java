@@ -66,7 +66,6 @@ public final class SwcMapper {
         name = (String) record.get(SwcConstants.NAME);
         qualification = (String) record.get(SwcConstants.QUALIFICATION);
 
-        String gfStatus = (String) record.get(SwcConstants.GF_STATUS);
 
         if (contactNumber != null) {
             swc.setContactNumber(contactNumber);
@@ -80,10 +79,9 @@ public final class SwcMapper {
             swc.setName(name);
         }
 
-        if (gfStatus != null && !gfStatus.isEmpty()) {
             SwcJobStatus jobStatus = SwcJobStatus.ACTIVE;
             swc.setJobStatus(jobStatus);
-        }
+
 
         setSwcLocation(swc, location);
 

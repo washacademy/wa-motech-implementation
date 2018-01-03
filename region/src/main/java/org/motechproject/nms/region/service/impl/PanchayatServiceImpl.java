@@ -26,13 +26,13 @@ public class PanchayatServiceImpl implements PanchayatService {
 
             @Override
             public String getSqlQuery() {
-                return "select * from wash_panchayats where block_id_oid = ? and vcode = ? and svid = ?";
+                return "select * from wash_panchayats where block_id_oid = ? and vcode = ?";
             }
 
             @Override
             public Panchayat execute(Query query) {
                 query.setClass(Panchayat.class);
-                ForwardQueryResult fqr = (ForwardQueryResult) query.execute(block.getId(), vcode, svid);
+                ForwardQueryResult fqr = (ForwardQueryResult) query.execute(block.getId(), vcode);
                 if (fqr.isEmpty()) {
                     return null;
                 }

@@ -171,10 +171,10 @@ public class SwcServiceImpl implements SwcService {
     }
 
     @Override
-    public Swachchagrahi getByMctsFlwIdAndPanchayat(final String mctsFlwId, final Panchayat panchayat) {
-        if (mctsFlwId == null || panchayat == null) {
-            LOGGER.error(String.format("Attempt to look up SWC by a null mctsFlwId (%s) or panchayat (%s)",
-                    mctsFlwId, panchayat == null ? "null" : panchayat.getName()));
+    public Swachchagrahi getBySwcIdAndPanchayat(final String swcId, final Panchayat panchayat) {
+        if (swcId == null || panchayat == null) {
+            LOGGER.error(String.format("Attempt to look up SWC by a null swcId (%s) or panchayat (%s)",
+                    swcId, panchayat == null ? "null" : panchayat.getName()));
             return null;
         }
 
@@ -182,12 +182,12 @@ public class SwcServiceImpl implements SwcService {
         QueryExecution<Swachchagrahi> queryExecution = new QueryExecution<Swachchagrahi>() {
             @Override
             public Swachchagrahi execute(Query query, InstanceSecurityRestriction restriction) {
-                query.setFilter("swcId == _mctsFlwId && panchayat == _panchayat");
-                query.declareParameters("String _mctsFlwId, org.motechproject.nms.region.domain.Panchayat _panchayat");
+                query.setFilter("swcId == _swcId && panchayat == _panchayat");
+                query.declareParameters("String _swcId, org.motechproject.nms.region.domain.Panchayat _panchayat");
                 query.setClass(Swachchagrahi.class);
                 query.setUnique(true);
 
-                return (Swachchagrahi) query.execute(mctsFlwId, panchayat);
+                return (Swachchagrahi) query.execute(swcId, panchayat);
             }
         };
 
@@ -246,14 +246,6 @@ public class SwcServiceImpl implements SwcService {
     @Transactional
     public void update(Swachchagrahi record) {
 
-        if (record.getJobStatus() == SwcJobStatus.INACTIVE) {
-            // if the caller sets the job status to INVALID, that takes precedence over any other status change
-            swcDataService.update(record);
-            SwcStatusUpdateAudit swcStatusUpdateAudit = new SwcStatusUpdateAudit(DateUtil.now(), record.getSwcId(), null, UpdateStatusType.ACTIVE_TO_INVALID);
-            swcStatusUpdateAuditDataService.create(swcStatusUpdateAudit);
-
-            return;
-        }
 
         Swachchagrahi retrievedSwc = getByContactNumber(record.getContactNumber());
         if (retrievedSwc == null) {

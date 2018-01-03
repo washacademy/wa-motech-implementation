@@ -11,7 +11,6 @@ public class AddSwcRequest {
     private Long districtId;
     private Long blockId;
     private Long panchayatId;
-    private String gfType;
     private String gfStatus;
 
     public AddSwcRequest() {
@@ -73,14 +72,6 @@ public class AddSwcRequest {
 
     public void setPanchayatId(Long panchayatId) {
         this.panchayatId = panchayatId;
-    }
-
-    public String getGfType() {
-        return gfType;
-    }
-
-    public void setGfType(String gfType) {
-        this.gfType = gfType;
     }
 
     public String getGfStatus() {
