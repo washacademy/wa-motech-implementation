@@ -40,7 +40,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SwcCsvServiceImpl.class);
 
     @Autowired
-    private SwcRejectionService flwRejectionService;
+    private SwcRejectionService swcRejectionService;
 
     @Autowired
     private SwcService swcService;
@@ -54,7 +54,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     @Override
     @Transactional
     public StringBuilder csvUploadRch(AddSwcRequest addSwcRequest) {
-        log("REQUEST: /ops/createUpdateRchFlw", String.format(
+        log("REQUEST: /ops/createUpdateRchSwc", String.format(
                 "callingNumber=%s, rchId=%s, name=%s, state=%d, district=%d",
                 LogHelper.obscure(addSwcRequest.getMsisdn()),
                 addSwcRequest.getSwcId(),
@@ -80,49 +80,49 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
     @Override
     @Transactional
-    public void persistFlwRch(AddSwcRequest addSwcRequest) {
-        Map<String, Object> flwProperties = new HashMap<>();
-        flwProperties.put(SwcConstants.NAME, addSwcRequest.getName());
-        flwProperties.put(SwcConstants.GF_ID, addSwcRequest.getSwcId());
-        flwProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
-        flwProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
-        flwProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
-        flwProperties.put(SwcConstants.GF_STATUS, addSwcRequest.getGfStatus());
+    public void persistSwcRch(AddSwcRequest addSwcRequest) {
+        Map<String, Object> swcProperties = new HashMap<>();
+        swcProperties.put(SwcConstants.NAME, addSwcRequest.getName());
+        swcProperties.put(SwcConstants.GF_ID, addSwcRequest.getSwcId());
+        swcProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
+        swcProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
+        swcProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
+        swcProperties.put(SwcConstants.GF_STATUS, addSwcRequest.getGfStatus());
 
         if (addSwcRequest.getGfType() != null) {
-            flwProperties.put(SwcConstants.GF_TYPE, addSwcRequest.getGfType());
+            swcProperties.put(SwcConstants.GF_TYPE, addSwcRequest.getGfType());
         }
 
         if (addSwcRequest.getBlockId() != null) {
-            flwProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
+            swcProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
         }
 
-        swcImportService.createUpdate(flwProperties, SubscriptionOrigin.RCH_IMPORT);
+        swcImportService.createUpdate(swcProperties, SubscriptionOrigin.RCH_IMPORT);
     }
 
     @Override
     @Transactional
     public void csvRejectionsRch(String fieldName, AddSwcRequest addSwcRequest) {
-        String action = this.rchFlwActionFinder(addSwcRequest);
+        String action = this.rchSwcActionFinder(addSwcRequest);
         if ("contactNumber".equals(fieldName)) {
-            flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.MOBILE_NUMBER_EMPTY_OR_WRONG_FORMAT.toString(), action));
+            swcRejectionService.createUpdate(swcRejectionRch(addSwcRequest, false, RejectionReasons.MOBILE_NUMBER_EMPTY_OR_WRONG_FORMAT.toString(), action));
         } else if (gfStatus.equals(fieldName)) {
-            flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.GF_STATUS_EMPTY_OR_WRONG_FORMAT.toString(), action));
+            swcRejectionService.createUpdate(swcRejectionRch(addSwcRequest, false, RejectionReasons.GF_STATUS_EMPTY_OR_WRONG_FORMAT.toString(), action));
         } else {
-            flwRejectionService.createUpdate(flwRejectionRch(addSwcRequest, false, RejectionReasons.FIELD_NOT_PRESENT.toString(), action));
+            swcRejectionService.createUpdate(swcRejectionRch(addSwcRequest, false, RejectionReasons.FIELD_NOT_PRESENT.toString(), action));
         }
     }
 
 
-    private String rchFlwActionFinder(AddSwcRequest record) {
-        if (swcService.getByMctsFlwIdAndPanchayat(record.getSwcId(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
+    private String rchSwcActionFinder(AddSwcRequest record) {
+        if (swcService.getByMctsSwcIdAndPanchayat(record.getSwcId(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
         }
     }
 
-    public static SwcImportRejection flwRejectionRch(AddSwcRequest record, Boolean accepted, String rejectionReason, String action) {
+    public static SwcImportRejection swcRejectionRch(AddSwcRequest record, Boolean accepted, String rejectionReason, String action) {
         SwcImportRejection swcImportRejection = new SwcImportRejection();
         swcImportRejection.setSwcName(record.getName());
         swcImportRejection.setSwcID(Long.parseLong(record.getSwcId()));

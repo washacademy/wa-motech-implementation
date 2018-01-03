@@ -119,7 +119,7 @@ public class CallDetailsController extends BaseController {
 
         createCallDetailRecord(swc, callDetailRecordRequest, service);
 
-        // if this is the FLW's first time calling the service, set her status to ACTIVE based on NMS.GEN.FLW.003
+        // if this is the SWC's first time calling the service, set her status to ACTIVE based on NMS.GEN.SWC.003
         if (swc.getCourseStatus() == SwachchagrahiStatus.INACTIVE &&
                 validateSwcNameAndNumber(swc) &&
                 validateSwcLocation(swc)) {
@@ -130,19 +130,19 @@ public class CallDetailsController extends BaseController {
         }
     }
 
-    private boolean validateSwcLocation(Swachchagrahi flw) {
-        return flw.getState() != null && flw.getDistrict() != null;
+    private boolean validateSwcLocation(Swachchagrahi swc) {
+        return swc.getState() != null && swc.getDistrict() != null;
     }
 
-    private boolean validateSwcNameAndNumber(Swachchagrahi flw) {
-        return flw.getName() != null && flw.getContactNumber() != null;
+    private boolean validateSwcNameAndNumber(Swachchagrahi swc) {
+        return swc.getName() != null && swc.getContactNumber() != null;
     }
 
-    private void createCallDetailRecord(Swachchagrahi flw, CallDetailRecordRequest callDetailRecordRequest,
+    private void createCallDetailRecord(Swachchagrahi swc, CallDetailRecordRequest callDetailRecordRequest,
                                         Service service) {
         CallDetailRecord cdr = new CallDetailRecord();
         cdr.setService(service);
-        cdr.setSwachchagrahi(flw);
+        cdr.setSwachchagrahi(swc);
         cdr.setCallingNumber(callDetailRecordRequest.getCallingNumber());
         cdr.setCallId(callDetailRecordRequest.getCallId());
         cdr.setOperator(callDetailRecordRequest.getOperator());

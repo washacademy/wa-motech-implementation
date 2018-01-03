@@ -19,7 +19,7 @@ public class SwcValidator implements ConstraintValidator<ValidSwachchagrahi, Swa
             return true;
         }
 
-        // An active FLW must have a state and district
+        // An active SWC must have a state and district
         if (swc.getCourseStatus() == SwachchagrahiStatus.ACTIVE &&
                 (swc.getState() == null || swc.getDistrict() == null)) {
             return false;
@@ -34,7 +34,7 @@ public class SwcValidator implements ConstraintValidator<ValidSwachchagrahi, Swa
             return false;
         }
 
-        // invalid FLWs can't have a contact number
+        // invalid SWCs can't have a contact number
         if (swc.getCourseStatus() == SwachchagrahiStatus.INVALID && swc.getContactNumber() != null) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate(

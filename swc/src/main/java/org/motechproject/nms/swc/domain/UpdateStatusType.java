@@ -1,7 +1,7 @@
 package org.motechproject.nms.swc.domain;
 
 /**
- * Data types during Flw Status
+ * Data types during Swc Status
  */
 public enum UpdateStatusType {
     ANONYMOUS_TO_ACTIVE,

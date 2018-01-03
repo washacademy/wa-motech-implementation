@@ -199,9 +199,9 @@ public class WashAcademyController extends BaseController {
 
         // validate scores
         if (validateMAScores(bookmarkRequest.getScoresByChapter())) {
-            Swachchagrahi flw = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
-            Long flwId = flw.getId();
-            WaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, flwId);
+            Swachchagrahi swc = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
+            Long swcId = swc.getId();
+            WaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, swcId);
             washAcademyService.setBookmark(bookmark);
         }
     }
@@ -244,13 +244,13 @@ public class WashAcademyController extends BaseController {
             value = "/notify",
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void sendNotification(@RequestBody Long flwId) {
+    public void sendNotification(@RequestBody Long swcId) {
 
-        log("REQUEST: /washacademy/notify (POST)", String.format("flwId=%s", String.valueOf(flwId)));
+        log("REQUEST: /washacademy/notify (POST)", String.format("swcId=%s", String.valueOf(swcId)));
 
         // done with validation
         try {
-            washAcademyService.triggerCompletionNotification(flwId);
+            washAcademyService.triggerCompletionNotification(swcId);
         } catch (CourseNotCompletedException cnc) {
             LOGGER.error("Could not send notification: " + cnc.toString());
             throw cnc;

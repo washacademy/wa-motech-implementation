@@ -51,7 +51,7 @@ public class ContactNumberAudit {
         return swcId;
     }
 
-    public void setFlwId(Long swcId) {
+    public void setSwcId(Long swcId) {
         this.swcId = swcId;
     }
 

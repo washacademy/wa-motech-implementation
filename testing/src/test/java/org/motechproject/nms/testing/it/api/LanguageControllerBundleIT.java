@@ -222,7 +222,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
     @Test
     @Ignore
-    public void testSetLanguageNoFLW() throws IOException, InterruptedException {
+    public void testSetLanguageNoSWC() throws IOException, InterruptedException {
 
         HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
@@ -239,7 +239,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
         Language language = swc.getLanguage();
         assertNotNull(language);
-        assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
+        assertEquals("SWC Language Code", rh.hindiLanguage().getCode(),
                 language.getCode());
     }
 
@@ -296,7 +296,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
-        assertEquals("FLW Language Code", rh.hindiLanguage().getCode(),
+        assertEquals("SWC Language Code", rh.hindiLanguage().getCode(),
                 language.getCode());
     }
 
@@ -306,7 +306,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT463() throws IOException, InterruptedException {
-        // create FLW record
+        // create SWC record
         Swachchagrahi swc = new Swachchagrahi(1111111112l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
@@ -461,7 +461,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     	Language language = new Language("99", "Papiamento");
         languageDataService.create(language);
         
-    	// create anonymous FLW record
+    	// create anonymous SWC record
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
         swcService.add(swc);
         
@@ -490,6 +490,6 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
-        assertEquals("FLW Language Code", "99", language.getCode());
+        assertEquals("SWC Language Code", "99", language.getCode());
     }
 }

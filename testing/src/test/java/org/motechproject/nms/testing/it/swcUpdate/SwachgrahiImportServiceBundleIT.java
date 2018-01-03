@@ -178,7 +178,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         stateDataService.create(state1);
     }
 
-    // This test should load the FLW with MCTS id '#1' and attempt to update their MSISDN to a number already
+    // This test should load the SWC with MCTS id '#1' and attempt to update their MSISDN to a number already
     // in use.  This should result in a unique constraint exception
     @Test(expected = CsvImportDataException.class)
     public void testImportMSISDNConflict() throws Exception {
@@ -199,11 +199,11 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swcService.add(swc);
         transactionManager.commit(status);
 
-        Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#1\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
-    // This test should load the FLW with MSISDN 1234567890 however that FLW already has a different MCTS ID
+    // This test should load the SWC with MSISDN 1234567890 however that SWC already has a different MCTS ID
     // assigned to them.  This should result in an exception
     //NMS_FT_538
     @Test(expected = CsvImportDataException.class)
@@ -212,7 +212,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
 
-        Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#1\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
@@ -229,29 +229,29 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void testImportWhenDistrictLanguageLocationPresent() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
         Swachchagrahi swc = swcService.getByContactNumber(1234567890L);
-        assertFLW(swc, "#0", 1234567890L, "FLW 0", "District 11", "L1");
+        assertSWC(swc, "#0", 1234567890L, "SWC 0", "District 11", "L1");
         assertEquals(SwachchagrahiStatus.INACTIVE, swc.getCourseStatus());
     }
 
     @Test
     public void testImportWhenDistrictLanguageLocationNotPresent() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t12\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t12\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
         Swachchagrahi swc = swcService.getByContactNumber(1234567890L);
-        assertFLW(swc, "#0", 1234567890L, "FLW 0", "District 12", null);
+        assertSWC(swc, "#0", 1234567890L, "SWC 0", "District 12", null);
     }
 
     /**
-     * NMS_FT_541: To verify FLW upload is rejected when mandatory parameter district is missing.
+     * NMS_FT_541: To verify SWC upload is rejected when mandatory parameter district is missing.
      */
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenDistrictNotPresent() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
@@ -261,7 +261,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swcImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
 
         Swachchagrahi swc1 = swcService.getByContactNumber(9999999996L);
-        assertFLW(swc1, "72185", 9999999996L, "Bishnu Priya Behera", "Koraput", null);
+        assertSWC(swc1, "72185", 9999999996L, "Bishnu Priya Behera", "Koraput", null);
 
         // verify location data was created on the fly
         State state = stateDataService.findByCode(1L);
@@ -274,13 +274,13 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify FLW record is uploaded successfully when all mandatory parameters are present.
+     * To verify SWC record is uploaded successfully when all mandatory parameters are present.
      */
     @Test
     public void verifyFT535() throws Exception {
-        importCsvFileForFLW("swc.txt");
+        importCsvFileForSWC("swc.txt");
         Swachchagrahi swc1 = swcService.getByContactNumber(1234567899L);
-        assertFLW(swc1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
+        assertSWC(swc1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", swc1.getState().toString());
         assertEquals(SwachchagrahiStatus.INACTIVE, swc1.getCourseStatus());
         // Assert audit trail log
@@ -292,45 +292,45 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify FLW status must be updated successfully from Anonymous to Active.
+     * To verify SWC status must be updated successfully from Anonymous to Active.
      */
     @Test
     public void verifyFT536() throws Exception {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Swachchagrahi swc1 = swcService.getByContactNumber(1234567890L);
-        assertFLW(swc1, "#0", 1234567890L, "FLW 0", "District 11", "L1");
+        assertSWC(swc1, "#0", 1234567890L, "SWC 0", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", swc1.getState().toString());
         assertEquals(SwachchagrahiStatus.ACTIVE, swc1.getCourseStatus());
     }
 
     /**
-     * To verify FLW upload is rejected when mandatory parameter MSISDN is missing.
+     * To verify SWC upload is rejected when mandatory parameter MSISDN is missing.
      */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT537() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
     /**
-     * To verify FLW upload is rejected when mandatory parameter state is missing.
+     * To verify SWC upload is rejected when mandatory parameter state is missing.
      */
     @Test(expected = IllegalArgumentException.class)
     public void verifyFT540() throws Exception {
-        Reader reader = createReaderWithHeadersWithNoState("#1\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeadersWithNoState("#1\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
     /**
-     * To verify FLW upload is rejected when mandatory parameter name is missing.
+     * To verify SWC upload is rejected when mandatory parameter name is missing.
      */
     @Test
     public void verifyFT542() throws Exception {
-            importCsvFileForFLW("swc_name_missing.txt");
+            importCsvFileForSWC("swc_name_missing.txt");
             // Assert audit trail log
             CsvAuditRecord csvAuditRecord = csvAuditRecordDataService.retrieveAll()
                     .get(0);
@@ -340,44 +340,44 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify FLW upload is rejected when mandatory parameter MSISDN is having invalid value
+     * To verify SWC upload is rejected when mandatory parameter MSISDN is having invalid value
      */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT543() throws Exception {
-        Reader reader = createReaderWithHeaders("#1\t123456789\tFLW 1\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#1\t123456789\tSWC 1\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
     /**
-     * To verify FLW upload is rejected when mandatory parameter MSISDN is having invalid value
+     * To verify SWC upload is rejected when mandatory parameter MSISDN is having invalid value
      */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT544() throws Exception {
-        Reader reader = createReaderWithHeadersWithInvalidState("#1\t1234567890\tFLW 1\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeadersWithInvalidState("#1\t1234567890\tSWC 1\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
     /**
-     * To verify FLW upload is rejected when mandatory parameter District is having invalid value
+     * To verify SWC upload is rejected when mandatory parameter District is having invalid value
      */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT545() throws Exception {
-        Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 1\t111\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#1\t1234567890\tSWC 1\t111\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
     /**
-     * To verify FLW upload is rejected when combination of state and District is invalid.
+     * To verify SWC upload is rejected when combination of state and District is invalid.
      */
     @Test(expected = CsvImportDataException.class)
     public void verifyFT546() throws Exception {
         State state2 = createState(2L, "State 2");
         createDistrict(state2, 22L, "District 22");
-        Reader reader = createReaderWithHeaders("#1\t1234567890\tFLW 1\t22\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#1\t1234567890\tSWC 1\t22\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
-    private void assertFLW(Swachchagrahi swc, String mctsSwcId, Long contactNumber, String name, String districtName, String languageLocationCode) {
+    private void assertSWC(Swachchagrahi swc, String mctsSwcId, Long contactNumber, String name, String districtName, String languageLocationCode) {
         assertNotNull(swc);
         assertEquals(contactNumber, null != swc.getContactNumber() ? swc.getContactNumber() : null);
         assertEquals(name, swc.getName());
@@ -426,9 +426,9 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * Method used to import CSV File For FLW Data
+     * Method used to import CSV File For SWC Data
      */
-    private void importCsvFileForFLW(String fileName) throws InterruptedException, IOException {
+    private void importCsvFileForSWC(String fileName) throws InterruptedException, IOException {
         HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/swcUpdate/import", TestContext.getJettyPort()));
         FileBody fileBody = new FileBody(new File(String.format("src/test/resources/csv/%s", fileName)));
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -456,17 +456,17 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
 
-        importCsvFileForFLW("swc_location_update_msisdn.txt");
+        importCsvFileForSWC("swc_location_update_msisdn.txt");
 
         swc = swcService.getByContactNumber(1234567890L);
 
-        // deleting the FLW to avoid conflicts at later stage
+        // deleting the SWC to avoid conflicts at later stage
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(DateTime.now().minusYears(1));
         swcService.update(swc);
         swcService.delete(swc);
 
-        assertFLW(swc, "#0", null, "Test MSISDN", "District 12", language1.getCode());
+        assertSWC(swc, "#0", null, "Test MSISDN", "District 12", language1.getCode());
 
         List<CsvAuditRecord> auditRecords = csvAuditRecordDataService.retrieveAll();
         assertNotNull(auditRecords);
@@ -478,7 +478,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * Verify that an FLWs state can be updated
+     * Verify that an SWCs state can be updated
      */
     @Test
     public void verifyNIP166() throws InterruptedException, IOException {
@@ -498,11 +498,11 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
 
-        importCsvFileForFLW("swc_update_state_by_msisdn.txt");
+        importCsvFileForSWC("swc_update_state_by_msisdn.txt");
 
         swc = swcService.getByContactNumber(1234567890L);
 
-        assertFLW(swc, "#0", 1234567890L, "Test MSISDN", "District 22", language1.getCode());
+        assertSWC(swc, "#0", 1234567890L, "Test MSISDN", "District 22", language1.getCode());
 
         List<CsvAuditRecord> auditRecords = csvAuditRecordDataService.retrieveAll();
         assertNotNull(auditRecords);
@@ -512,7 +512,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         assertEquals("Success", auditRecord.getOutcome());
         assertEquals("swc_update_state_by_msisdn.txt", auditRecord.getFile());
 
-        // deleting the FLW to avoid conflicts at later stage
+        // deleting the SWC to avoid conflicts at later stage
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(DateTime.now().minusYears(1));
         swcService.update(swc);
@@ -522,12 +522,12 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     // Test whether MSISDN is updated in Bookmark, Activity and Course Completion Records along with Swc
     @Test
     public void testMsisdnUpdateInMa() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long oldMsisdn = 1234567890L;
 
         Swachchagrahi swc = swcService.getByContactNumber(oldMsisdn);
-        assertFLW(swc, "#0", oldMsisdn, "FLW 0", "District 11", "L1");
+        assertSWC(swc, "#0", oldMsisdn, "SWC 0", "District 11", "L1");
 
         Long swcId = swc.getId();
         WaBookmark bookmark = new WaBookmark(swcId, VALID_CALL_ID, null, null);
@@ -544,12 +544,12 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         maService.setBookmark(bookmark);
 
         // Update Msisdn
-        reader = createReaderWithHeaders("#0\t9876543210\tFLW 0\t11\t18-08-2016\tASHA\tActive");
+        reader = createReaderWithHeaders("#0\t9876543210\tSWC 0\t11\t18-08-2016\tASHA\tActive");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long newMsisdn = 9876543210L;
 
         swc = swcService.getByContactNumber(newMsisdn);
-        assertFLW(swc, "#0", newMsisdn, "FLW 0", "District 11", "L1");
+        assertSWC(swc, "#0", newMsisdn, "SWC 0", "District 11", "L1");
 
         assertNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID));
         assertNotNull(maService.getBookmark(newMsisdn, VALID_CALL_ID));

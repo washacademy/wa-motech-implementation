@@ -23,10 +23,10 @@ public class SwachchagrahiUnitTest {
 
     @Test
     public void testContactNumberTooShort() {
-        Swachchagrahi flw = new Swachchagrahi(111111111L);
+        Swachchagrahi swc = new Swachchagrahi(111111111L);
 
         Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator
-                .validateProperty(flw, "contactNumber");
+                .validateProperty(swc, "contactNumber");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("contactNumber must be 10 digits", constraintViolations.iterator().next().getMessage());
@@ -34,10 +34,10 @@ public class SwachchagrahiUnitTest {
 
     @Test
     public void testContactNumberTooLong() {
-        Swachchagrahi flw = new Swachchagrahi(11111111111L);
+        Swachchagrahi swc = new Swachchagrahi(11111111111L);
 
         Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator
-                .validateProperty(flw, "contactNumber");
+                .validateProperty(swc, "contactNumber");
 
         assertEquals(1, constraintViolations.size());
         assertEquals("contactNumber must be 10 digits", constraintViolations.iterator().next().getMessage());
@@ -45,10 +45,10 @@ public class SwachchagrahiUnitTest {
 
     @Test
     public void testContactNumberValid() {
-        Swachchagrahi flw = new Swachchagrahi(1111111111L);
+        Swachchagrahi swc = new Swachchagrahi(1111111111L);
 
         Set<ConstraintViolation<Swachchagrahi>> constraintViolations = validator
-                .validateProperty(flw, "contactNumber");
+                .validateProperty(swc, "contactNumber");
 
         assertEquals(0, constraintViolations.size());
     }

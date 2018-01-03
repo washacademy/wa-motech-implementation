@@ -9,7 +9,7 @@ public interface SwcCsvService {
 
     StringBuilder csvUploadRch(AddSwcRequest addSwcRequest);
 
-    void persistFlwRch(AddSwcRequest addSwcRequest);
+    void persistSwcRch(AddSwcRequest addSwcRequest);
 
     void csvRejectionsRch(String fieldName, AddSwcRequest addSwcRequest);
 }

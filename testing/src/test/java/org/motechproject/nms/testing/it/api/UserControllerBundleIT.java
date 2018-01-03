@@ -577,7 +577,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     // Request undeployed service by swc location
     @Test
-    public void testUndeployedServiceByFLWLocation() throws IOException, InterruptedException {
+    public void testUndeployedServiceBySWCLocation() throws IOException, InterruptedException {
         createSwcWithLocationNoLanguageNoDeployedServices();
 
         HttpGet httpGet = createHttpGet(
@@ -759,7 +759,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
   
 
-    // An FLW that does not exist
+    // An SWC that does not exist
     @Test
     public void testGetUserDetailsUnknownUser() throws IOException, InterruptedException {
         createCircleWithLanguage();
@@ -822,7 +822,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertNotNull(swc);
         Language language = swc.getLanguage();
         assertNotNull(language);
-        assertEquals("FLW Language Code", rh.hindiLanguage().getCode(), language.getCode());
+        assertEquals("SWC Language Code", rh.hindiLanguage().getCode(), language.getCode());
     }
 
     @Test
@@ -854,7 +854,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
     }
 
-    // An FLW with usage for both MA and MK
+    // An SWC with usage for both MA and MK
     @Test
     public void testGetUserDetailsUserOfBothServices() throws IOException, InterruptedException {
         createSwcWithLanguageFullUsageOfBothServiceUncapped();
@@ -883,7 +883,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
     }
 
-    // An FLW with usage and a service with a cap
+    // An SWC with usage and a service with a cap
     @Test
     public void testGetUserDetailsServiceCapped() throws IOException, InterruptedException {
         createSwcWithLanguageFullUsageOfBothServiceUncapped();
@@ -1031,7 +1031,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSetLanguageNoFLW() throws IOException, InterruptedException {
+    public void testSetLanguageNoSWC() throws IOException, InterruptedException {
         createCircleWithLanguage();
 
         HttpPost httpPost = createHttpPost("mobilekunji", new UserLanguageRequest(1111111111L, VALID_CALL_ID,
@@ -1043,7 +1043,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertNotNull(swc);
         Language language = swc.getLanguage();
         assertNotNull(language);
-        assertEquals("FLW Language Code", rh.hindiLanguage().getCode(), language.getCode());
+        assertEquals("SWC Language Code", rh.hindiLanguage().getCode(), language.getCode());
     }
 
     @Test
@@ -1070,7 +1070,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = swcService.getByContactNumber(1111111111L);
         Language language = swc.getLanguage();
         assertNotNull(language);
-        assertEquals("FLW Language Code", "99", language.getCode());
+        assertEquals("SWC Language Code", "99", language.getCode());
     }
  
 
@@ -1112,7 +1112,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT340() throws InterruptedException, IOException {
         setupWhiteListData();
 
-        // create a FLW with whitelist number and whitelist state
+        // create a SWC with whitelist number and whitelist state
         Swachchagrahi whitelistWorker = new Swachchagrahi("Test",
                 WHITELIST_CONTACT_NUMBER);
         whitelistWorker.setState(whitelistState);
@@ -1239,7 +1239,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT342() throws InterruptedException, IOException {
         setupWhiteListData();
 
-        // create a FLW with non-whitelist number and whitelist state
+        // create a SWC with non-whitelist number and whitelist state
         Swachchagrahi notWhitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", NOT_WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
         notWhitelistWorker.setState(whitelistState);
         notWhitelistWorker.setDistrict(rh.newDelhiDistrict());
@@ -1550,7 +1550,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT439() throws InterruptedException, IOException {
         setupWhiteListData();
 
-        // create a FLW with whitelist number and whitelist state
+        // create a SWC with whitelist number and whitelist state
         Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ANONYMOUS);
         whitelistWorker.setState(whitelistState);
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
@@ -1597,7 +1597,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT440() throws InterruptedException, IOException {
         setupWhiteListData();
 
-        // create a FLW with whitelist number and whitelist state
+        // create a SWC with whitelist number and whitelist state
         Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Dingo Ate Baby", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
         whitelistWorker.setState(whitelistState);
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
@@ -1678,7 +1678,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT443() throws InterruptedException, IOException {
         setupWhiteListData();
 
-        // create a FLW with non-whitelist number and whitelist state
+        // create a SWC with non-whitelist number and whitelist state
         Swachchagrahi notWhitelistWorker = new Swachchagrahi("Test",
                 NOT_WHITELIST_CONTACT_NUMBER);
         notWhitelistWorker.setState(whitelistState);
@@ -1723,7 +1723,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT444() throws InterruptedException, IOException {
         setupWhiteListData();
 
-        // create a FLW with non-whitelist number and whitelist state
+        // create a SWC with non-whitelist number and whitelist state
         Swachchagrahi notWhitelistWorker = new Swachchagrahi("Test",
                 NOT_WHITELIST_CONTACT_NUMBER);
         notWhitelistWorker.setState(whitelistState);
@@ -1874,9 +1874,9 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     /**
      * This case has been added to test the functionality mentioned in
-     * NMS.GEN.FLW.008. The NMS system shall provide means to mark an FLW as
-     * invalid using CSV upload. Once an FLW is marked invalid, any incoming
-     * call with MSISDN that is same as that of invalid FLW shall be treated as
+     * NMS.GEN.SWC.008. The NMS system shall provide means to mark an SWC as
+     * invalid using CSV upload. Once an SWC is marked invalid, any incoming
+     * call with MSISDN that is same as that of invalid SWC shall be treated as
      * that of an anonymous caller.
      */
     // TODO JIRA issue: https://applab.atlassian.net/browse/NMS-236
@@ -2462,19 +2462,19 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     /**
      * To get the details of the inactive user using get user details API when
-     * languageLocation code is retrieved based on state and district. FLW must
+     * languageLocation code is retrieved based on state and district. SWC must
      * exist in system with status as Inactive
      */
     @Test
     public void verifyFT461() throws IOException, InterruptedException {
-        // create Invalid FLW record
+        // create Invalid SWC record
         Swachchagrahi swc = ApiTestHelper.createSwc("Baby Dingo", 1200000001l, "123", SwachchagrahiStatus.INACTIVE);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
         swc.setState(rh.karnatakaState());
         swcService.add(swc);
 
-        // assert for FLW status
+        // assert for SWC status
         swc = swcService.getByContactNumber(1200000001l);
         assertTrue(SwachchagrahiStatus.INACTIVE == swc.getCourseStatus());
         
@@ -2510,23 +2510,23 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     /**
      * To get the details of the active user using get user details API when
-     * languageLocation code is retrieved based on state and district. FLW must
+     * languageLocation code is retrieved based on state and district. SWC must
      * exist in system with status as active.
      */
     @Test
     public void verifyFT462() throws IOException, InterruptedException {
-        // create anonymous FLW record
+        // create anonymous SWC record
         Swachchagrahi swc = ApiTestHelper.createSwc("Frankie Dingo", 1200000001l, "123", SwachchagrahiStatus.ANONYMOUS);
         swcService.add(swc);
 
-        // update FLW status to ACTIVE
+        // update SWC status to ACTIVE
         swc = swcService.getByContactNumber(1200000001l);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
         swc.setState(rh.karnatakaState());
         swcService.update(swc);
 
-        // assert for FLW status
+        // assert for SWC status
         swc = swcService.getByContactNumber(1200000001l);
         assertTrue(SwachchagrahiStatus.ACTIVE == swc.getCourseStatus());
 
@@ -2572,12 +2572,12 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
     
     private void createSwcWithStatusActive(){
-    	// create anonymous FLW record
+    	// create anonymous SWC record
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
 
-        // update FLW status to ACTIVE
+        // update SWC status to ACTIVE
         swc = swcService.getByContactNumber(1111111111L);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
@@ -2593,7 +2593,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
     
     private void createSwcWithStatusInactive(){
-    	// create Invalid FLW record
+    	// create Invalid SWC record
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
@@ -3078,7 +3078,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT430() throws IOException, InterruptedException {
-        // add FLW with active status
+        // add SWC with active status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
@@ -3122,7 +3122,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT431() throws IOException, InterruptedException {
-        // add FLW with In active status
+        // add SWC with In active status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright",
                 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
@@ -3170,7 +3170,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT432() throws IOException, InterruptedException {
-        // add FLW with Invalid status
+        // add SWC with Invalid status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
@@ -3205,7 +3205,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT434() throws IOException, InterruptedException {
-        // add FLW with active status
+        // add SWC with active status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright",
                 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
@@ -3241,7 +3241,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT435() throws IOException, InterruptedException {
-        // add FLW with In active status
+        // add SWC with In active status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright",
                 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
@@ -3280,7 +3280,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT436() throws IOException, InterruptedException {
-        // add FLW with Invalid status
+        // add SWC with Invalid status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
@@ -3319,7 +3319,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY, 5000);
         serviceUsageCapDataService.create(serviceUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Jingo Jango", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(district);
         swc.setState(district.getState());
@@ -3382,7 +3382,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY, 5000);
         serviceUsageCapDataService.create(nationalUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(d);
         swc.setState(d.getState());
@@ -3425,7 +3425,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that MA service shall maintain the pulses consumed by FLW for
+     * To verify that MA service shall maintain the pulses consumed by SWC for
      * MA usage.
      */
     // TODO https://applab.atlassian.net/browse/NMS-241
@@ -3436,7 +3436,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
         
-        // Create FLW with no usage
+        // Create SWC with no usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(district);
         swc.setState(district.getState());
@@ -3540,7 +3540,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY, 500);
         serviceUsageCapDataService.create(nationalUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(district);
         swc.setState(district.getState());
@@ -3581,7 +3581,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse,
                 EntityUtils.toString(response.getEntity()));
 
-        // Update FLW usage to previous month last day time such that it is resetted now
+        // Update SWC usage to previous month last day time such that it is resetted now
 
         cdr.setCallStartTime(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().minusMinutes(1));
         callDetailRecordDataService.update(cdr);
@@ -3626,7 +3626,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY, 100);
         serviceUsageCapDataService.create(nationalUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(d);
         swc.setState(d.getState());
@@ -3734,7 +3734,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY, 150);
         serviceUsageCapDataService.create(stateUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(district);
         swc.setState(district.getState());
@@ -3841,7 +3841,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         ServiceUsageCap nationalUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 100);
         serviceUsageCapDataService.create(nationalUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ANONYMOUS);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
@@ -3946,7 +3946,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_KUNJI, 150);
         serviceUsageCapDataService.create(stateUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
@@ -4052,7 +4052,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_KUNJI, 150);
         serviceUsageCapDataService.create(stateUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
@@ -4091,7 +4091,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse,
                 EntityUtils.toString(response.getEntity()));
 
-        // Update FLW usage to previous month last day time such that it is resetted now
+        // Update SWC usage to previous month last day time such that it is resetted now
 
         cdr.setCallStartTime(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().minusMinutes(1));
         callDetailRecordDataService.update(cdr);
@@ -4136,7 +4136,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_KUNJI, 150);
         serviceUsageCapDataService.create(stateUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
@@ -4175,7 +4175,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse,
                 EntityUtils.toString(response.getEntity()));
 
-        // Update FLW usage to previous month last day time such that it is resetted now
+        // Update SWC usage to previous month last day time such that it is resetted now
 
         cdr.setCallStartTime(DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay().minusMinutes(1));
         callDetailRecordDataService.update(cdr);
@@ -4217,7 +4217,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.MOBILE_KUNJI, 150);
         serviceUsageCapDataService.create(stateUsageCap);
 
-        // FLW
+        // SWC
         Swachchagrahi swc = ApiTestHelper.createSwc("Claire Underwood", 1200000000l, null, SwachchagrahiStatus.ACTIVE);
         swc.setLanguage(rh.hindiLanguage());
         swc.setDistrict(d);
@@ -4258,7 +4258,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY, 250);
         serviceUsageCapDataService.create(stateUsageCap);
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
         swc.setDistrict(district);
         swc.setState(district.getState());
@@ -4300,7 +4300,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse,
                 EntityUtils.toString(response.getEntity()));
 
-        // Update FLW usage to previous month last day time such that it is
+        // Update SWC usage to previous month last day time such that it is
         // resetted now
 
         cdr.setCallStartTime(DateTime.now().withDayOfMonth(1)
@@ -4387,7 +4387,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     @Test
     public void verifyAnonymousCallAuditRecord() throws IOException, InterruptedException{
-        // add FLW with Anonymous status
+        // add SWC with Anonymous status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
@@ -4396,7 +4396,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         swc.setInvalidationDate(DateTime.now().minusDays(50));
         swcDataService.create(swc);
 
-        // add another FLW with Anonymous status
+        // add another SWC with Anonymous status
         Swachchagrahi swc1 = new Swachchagrahi("Aisha Bibi", 1234567899l);
         swc1.setLanguage(rh.tamilLanguage());
         swc1.setDistrict(rh.southDelhiDistrict());
@@ -4459,7 +4459,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyInactiveJobUserCallAuditRecord() throws IOException, InterruptedException {
 
-        // add FLW with Anonymous status
+        // add SWC with Anonymous status
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());

@@ -68,7 +68,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testGetCurrentMonthlyUsageForFLWAndService() throws Exception {
+    public void testGetCurrentMonthlyUsageForSWCAndService() throws Exception {
         setupData();
         Swachchagrahi swc = new Swachchagrahi("Valid Worker", 1111111111L);
         swcService.add(swc);
@@ -97,16 +97,16 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         differentService.setCallStartTime(DateTime.now());
         callDetailRecordDataService.create(differentService);
 
-        // A usage record for a different FLW that should be ignored
-        CallDetailRecord differentFLW = new CallDetailRecord();
-        differentFLW.setSwachchagrahi(swcIgnored);
-        differentFLW.setCallingNumber(1111111111l);
-        differentFLW.setService(Service.MOBILE_KUNJI);
-        differentFLW.setCallDurationInPulses(1);
-        differentFLW.setEndOfUsagePromptCounter(1);
-        differentFLW.setWelcomePrompt(true);
-        differentFLW.setCallStartTime(DateTime.now());
-        callDetailRecordDataService.create(differentFLW);
+        // A usage record for a different SWC that should be ignored
+        CallDetailRecord differentSWC = new CallDetailRecord();
+        differentSWC.setSwachchagrahi(swcIgnored);
+        differentSWC.setCallingNumber(1111111111l);
+        differentSWC.setService(Service.MOBILE_KUNJI);
+        differentSWC.setCallDurationInPulses(1);
+        differentSWC.setEndOfUsagePromptCounter(1);
+        differentSWC.setWelcomePrompt(true);
+        differentSWC.setCallStartTime(DateTime.now());
+        callDetailRecordDataService.create(differentSWC);
 
         // Two valid records that should get aggregated
         CallDetailRecord recordOne = new CallDetailRecord();
@@ -129,7 +129,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         recordTwo.setCallStartTime(DateTime.now());
         callDetailRecordDataService.create(recordTwo);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.WASH_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, Service.WASH_ACADEMY);
 
         assertEquals(swc, serviceUsage.getSwachchagrahi());
         assertEquals(Service.WASH_ACADEMY, serviceUsage.getService());
@@ -139,7 +139,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
 
         callDetailRecordDataService.delete(lastMonth);
         callDetailRecordDataService.delete(differentService);
-        callDetailRecordDataService.delete(differentFLW);
+        callDetailRecordDataService.delete(differentSWC);
         callDetailRecordDataService.delete(recordOne);
         callDetailRecordDataService.delete(recordTwo);
 
@@ -155,12 +155,12 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testGetCurrentMonthlyUsageForFLWAndServiceWithNoService() throws Exception {
+    public void testGetCurrentMonthlyUsageForSWCAndServiceWithNoService() throws Exception {
         setupData();
         Swachchagrahi swc = new Swachchagrahi("Valid Worker", 1111111111L);
         swcService.add(swc);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, Service.WASH_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, Service.WASH_ACADEMY);
 
         assertEquals(swc, serviceUsage.getSwachchagrahi());
         assertEquals(Service.WASH_ACADEMY, serviceUsage.getService());

@@ -246,8 +246,8 @@ public class BaseController {
         return new DateTime(epoch * MILLIS); // epoch time sent by IVR is in secs
     }
 
-    protected State getStateForFrontLineWorker(Swachchagrahi flw, Circle circle) {
-        State state = swcService.getState(flw);
+    protected State getStateForFrontLineWorker(Swachchagrahi swc, Circle circle) {
+        State state = swcService.getState(swc);
 
         if (state == null && circle != null) {
             state = getStateFromCircle(circle);
@@ -271,8 +271,8 @@ public class BaseController {
         return state;
     }
 
-    protected boolean frontLineWorkerAuthorizedForAccess(Swachchagrahi flw, State state) {
-        return whitelistService.numberWhitelistedForState(state, flw.getContactNumber());
+    protected boolean frontLineWorkerAuthorizedForAccess(Swachchagrahi swc, State state) {
+        return whitelistService.numberWhitelistedForState(state, swc.getContactNumber());
     }
 
     /**

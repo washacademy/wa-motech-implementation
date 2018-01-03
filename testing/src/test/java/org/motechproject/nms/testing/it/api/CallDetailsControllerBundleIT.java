@@ -676,7 +676,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      ****************************************************************************************************************/
     @Test
     @Ignore
-    public void testCallDetailsFLWNotFound() throws IOException, InterruptedException {
+    public void testCallDetailsSWCNotFound() throws IOException, InterruptedException {
 
         HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
@@ -2470,7 +2470,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.MOBILE_KUNJI));
 
-        // FLW usage
+        // SWC usage
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
         swc.setLanguage(rh.hindiLanguage());
         swc.setJobStatus(SwcJobStatus.ACTIVE);

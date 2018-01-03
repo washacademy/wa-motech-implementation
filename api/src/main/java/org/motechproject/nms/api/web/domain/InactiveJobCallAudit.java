@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Audit record for Inactive Job Flw call details
+ * Audit record for Inactive Job Swc call details
  */
 
 @Entity(tableName = "nms_inactive_job_call_audit")

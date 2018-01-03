@@ -104,9 +104,9 @@ public class UserController extends BaseController {
         }
 
         /*
-        Handle the FLW services
+        Handle the SWC services
          */
-        if (WASH_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName)) {
+        if (WASH_ACADEMY.equals(serviceName)) {
             user = getFrontLineWorkerResponseUser(serviceName, callingNumber, circleObj);
         }
 
@@ -186,7 +186,7 @@ public class UserController extends BaseController {
                 user.setLanguageLocationCode(language.getCode());
             }
 
-            serviceUsage = serviceUsageService.getCurrentMonthlyUsageForFLWAndService(swc, service);
+            serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, service);
 
             if (!frontLineWorkerAuthorizedForAccess(swc, state)) {
                 throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));

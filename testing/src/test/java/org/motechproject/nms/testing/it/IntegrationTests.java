@@ -39,7 +39,7 @@ import org.motechproject.nms.testing.it.tracking.TrackOneToManyChangesBundleIT;
     OpsControllerBundleIT.class,
 
     /**
-     * FLW
+     * SWC
      */
     ServiceUsageServiceBundleIT.class,
     ServiceUsageCapServiceBundleIT.class,
@@ -47,7 +47,7 @@ import org.motechproject.nms.testing.it.tracking.TrackOneToManyChangesBundleIT;
     SwachgrahiServiceBundleIT.class,
 
     /**
-     * FLW UPDATE
+     * SWC UPDATE
      */
     SwachgrahiImportServiceBundleIT.class,
     SwachgrahiUpdateImportServiceBundleIT.class,

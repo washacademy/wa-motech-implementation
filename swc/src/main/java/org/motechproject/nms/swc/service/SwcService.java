@@ -24,7 +24,7 @@ public interface SwcService {
 
     Swachchagrahi getBySwcId(String swcId);
 
-    Swachchagrahi getByMctsFlwIdAndPanchayat(String mctsFlwId, Panchayat state);
+    Swachchagrahi getByMctsSwcIdAndPanchayat(String mctsSwcId, Panchayat state);
 
     Swachchagrahi getById(Long id);
 
@@ -37,8 +37,8 @@ public interface SwcService {
     Boolean isAnonymousAllowed();
 
     /**
-     * MotechEvent handler that responds to scheduler events.  Purges FLW records that are in invalid state
-     * and have been for more than swc.weeks_to_keep_invalid_flws weeks
+     * MotechEvent handler that responds to scheduler events.  Purges SWC records that are in invalid state
+     * and have been for more than swc.weeks_to_keep_invalid_swcs weeks
      *
      * @param event
      */

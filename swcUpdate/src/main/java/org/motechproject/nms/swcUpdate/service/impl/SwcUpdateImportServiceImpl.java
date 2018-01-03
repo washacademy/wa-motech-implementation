@@ -36,8 +36,8 @@ import java.util.Set;
 @Service("swcUpdateImportService")
 public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
 
-    public static final String NMS_FLW_ID = "NMS FLW-ID";
-    public static final String MCTS_FLW_ID = "MCTS FLW-ID";
+    public static final String NMS_SWC_ID = "NMS SWC-ID";
+    public static final String MCTS_SWC_ID = "MCTS SWC-ID";
     public static final String STATE = "STATE";
     public static final String MSISDN = "MSISDN";
     public static final String LANGUAGE_CODE = "LANGUAGE CODE";
@@ -50,7 +50,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
 
     /*
         Expected file format:
-        * First line contains headers: NMS FLW-ID, MCTS FLW-ID, MSISDN, LANGUAGE CODE
+        * First line contains headers: NMS SWC-ID, MCTS SWC-ID, MSISDN, LANGUAGE CODE
         * CSV data (comma-separated)
      */
     @Override
@@ -71,16 +71,16 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
                             csvImporter.getRowNumber()));
                 }
 
-                Swachchagrahi flw = flwFromRecord(record);
-                if (flw == null) {
-                    throw new CsvImportDataException(createErrorMessage(String.format("Unable to locate FLW: %s(%s) %s(%s) %s(%s)",
-                                    NMS_FLW_ID, record.get(NMS_FLW_ID),
-                                    MCTS_FLW_ID, record.get(MCTS_FLW_ID),
+                Swachchagrahi swc = swcFromRecord(record);
+                if (swc == null) {
+                    throw new CsvImportDataException(createErrorMessage(String.format("Unable to locate SWC: %s(%s) %s(%s) %s(%s)",
+                                    NMS_SWC_ID, record.get(NMS_SWC_ID),
+                                    MCTS_SWC_ID, record.get(MCTS_SWC_ID),
                                     MSISDN, record.get(MSISDN)),
                                                                         csvImporter.getRowNumber()));
                 }
 
-                swcService.update(flw);
+                swcService.update(swc);
             }
         } catch (ConstraintViolationException e) {
             throw new CsvImportDataException(createErrorMessage(e.getConstraintViolations(), csvImporter.getRowNumber()), e);
@@ -89,7 +89,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
 
     /*
         Expected file format:
-        * First line contains headers: NMS FLW-ID, MCTS FLW-ID, MSISDN, NEW MSISDN
+        * First line contains headers: NMS SWC-ID, MCTS SWC-ID, MSISDN, NEW MSISDN
         * CSV data (comma-separated)
      */
     @Override
@@ -104,37 +104,37 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         try {
             Map<String, Object> record;
             while (null != (record = csvImporter.read())) {
-                Swachchagrahi flw = flwFromRecord(record);
-                if (flw == null) {
-                    throw new CsvImportDataException(createErrorMessage(String.format("Unable to locate FLW: %s(%s) %s(%s) %s(%s)",
-                                    NMS_FLW_ID, record.get(NMS_FLW_ID),
-                                    MCTS_FLW_ID, record.get(MCTS_FLW_ID),
+                Swachchagrahi swc = swcFromRecord(record);
+                if (swc == null) {
+                    throw new CsvImportDataException(createErrorMessage(String.format("Unable to locate SWC: %s(%s) %s(%s) %s(%s)",
+                                    NMS_SWC_ID, record.get(NMS_SWC_ID),
+                                    MCTS_SWC_ID, record.get(MCTS_SWC_ID),
                                     MSISDN, record.get(MSISDN)),
                             csvImporter.getRowNumber()));
                 }
 
                 Long msisdn = (Long) record.get(NEW_MSISDN);
 
-                Swachchagrahi flwWithNewMSISDN = swcService.getByContactNumber(msisdn);
+                Swachchagrahi swcWithNewMSISDN = swcService.getByContactNumber(msisdn);
 
-                if (flwWithNewMSISDN != null && flwWithNewMSISDN != flw) {
+                if (swcWithNewMSISDN != null && swcWithNewMSISDN != swc) {
                     throw new CsvImportDataException(
                             createErrorMessage(String
-                                            .format("Attempt to assign an msisdn when an existing FLW " +
-                                                            "already has that number FLW in CSV: %s(%s) %s(%s) %s(%s) " +
-                                                            "Existing FLW:  %s(%s) %s(%s) %s(%s)",
-                                                    NMS_FLW_ID, record.get(NMS_FLW_ID),
-                                                    MCTS_FLW_ID, record.get(MCTS_FLW_ID),
+                                            .format("Attempt to assign an msisdn when an existing SWC " +
+                                                            "already has that number SWC in CSV: %s(%s) %s(%s) %s(%s) " +
+                                                            "Existing SWC:  %s(%s) %s(%s) %s(%s)",
+                                                    NMS_SWC_ID, record.get(NMS_SWC_ID),
+                                                    MCTS_SWC_ID, record.get(MCTS_SWC_ID),
                                                     MSISDN, record.get(MSISDN),
-                                                    NMS_FLW_ID, flwWithNewMSISDN.getSwcId(),
-                                                    MSISDN, flwWithNewMSISDN.getContactNumber()),
+                                                    NMS_SWC_ID, swcWithNewMSISDN.getSwcId(),
+                                                    MSISDN, swcWithNewMSISDN.getContactNumber()),
                                     csvImporter.getRowNumber()));
                 }
 
-                Long oldMsisdn = flw.getContactNumber();
-                flw.setContactNumber(msisdn);
-                swcService.update(flw);
-                washAcademyService.updateMsisdn(flw.getId(), oldMsisdn, msisdn);
+                Long oldMsisdn = swc.getContactNumber();
+                swc.setContactNumber(msisdn);
+                swcService.update(swc);
+                washAcademyService.updateMsisdn(swc.getId(), oldMsisdn, msisdn);
             }
         } catch (ConstraintViolationException e) {
             throw new CsvImportDataException(createErrorMessage(e.getConstraintViolations(), csvImporter.getRowNumber()), e);
@@ -143,34 +143,34 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         }
     }
 
-    private Swachchagrahi flwFromRecord(Map<String, Object> record) {
-        Swachchagrahi flw = null;
+    private Swachchagrahi swcFromRecord(Map<String, Object> record) {
+        Swachchagrahi swc = null;
 
-        String nmsFlWId = (String) record.get(NMS_FLW_ID);
-        String mctsFlwId = (String) record.get(MCTS_FLW_ID);
+        String nmsFlWId = (String) record.get(NMS_SWC_ID);
+        String mctsSwcId = (String) record.get(MCTS_SWC_ID);
         Panchayat state = (Panchayat) record.get(STATE);
         Long msisdn = (Long) record.get(MSISDN);
 
         if (nmsFlWId != null) {
-            flw = swcService.getBySwcId(nmsFlWId);
+            swc = swcService.getBySwcId(nmsFlWId);
         }
 
-        if (flw == null && mctsFlwId != null) {
-            flw = swcService.getByMctsFlwIdAndPanchayat(mctsFlwId, state);
+        if (swc == null && mctsSwcId != null) {
+            swc = swcService.getByMctsSwcIdAndPanchayat(mctsSwcId, state);
         }
 
-        if (flw == null && msisdn != null) {
-            flw = swcService.getByContactNumber(msisdn);
+        if (swc == null && msisdn != null) {
+            swc = swcService.getByContactNumber(msisdn);
         }
 
-        return flw;
+        return swc;
     }
 
 
     private Map<String, CellProcessor> getIDProcessorMapping() {
         Map<String, CellProcessor> mapping = new HashMap<>();
-        mapping.put(NMS_FLW_ID, new Optional(new GetString()));
-        mapping.put(MCTS_FLW_ID, new Optional(new GetString()));
+        mapping.put(NMS_SWC_ID, new Optional(new GetString()));
+        mapping.put(MCTS_SWC_ID, new Optional(new GetString()));
         mapping.put(MSISDN, new Optional(new GetLong()));
         mapping.put(STATE, new GetInstanceByLong<State>() {
             @Override

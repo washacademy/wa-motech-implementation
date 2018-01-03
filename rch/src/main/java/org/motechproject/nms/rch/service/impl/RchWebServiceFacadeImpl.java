@@ -152,7 +152,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                     settingsFacade.getProperty(Constants.RCH_PASSWORD), from.toString(DATE_FORMAT), to.toString(DATE_FORMAT), stateId.toString(),
                     settingsFacade.getProperty(Constants.RCH_ASHA_USER), settingsFacade.getProperty(Constants.RCH_DTID));
         } catch (RemoteException e) {
-            throw new RchWebServiceException("Remote Server Error. Could Not Read RCH FLW Data.", e);
+            throw new RchWebServiceException("Remote Server Error. Could Not Read RCH SWC Data.", e);
         }
 
         LOGGER.debug("writing RCH Asha response to file");
@@ -206,33 +206,33 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                             null :
                             (SwcDataSet) MarshallUtils.unmarshall(ashaResultFeed.get(0).toString(), SwcDataSet.class);
 
-                    LOGGER.info("Starting RCH FLW import for stateId: {}", stateId);
+                    LOGGER.info("Starting RCH SWC import for stateId: {}", stateId);
                     StopWatch stopWatch = new StopWatch();
                     stopWatch.start();
 
                     if (ashaDataSet == null || ashaDataSet.getRecords() == null) {
-                        String warning = String.format("No FLW data set received from RCH for %s state", stateName);
+                        String warning = String.format("No SWC data set received from RCH for %s state", stateName);
                         LOGGER.warn(warning);
                         rchImportAuditDataService.create(new RchImportAudit(startReferenceDate, endReferenceDate, RchUserType.ASHA, stateCode, stateName, 0, 0, warning));
                     } else {
-                        LOGGER.info("Received {} FLW records from RCH for {} state", sizeNullSafe(ashaDataSet.getRecords()), stateName);
+                        LOGGER.info("Received {} SWC records from RCH for {} state", sizeNullSafe(ashaDataSet.getRecords()), stateName);
 
                         RchImportAudit audit = saveImportedAshaData(ashaDataSet, stateName, stateCode, startReferenceDate, endReferenceDate);
                         rchImportAuditDataService.create(audit);
                         stopWatch.stop();
                         double seconds = stopWatch.getTime() / THOUSAND;
-                        LOGGER.info("Finished RCH FLW import dispatch in {} seconds. Accepted {} Ashas, Rejected {} Ashas",
+                        LOGGER.info("Finished RCH SWC import dispatch in {} seconds. Accepted {} Ashas, Rejected {} Ashas",
                                 seconds, audit.getAccepted(), audit.getRejected());
 
                         // Delete RchImportFailRecords once import is successful
                         deleteRchImportFailRecords(startReferenceDate, endReferenceDate, RchUserType.ASHA, stateId);
                     }
                 } catch (JAXBException e) {
-                    throw new RchInvalidResponseStructureException(String.format("Cannot deserialize RCH FLW data from %s location.", stateId), e);
+                    throw new RchInvalidResponseStructureException(String.format("Cannot deserialize RCH SWC data from %s location.", stateId), e);
                 } catch (RchInvalidResponseStructureException e) {
-                    String error = String.format("Cannot read RCH FLW data from %s state with stateId:%d. Response Deserialization Error", stateName, stateCode);
+                    String error = String.format("Cannot read RCH SWC data from %s state with stateId:%d. Response Deserialization Error", stateName, stateCode);
                     LOGGER.error(error, e);
-                    alertService.create(RCH_WEB_SERVICE, "RCH Web Service FLW Import", e.getMessage() + " " + error, AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+                    alertService.create(RCH_WEB_SERVICE, "RCH Web Service SWC Import", e.getMessage() + " " + error, AlertType.CRITICAL, AlertStatus.NEW, 0, null);
                     rchImportAuditDataService.create(new RchImportAudit(startReferenceDate, endReferenceDate, RchUserType.ASHA, stateCode, stateName, 0, 0, error));
                     rchImportFailRecordDataService.create(new RchImportFailRecord(endReferenceDate, RchUserType.ASHA, stateId));
                 } catch (NullPointerException e) {
@@ -301,7 +301,7 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
         List<SwcRecord> rejectedRchAshas = rchAshaRecordsSet.get(0);
         String action = "";
         for (SwcRecord record : rejectedRchAshas) {
-            action = this.rchFlwActionFinder(record);
+            action = this.rchSwcActionFinder(record);
             LOGGER.error("Existing Asha Record with same MSISDN in the data set");
             swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.DUPLICATE_MOBILE_NUMBER_IN_DATASET.toString(), action));
         }
@@ -313,11 +313,11 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
 
         for (SwcRecord record : acceptedRchAshas) {
             try {
-                action = this.rchFlwActionFinder(record);
+                action = this.rchSwcActionFinder(record);
                 Long msisdn = Long.parseLong(record.getMobileNo());
-                String flwId = record.getGfId().toString();
-                Swachchagrahi flw = swcService.getByContactNumber(msisdn);
-                if ((flw != null && (!flwId.equals(flw.getSwcId()) || panchayat != flw.getPanchayat()))  && flw.getCourseStatus() != SwachchagrahiStatus.ANONYMOUS) {
+                String swcId = record.getGfId().toString();
+                Swachchagrahi swc = swcService.getByContactNumber(msisdn);
+                if ((swc != null && (!swcId.equals(swc.getSwcId()) || panchayat != swc.getPanchayat()))  && swc.getCourseStatus() != SwachchagrahiStatus.ANONYMOUS) {
                     LOGGER.error("Existing SWC with same MSISDN but different ID");
                     swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                     rejected++;
@@ -329,21 +329,21 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
                             swcRejectionService.createUpdate(swcRejection(record, true, null, action));
                             saved++;
                         } catch (InvalidLocationException e) {
-                            LOGGER.warn("Invalid location for FLW: ", e);
+                            LOGGER.warn("Invalid location for SWC: ", e);
                             swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.INVALID_LOCATION.toString(), action));
                             rejected++;
                         } catch (SwcImportException e) {
-                            LOGGER.error("Existing FLW with same MSISDN but different RCH ID", e);
+                            LOGGER.error("Existing SWC with same MSISDN but different RCH ID", e);
                             swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
                             rejected++;
                         } catch (SwcExistingRecordException e) {
-                            LOGGER.error("Cannot import FLW with ID: {}, and MSISDN (Mobile_No): {}", record.getGfId(), record.getMobileNo(), e);
+                            LOGGER.error("Cannot import SWC with ID: {}, and MSISDN (Mobile_No): {}", record.getGfId(), record.getMobileNo(), e);
                             swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.UPDATED_RECORD_ALREADY_EXISTS.toString(), action));
                             rejected++;
                         } catch (Exception e) {
-                            LOGGER.error("RCH Flw import Error. Cannot import FLW with ID: {}, and MSISDN (Mobile_No): {}",
+                            LOGGER.error("RCH Swc import Error. Cannot import SWC with ID: {}, and MSISDN (Mobile_No): {}",
                                     record.getGfId(), record.getMobileNo(), e);
-                            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.FLW_IMPORT_ERROR.toString(), action));
+                            swcRejectionService.createUpdate(swcRejection(record, false, RejectionReasons.SWC_IMPORT_ERROR.toString(), action));
                             rejected++;
                         }
                     if ((saved + rejected) % THOUSAND == 0) {
@@ -518,8 +518,8 @@ public class RchWebServiceFacadeImpl implements RchWebServiceFacade {
         }
     }
 
-    private String rchFlwActionFinder(SwcRecord record) {
-        if (swcService.getByMctsFlwIdAndPanchayat(record.getGfId().toString(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
+    private String rchSwcActionFinder(SwcRecord record) {
+        if (swcService.getByMctsSwcIdAndPanchayat(record.getGfId().toString(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
             return "CREATE";
         } else {
             return "UPDATE";

@@ -141,15 +141,15 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         swcUpdateImportService.importLanguageData(reader);
     }
 
-    // Test when only NMS Id found and FLW not in database
+    // Test when only NMS Id found and SWC not in database
     @Test(expected = CsvImportDataException.class)
-    public void testImportWhenFLWIdProvidedButNotInDatabase() throws Exception {
+    public void testImportWhenSWCIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createLanguageReaderWithHeaders("72185,,,hi,1");
         swcUpdateImportService.importLanguageData(reader);
     }
 
     // NMS_FT_553
-    // Test when only MCTS Id found and FLW not in database
+    // Test when only MCTS Id found and SWC not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenMCTSIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createLanguageReaderWithHeaders(",210302604211400029,,hi,1");
@@ -157,7 +157,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     // NMS_FT_554
-    // Test when only MSISDN found and FLW not in database
+    // Test when only MSISDN found and SWC not in database
     @Test(expected = CsvImportDataException.class)
     public void testImportWhenMSISDProvidedButNotInDatabase() throws Exception {
         Reader reader = createLanguageReaderWithHeaders(",,9439986187,hi,1");
@@ -247,21 +247,21 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         swcUpdateImportService.importMSISDNData(reader);
     }
 
-    // Test when only NMS Id found and FLW not in database
+    // Test when only NMS Id found and SWC not in database
     @Test(expected = CsvImportDataException.class)
-    public void testMsisdnImportWhenFLWIdProvidedButNotInDatabase() throws Exception {
+    public void testMsisdnImportWhenSWCIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders("72185,,,9439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
     }
 
-    // Test when only MCTS Id found and FLW not in database
+    // Test when only MCTS Id found and SWC not in database
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMCTSIdProvidedButNotInDatabase() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders(",210302604211400029,,9439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
     }
 
-    // Test when only MSISDN found and FLW not in database
+    // Test when only MSISDN found and SWC not in database
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButNotInDatabase() throws Exception {
         Reader reader = createMSISDNReaderWithHeaders(",,9439986187,9439986188,1");
@@ -387,7 +387,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     // NMS_FT_556
-    // Test new MSISDN associated with existing FLW
+    // Test new MSISDN associated with existing SWC
     @Test(expected = CsvImportDataException.class)
     public void testMsisdnImportWhenMSISDNProvidedButAlreadyInUse() throws Exception {
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
@@ -400,7 +400,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         swcUpdateImportService.importMSISDNData(reader);
     }
 
-    // Test Ma Update when new MSISDN associated with existing FLW
+    // Test Ma Update when new MSISDN associated with existing SWC
     @Test
     public void testMaUpdateWhenMSISDNProvidedIsAlreadyInUse() throws Exception {
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
@@ -427,7 +427,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
     private Reader createMSISDNReaderWithHeaders(String... lines) {
         StringBuilder builder = new StringBuilder();
-        builder.append("NMS FLW-ID,MCTS FLW-ID,MSISDN,NEW MSISDN,STATE").append("\n");
+        builder.append("NMS SWC-ID,MCTS SWC-ID,MSISDN,NEW MSISDN,STATE").append("\n");
         for (String line : lines) {
             builder.append(line).append("\n");
         }
@@ -436,7 +436,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
     private Reader createLanguageReaderWithHeaders(String... lines) {
         StringBuilder builder = new StringBuilder();
-        builder.append("NMS FLW-ID,MCTS FLW-ID,MSISDN,LANGUAGE CODE,STATE").append("\n");
+        builder.append("NMS SWC-ID,MCTS SWC-ID,MSISDN,LANGUAGE CODE,STATE").append("\n");
         for (String line : lines) {
             builder.append(line).append("\n");
         }
@@ -448,10 +448,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * Method used to import CSV File For updating FLW Data. option can be
+     * Method used to import CSV File For updating SWC Data. option can be
      * "msisdn" or "language"
      */
-    private HttpResponse importCsvFileForFLWUpdate(String option,
+    private HttpResponse importCsvFileForSWCUpdate(String option,
             String fileName)
             throws InterruptedException, IOException {
         HttpPost httpPost;
@@ -480,7 +480,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify language is updated successfully when MCTS FLW ID is provided.
+     * To verify language is updated successfully when MCTS SWC ID is provided.
      */
     @Test
     public void verifyFT550() throws InterruptedException, IOException {
@@ -494,7 +494,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
         assertEquals(
                 HttpStatus.SC_OK,
-                importCsvFileForFLWUpdate("language",
+                importCsvFileForSWCUpdate("language",
                         "swc_language_update_only_swcId.csv").getStatusLine()
                         .getStatusCode());
 
@@ -521,7 +521,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
         assertEquals(
                 HttpStatus.SC_OK,
-                importCsvFileForFLWUpdate("language",
+                importCsvFileForSWCUpdate("language",
                         "swc_language_update_only_MSISDN.csv").getStatusLine()
                         .getStatusCode());
 
@@ -549,7 +549,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
         assertEquals(
                 HttpStatus.SC_BAD_REQUEST,
-                importCsvFileForFLWUpdate("language",
+                importCsvFileForSWCUpdate("language",
                         "swc_language_update_lang_error.csv").getStatusLine()
                         .getStatusCode());
 
@@ -562,7 +562,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify MSISDN is updated successfully when MCTS FLW ID is provided.
+     * To verify MSISDN is updated successfully when MCTS SWC ID is provided.
      */
     @Test
     public void verifyFT555() throws InterruptedException, IOException {
@@ -576,7 +576,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
         assertEquals(
                 HttpStatus.SC_OK,
-                importCsvFileForFLWUpdate("msisdn",
+                importCsvFileForSWCUpdate("msisdn",
                         "swc_msisdn_update_only_swcId.csv").getStatusLine()
                         .getStatusCode());
 
@@ -592,12 +592,12 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     }
 
     /*
-     * To verify location is updated successfully when MCTS FLW ID is provided.
+     * To verify location is updated successfully when MCTS SWC ID is provided.
      */
     // TODO https://applab.atlassian.net/browse/NMS-255
     @Test
     public void verifyFT558() throws InterruptedException, IOException {
-        // create FLW record having state as "Delhi" and district as "new delhi district"
+        // create SWC record having state as "Delhi" and district as "new delhi district"
         Swachchagrahi swc = new Swachchagrahi("Aisha Bibi", 1234567899L);
         swc.setState(rh.delhiState());
         swc.setDistrict(rh.newDelhiDistrict());
@@ -605,10 +605,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
 
-        // update FLW district to "southDelhiDistrict"
+        // update SWC district to "southDelhiDistrict"
         rh.southDelhiDistrict();
 
-        HttpResponse response = importCsvFileForFLWUpdate(null,
+        HttpResponse response = importCsvFileForSWCUpdate(null,
                 "swc_FT_558.txt");
         assertEquals(HttpStatus.SC_OK, response.getStatusLine()
                 .getStatusCode());
@@ -635,7 +635,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT560() throws InterruptedException, IOException {
-        // create FLW record
+        // create SWC record
         Swachchagrahi swc = new Swachchagrahi("Aisha Bibi", 1234567899L);
         swc.setState(rh.delhiState());
         swc.setDistrict(rh.newDelhiDistrict());
@@ -643,7 +643,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         // update state to "State 10" which doesn't exist in DB
-        HttpResponse response = importCsvFileForFLWUpdate(null,
+        HttpResponse response = importCsvFileForSWCUpdate(null,
                 "swc_FT_560.txt");
         assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
                 .getStatusCode());
@@ -662,15 +662,15 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT561() throws InterruptedException, IOException {
-        // create FLW record
+        // create SWC record
         Swachchagrahi swc = new Swachchagrahi("Aisha Bibi", 1234567899L);
         swc.setState(rh.delhiState());
         swc.setDistrict(rh.newDelhiDistrict());
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
-        // update FLW district to a value which doesn't exist in DB
-        HttpResponse response = importCsvFileForFLWUpdate(null,
+        // update SWC district to a value which doesn't exist in DB
+        HttpResponse response = importCsvFileForSWCUpdate(null,
                 "swc_FT_561.txt");
         assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
                 .getStatusCode());

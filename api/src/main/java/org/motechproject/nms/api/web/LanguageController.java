@@ -74,10 +74,10 @@ public class LanguageController extends BaseController {
             throw new IllegalArgumentException(failureReasons.toString());
         }
 
-        Swachchagrahi flw = swcService.getByContactNumber(callingNumber);
-        if (flw == null) {
-            flw = new Swachchagrahi(callingNumber);
-            flw.setJobStatus(SwcJobStatus.ACTIVE);
+        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        if (swc == null) {
+            swc = new Swachchagrahi(callingNumber);
+            swc.setJobStatus(SwcJobStatus.ACTIVE);
         }
 
         Language language = languageService.getForCode(languageLocationCode);
@@ -85,23 +85,23 @@ public class LanguageController extends BaseController {
             throw new NotFoundException(String.format(NOT_FOUND, LANGUAGE_LOCATION_CODE));
         }
 
-        flw.setLanguage(language);
+        swc.setLanguage(language);
 
-        State state =  getStateForFrontLineWorker(flw, null);
+        State state =  getStateForFrontLineWorker(swc, null);
 
         if (!serviceDeployedInUserState(service, state)) {
             throw new NotDeployedException(String.format(NOT_DEPLOYED, service));
         }
 
-        if (!frontLineWorkerAuthorizedForAccess(flw, state)) {
+        if (!frontLineWorkerAuthorizedForAccess(swc, state)) {
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
         }
 
         // MOTECH-1667 added to get an upsert method included
-        if (flw.getId() == null) {
-            swcService.add(flw);
+        if (swc.getId() == null) {
+            swcService.add(swc);
         } else {
-            swcService.update(flw);
+            swcService.update(swc);
         }
     }
 
