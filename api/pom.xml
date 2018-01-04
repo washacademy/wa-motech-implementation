@@ -95,7 +95,6 @@
                         <Context-Path>api</Context-Path>
                         <Export-Package>
                             org.motechproject.nms.api.web.contract,
-                            org.motechproject.nms.api.web.contract.kilkari,
                             org.motechproject.nms.api.web.contract.washAcademy,
                             org.motechproject.nms.api.web.contract.washAcademy.sms,
                             org.motechproject.nms.api.web.converter,
@@ -113,9 +112,6 @@
                             net.sf.cglib.reflect,
                             org.springframework.web.multipart.commons,
                             org.springframework.transaction,
-                            org.motechproject.nms.kilkari.repository,
-                            org.motechproject.nms.kilkari.domain,
-                            org.motechproject.nms.kilkari.utils,
                             org.motechproject.nms.rejectionhandler.service,
                             org.motechproject.nms.region.repository,
                             *

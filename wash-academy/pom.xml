@@ -95,6 +95,7 @@
                             org.apache.http.ssl,
                             org.json,
                             org.motechproject.mtraining.service,
+                            org.motechproject.nms.region.repository,
                             *
                         </Import-Package>
                     </instructions>

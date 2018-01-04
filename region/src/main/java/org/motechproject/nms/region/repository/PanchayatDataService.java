@@ -10,5 +10,5 @@ public interface PanchayatDataService extends MotechDataService<Panchayat> {
     Panchayat findByName(@LookupField(name = "name") String name);
 
     @Lookup
-    Panchayat findByCode(@LookupField(name = "code") Long code);
+    Panchayat findByCode(@LookupField(name = "vcode") Long vcode);
 }

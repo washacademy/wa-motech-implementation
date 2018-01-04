@@ -18,9 +18,6 @@
     <osgi:service ref="swcImportService"
                   interface="org.motechproject.nms.swcUpdate.service.SwcImportService" />
 
-    <osgi:service ref="frontLineWorkerUpdateImportService"
-                  interface="org.motechproject.nms.swcUpdate.service.SwcUpdateImportService" />
-
     <osgi:reference id="stateDataService"
                     interface="org.motechproject.nms.region.repository.StateDataService" />
 

@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by vishnu on 25/9/17.
  */
-@Service("swcRejectionCsvService")
+@Service("swcCsvService")
 public class SwcCsvServiceImpl implements SwcCsvService {
 
     private static final String NOT_PRESENT = "<%s: Not Present>";

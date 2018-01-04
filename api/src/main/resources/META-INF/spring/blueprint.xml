@@ -13,7 +13,7 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <osgi:service ref="swcRejectionCsvService"
+    <osgi:service ref="swcCsvService"
                   interface="org.motechproject.nms.api.web.service.SwcCsvService" />
 
     <osgi:reference id="swcStatusUpdateAuditDataService"
@@ -24,12 +24,6 @@
     <osgi:reference id="inactiveJobCallAuditDataService" interface="org.motechproject.nms.api.web.repository.InactiveJobCallAuditDataService"/>
 
     <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager"/>
-
-    <osgi:reference id="subscriberService" interface="org.motechproject.nms.kilkari.service.SubscriberService"/>
-
-    <osgi:reference id="subscriptionService" interface="org.motechproject.nms.kilkari.service.SubscriptionService"/>
-
-    <osgi:reference id="inboxService" interface="org.motechproject.nms.kilkari.service.InboxService"/>
 
     <osgi:reference id="swcService" interface="org.motechproject.nms.swc.service.SwcService"/>
 
@@ -59,18 +53,12 @@
 
     <osgi:reference id="stateDataService" interface="org.motechproject.nms.region.repository.StateDataService"/>
 
+    <osgi:reference id="panchayatDataService" interface="org.motechproject.nms.region.repository.PanchayatDataService"/>
+
     <osgi:reference id="swcRejectionService" interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:reference id="cdrFileService" interface="org.motechproject.nms.imi.service.CdrFileService" />
-
-    <!-- Used to access the clearAllCaches API -->
-    <osgi:reference id="subscriptionDataService" interface="org.motechproject.nms.kilkari.repository.SubscriptionDataService" />
-
-    <osgi:reference id="mctsWsImportService" interface="org.motechproject.nms.mcts.service.MctsWsImportService" />
-
-    <osgi:reference id="mctsChildFixService"
-    interface="org.motechproject.nms.kilkari.service.MctsChildFixService" />
 
 </beans>

@@ -90,6 +90,8 @@
                         <Resource-Path>swcUpdate/resources</Resource-Path>
                         <Context-Path>swcUpdate</Context-Path>
                         <Export-Package>
+                            org.motechproject.nms.swcUpdate.contract;version=${project.version},
+                            org.motechproject.nms.swcUpdate.utils;version=${project.version},
                             org.motechproject.nms.swcUpdate.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
@@ -102,8 +104,6 @@
                             org.apache.commons.fileupload,
                             org.springframework.web.multipart.commons,
                             org.motechproject.event.listener,
-                            org.motechproject.nms.kilkari.utils,
-                            org.motechproject.nms.kilkari.domain,
                             org.motechproject.nms.swc.utils,
                             org.motechproject.nms.swc.domain,
                             org.motechproject.nms.swc.exception,

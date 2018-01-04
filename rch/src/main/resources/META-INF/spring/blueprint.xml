@@ -29,8 +29,7 @@
     <osgi:reference id="stateDataService"
                     interface="org.motechproject.nms.region.repository.StateDataService" />
 
-    <osgi:reference id="mctsBeneficiaryValueProcessor"
-                    interface="org.motechproject.nms.kilkari.service.MctsBeneficiaryValueProcessor"/>
+    <osgi:reference id="panchayatDataService" interface="org.motechproject.nms.region.repository.PanchayatDataService"/>
 
     <osgi:reference id="swcImportService"
                     interface="org.motechproject.nms.swcUpdate.service.SwcImportService" />
@@ -38,20 +37,8 @@
     <osgi:reference id="swcService"
                     interface="org.motechproject.nms.swc.service.SwcService" />
 
-    <osgi:reference id="mctsBeneficiaryImportService"
-                    interface="org.motechproject.nms.kilkari.service.MctsBeneficiaryImportService"/>
-
-    <osgi:reference id="actionFinderService"
-                    interface="org.motechproject.nms.kilkari.service.ActionFinderService"/>
-
     <osgi:reference id="swcRejectionService"
                     interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
-
-    <osgi:reference id="childRejectionService"
-                    interface="org.motechproject.nms.rejectionhandler.service.ChildRejectionService"/>
-
-    <osgi:reference id="motherRejectionService"
-                    interface="org.motechproject.nms.rejectionhandler.service.MotherRejectionService"/>
 
     <osgi:reference id="alertsService" interface="org.motechproject.alerts.contract.AlertService" />
 
