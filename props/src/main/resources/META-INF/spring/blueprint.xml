@@ -14,8 +14,8 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <osgi:service ref="propertyService"
-                  interface="org.motechproject.nms.props.service.PropertyService" />
+                  interface="org.motechproject.wa.props.service.PropertyService" />
 
     <osgi:reference id="deployedServiceDataService"
-                    interface="org.motechproject.nms.props.repository.DeployedServiceDataService" />
+                    interface="org.motechproject.wa.props.repository.DeployedServiceDataService" />
 </beans>

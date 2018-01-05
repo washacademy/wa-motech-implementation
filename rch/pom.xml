@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -48,26 +48,26 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>imi</artifactId>
             <version>${project.version}</version>
         </dependency>
 
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>swc</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>swcUpdate</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>rejection-handler</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -121,22 +121,22 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>rch/resources</Resource-Path>
                         <Export-Package>
-                            org.motechproject.nms.rch.service;version=${project.version},
-                            org.motechproject.nms.rch.soap;version=${project.version},
-                            org.motechproject.nms.rch.contract;version=${project.version},
-                            org.motechproject.nms.rch.repository;version=${project.version},
-                            org.motechproject.nms.rch.domain;version=${project.version}
+                            org.motechproject.wa.rch.service;version=${project.version},
+                            org.motechproject.wa.rch.soap;version=${project.version},
+                            org.motechproject.wa.rch.contract;version=${project.version},
+                            org.motechproject.wa.rch.repository;version=${project.version},
+                            org.motechproject.wa.rch.domain;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.apache.axis.*,
-                            org.motechproject.nms.swcUpdate.contract,
-                            org.motechproject.nms.swcUpdate.service,
-                            org.motechproject.nms.swcUpdate.utils,
-                            org.motechproject.nms.region.domain,
-                            org.motechproject.nms.region.exception,
-                            org.motechproject.nms.region.repository,
-                            org.motechproject.nms.rejectionhandler.service,
-                            org.motechproject.nms.rejectionhandler.repository,
+                            org.motechproject.wa.swcUpdate.contract,
+                            org.motechproject.wa.swcUpdate.service,
+                            org.motechproject.wa.swcUpdate.utils,
+                            org.motechproject.wa.region.domain,
+                            org.motechproject.wa.region.exception,
+                            org.motechproject.wa.region.repository,
+                            org.motechproject.wa.rejectionhandler.service,
+                            org.motechproject.wa.rejectionhandler.repository,
                             javax.mail,
                             net.sf.cglib.proxy,
                             net.sf.cglib.core,

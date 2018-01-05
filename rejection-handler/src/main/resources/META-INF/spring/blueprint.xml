@@ -6,9 +6,9 @@
     <import resource="classpath*:META-INF/motech/*.xml" />
 
     <osgi:service ref="swcRejectionService"
-                  interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService" />
+                  interface="org.motechproject.wa.rejectionhandler.service.SwcRejectionService" />
 
     <osgi:reference id="swcImportRejectionDataService"
-                    interface="org.motechproject.nms.rejectionhandler.repository.SwcImportRejectionDataService" />
+                    interface="org.motechproject.wa.rejectionhandler.repository.SwcImportRejectionDataService" />
 
 </beans>

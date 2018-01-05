@@ -16,35 +16,35 @@
     <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager"/>
 
     <osgi:service ref="swcImportService"
-                  interface="org.motechproject.nms.swcUpdate.service.SwcImportService" />
+                  interface="org.motechproject.wa.swcUpdate.service.SwcImportService" />
 
     <osgi:reference id="stateDataService"
-                    interface="org.motechproject.nms.region.repository.StateDataService" />
+                    interface="org.motechproject.wa.region.repository.StateDataService" />
 
     <osgi:reference id="swcService"
-                  interface="org.motechproject.nms.swc.service.SwcService" />
+                  interface="org.motechproject.wa.swc.service.SwcService" />
 
     <!-- CSV Audit Service -->
-    <osgi:reference id="csvAuditService" interface="org.motechproject.nms.csv.service.CsvAuditService" />
+    <osgi:reference id="csvAuditService" interface="org.motechproject.wa.csv.service.CsvAuditService" />
 
     <osgi:reference id="locationService"
-                    interface="org.motechproject.nms.region.service.LocationService" />
+                    interface="org.motechproject.wa.region.service.LocationService" />
 
     <osgi:reference id="contactNumberAuditDataService"
-                    interface="org.motechproject.nms.swc.repository.ContactNumberAuditDataService" />
+                    interface="org.motechproject.wa.swc.repository.ContactNumberAuditDataService" />
 
     <osgi:reference id="languageService"
-                    interface="org.motechproject.nms.region.service.LanguageService" />
+                    interface="org.motechproject.wa.region.service.LanguageService" />
 
     <osgi:reference id="alertsService" interface="org.motechproject.alerts.contract.AlertService" />
 
     <osgi:reference id="washAcademyService"
-                    interface="org.motechproject.nms.washacademy.service.WashAcademyService" />
+                    interface="org.motechproject.wa.washacademy.service.WashAcademyService" />
 
     <osgi:reference id="swcErrorDataService"
-                    interface="org.motechproject.nms.swc.repository.SwcErrorDataService" />
+                    interface="org.motechproject.wa.swc.repository.SwcErrorDataService" />
 
     <osgi:reference id="swcRejectionService"
-                    interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService" />
+                    interface="org.motechproject.wa.rejectionhandler.service.SwcRejectionService" />
 
 </beans>

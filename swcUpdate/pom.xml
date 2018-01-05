@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -29,19 +29,19 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>swc</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>rejection-handler</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>wash-academy</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -90,13 +90,13 @@
                         <Resource-Path>swcUpdate/resources</Resource-Path>
                         <Context-Path>swcUpdate</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.swcUpdate.contract;version=${project.version},
-                            org.motechproject.nms.swcUpdate.utils;version=${project.version},
-                            org.motechproject.nms.swcUpdate.service;version=${project.version}
+                            org.motechproject.wa.swcUpdate.contract;version=${project.version},
+                            org.motechproject.wa.swcUpdate.utils;version=${project.version},
+                            org.motechproject.wa.swcUpdate.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
-                            org.motechproject.nms.tracking.aspect,
+                            org.motechproject.wa.tracking.aspect,
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
@@ -104,12 +104,12 @@
                             org.apache.commons.fileupload,
                             org.springframework.web.multipart.commons,
                             org.motechproject.event.listener,
-                            org.motechproject.nms.swc.utils,
-                            org.motechproject.nms.swc.domain,
-                            org.motechproject.nms.swc.exception,
-                            org.motechproject.nms.swc.repository,
-                            org.motechproject.nms.swc.service,
-                            org.motechproject.nms.rejectionhandler.service,
+                            org.motechproject.wa.swc.utils,
+                            org.motechproject.wa.swc.domain,
+                            org.motechproject.wa.swc.exception,
+                            org.motechproject.wa.swc.repository,
+                            org.motechproject.wa.swc.service,
+                            org.motechproject.wa.rejectionhandler.service,
                             *
                         </Import-Package>
                     </instructions>
@@ -170,7 +170,7 @@
                     <target>1.7</target>
                     <aspectLibraries>
                         <dependency>
-                            <groupId>org.motechproject.nms</groupId>
+                            <groupId>org.motechproject.wa</groupId>
                             <artifactId>tracking</artifactId>
                         </dependency>
                     </aspectLibraries>

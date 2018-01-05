@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -26,13 +26,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>csv</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>tracking</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -74,13 +74,13 @@
                         <Resource-Path>region/resources</Resource-Path>
                         <Context-Path>region</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.region.service;version=${project.version},
-                            org.motechproject.nms.region.repository;version=${project.version},
-                            org.motechproject.nms.region.domain;version=${project.version},
-                            org.motechproject.nms.region.domain.validation;version=${project.version},
-                            org.motechproject.nms.region.exception;version=${project.version},
-                            org.motechproject.nms.region.contract;version=${project.version},
-                            org.motechproject.nms.region.csv;version=${project.version}
+                            org.motechproject.wa.region.service;version=${project.version},
+                            org.motechproject.wa.region.repository;version=${project.version},
+                            org.motechproject.wa.region.domain;version=${project.version},
+                            org.motechproject.wa.region.domain.validation;version=${project.version},
+                            org.motechproject.wa.region.exception;version=${project.version},
+                            org.motechproject.wa.region.contract;version=${project.version},
+                            org.motechproject.wa.region.csv;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             net.sf.cglib.core,
@@ -92,7 +92,7 @@
                             org.springframework.aop.framework,
                             org.springframework.transaction,
                             org.motechproject.osgi.web,
-                            org.motechproject.nms.tracking.aspect,
+                            org.motechproject.wa.tracking.aspect,
                             org.springframework.web.multipart.commons,
                             org.springframework.cache.support,
                             org.springframework.cache.concurrent,
@@ -156,7 +156,7 @@
                     <target>1.7</target>
                     <aspectLibraries>
                         <dependency>
-                            <groupId>org.motechproject.nms</groupId>
+                            <groupId>org.motechproject.wa</groupId>
                             <artifactId>tracking</artifactId>
                         </dependency>
                     </aspectLibraries>

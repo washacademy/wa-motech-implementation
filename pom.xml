@@ -2,20 +2,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>nms</artifactId>
-    <groupId>org.motechproject.nms</groupId>
+    <artifactId>wa</artifactId>
+    <groupId>org.motechproject.wa</groupId>
     <version>1.0.33</version>
     <packaging>pom</packaging>
     <name>National Motech System</name>
 
     <description>
-        MOTECH is a software system from Grameen Foundation that harnesses the ubiquity of mobile phones to deliver and receive information from patient and caregivers. This is the NMS implementation scale-up 
+        MOTECH is a software system from Grameen Foundation that harnesses the ubiquity of mobile phones to deliver and receive information from patient and caregivers. This is the wa implementation scale-up
     </description>
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
         <motech.version>0.27</motech.version>
-        <nms.version>${project.version}}</nms.version>
+        <wa.version>${project.version}}</wa.version>
 
         <jasmine.server.port>8234</jasmine.server.port>
 

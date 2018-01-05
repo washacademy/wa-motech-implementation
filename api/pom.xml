@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -26,31 +26,31 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>region</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>props</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>swc</artifactId>
             <version>${project.version}</version>
         </dependency>
         
           <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>swcUpdate</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>wash-academy</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -94,13 +94,13 @@
                         <Resource-Path>api/resources</Resource-Path>
                         <Context-Path>api</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.api.web.contract,
-                            org.motechproject.nms.api.web.contract.washAcademy,
-                            org.motechproject.nms.api.web.contract.washAcademy.sms,
-                            org.motechproject.nms.api.web.converter,
-                            org.motechproject.nms.api.web.repository,
-                            org.motechproject.nms.api.web.domain,
-                            org.motechproject.nms.api.web.service
+                            org.motechproject.wa.api.web.contract,
+                            org.motechproject.wa.api.web.contract.washAcademy,
+                            org.motechproject.wa.api.web.contract.washAcademy.sms,
+                            org.motechproject.wa.api.web.converter,
+                            org.motechproject.wa.api.web.repository,
+                            org.motechproject.wa.api.web.domain,
+                            org.motechproject.wa.api.web.service
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
@@ -112,8 +112,8 @@
                             net.sf.cglib.reflect,
                             org.springframework.web.multipart.commons,
                             org.springframework.transaction,
-                            org.motechproject.nms.rejectionhandler.service,
-                            org.motechproject.nms.region.repository,
+                            org.motechproject.wa.rejectionhandler.service,
+                            org.motechproject.wa.region.repository,
                             *
                         </Import-Package>
                     </instructions>

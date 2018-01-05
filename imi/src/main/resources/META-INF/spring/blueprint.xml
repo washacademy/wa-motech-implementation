@@ -10,33 +10,33 @@
     <import resource="classpath*:META-INF/motech/*.xml" />
 
     <osgi:service ref="targetFileService"
-                  interface="org.motechproject.nms.imi.service.TargetFileService" />
+                  interface="org.motechproject.wa.imi.service.TargetFileService" />
 
     <osgi:service ref="cdrFileService"
-                  interface="org.motechproject.nms.imi.service.CdrFileService" />
+                  interface="org.motechproject.wa.imi.service.CdrFileService" />
 
     <osgi:service ref="smsNotificationService"
-                  interface="org.motechproject.nms.imi.service.SmsNotificationService" />
+                  interface="org.motechproject.wa.imi.service.SmsNotificationService" />
 
-    <osgi:service ref="settingsService" interface="org.motechproject.nms.imi.service.SettingsService" />
+    <osgi:service ref="settingsService" interface="org.motechproject.wa.imi.service.SettingsService" />
 
     <osgi:reference id="fileAuditRecordDataService"
-                    interface="org.motechproject.nms.imi.repository.FileAuditRecordDataService" />
+                    interface="org.motechproject.wa.imi.repository.FileAuditRecordDataService" />
 
     <osgi:reference id="callDetailRecordDataService"
-                    interface="org.motechproject.nms.imi.repository.CallDetailRecordDataService" />
+                    interface="org.motechproject.wa.imi.repository.CallDetailRecordDataService" />
 
     <osgi:reference id="chunkAuditRecordDataService"
-                    interface="org.motechproject.nms.imi.repository.ChunkAuditRecordDataService" />
+                    interface="org.motechproject.wa.imi.repository.ChunkAuditRecordDataService" />
 
     <osgi:reference id="callSummaryRecordDataService"
-                    interface="org.motechproject.nms.imi.repository.CallSummaryRecordDataService" />
+                    interface="org.motechproject.wa.imi.repository.CallSummaryRecordDataService" />
 
     <osgi:reference id="languageService"
-                    interface="org.motechproject.nms.region.service.LanguageService" />
+                    interface="org.motechproject.wa.region.service.LanguageService" />
 
     <osgi:reference id="circleService"
-                    interface="org.motechproject.nms.region.service.CircleService" />
+                    interface="org.motechproject.wa.region.service.CircleService" />
 
     <osgi:reference id="schedulerService"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService" />

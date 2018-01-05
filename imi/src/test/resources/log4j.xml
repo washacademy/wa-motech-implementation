@@ -14,7 +14,7 @@
         <level value="ALL"/>
     </logger>
 
-    <logger name="org.motechproject.nms.imi">
+    <logger name="org.motechproject.wa.imi">
         <level value="ALL"/>
     </logger>
 

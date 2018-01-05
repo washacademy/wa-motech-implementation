@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -37,50 +37,50 @@
 
         <!-- common properties -->
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>props</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>api</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>imi</artifactId>
             <version>${project.version}</version>
         </dependency>
 
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>region</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>csv</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>tracking</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>rch</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>rejection-handler</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -252,21 +252,21 @@
                         <Resource-Path>testing/resources</Resource-Path>
                         <Context-Path>testing</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.testing.service,
-                            org.motechproject.nms.testing.tracking.repository,
-                            org.motechproject.nms.testing.tracking.domain
+                            org.motechproject.wa.testing.service,
+                            org.motechproject.wa.testing.tracking.repository,
+                            org.motechproject.wa.testing.tracking.domain
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
-                            org.motechproject.nms.api.web.service,
-                            org.motechproject.nms.region.service,
-                            org.motechproject.nms.csv.service,
-                            org.motechproject.nms.tracking.repository,
-                            org.motechproject.nms.rch.contract,
-                            org.motechproject.nms.rch.service,
-                            org.motechproject.nms.rch.soap,
-                            org.motechproject.nms.rejectionhandler.repository,
-                            org.motechproject.nms.rejectionhandler.service,
+                            org.motechproject.wa.api.web.service,
+                            org.motechproject.wa.region.service,
+                            org.motechproject.wa.csv.service,
+                            org.motechproject.wa.tracking.repository,
+                            org.motechproject.wa.rch.contract,
+                            org.motechproject.wa.rch.service,
+                            org.motechproject.wa.rch.soap,
+                            org.motechproject.wa.rejectionhandler.repository,
+                            org.motechproject.wa.rejectionhandler.service,
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,
@@ -335,7 +335,7 @@
                     <target>1.7</target>
                     <aspectLibraries>
                         <dependency>
-                            <groupId>org.motechproject.nms</groupId>
+                            <groupId>org.motechproject.wa</groupId>
                             <artifactId>tracking</artifactId>
                         </dependency>
                     </aspectLibraries>

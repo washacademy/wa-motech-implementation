@@ -9,21 +9,21 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
-class NMSKKSUMMARYRECORDSSTATUSSTAT(Base):
-    __tablename__ = 'NMS_KK_SUMMARY_RECORDS_STATUSSTATS'
+class waKKSUMMARYRECORDSSTATUSSTAT(Base):
+    __tablename__ = 'wa_KK_SUMMARY_RECORDS_STATUSSTATS'
 
-    id_OID = Column(ForeignKey(u'nms_kk_summary_records.id'), primary_key=True, nullable=False, index=True)
+    id_OID = Column(ForeignKey(u'wa_kk_summary_records.id'), primary_key=True, nullable=False, index=True)
     KEY = Column(Integer, primary_key=True, nullable=False)
     VALUE = Column(Integer)
 
-    nms_kk_summary_record = relationship(u'NmsKkSummaryRecord')
+    wa_kk_summary_record = relationship(u'waKkSummaryRecord')
 
 
-class NmsCallContent(Base):
-    __tablename__ = 'nms_call_content'
+class waCallContent(Base):
+    __tablename__ = 'wa_call_content'
 
     id = Column(BigInteger, primary_key=True, index=True)
-    callDetailRecord_id_OID = Column(ForeignKey(u'nms_swc_cdrs.id', ondelete=u'CASCADE'), index=True)
+    callDetailRecord_id_OID = Column(ForeignKey(u'wa_swc_cdrs.id', ondelete=u'CASCADE'), index=True)
     completionFlag = Column(BIT(1))
     contentFile = Column(String(255, u'utf8_bin'))
     contentName = Column(String(255, u'utf8_bin'))
@@ -38,14 +38,14 @@ class NmsCallContent(Base):
     startTime = Column(DateTime)
     type = Column(String(255, u'utf8_bin'))
 
-    nms_swc_cdr = relationship(u'NmsSwcCdr')
+    wa_swc_cdr = relationship(u'waSwcCdr')
 
 
-class NmsCircle(Base):
-    __tablename__ = 'nms_circles'
+class waCircle(Base):
+    __tablename__ = 'wa_circles'
 
     id = Column(BigInteger, primary_key=True, index=True)
-    defaultLanguage_id_OID = Column(ForeignKey(u'nms_languages.id'), index=True)
+    defaultLanguage_id_OID = Column(ForeignKey(u'wa_languages.id'), index=True)
     name = Column(String(255, u'utf8_bin'), unique=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
@@ -53,11 +53,11 @@ class NmsCircle(Base):
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_language = relationship(u'NmsLanguage')
+    wa_language = relationship(u'waLanguage')
 
 
-class NmsCsvAuditRecord(Base):
-    __tablename__ = 'nms_csv_audit_records'
+class waCsvAuditRecord(Base):
+    __tablename__ = 'wa_csv_audit_records'
 
     id = Column(BigInteger, primary_key=True, index=True)
     creationDate = Column(DateTime, nullable=False)
@@ -70,8 +70,8 @@ class NmsCsvAuditRecord(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsDeployedService(Base):
-    __tablename__ = 'nms_deployed_services'
+class waDeployedService(Base):
+    __tablename__ = 'wa_deployed_services'
     __table_args__ = (
         Index('UNIQUE_STATE_SERVICE_COMPOSITE_IDX', 'state_id_OID', 'service', unique=True),
     )
@@ -83,23 +83,23 @@ class NmsDeployedService(Base):
     modifiedBy = Column(String(255, u'utf8_bin'), nullable=False)
     owner = Column(String(255, u'utf8_bin'))
     service = Column(String(255, u'utf8_bin'), nullable=False)
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), nullable=False, index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), nullable=False, index=True)
 
-    nms_state = relationship(u'NmsState')
+    wa_state = relationship(u'waState')
 
 
-class NmsDistrict(Base):
-    __tablename__ = 'nms_districts'
+class waDistrict(Base):
+    __tablename__ = 'wa_districts'
     __table_args__ = (
         Index('UNIQUE_STATE_CODE', 'state_id_OID', 'code', unique=True),
     )
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(BigInteger, nullable=False)
-    language_id_OID = Column(ForeignKey(u'nms_languages.id'), index=True)
+    language_id_OID = Column(ForeignKey(u'wa_languages.id'), index=True)
     name = Column(String(100, u'utf8_bin'))
     regionalName = Column(String(100, u'utf8_bin'))
-    state_id_OID = Column(ForeignKey(u'nms_states.id', ondelete=u'CASCADE'), nullable=False, index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id', ondelete=u'CASCADE'), nullable=False, index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
@@ -107,12 +107,12 @@ class NmsDistrict(Base):
     owner = Column(String(255, u'utf8_bin'))
     districts_INTEGER_IDX = Column(Integer)
 
-    nms_language = relationship(u'NmsLanguage')
-    nms_state = relationship(u'NmsState')
+    wa_language = relationship(u'waLanguage')
+    wa_state = relationship(u'waState')
 
 
-class NmsSwcCdr(Base):
-    __tablename__ = 'nms_swc_cdrs'
+class waSwcCdr(Base):
+    __tablename__ = 'wa_swc_cdrs'
 
     id = Column(BigInteger, primary_key=True, index=True)
     callDisconnectReason = Column(String(255, u'utf8_bin'))
@@ -127,7 +127,7 @@ class NmsSwcCdr(Base):
     creator = Column(String(255, u'utf8_bin'), nullable=False)
     endOfUsagePromptCounter = Column(Integer, nullable=False)
     finalCallStatus = Column(String(255, u'utf8_bin'))
-    frontLineWorker_id_OID = Column(ForeignKey(u'nms_front_line_workers.id'), index=True)
+    frontLineWorker_id_OID = Column(ForeignKey(u'wa_front_line_workers.id'), index=True)
     modificationDate = Column(DateTime, nullable=False)
     modifiedBy = Column(String(255, u'utf8_bin'), nullable=False)
     operator = Column(String(255, u'utf8_bin'))
@@ -135,48 +135,48 @@ class NmsSwcCdr(Base):
     service = Column(String(255, u'utf8_bin'), nullable=False)
     welcomePrompt = Column(BIT(1))
 
-    nms_front_line_worker = relationship(u'NmsFrontLineWorker')
+    wa_front_line_worker = relationship(u'waFrontLineWorker')
 
 
-class NmsFrontLineWorker(Base):
-    __tablename__ = 'nms_front_line_workers'
+class waFrontLineWorker(Base):
+    __tablename__ = 'wa_front_line_workers'
     __table_args__ = (
         Index('status_invalidationDate_composit_idx', 'status', 'invalidationDate'),
     )
 
     id = Column(BigInteger, primary_key=True, index=True)
     contactNumber = Column(BigInteger, nullable=False, unique=True)
-    district_id_OID = Column(ForeignKey(u'nms_districts.id'), index=True)
+    district_id_OID = Column(ForeignKey(u'wa_districts.id'), index=True)
     swcId = Column(String(255, u'utf8_bin'), index=True)
-    healthBlock_id_OID = Column(ForeignKey(u'nms_health_blocks.id'), index=True)
-    healthFacility_id_OID = Column(ForeignKey(u'nms_health_facilities.id'), index=True)
-    healthSubFacility_id_OID = Column(ForeignKey(u'nms_health_sub_facilities.id'), index=True)
+    healthBlock_id_OID = Column(ForeignKey(u'wa_health_blocks.id'), index=True)
+    healthFacility_id_OID = Column(ForeignKey(u'wa_health_facilities.id'), index=True)
+    healthSubFacility_id_OID = Column(ForeignKey(u'wa_health_sub_facilities.id'), index=True)
     invalidationDate = Column(DateTime)
-    language_id_OID = Column(ForeignKey(u'nms_languages.id'), index=True)
+    language_id_OID = Column(ForeignKey(u'wa_languages.id'), index=True)
     mctsSwcId = Column(String(255, u'utf8_bin'))
     name = Column(String(255, u'utf8_bin'))
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), index=True)
     status = Column(String(255, u'utf8_bin'))
-    taluka_id_OID = Column(ForeignKey(u'nms_talukas.id'), index=True)
-    village_id_OID = Column(ForeignKey(u'nms_villages.id'), index=True)
+    taluka_id_OID = Column(ForeignKey(u'wa_talukas.id'), index=True)
+    village_id_OID = Column(ForeignKey(u'wa_villages.id'), index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_district = relationship(u'NmsDistrict')
-    nms_health_block = relationship(u'NmsHealthBlock')
-    nms_health_facility = relationship(u'NmsHealthFacility')
-    nms_health_sub_facility = relationship(u'NmsHealthSubFacility')
-    nms_language = relationship(u'NmsLanguage')
-    nms_state = relationship(u'NmsState')
-    nms_taluka = relationship(u'NmsTaluka')
-    nms_village = relationship(u'NmsVillage')
+    wa_district = relationship(u'waDistrict')
+    wa_health_block = relationship(u'waHealthBlock')
+    wa_health_facility = relationship(u'waHealthFacility')
+    wa_health_sub_facility = relationship(u'waHealthSubFacility')
+    wa_language = relationship(u'waLanguage')
+    wa_state = relationship(u'waState')
+    wa_taluka = relationship(u'waTaluka')
+    wa_village = relationship(u'waVillage')
 
 
-class NmsHealthBlock(Base):
-    __tablename__ = 'nms_health_blocks'
+class waHealthBlock(Base):
+    __tablename__ = 'wa_health_blocks'
     __table_args__ = (
         Index('UNIQUE_TALUKA_CODE', 'taluka_id_OID', 'code', unique=True),
     )
@@ -186,7 +186,7 @@ class NmsHealthBlock(Base):
     hq = Column(String(50, u'utf8_bin'))
     name = Column(String(35, u'utf8_bin'))
     regionalName = Column(String(50, u'utf8_bin'))
-    taluka_id_OID = Column(ForeignKey(u'nms_talukas.id', ondelete=u'CASCADE'), nullable=False, index=True)
+    taluka_id_OID = Column(ForeignKey(u'wa_talukas.id', ondelete=u'CASCADE'), nullable=False, index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
@@ -194,19 +194,19 @@ class NmsHealthBlock(Base):
     owner = Column(String(255, u'utf8_bin'))
     healthBlocks_INTEGER_IDX = Column(Integer)
 
-    nms_taluka = relationship(u'NmsTaluka')
+    wa_taluka = relationship(u'waTaluka')
 
 
-class NmsHealthFacility(Base):
-    __tablename__ = 'nms_health_facilities'
+class waHealthFacility(Base):
+    __tablename__ = 'wa_health_facilities'
     __table_args__ = (
         Index('UNIQUE_HEALTH_BLOCK_CODE', 'healthBlock_id_OID', 'code', unique=True),
     )
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(BigInteger, nullable=False)
-    healthBlock_id_OID = Column(ForeignKey(u'nms_health_blocks.id', ondelete=u'CASCADE'), nullable=False, index=True)
-    healthFacilityType_id_OID = Column(ForeignKey(u'nms_health_facility_types.id'), nullable=False, index=True)
+    healthBlock_id_OID = Column(ForeignKey(u'wa_health_blocks.id', ondelete=u'CASCADE'), nullable=False, index=True)
+    healthFacilityType_id_OID = Column(ForeignKey(u'wa_health_facility_types.id'), nullable=False, index=True)
     name = Column(String(50, u'utf8_bin'))
     regionalName = Column(String(50, u'utf8_bin'))
     creationDate = Column(DateTime)
@@ -216,12 +216,12 @@ class NmsHealthFacility(Base):
     owner = Column(String(255, u'utf8_bin'))
     healthFacilities_INTEGER_IDX = Column(Integer)
 
-    nms_health_block = relationship(u'NmsHealthBlock')
-    nms_health_facility_type = relationship(u'NmsHealthFacilityType')
+    wa_health_block = relationship(u'waHealthBlock')
+    wa_health_facility_type = relationship(u'waHealthFacilityType')
 
 
-class NmsHealthFacilityType(Base):
-    __tablename__ = 'nms_health_facility_types'
+class waHealthFacilityType(Base):
+    __tablename__ = 'wa_health_facility_types'
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(BigInteger, nullable=False, unique=True)
@@ -233,15 +233,15 @@ class NmsHealthFacilityType(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsHealthSubFacility(Base):
-    __tablename__ = 'nms_health_sub_facilities'
+class waHealthSubFacility(Base):
+    __tablename__ = 'wa_health_sub_facilities'
     __table_args__ = (
         Index('UNIQUE_HEALTH_FACILITY_CODE', 'healthFacility_id_OID', 'code', unique=True),
     )
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(BigInteger, nullable=False)
-    healthFacility_id_OID = Column(ForeignKey(u'nms_health_facilities.id', ondelete=u'CASCADE'), nullable=False, index=True)
+    healthFacility_id_OID = Column(ForeignKey(u'wa_health_facilities.id', ondelete=u'CASCADE'), nullable=False, index=True)
     name = Column(String(100, u'utf8_bin'))
     regionalName = Column(String(100, u'utf8_bin'))
     creationDate = Column(DateTime)
@@ -251,11 +251,11 @@ class NmsHealthSubFacility(Base):
     owner = Column(String(255, u'utf8_bin'))
     healthSubFacilities_INTEGER_IDX = Column(Integer)
 
-    nms_health_facility = relationship(u'NmsHealthFacility')
+    wa_health_facility = relationship(u'waHealthFacility')
 
 
-class NmsImiCdr(Base):
-    __tablename__ = 'nms_imi_cdrs'
+class waImiCdr(Base):
+    __tablename__ = 'wa_imi_cdrs'
 
     id = Column(BigInteger, primary_key=True, index=True)
     attemptNo = Column(String(255, u'utf8_bin'))
@@ -283,8 +283,8 @@ class NmsImiCdr(Base):
     weekId = Column(String(255, u'utf8_bin'))
 
 
-class NmsImiCsr(Base):
-    __tablename__ = 'nms_imi_csrs'
+class waImiCsr(Base):
+    __tablename__ = 'wa_imi_csrs'
 
     id = Column(BigInteger, primary_key=True, index=True)
     attempts = Column(Integer)
@@ -307,8 +307,8 @@ class NmsImiCsr(Base):
     weekId = Column(String(255, u'utf8_bin'))
 
 
-class NmsImiFileAuditRecord(Base):
-    __tablename__ = 'nms_imi_file_audit_records'
+class waImiFileAuditRecord(Base):
+    __tablename__ = 'wa_imi_file_audit_records'
 
     id = Column(BigInteger, primary_key=True, index=True)
     checksum = Column(String(40, u'utf8_bin'))
@@ -324,8 +324,8 @@ class NmsImiFileAuditRecord(Base):
     type = Column(String(255, u'utf8_bin'), nullable=False)
 
 
-class NmsInboxCallDatum(Base):
-    __tablename__ = 'nms_inbox_call_data'
+class waInboxCallDatum(Base):
+    __tablename__ = 'wa_inbox_call_data'
 
     id = Column(BigInteger, primary_key=True, index=True)
     contentFileName = Column(String(255, u'utf8_bin'))
@@ -339,13 +339,13 @@ class NmsInboxCallDatum(Base):
     startTime = Column(DateTime)
     subscriptionId = Column(String(255, u'utf8_bin'))
     subscriptionPack = Column(String(255, u'utf8_bin'))
-    content_id_OWN = Column(ForeignKey(u'nms_inbox_call_details.id'), index=True)
+    content_id_OWN = Column(ForeignKey(u'wa_inbox_call_details.id'), index=True)
 
-    nms_inbox_call_detail = relationship(u'NmsInboxCallDetail')
+    wa_inbox_call_detail = relationship(u'waInboxCallDetail')
 
 
-class NmsInboxCallDetail(Base):
-    __tablename__ = 'nms_inbox_call_details'
+class waInboxCallDetail(Base):
+    __tablename__ = 'wa_inbox_call_details'
 
     id = Column(BigInteger, primary_key=True, index=True)
     callDisconnectReason = Column(Integer)
@@ -364,8 +364,8 @@ class NmsInboxCallDetail(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsKkRetryRecord(Base):
-    __tablename__ = 'nms_kk_retry_records'
+class waKkRetryRecord(Base):
+    __tablename__ = 'wa_kk_retry_records'
 
     id = Column(BigInteger, primary_key=True, index=True)
     callStage = Column(String(255, u'utf8_bin'))
@@ -384,8 +384,8 @@ class NmsKkRetryRecord(Base):
     weekId = Column(String(255, u'utf8_bin'))
 
 
-class NmsKkSummaryRecord(Base):
-    __tablename__ = 'nms_kk_summary_records'
+class waKkSummaryRecord(Base):
+    __tablename__ = 'wa_kk_summary_records'
 
     id = Column(BigInteger, primary_key=True, index=True)
     attemptedDayCount = Column(Integer)
@@ -405,8 +405,8 @@ class NmsKkSummaryRecord(Base):
     weekId = Column(String(255, u'utf8_bin'))
 
 
-class NmsLanguage(Base):
-    __tablename__ = 'nms_languages'
+class waLanguage(Base):
+    __tablename__ = 'wa_languages'
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(String(255, u'utf8_bin'), unique=True)
@@ -418,8 +418,8 @@ class NmsLanguage(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsMaCompletionRecord(Base):
-    __tablename__ = 'nms_ma_completion_records'
+class waMaCompletionRecord(Base):
+    __tablename__ = 'wa_ma_completion_records'
 
     id = Column(BigInteger, primary_key=True, index=True)
     callingNumber = Column(BigInteger, nullable=False, unique=True)
@@ -435,8 +435,8 @@ class NmsMaCompletionRecord(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsMaCourse(Base):
-    __tablename__ = 'nms_ma_course'
+class waMaCourse(Base):
+    __tablename__ = 'wa_ma_course'
 
     id = Column(BigInteger, primary_key=True, index=True)
     content = Column(String)
@@ -448,86 +448,86 @@ class NmsMaCourse(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsMctsChildren(Base):
-    __tablename__ = 'nms_mcts_children'
+class waMctsChildren(Base):
+    __tablename__ = 'wa_mcts_children'
 
     id = Column(BigInteger, primary_key=True, index=True)
-    mother_id_OID = Column(ForeignKey(u'nms_mcts_mothers.id'), index=True)
+    mother_id_OID = Column(ForeignKey(u'wa_mcts_mothers.id'), index=True)
     beneficiaryId = Column(String(255, u'utf8_bin'), unique=True)
-    district_id_OID = Column(ForeignKey(u'nms_districts.id'), index=True)
-    healthBlock_id_OID = Column(ForeignKey(u'nms_health_blocks.id'), index=True)
-    healthFacility_id_OID = Column(ForeignKey(u'nms_health_facilities.id'), index=True)
-    healthSubFacility_id_OID = Column(ForeignKey(u'nms_health_sub_facilities.id'), index=True)
+    district_id_OID = Column(ForeignKey(u'wa_districts.id'), index=True)
+    healthBlock_id_OID = Column(ForeignKey(u'wa_health_blocks.id'), index=True)
+    healthFacility_id_OID = Column(ForeignKey(u'wa_health_facilities.id'), index=True)
+    healthSubFacility_id_OID = Column(ForeignKey(u'wa_health_sub_facilities.id'), index=True)
     name = Column(String(255, u'utf8_bin'))
-    primaryHealthCenter_id_OID = Column(ForeignKey(u'nms_health_facilities.id'), index=True)
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), index=True)
-    taluka_id_OID = Column(ForeignKey(u'nms_talukas.id'), index=True)
-    village_id_OID = Column(ForeignKey(u'nms_villages.id'), index=True)
+    primaryHealthCenter_id_OID = Column(ForeignKey(u'wa_health_facilities.id'), index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), index=True)
+    taluka_id_OID = Column(ForeignKey(u'wa_talukas.id'), index=True)
+    village_id_OID = Column(ForeignKey(u'wa_villages.id'), index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_district = relationship(u'NmsDistrict')
-    nms_health_block = relationship(u'NmsHealthBlock')
-    nms_health_facility = relationship(u'NmsHealthFacility', primaryjoin='NmsMctsChildren.healthFacility_id_OID == NmsHealthFacility.id')
-    nms_health_sub_facility = relationship(u'NmsHealthSubFacility')
-    nms_mcts_mother = relationship(u'NmsMctsMother')
-    nms_health_facility1 = relationship(u'NmsHealthFacility', primaryjoin='NmsMctsChildren.primaryHealthCenter_id_OID == NmsHealthFacility.id')
-    nms_state = relationship(u'NmsState')
-    nms_taluka = relationship(u'NmsTaluka')
-    nms_village = relationship(u'NmsVillage')
+    wa_district = relationship(u'waDistrict')
+    wa_health_block = relationship(u'waHealthBlock')
+    wa_health_facility = relationship(u'waHealthFacility', primaryjoin='waMctsChildren.healthFacility_id_OID == waHealthFacility.id')
+    wa_health_sub_facility = relationship(u'waHealthSubFacility')
+    wa_mcts_mother = relationship(u'waMctsMother')
+    wa_health_facility1 = relationship(u'waHealthFacility', primaryjoin='waMctsChildren.primaryHealthCenter_id_OID == waHealthFacility.id')
+    wa_state = relationship(u'waState')
+    wa_taluka = relationship(u'waTaluka')
+    wa_village = relationship(u'waVillage')
 
 
-class NmsMctsMother(Base):
-    __tablename__ = 'nms_mcts_mothers'
+class waMctsMother(Base):
+    __tablename__ = 'wa_mcts_mothers'
 
     id = Column(BigInteger, primary_key=True, index=True)
     dateOfBirth = Column(DateTime)
     beneficiaryId = Column(String(255, u'utf8_bin'), unique=True)
-    district_id_OID = Column(ForeignKey(u'nms_districts.id'), index=True)
-    healthBlock_id_OID = Column(ForeignKey(u'nms_health_blocks.id'), index=True)
-    healthFacility_id_OID = Column(ForeignKey(u'nms_health_facilities.id'), index=True)
-    healthSubFacility_id_OID = Column(ForeignKey(u'nms_health_sub_facilities.id'), index=True)
+    district_id_OID = Column(ForeignKey(u'wa_districts.id'), index=True)
+    healthBlock_id_OID = Column(ForeignKey(u'wa_health_blocks.id'), index=True)
+    healthFacility_id_OID = Column(ForeignKey(u'wa_health_facilities.id'), index=True)
+    healthSubFacility_id_OID = Column(ForeignKey(u'wa_health_sub_facilities.id'), index=True)
     name = Column(String(255, u'utf8_bin'))
-    primaryHealthCenter_id_OID = Column(ForeignKey(u'nms_health_facilities.id'), index=True)
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), index=True)
-    taluka_id_OID = Column(ForeignKey(u'nms_talukas.id'), index=True)
-    village_id_OID = Column(ForeignKey(u'nms_villages.id'), index=True)
+    primaryHealthCenter_id_OID = Column(ForeignKey(u'wa_health_facilities.id'), index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), index=True)
+    taluka_id_OID = Column(ForeignKey(u'wa_talukas.id'), index=True)
+    village_id_OID = Column(ForeignKey(u'wa_villages.id'), index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_district = relationship(u'NmsDistrict')
-    nms_health_block = relationship(u'NmsHealthBlock')
-    nms_health_facility = relationship(u'NmsHealthFacility', primaryjoin='NmsMctsMother.healthFacility_id_OID == NmsHealthFacility.id')
-    nms_health_sub_facility = relationship(u'NmsHealthSubFacility')
-    nms_health_facility1 = relationship(u'NmsHealthFacility', primaryjoin='NmsMctsMother.primaryHealthCenter_id_OID == NmsHealthFacility.id')
-    nms_state = relationship(u'NmsState')
-    nms_taluka = relationship(u'NmsTaluka')
-    nms_village = relationship(u'NmsVillage')
+    wa_district = relationship(u'waDistrict')
+    wa_health_block = relationship(u'waHealthBlock')
+    wa_health_facility = relationship(u'waHealthFacility', primaryjoin='waMctsMother.healthFacility_id_OID == waHealthFacility.id')
+    wa_health_sub_facility = relationship(u'waHealthSubFacility')
+    wa_health_facility1 = relationship(u'waHealthFacility', primaryjoin='waMctsMother.primaryHealthCenter_id_OID == waHealthFacility.id')
+    wa_state = relationship(u'waState')
+    wa_taluka = relationship(u'waTaluka')
+    wa_village = relationship(u'waVillage')
 
 
-class NmsNationalDefaultLanguage(Base):
-    __tablename__ = 'nms_national_default_language'
+class waNationalDefaultLanguage(Base):
+    __tablename__ = 'wa_national_default_language'
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(Integer, nullable=False, unique=True, server_default=text("'0'"))
-    language_id_OID = Column(ForeignKey(u'nms_languages.id'), nullable=False, index=True)
+    language_id_OID = Column(ForeignKey(u'wa_languages.id'), nullable=False, index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_language = relationship(u'NmsLanguage')
+    wa_language = relationship(u'waLanguage')
 
 
-class NmsServiceUsageCap(Base):
-    __tablename__ = 'nms_service_usage_caps'
+class waServiceUsageCap(Base):
+    __tablename__ = 'wa_service_usage_caps'
     __table_args__ = (
         Index('UNIQUE_STATE_SERVICE_COMPOSITE_IDX', 'state_id_OID', 'service', unique=True),
     )
@@ -540,13 +540,13 @@ class NmsServiceUsageCap(Base):
     modifiedBy = Column(String(255, u'utf8_bin'), nullable=False)
     owner = Column(String(255, u'utf8_bin'))
     service = Column(String(255, u'utf8_bin'))
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), index=True)
 
-    nms_state = relationship(u'NmsState')
+    wa_state = relationship(u'waState')
 
 
-class NmsState(Base):
-    __tablename__ = 'nms_states'
+class waState(Base):
+    __tablename__ = 'wa_states'
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(BigInteger, nullable=False, unique=True)
@@ -558,42 +558,42 @@ class NmsState(Base):
     owner = Column(String(255, u'utf8_bin'))
 
 
-class NmsStatesJoinCircle(Base):
-    __tablename__ = 'nms_states_join_circles'
+class waStatesJoinCircle(Base):
+    __tablename__ = 'wa_states_join_circles'
 
-    circle_id = Column(ForeignKey(u'nms_circles.id'), primary_key=True, nullable=False, index=True)
-    state_id = Column(ForeignKey(u'nms_states.id'), nullable=False, index=True)
+    circle_id = Column(ForeignKey(u'wa_circles.id'), primary_key=True, nullable=False, index=True)
+    state_id = Column(ForeignKey(u'wa_states.id'), nullable=False, index=True)
     IDX = Column(Integer, primary_key=True, nullable=False)
 
-    circleName = relationship(u'NmsCircle')
-    state = relationship(u'NmsState')
+    circleName = relationship(u'waCircle')
+    state = relationship(u'waState')
 
 
-class NmsSubscriber(Base):
-    __tablename__ = 'nms_subscribers'
+class waSubscriber(Base):
+    __tablename__ = 'wa_subscribers'
 
     id = Column(BigInteger, primary_key=True, index=True)
     callingNumber = Column(BigInteger, nullable=False, unique=True)
-    child_id_OID = Column(ForeignKey(u'nms_mcts_children.id'), index=True)
-    circle_id_OID = Column(ForeignKey(u'nms_circles.id'), index=True)
+    child_id_OID = Column(ForeignKey(u'wa_mcts_children.id'), index=True)
+    circle_id_OID = Column(ForeignKey(u'wa_circles.id'), index=True)
     dateOfBirth = Column(DateTime)
-    language_id_OID = Column(ForeignKey(u'nms_languages.id'), index=True)
+    language_id_OID = Column(ForeignKey(u'wa_languages.id'), index=True)
     lastMenstrualPeriod = Column(DateTime)
-    mother_id_OID = Column(ForeignKey(u'nms_mcts_mothers.id'), index=True)
+    mother_id_OID = Column(ForeignKey(u'wa_mcts_mothers.id'), index=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_mcts_children = relationship(u'NmsMctsChildren')
-    nms_circle = relationship(u'NmsCircle')
-    nms_language = relationship(u'NmsLanguage')
-    nms_mcts_mother = relationship(u'NmsMctsMother')
+    wa_mcts_children = relationship(u'waMctsChildren')
+    wa_circle = relationship(u'waCircle')
+    wa_language = relationship(u'waLanguage')
+    wa_mcts_mother = relationship(u'waMctsMother')
 
 
-class NmsSubscriptionError(Base):
-    __tablename__ = 'nms_subscription_errors'
+class waSubscriptionError(Base):
+    __tablename__ = 'wa_subscription_errors'
 
     id = Column(BigInteger, primary_key=True, index=True)
     beneficiaryId = Column(String(255, u'utf8_bin'), index=True)
@@ -608,8 +608,8 @@ class NmsSubscriptionError(Base):
     rejectionReason = Column(String(255, u'utf8_bin'))
 
 
-class NmsSubscriptionPackMessage(Base):
-    __tablename__ = 'nms_subscription_pack_messages'
+class waSubscriptionPackMessage(Base):
+    __tablename__ = 'wa_subscription_pack_messages'
 
     id = Column(BigInteger, primary_key=True, index=True)
     creationDate = Column(DateTime, nullable=False)
@@ -620,14 +620,14 @@ class NmsSubscriptionPackMessage(Base):
     modifiedBy = Column(String(255, u'utf8_bin'), nullable=False)
     owner = Column(String(255, u'utf8_bin'))
     weekId = Column(String(255, u'utf8_bin'))
-    messages_id_OWN = Column(ForeignKey(u'nms_subscription_packs.id'), index=True)
+    messages_id_OWN = Column(ForeignKey(u'wa_subscription_packs.id'), index=True)
     messages_INTEGER_IDX = Column(Integer)
 
-    nms_subscription_pack = relationship(u'NmsSubscriptionPack')
+    wa_subscription_pack = relationship(u'waSubscriptionPack')
 
 
-class NmsSubscriptionPack(Base):
-    __tablename__ = 'nms_subscription_packs'
+class waSubscriptionPack(Base):
+    __tablename__ = 'wa_subscription_packs'
 
     id = Column(BigInteger, primary_key=True, index=True)
     creationDate = Column(DateTime, nullable=False)
@@ -641,8 +641,8 @@ class NmsSubscriptionPack(Base):
     weeks = Column(Integer, nullable=False)
 
 
-class NmsSubscription(Base):
-    __tablename__ = 'nms_subscriptions'
+class waSubscription(Base):
+    __tablename__ = 'wa_subscriptions'
     __table_args__ = (
         Index('status_endDate_composit_idx', 'status', 'endDate'),
     )
@@ -662,23 +662,23 @@ class NmsSubscription(Base):
     secondMessageDayOfWeek = Column(String(255, u'utf8_bin'))
     startDate = Column(DateTime, index=True)
     status = Column(String(255, u'utf8_bin'), nullable=False, index=True)
-    subscriber_id_OID = Column(ForeignKey(u'nms_subscribers.id'), nullable=False, index=True)
+    subscriber_id_OID = Column(ForeignKey(u'wa_subscribers.id'), nullable=False, index=True)
     subscriptionId = Column(String(36, u'utf8_bin'), unique=True)
-    subscriptionPack_id_OID = Column(ForeignKey(u'nms_subscription_packs.id'), nullable=False, index=True)
+    subscriptionPack_id_OID = Column(ForeignKey(u'wa_subscription_packs.id'), nullable=False, index=True)
 
-    nms_subscriber = relationship(u'NmsSubscriber')
-    nms_subscription_pack = relationship(u'NmsSubscriptionPack')
+    wa_subscriber = relationship(u'waSubscriber')
+    wa_subscription_pack = relationship(u'waSubscriptionPack')
 
 
-class NmsTaluka(Base):
-    __tablename__ = 'nms_talukas'
+class waTaluka(Base):
+    __tablename__ = 'wa_talukas'
     __table_args__ = (
         Index('UNIQUE_DISTRICT_CODE', 'district_id_OID', 'code', unique=True),
     )
 
     id = Column(BigInteger, primary_key=True, index=True)
     code = Column(String(7, u'utf8_bin'))
-    district_id_OID = Column(ForeignKey(u'nms_districts.id', ondelete=u'CASCADE'), nullable=False, index=True)
+    district_id_OID = Column(ForeignKey(u'wa_districts.id', ondelete=u'CASCADE'), nullable=False, index=True)
     identity = Column(Integer, nullable=False)
     name = Column(String(100, u'utf8_bin'))
     regionalName = Column(String(100, u'utf8_bin'))
@@ -689,11 +689,11 @@ class NmsTaluka(Base):
     owner = Column(String(255, u'utf8_bin'))
     talukas_INTEGER_IDX = Column(Integer)
 
-    nms_district = relationship(u'NmsDistrict')
+    wa_district = relationship(u'waDistrict')
 
 
-class NmsVillage(Base):
-    __tablename__ = 'nms_villages'
+class waVillage(Base):
+    __tablename__ = 'wa_villages'
     __table_args__ = (
         Index('UNIQUE_TALUKA_VCODE_SVID', 'taluka_id_OID', 'vcode', 'svid', unique=True),
     )
@@ -702,7 +702,7 @@ class NmsVillage(Base):
     name = Column(String(50, u'utf8_bin'))
     regionalName = Column(String(50, u'utf8_bin'))
     svid = Column(BigInteger, nullable=False)
-    taluka_id_OID = Column(ForeignKey(u'nms_talukas.id', ondelete=u'CASCADE'), nullable=False, index=True)
+    taluka_id_OID = Column(ForeignKey(u'wa_talukas.id', ondelete=u'CASCADE'), nullable=False, index=True)
     vcode = Column(BigInteger, nullable=False)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
@@ -711,11 +711,11 @@ class NmsVillage(Base):
     owner = Column(String(255, u'utf8_bin'))
     villages_INTEGER_IDX = Column(Integer)
 
-    nms_taluka = relationship(u'NmsTaluka')
+    wa_taluka = relationship(u'waTaluka')
 
 
-class NmsWhitelistEntry(Base):
-    __tablename__ = 'nms_whitelist_entries'
+class waWhitelistEntry(Base):
+    __tablename__ = 'wa_whitelist_entries'
     __table_args__ = (
         Index('UNIQUE_STATE_CONTACT_NUMBER_COMPOSITE_IDX', 'state_id_OID', 'contactNumber', unique=True),
     )
@@ -727,20 +727,20 @@ class NmsWhitelistEntry(Base):
     modificationDate = Column(DateTime, nullable=False)
     modifiedBy = Column(String(255, u'utf8_bin'), nullable=False)
     owner = Column(String(255, u'utf8_bin'))
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), index=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), index=True)
 
-    nms_state = relationship(u'NmsState')
+    wa_state = relationship(u'waState')
 
 
-class NmsWhitelistedState(Base):
-    __tablename__ = 'nms_whitelisted_states'
+class waWhitelistedState(Base):
+    __tablename__ = 'wa_whitelisted_states'
 
     id = Column(BigInteger, primary_key=True, index=True)
-    state_id_OID = Column(ForeignKey(u'nms_states.id'), nullable=False, unique=True)
+    state_id_OID = Column(ForeignKey(u'wa_states.id'), nullable=False, unique=True)
     creationDate = Column(DateTime)
     creator = Column(String(255, u'utf8_bin'))
     modificationDate = Column(DateTime)
     modifiedBy = Column(String(255, u'utf8_bin'))
     owner = Column(String(255, u'utf8_bin'))
 
-    nms_state = relationship(u'NmsState')
+    wa_state = relationship(u'waState')

@@ -18,59 +18,59 @@
 
     <!-- Language Services -->
     <osgi:service ref="languageService"
-                  interface="org.motechproject.nms.region.service.LanguageService" />
+                  interface="org.motechproject.wa.region.service.LanguageService" />
     <osgi:reference id="languageDataService"
-                    interface="org.motechproject.nms.region.repository.LanguageDataService" />
+                    interface="org.motechproject.wa.region.repository.LanguageDataService" />
 
     <osgi:reference id="nationalDefaultLanguageDataService"
-                    interface="org.motechproject.nms.region.repository.NationalDefaultLanguageDataService" />
+                    interface="org.motechproject.wa.region.repository.NationalDefaultLanguageDataService" />
 
     <!-- Location Services -->
 
     <osgi:service ref="locationService"
-                  interface="org.motechproject.nms.region.service.LocationService" />
+                  interface="org.motechproject.wa.region.service.LocationService" />
 
     <osgi:reference id="stateDataService"
-                    interface="org.motechproject.nms.region.repository.StateDataService" />
+                    interface="org.motechproject.wa.region.repository.StateDataService" />
     <osgi:service ref="stateService"
-                    interface="org.motechproject.nms.region.service.StateService" />
+                    interface="org.motechproject.wa.region.service.StateService" />
 
     <osgi:reference id="districtDataService"
-                    interface="org.motechproject.nms.region.repository.DistrictDataService" />
+                    interface="org.motechproject.wa.region.repository.DistrictDataService" />
     <osgi:service ref="districtService"
-                  interface="org.motechproject.nms.region.service.DistrictService" />
+                  interface="org.motechproject.wa.region.service.DistrictService" />
 
     <osgi:reference id="blockDataService"
-                    interface="org.motechproject.nms.region.repository.BlockDataService" />
+                    interface="org.motechproject.wa.region.repository.BlockDataService" />
     <osgi:service ref="blockService"
-                  interface="org.motechproject.nms.region.service.BlockService" />
+                  interface="org.motechproject.wa.region.service.BlockService" />
 
     <osgi:reference id="panchayatDataService"
-                    interface="org.motechproject.nms.region.repository.PanchayatDataService" />
+                    interface="org.motechproject.wa.region.repository.PanchayatDataService" />
     <osgi:service ref="panchayatService"
-                  interface="org.motechproject.nms.region.service.PanchayatService" />
+                  interface="org.motechproject.wa.region.service.PanchayatService" />
 
 
     <!--- Circle Services -->
     <osgi:service ref="circleService"
-                  interface="org.motechproject.nms.region.service.CircleService" />
+                  interface="org.motechproject.wa.region.service.CircleService" />
     <osgi:reference id="circleDataService"
-                    interface="org.motechproject.nms.region.repository.CircleDataService" />
+                    interface="org.motechproject.wa.region.repository.CircleDataService" />
 
     <!-- Location Data Import Services -->
-    <osgi:service ref="stateImportService" interface="org.motechproject.nms.region.csv.StateImportService" />
-    <osgi:service ref="districtImportService" interface="org.motechproject.nms.region.csv.DistrictImportService" />
-    <osgi:service ref="blockImportService" interface="org.motechproject.nms.region.csv.BlockImportService" />
-    <osgi:service ref="panchayatImportService" interface="org.motechproject.nms.region.csv.PanchayatImportService" />
+    <osgi:service ref="stateImportService" interface="org.motechproject.wa.region.csv.StateImportService" />
+    <osgi:service ref="districtImportService" interface="org.motechproject.wa.region.csv.DistrictImportService" />
+    <osgi:service ref="blockImportService" interface="org.motechproject.wa.region.csv.BlockImportService" />
+    <osgi:service ref="panchayatImportService" interface="org.motechproject.wa.region.csv.PanchayatImportService" />
     <!-- Language Location Codes Import Service -->
-    <osgi:service ref="languageLocationImportService" interface="org.motechproject.nms.region.csv.LanguageLocationImportService" />
+    <osgi:service ref="languageLocationImportService" interface="org.motechproject.wa.region.csv.LanguageLocationImportService" />
 
     <!-- Alert Service -->
     <osgi:reference id="alertsService"
                     interface="org.motechproject.alerts.contract.AlertService" />
 
     <!-- CSV Audit Service -->
-    <osgi:reference id="csvAuditService" interface="org.motechproject.nms.csv.service.CsvAuditService" />
+    <osgi:reference id="csvAuditService" interface="org.motechproject.wa.csv.service.CsvAuditService" />
 
     <!-- Event Relay -->
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>

@@ -14,51 +14,51 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <osgi:service ref="swcCsvService"
-                  interface="org.motechproject.nms.api.web.service.SwcCsvService" />
+                  interface="org.motechproject.wa.api.web.service.SwcCsvService" />
 
     <osgi:reference id="swcStatusUpdateAuditDataService"
-                    interface="org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService" />
+                    interface="org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService" />
 
-    <osgi:reference id="anonymousCallAuditDataService" interface="org.motechproject.nms.api.web.repository.AnonymousCallAuditDataService"/>
+    <osgi:reference id="anonymousCallAuditDataService" interface="org.motechproject.wa.api.web.repository.AnonymousCallAuditDataService"/>
 
-    <osgi:reference id="inactiveJobCallAuditDataService" interface="org.motechproject.nms.api.web.repository.InactiveJobCallAuditDataService"/>
+    <osgi:reference id="inactiveJobCallAuditDataService" interface="org.motechproject.wa.api.web.repository.InactiveJobCallAuditDataService"/>
 
     <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager"/>
 
-    <osgi:reference id="swcService" interface="org.motechproject.nms.swc.service.SwcService"/>
+    <osgi:reference id="swcService" interface="org.motechproject.wa.swc.service.SwcService"/>
 
-    <osgi:reference id="swcDataService" interface="org.motechproject.nms.swc.repository.SwcDataService"/>
+    <osgi:reference id="swcDataService" interface="org.motechproject.wa.swc.repository.SwcDataService"/>
 
-    <osgi:reference id="swcImportService" interface="org.motechproject.nms.swcUpdate.service.SwcImportService"/>
+    <osgi:reference id="swcImportService" interface="org.motechproject.wa.swcUpdate.service.SwcImportService"/>
 
-    <osgi:reference id="serviceUsageService" interface="org.motechproject.nms.swc.service.ServiceUsageService"/>
+    <osgi:reference id="serviceUsageService" interface="org.motechproject.wa.swc.service.ServiceUsageService"/>
 
-    <osgi:reference id="serviceUsageCapService" interface="org.motechproject.nms.swc.service.ServiceUsageCapService"/>
+    <osgi:reference id="serviceUsageCapService" interface="org.motechproject.wa.swc.service.ServiceUsageCapService"/>
 
-    <osgi:reference id="callDetailRecordService" interface="org.motechproject.nms.swc.service.CallDetailRecordService"/>
+    <osgi:reference id="callDetailRecordService" interface="org.motechproject.wa.swc.service.CallDetailRecordService"/>
 
-    <osgi:reference id="callContentService" interface="org.motechproject.nms.swc.service.CallContentService"/>
+    <osgi:reference id="callContentService" interface="org.motechproject.wa.swc.service.CallContentService"/>
 
-    <osgi:reference id="whitelistService" interface="org.motechproject.nms.swc.service.WhitelistService"/>
+    <osgi:reference id="whitelistService" interface="org.motechproject.wa.swc.service.WhitelistService"/>
 
-    <osgi:reference id="propertyService" interface="org.motechproject.nms.props.service.PropertyService"/>
+    <osgi:reference id="propertyService" interface="org.motechproject.wa.props.service.PropertyService"/>
 
-    <osgi:reference id="washAcademyService" interface="org.motechproject.nms.washacademy.service.WashAcademyService"/>
+    <osgi:reference id="washAcademyService" interface="org.motechproject.wa.washacademy.service.WashAcademyService"/>
 
-    <osgi:reference id="languageService" interface="org.motechproject.nms.region.service.LanguageService"/>
+    <osgi:reference id="languageService" interface="org.motechproject.wa.region.service.LanguageService"/>
 
-    <osgi:reference id="circleService" interface="org.motechproject.nms.region.service.CircleService"/>
+    <osgi:reference id="circleService" interface="org.motechproject.wa.region.service.CircleService"/>
 
-    <osgi:reference id="stateService" interface="org.motechproject.nms.region.service.StateService"/>
+    <osgi:reference id="stateService" interface="org.motechproject.wa.region.service.StateService"/>
 
-    <osgi:reference id="stateDataService" interface="org.motechproject.nms.region.repository.StateDataService"/>
+    <osgi:reference id="stateDataService" interface="org.motechproject.wa.region.repository.StateDataService"/>
 
-    <osgi:reference id="panchayatDataService" interface="org.motechproject.nms.region.repository.PanchayatDataService"/>
+    <osgi:reference id="panchayatDataService" interface="org.motechproject.wa.region.repository.PanchayatDataService"/>
 
-    <osgi:reference id="swcRejectionService" interface="org.motechproject.nms.rejectionhandler.service.SwcRejectionService"/>
+    <osgi:reference id="swcRejectionService" interface="org.motechproject.wa.rejectionhandler.service.SwcRejectionService"/>
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
-    <osgi:reference id="cdrFileService" interface="org.motechproject.nms.imi.service.CdrFileService" />
+    <osgi:reference id="cdrFileService" interface="org.motechproject.wa.imi.service.CdrFileService" />
 
 </beans>

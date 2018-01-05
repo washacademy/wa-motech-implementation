@@ -6,22 +6,22 @@
     <import resource="classpath*:META-INF/motech/*.xml" />
 
     <osgi:service ref="washAcademyService"
-                  interface="org.motechproject.nms.washacademy.service.WashAcademyService" />
+                  interface="org.motechproject.wa.washacademy.service.WashAcademyService" />
 
     <osgi:service ref="courseNotificationService"
-                  interface="org.motechproject.nms.washacademy.service.CourseNotificationService" />
+                  interface="org.motechproject.wa.washacademy.service.CourseNotificationService" />
 
     <osgi:service ref="settingsService"
-                  interface="org.motechproject.nms.washacademy.service.SettingsService" />
+                  interface="org.motechproject.wa.washacademy.service.SettingsService" />
 
-    <osgi:reference id="nmsCourseDataService"
-                    interface="org.motechproject.nms.washacademy.repository.NmsCourseDataService" />
+    <osgi:reference id="WaCourseDataService"
+                    interface="org.motechproject.wa.washacademy.repository.WaCourseDataService" />
 
     <osgi:reference id="courseCompletionRecordDataService"
-                    interface="org.motechproject.nms.washacademy.repository.CourseCompletionRecordDataService" />
+                    interface="org.motechproject.wa.washacademy.repository.CourseCompletionRecordDataService" />
 
     <osgi:reference id="mtrainingModuleActivityRecordAuditDataService"
-                    interface="org.motechproject.nms.washacademy.repository.MtrainingModuleActivityRecordAuditDataService" />
+                    interface="org.motechproject.wa.washacademy.repository.MtrainingModuleActivityRecordAuditDataService" />
 
     <osgi:reference id="activityDataService"
                     interface="org.motechproject.mtraining.repository.ActivityDataService" />
@@ -30,7 +30,7 @@
                     interface="org.motechproject.mtraining.service.MTrainingService" />
 
     <osgi:reference id="smsNotificationService"
-                    interface="org.motechproject.nms.imi.service.SmsNotificationService" />
+                    interface="org.motechproject.wa.imi.service.SmsNotificationService" />
 
     <osgi:reference id="bookmarkService"
                     interface="org.motechproject.mtraining.service.BookmarkService" />
@@ -39,10 +39,10 @@
                     interface="org.motechproject.mtraining.service.ActivityService" />
 
     <osgi:reference id="swcService"
-                    interface="org.motechproject.nms.swc.service.SwcService" />
+                    interface="org.motechproject.wa.swc.service.SwcService" />
 
     <osgi:reference id="districtDataService"
-                    interface="org.motechproject.nms.region.repository.DistrictDataService" />
+                    interface="org.motechproject.wa.region.repository.DistrictDataService" />
 
     <osgi:reference id="eventRelay"
                     interface="org.motechproject.event.listener.EventRelay"/>
@@ -54,6 +54,6 @@
                     interface="org.motechproject.scheduler.service.MotechSchedulerService" />
 
     <osgi:service ref="washAcademyService"
-                    interface="org.motechproject.nms.washacademy.service.WashAcademyService" />
+                    interface="org.motechproject.wa.washacademy.service.WashAcademyService" />
 
 </beans>

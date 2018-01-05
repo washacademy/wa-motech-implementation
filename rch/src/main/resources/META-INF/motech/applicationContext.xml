@@ -7,7 +7,7 @@
        ">
 
     <context:annotation-config />
-    <context:component-scan base-package="org.motechproject.nms.rch" />
+    <context:component-scan base-package="org.motechproject.wa.rch" />
 
     <bean id="rchSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
         <property name="configFiles">
@@ -17,6 +17,6 @@
         </property>
     </bean>
 
-    <bean id="rchServiceLocator" class="org.motechproject.nms.rch.soap.RchwebservicesLocator" autowire="byType" />
+    <bean id="rchServiceLocator" class="org.motechproject.wa.rch.soap.RchwebservicesLocator" autowire="byType" />
 
 </beans>

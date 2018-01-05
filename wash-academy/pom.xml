@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -32,13 +32,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>imi</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>swc</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -82,11 +82,11 @@
                         <Resource-Path>washacademy/resources</Resource-Path>
                         <Context-Path>washacademy</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.washacademy.domain;version=${project.version},
-                            org.motechproject.nms.washacademy.dto;version=${project.version},
-                            org.motechproject.nms.washacademy.repository;version=${project.version},
-                            org.motechproject.nms.washacademy.exception;version=${project.version},
-                            org.motechproject.nms.washacademy.service; version=${project.version},
+                            org.motechproject.wa.washacademy.domain;version=${project.version},
+                            org.motechproject.wa.washacademy.dto;version=${project.version},
+                            org.motechproject.wa.washacademy.repository;version=${project.version},
+                            org.motechproject.wa.washacademy.exception;version=${project.version},
+                            org.motechproject.wa.washacademy.service; version=${project.version},
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
@@ -95,7 +95,7 @@
                             org.apache.http.ssl,
                             org.json,
                             org.motechproject.mtraining.service,
-                            org.motechproject.nms.region.repository,
+                            org.motechproject.wa.region.repository,
                             *
                         </Import-Package>
                     </instructions>

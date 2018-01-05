@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -66,11 +66,11 @@
                         <Resource-Path>csv/resources</Resource-Path>
                         <Context-Path>csv</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.csv.service;version=${project.version},
-                            org.motechproject.nms.csv.utils;version=${project.version},
-                            org.motechproject.nms.csv.domain;version=${project.version},
-                            org.motechproject.nms.csv.repository;version=${project.version},
-                            org.motechproject.nms.csv.exception;version=${project.version}
+                            org.motechproject.wa.csv.service;version=${project.version},
+                            org.motechproject.wa.csv.utils;version=${project.version},
+                            org.motechproject.wa.csv.domain;version=${project.version},
+                            org.motechproject.wa.csv.repository;version=${project.version},
+                            org.motechproject.wa.csv.exception;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,

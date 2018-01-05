@@ -12,7 +12,7 @@
        http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="org.motechproject.nms.tracking" />
+    <context:component-scan base-package="org.motechproject.wa.tracking" />
 
     <cache:annotation-driven />
 
@@ -24,5 +24,5 @@
         </property>
     </bean>
 
-    <bean id="trackChangesAspect" class="org.motechproject.nms.tracking.aspect.TrackChangesAspect" factory-method="aspectOf"/>
+    <bean id="trackChangesAspect" class="org.motechproject.wa.tracking.aspect.TrackChangesAspect" factory-method="aspectOf"/>
 </beans>

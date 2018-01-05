@@ -14,7 +14,7 @@
         <level value="ALL"/>
     </logger>
 
-    <logger name="org.motechproject.nms.api">
+    <logger name="org.motechproject.wa.api">
         <level value="ALL"/>
     </logger>
 

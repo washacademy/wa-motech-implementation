@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -26,13 +26,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>region</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>tracking</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -70,13 +70,13 @@
                         <Resource-Path>props/resources</Resource-Path>
                         <Context-Path>props</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.props.domain;version=${project.version},
-                            org.motechproject.nms.props.repository;version=${project.version},
-                            org.motechproject.nms.props.service;version=${project.version},
+                            org.motechproject.wa.props.domain;version=${project.version},
+                            org.motechproject.wa.props.repository;version=${project.version},
+                            org.motechproject.wa.props.service;version=${project.version},
                         </Export-Package>
                         <Import-Package>
                         	org.motechproject.osgi.web,
-                            org.motechproject.nms.tracking.aspect,
+                            org.motechproject.wa.tracking.aspect,
                             org.aspectj.runtime.internal,
                             *
                         </Import-Package>
@@ -137,7 +137,7 @@
                     <target>1.7</target>
                     <aspectLibraries>
                         <dependency>
-                            <groupId>org.motechproject.nms</groupId>
+                            <groupId>org.motechproject.wa</groupId>
                             <artifactId>tracking</artifactId>
                         </dependency>
                     </aspectLibraries>

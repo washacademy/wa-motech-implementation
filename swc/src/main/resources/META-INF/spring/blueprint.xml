@@ -16,61 +16,61 @@
     <osgi:reference id="transactionManager" interface="org.springframework.transaction.PlatformTransactionManager"/>
 
     <osgi:service ref="swcService"
-                  interface="org.motechproject.nms.swc.service.SwcService" />
+                  interface="org.motechproject.wa.swc.service.SwcService" />
 
     <osgi:service ref="serviceUsageService"
-                  interface="org.motechproject.nms.swc.service.ServiceUsageService" />
+                  interface="org.motechproject.wa.swc.service.ServiceUsageService" />
 
     <osgi:service ref="serviceUsageCapService"
-                  interface="org.motechproject.nms.swc.service.ServiceUsageCapService" />
+                  interface="org.motechproject.wa.swc.service.ServiceUsageCapService" />
 
     <osgi:service ref="callDetailRecordService"
-                  interface="org.motechproject.nms.swc.service.CallDetailRecordService" />
+                  interface="org.motechproject.wa.swc.service.CallDetailRecordService" />
 
     <osgi:service ref="callContentService"
-                  interface="org.motechproject.nms.swc.service.CallContentService" />
+                  interface="org.motechproject.wa.swc.service.CallContentService" />
 
     <osgi:service ref="whitelistService"
-                  interface="org.motechproject.nms.swc.service.WhitelistService" />
+                  interface="org.motechproject.wa.swc.service.WhitelistService" />
 
     <osgi:reference id="swcStatusUpdateAuditDataService"
-                  interface="org.motechproject.nms.swc.repository.SwcStatusUpdateAuditDataService" />
+                  interface="org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService" />
 
     <osgi:reference id="contactNumberAuditDataService"
-                    interface="org.motechproject.nms.swc.repository.ContactNumberAuditDataService" />
+                    interface="org.motechproject.wa.swc.repository.ContactNumberAuditDataService" />
 
     <osgi:reference id="swcErrorDataService"
-                    interface="org.motechproject.nms.swc.repository.SwcErrorDataService" />
+                    interface="org.motechproject.wa.swc.repository.SwcErrorDataService" />
 
     <osgi:reference id="swcDataService"
-                    interface="org.motechproject.nms.swc.repository.SwcDataService" />
+                    interface="org.motechproject.wa.swc.repository.SwcDataService" />
 
     <osgi:reference id="serviceUsageCapDataService"
-                    interface="org.motechproject.nms.swc.repository.ServiceUsageCapDataService" />
+                    interface="org.motechproject.wa.swc.repository.ServiceUsageCapDataService" />
 
     <osgi:reference id="csrDataService"
-                    interface="org.motechproject.nms.swc.repository.CallDetailRecordDataService" />
+                    interface="org.motechproject.wa.swc.repository.CallDetailRecordDataService" />
 
     <osgi:reference id="callContentDataService"
-                    interface="org.motechproject.nms.swc.repository.CallContentDataService" />
+                    interface="org.motechproject.wa.swc.repository.CallContentDataService" />
 
     <osgi:reference id="whitelistEntryDataService"
-                    interface="org.motechproject.nms.swc.repository.WhitelistEntryDataService" />
+                    interface="org.motechproject.wa.swc.repository.WhitelistEntryDataService" />
 
     <osgi:reference id="whitelistStateDataService"
-                    interface="org.motechproject.nms.swc.repository.WhitelistStateDataService" />
+                    interface="org.motechproject.wa.swc.repository.WhitelistStateDataService" />
 
     <osgi:reference id="languageService"
-                    interface="org.motechproject.nms.region.service.LanguageService" />
+                    interface="org.motechproject.wa.region.service.LanguageService" />
 
     <osgi:reference id="schedulerService"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService" />
     
-    <osgi:service ref="swcSettingsService" interface="org.motechproject.nms.swc.service.SwcSettingsService" />
+    <osgi:service ref="swcSettingsService" interface="org.motechproject.wa.swc.service.SwcSettingsService" />
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
     <osgi:service ref="swcErrorDataService"
-                    interface="org.motechproject.nms.swc.repository.SwcErrorDataService" />
+                    interface="org.motechproject.wa.swc.repository.SwcErrorDataService" />
 
 </beans>

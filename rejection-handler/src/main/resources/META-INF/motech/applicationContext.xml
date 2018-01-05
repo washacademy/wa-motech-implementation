@@ -7,7 +7,7 @@
        ">
 
     <context:annotation-config />
-    <context:component-scan base-package="org.motechproject.nms.rejectionhandler" />
+    <context:component-scan base-package="org.motechproject.wa.rejectionhandler" />
 
     <!--<bean id="rejectionHandlerSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">-->
         <!--<property name="configFiles">-->

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -49,7 +49,7 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject.nms</groupId>
+            <groupId>org.motechproject.wa</groupId>
             <artifactId>tracking</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -86,13 +86,13 @@
                         <Resource-Path>rejection-handler/resources</Resource-Path>
                         <Context-Path>rejection-handler</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.rejectionhandler.domain;version=${project.version},
-                            org.motechproject.nms.rejectionhandler.repository;version=${project.version},
-                            org.motechproject.nms.rejectionhandler.service;version=${project.version}
+                            org.motechproject.wa.rejectionhandler.domain;version=${project.version},
+                            org.motechproject.wa.rejectionhandler.repository;version=${project.version},
+                            org.motechproject.wa.rejectionhandler.service;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.motechproject.osgi.web,
-                            org.motechproject.nms.tracking.aspect,
+                            org.motechproject.wa.tracking.aspect,
                             org.aspectj.runtime.internal,
                             org.aopalliance.aop,
                             org.springframework.aop,
@@ -164,7 +164,7 @@
                     <target>1.7</target>
                     <aspectLibraries>
                         <dependency>
-                            <groupId>org.motechproject.nms</groupId>
+                            <groupId>org.motechproject.wa</groupId>
                             <artifactId>tracking</artifactId>
                         </dependency>
                     </aspectLibraries>

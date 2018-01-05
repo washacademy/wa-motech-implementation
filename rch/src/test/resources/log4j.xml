@@ -10,7 +10,7 @@
         <level value="ERROR"/>
     </logger>
 
-    <logger name="org.motechproject.nms.rch.importer">
+    <logger name="org.motechproject.wa.rch.importer">
         <level value="INFO"/>
     </logger>
 

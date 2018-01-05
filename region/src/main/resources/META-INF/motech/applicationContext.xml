@@ -16,7 +16,7 @@
            http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
 
     <context:annotation-config />
-    <context:component-scan base-package="org.motechproject.nms.region" />
+    <context:component-scan base-package="org.motechproject.wa.region" />
 
     <mvc:annotation-driven />
 

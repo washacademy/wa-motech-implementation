@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>nms</artifactId>
-        <groupId>org.motechproject.nms</groupId>
+        <artifactId>wa</artifactId>
+        <groupId>org.motechproject.wa</groupId>
         <version>1.0.33</version>
         <relativePath>../</relativePath>
     </parent>
@@ -66,13 +66,13 @@
                         <Resource-Path>tracking/resources</Resource-Path>
                         <Context-Path>tracking</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.tracking.annotation;version=${project.version},
-                            org.motechproject.nms.tracking.aspect;version=${project.version},
-                            org.motechproject.nms.tracking.domain;version=${project.version},
-                            org.motechproject.nms.tracking.exception;version=${project.version},
-                            org.motechproject.nms.tracking.repository;version=${project.version},
-                            org.motechproject.nms.tracking.service;version=${project.version},
-                            org.motechproject.nms.tracking.utils;version=${project.version}
+                            org.motechproject.wa.tracking.annotation;version=${project.version},
+                            org.motechproject.wa.tracking.aspect;version=${project.version},
+                            org.motechproject.wa.tracking.domain;version=${project.version},
+                            org.motechproject.wa.tracking.exception;version=${project.version},
+                            org.motechproject.wa.tracking.repository;version=${project.version},
+                            org.motechproject.wa.tracking.service;version=${project.version},
+                            org.motechproject.wa.tracking.utils;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             org.aopalliance.aop,

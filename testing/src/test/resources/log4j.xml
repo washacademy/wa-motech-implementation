@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <logger name="org.motechproject.nms">
+    <logger name="org.motechproject.wa">
         <level value="ALL"/>
     </logger>
 
