@@ -26,9 +26,9 @@ public class StateServiceImpl implements StateService {
             @Override
             public String getSqlQuery() {
                 String query = "select * " +
-                        "from nms_states s " +
-                        "join nms_districts d on d.state_id_oid = s.id " +
-                        "join nms_circles c on d.circle_id_oid = c.id and c.id = ?";
+                        "from wash_states s " +
+                        "join wash_districts d on d.state_id_oid = s.id " +
+                        "join wash_circles c on d.circle_id_oid = c.id and c.id = ?";
 
                 return query;
             }
