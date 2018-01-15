@@ -404,7 +404,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        updateRequest.setGfStatus("Random");
+        updateRequest.setJobStatus("Random");
         httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, updateRequest);
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
         assertNotNull(response);
@@ -434,7 +434,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setGfStatus("Active");
+        request.setJobStatus("Active");
         return request;
     }
 
@@ -446,7 +446,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setGfStatus("Active");
+        request.setJobStatus("Active");
         return request;
     }
 
@@ -458,7 +458,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setGfStatus("Active");
+        request.setJobStatus("Active");
         return request;
     }
 
@@ -469,7 +469,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
             request.setSwcId("123");
             request.setStateId(state.getCode());
             request.setDistrictId(district.getCode());
-            request.setGfStatus("Inactive");
+            request.setJobStatus("Inactive");
             return request;
     }
 
@@ -654,7 +654,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setGfStatus("Active");
+        request.setJobStatus("Active");
         httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, request);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 

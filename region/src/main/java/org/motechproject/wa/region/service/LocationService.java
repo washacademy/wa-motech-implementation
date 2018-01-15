@@ -38,12 +38,12 @@ public interface LocationService {
 
     District getDistrict(Long stateId, Long districtId);
 
-    Block getBlock(Long stateId, Long districtId, String blockId);
+    Block getBlock(Long stateId, Long districtId, Long blockId);
 
-    Panchayat getPanchayat(Long stateId, Long districtId, String blockId, Long vCode, Long svid);
+    Panchayat getPanchayat(Long stateId, Long districtId, Long blockId, Long vCode, Long svid);
 
-    Panchayat getCensusPanchayat(Long stateId, Long districtId, String blockId, Long vCode);
+    Panchayat getCensusPanchayat(Long stateId, Long districtId, Long blockId, Long vCode);
 
-    Panchayat getNonCensusPanchayat(Long stateId, Long districtId, String blockId, Long svid);
+    Panchayat getNonCensusPanchayat(Long stateId, Long districtId, Long blockId, Long svid);
 
 }

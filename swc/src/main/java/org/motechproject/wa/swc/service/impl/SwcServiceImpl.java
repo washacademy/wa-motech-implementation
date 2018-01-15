@@ -116,7 +116,7 @@ public class SwcServiceImpl implements SwcService {
             @Override
             public Long execute(Query query, InstanceSecurityRestriction restriction) {
 
-                query.setFilter("status == invalid && invalidationDate < cutoff");
+                query.setFilter("courseStatus == invalid && invalidationDate < cutoff");
                 query.declareParameters("SwachchagrahiStatus invalid, org.joda.time.DateTime cutoff");
 
                 return query.deletePersistentAll(status, cutoff);

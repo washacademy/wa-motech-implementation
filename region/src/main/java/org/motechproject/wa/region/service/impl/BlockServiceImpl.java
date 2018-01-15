@@ -18,7 +18,7 @@ public class BlockServiceImpl implements BlockService {
     private BlockDataService dataService;
 
     @Override
-    public Block findByDistrictAndCode(final District district, final String code) {
+    public Block findByDistrictAndCode(final District district, final Long code) {
         if (district == null) { return null; }
 
         SqlQueryExecution<Block> queryExecution = new SqlQueryExecution<Block>() {

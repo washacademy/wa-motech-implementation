@@ -266,7 +266,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         // verify location data was created on the fly
         State state = stateDataService.findByCode(1L);
         District district = districtService.findByStateAndCode(state, 18L);
-        Block block = talukaDataService.findByDistrictAndCode(district, "111");
+        Block block = talukaDataService.findByDistrictAndCode(district, 111L);
         assertEquals("Block", block.getName());
 
         Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 555L, 0L);

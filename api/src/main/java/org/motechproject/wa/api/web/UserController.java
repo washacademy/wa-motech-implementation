@@ -161,8 +161,10 @@ public class UserController extends BaseController {
             if (swc == null && circle != null) {
                 swc = new Swachchagrahi(callingNumber, circle);
                 swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+                swc.setJobStatus(SwcJobStatus.ACTIVE);
+                swcService.add(swc);
             }
-            swcService.add(swc);
+
         }
 
         State state = getStateForFrontLineWorker(swc, circle);

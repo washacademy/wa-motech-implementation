@@ -120,7 +120,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         assertNotNull(district.getState());
 
         blockImportService.importData(read("csv/taluka.csv"));
-        Block block = blockService.findByDistrictAndCode(district, "TALUKA");
+        Block block = blockService.findByDistrictAndCode(district, 0L);
         assertNotNull(block);
         assertEquals("TALUKA", block.getCode());
         assertEquals(2, (int) block.getIdentity());

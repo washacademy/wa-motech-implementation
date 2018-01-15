@@ -19,7 +19,7 @@ public final class SwcConstants {
     public static final java.lang.String QUALIFICATION = "Qualification";
     public static final java.lang.String UPDATED_ON = "Updated_On";
     public static final java.lang.String ASHA_TYPE = "ASHA";
-    public static final java.lang.String GF_STATUS = "GF_Status";
+    public static final java.lang.String JOB_STATUS = "JOB_Status";
     public static final java.lang.String AADHAR_NO = "Aadhar_No";
     public static final java.lang.String BANK_ID = "Bank_ID";
     public static final java.lang.String VERIFIER_ID = "VerifierID";
@@ -28,8 +28,8 @@ public final class SwcConstants {
     public static final java.lang.String GF_ID = "GF_ID";
     public static final java.lang.String MOBILE_NO = "Mobile_no";
     public static final java.lang.String GF_NAME = "GF_Name";
-    public static final java.lang.String GF_AGE = "GF_AGE";
-    public static final java.lang.String GF_SEX = "GF_SEX";
+    public static final java.lang.String SWC_AGE = "SWC_AGE";
+    public static final java.lang.String SWC_SEX = "SWC_SEX";
     public static final java.lang.String GF_TYPE = "GF_type";
     public static final java.lang.String EXEC_DATE = "Exec_Date";
 
