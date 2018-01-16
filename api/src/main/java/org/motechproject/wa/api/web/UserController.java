@@ -160,6 +160,7 @@ public class UserController extends BaseController {
             swc = swcService.getInctiveByContactNumber(callingNumber);
             if (swc == null && circle != null) {
                 swc = new Swachchagrahi(callingNumber, circle);
+                swc.setJobStatus(SwcJobStatus.ACTIVE);
                 swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
             }
             swcService.add(swc);

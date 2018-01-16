@@ -177,7 +177,7 @@ public class SwcImportServiceImpl implements SwcImportService {
 
         long stateId = (long) swc.get(SwcConstants.STATE_ID);
         long districtId = (long) swc.get(SwcConstants.DISTRICT_ID);
-        String blockId = (String) swc.get(SwcConstants.BLOCK_ID);
+        long blockId = (long) swc.get(SwcConstants.BLOCK_ID);
         long panchayatId = (long) swc.get(SwcConstants.PANCHAYAT_ID);
         String swcId = importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT) ? swc.get(SwcConstants.ID).toString() : swc.get(SwcConstants.GF_ID).toString();
         long contactNumber = importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT) ? (long) swc.get(SwcConstants.CONTACT_NO) : (long) swc.get(SwcConstants.MOBILE_NO);
@@ -390,7 +390,7 @@ public class SwcImportServiceImpl implements SwcImportService {
         mapping.put(SwcConstants.DISTRICT_ID, new Optional(new GetLong()));
         mapping.put(SwcConstants.DISTRICT_NAME, new Optional(new GetString()));
 
-        mapping.put(SwcConstants.BLOCK_ID, new Optional(new GetString()));
+        mapping.put(SwcConstants.BLOCK_ID, new Optional(new GetLong()));
         mapping.put(SwcConstants.BLOCK_NAME, new Optional(new GetString()));
 
         mapping.put(SwcConstants.PANCHAYAT_ID, new Optional(new GetLong()));
