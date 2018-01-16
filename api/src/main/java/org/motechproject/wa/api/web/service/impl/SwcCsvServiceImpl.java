@@ -72,6 +72,8 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         validateFieldString(failureReasons, "name", addSwcRequest.getName());
         validateFieldPresent(failureReasons, "blockId", addSwcRequest.getBlockId());
         validateFieldPresent(failureReasons, "panchayatId", addSwcRequest.getPanchayatId());
+        validateNameFields(failureReasons, "blockName", addSwcRequest.getBlockName(), addSwcRequest.getBlockId());
+        validateNameFields(failureReasons, "panchayatName", addSwcRequest.getPanchayatName(), addSwcRequest.getPanchayatId());
         if (failureReasons.length() > 0) {
             String fieldName = failureReasons.toString().split("[\\W]")[1];
             csvRejectionsRch(fieldName, addSwcRequest);
@@ -89,9 +91,14 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
         swcProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
         swcProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
-        swcProperties.put(SwcConstants.GF_STATUS, SwcJobStatus.ACTIVE.toString());
+        swcProperties.put(SwcConstants.JOB_STATUS, SwcJobStatus.ACTIVE.toString());
         swcProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
         swcProperties.put(SwcConstants.PANCHAYAT_ID, addSwcRequest.getPanchayatId());
+        swcProperties.put(SwcConstants.BLOCK_NAME, addSwcRequest.getBlockName());
+        swcProperties.put(SwcConstants.PANCHAYAT_NAME, addSwcRequest.getPanchayatName());
+        swcProperties.put(SwcConstants.SWC_SEX, addSwcRequest.getSex());
+        swcProperties.put(SwcConstants.SWC_AGE, addSwcRequest.getAge());
+        swcProperties.put(SwcConstants.TYPE, addSwcRequest.getType());
 
         swcImportService.createUpdate(swcProperties, SubscriptionOrigin.RCH_IMPORT);
     }
@@ -111,7 +118,8 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
 
     private String rchSwcActionFinder(AddSwcRequest record) {
-        if (swcService.getBySwcIdAndPanchayat(record.getSwcId(), panchayatDataService.findByCode(record.getPanchayatId())) == null) {
+        Long swcId = record.getSwcId() == null ? null : Long.parseLong(record.getSwcId());
+        if (swcRejectionService.findBySwcIdAndPanchayatId(swcId, record.getPanchayatId()) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
@@ -127,12 +135,14 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcImportRejection.setDistrictId(record.getDistrictId());
         swcImportRejection.setBlockId(record.getBlockId());
         swcImportRejection.setPanchayatId(record.getPanchayatId());
+        swcImportRejection.setBlockName(record.getBlockName());
+        swcImportRejection.setPanchayatName(record.getPanchayatName());
         swcImportRejection.setSwcStatus(SwcJobStatus.ACTIVE.toString());
         swcImportRejection.setSource("RCH-Import");
         swcImportRejection.setAccepted(accepted);
         swcImportRejection.setRejectionReason(rejectionReason);
         swcImportRejection.setAction(action);
-
+        swcImportRejection.setSex(record.getSex());
         return swcImportRejection;
     }
 
@@ -174,6 +184,18 @@ public class SwcCsvServiceImpl implements SwcCsvService {
             return true;
         }
         errors.append(String.format(INVALID, fieldName));
+        return false;
+    }
+
+    private static boolean validateNameFields(StringBuilder errors, String fieldName, Object value1, Object value2) {
+        if (value2 != null && !"NULL".equalsIgnoreCase(value2.toString()) && !value2.toString().isEmpty() && !"0".equals(value2.toString())) {
+            if (value1 != null && !"NULL".equalsIgnoreCase(value1.toString()) && !value1.toString().isEmpty()) {
+                return true;
+            }
+        } else {
+            return true;
+        }
+        errors.append(String.format(NOT_PRESENT, fieldName));
         return false;
     }
 

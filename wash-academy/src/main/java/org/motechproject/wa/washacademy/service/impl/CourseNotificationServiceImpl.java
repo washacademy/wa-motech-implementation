@@ -229,13 +229,13 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
              smsContent = settingsFacade.getProperty(SMS_CONTENT_PREFIX_ANONYMOUS + smsLanguageProperty);
             if (smsContent == null) {
                 throw new IllegalStateException("Unable to get sms content for swc language: " +
-                        SMS_CONTENT_PREFIX + smsLanguageProperty);
+                        SMS_CONTENT_PREFIX_ANONYMOUS + smsLanguageProperty);
             }
         } else {
              smsContent = settingsFacade.getProperty(SMS_CONTENT_PREFIX + smsLanguageProperty);
             if (smsContent == null) {
                 throw new IllegalStateException("Unable to get sms content for swc language: " +
-                        SMS_CONTENT_PREFIX_ANONYMOUS + smsLanguageProperty);
+                        SMS_CONTENT_PREFIX + smsLanguageProperty);
             }
         }
 

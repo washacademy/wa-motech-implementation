@@ -11,8 +11,12 @@ public class AddSwcRequest {
     private Long districtId;
     private Long blockId;
     private Long panchayatId;
-    private String gfStatus;
-
+    private String blockName;
+    private String panchayatName;
+    private Long age;
+    private  String sex;
+    private  String type;
+    private  String jobStatus;
     public AddSwcRequest() {
 
     }
@@ -74,11 +78,51 @@ public class AddSwcRequest {
         this.panchayatId = panchayatId;
     }
 
-    public String getGfStatus() {
-        return gfStatus;
+    public String getBlockName() {
+        return blockName;
     }
 
-    public void setGfStatus(String gfStatus) {
-        this.gfStatus = gfStatus;
+    public void setBlockName(String blockName) {
+        this.blockName = blockName;
+    }
+
+    public String getPanchayatName() {
+        return panchayatName;
+    }
+
+    public void setPanchayatName(String panchayatName) {
+        this.panchayatName = panchayatName;
+    }
+
+    public Long getAge() {
+        return age;
+    }
+
+    public void setAge(Long age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(String jobStatus) {
+        this.jobStatus = jobStatus;
     }
 }

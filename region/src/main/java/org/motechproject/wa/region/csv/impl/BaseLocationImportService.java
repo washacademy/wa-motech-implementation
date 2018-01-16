@@ -92,7 +92,7 @@ public abstract class BaseLocationImportService<T> {
                             .format("Unable to load Block %s with a null district", value));
                 }
 
-                return blockService.findByDistrictAndCode(district, value);
+                return blockService.findByDistrictAndCode(district, Long.parseLong(value));
             }
         };
     }

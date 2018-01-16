@@ -14,5 +14,6 @@ public interface SwcImportRejectionDataService extends MotechDataService<SwcImpo
     SwcImportRejection findBySwcIdAndPanchayatId(@LookupField(name = "swcID") Long swcID,
                                                  @LookupField(name = "panchayatId") Long panchayatId);
 
-
+    @Lookup
+    SwcImportRejection findBySwcId(@LookupField(name = "swcID") Long swcID);
 }

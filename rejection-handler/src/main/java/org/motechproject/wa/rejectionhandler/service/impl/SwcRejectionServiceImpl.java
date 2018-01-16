@@ -24,6 +24,10 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
         return swcImportRejectionDataService.findBySwcIdAndPanchayatId(swcId, stateId);
     }
 
+    private SwcImportRejection findBySwcId(Long swcId) {
+        return swcImportRejectionDataService.findBySwcId(swcId);
+    }
+
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public void createUpdate(SwcImportRejection swcImportRejection) {
         LOGGER.info("Creating rejection record: ");
@@ -41,8 +45,15 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
                 swcImportRejection1 = setNewData(swcImportRejection, swcImportRejection1);
                 swcImportRejectionDataService.update(swcImportRejection1);
             }
-        } else if (swcImportRejection.getSwcID() != null && swcImportRejection.getStateId() == null) {
-            swcImportRejectionDataService.create(swcImportRejection);
+        } else if (swcImportRejection.getSwcID() != null && swcImportRejection.getPanchayatId() == null) {
+            SwcImportRejection swcImportRejection1 = findBySwcId(swcImportRejection.getSwcID());
+
+            if (swcImportRejection1 == null && !swcImportRejection.getAccepted()) {
+                swcImportRejectionDataService.create(swcImportRejection);
+            } else {
+                swcImportRejection1 = setNewData(swcImportRejection, swcImportRejection1);
+                swcImportRejectionDataService.update(swcImportRejection1);
+            }
         }
         LOGGER.info("Created rejection record.");
     }

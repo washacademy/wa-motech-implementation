@@ -102,7 +102,7 @@ public class LocationServiceImpl implements LocationService {
         if (!isValidID(map, BLOCK_ID)) {
             return locations;
         }
-        Block block = blockService.findByDistrictAndCode(district, (Long) map.get(BLOCK_ID));
+        Block block = blockService.findByDistrictAndCode(district, (long) map.get(BLOCK_ID));
         if (block == null && createIfNotExists) {
             block = new Block();
             block.setCode((Long) map.get(BLOCK_ID));
@@ -126,7 +126,7 @@ public class LocationServiceImpl implements LocationService {
                 block.getPanchayats().add(panchayat);
                 LOGGER.debug(String.format("Created %s in %s with id %d", panchayat, block, panchayat.getId()));
             }
-            locations.put(PANCHAYAT_ID + NON_CENSUS_PANCHAYAT, panchayat);
+            locations.put(PANCHAYAT_ID, panchayat);
         }
 
 

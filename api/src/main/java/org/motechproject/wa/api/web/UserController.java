@@ -162,8 +162,10 @@ public class UserController extends BaseController {
                 swc = new Swachchagrahi(callingNumber, circle);
                 swc.setJobStatus(SwcJobStatus.ACTIVE);
                 swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+                swc.setJobStatus(SwcJobStatus.ACTIVE);
+                swcService.add(swc);
             }
-            swcService.add(swc);
+
         }
 
         State state = getStateForFrontLineWorker(swc, circle);

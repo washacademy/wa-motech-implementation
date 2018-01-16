@@ -20,14 +20,14 @@ import java.util.Map;
  */
 public final class SwcMapper {
 
-    private static final String ACTIVE = "Active";
+    private static final String ACTIVE = "ACTIVE";
 
     private SwcMapper() { }
 
     public static Swachchagrahi createSwc(Map<String, Object> record, Map<String, Object> location)
             throws InvalidLocationException {
         Long contactNumber = (Long) record.get(SwcConstants.CONTACT_NO);
-        String gfStatus = (String) record.get(SwcConstants.GF_STATUS);
+        String gfStatus = (String) record.get(SwcConstants.JOB_STATUS);
         if (gfStatus != null && !gfStatus.isEmpty() && ACTIVE.equals(gfStatus)) {
             Swachchagrahi swc = new Swachchagrahi(contactNumber);
             swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
@@ -42,7 +42,7 @@ public final class SwcMapper {
     public static Swachchagrahi createRchSwc(Map<String, Object> record, Map<String, Object> location)
             throws InvalidLocationException {
         Long contactNumber = (Long) record.get(SwcConstants.MOBILE_NO);
-        String gfStatus = (String) record.get(SwcConstants.GF_STATUS);
+        String gfStatus = (String) record.get(SwcConstants.JOB_STATUS);
         if (gfStatus != null && !gfStatus.isEmpty() && ACTIVE.equals(gfStatus)) {
             Swachchagrahi swc = new Swachchagrahi(contactNumber);
             swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
@@ -62,9 +62,16 @@ public final class SwcMapper {
         String name;
         String qualification;
         swcId = (String) record.get(SwcConstants.ID);
-        contactNumber = (Long) record.get(SwcConstants.CONTACT_NO);
+        contactNumber = (Long) record.get(SwcConstants.MOBILE_NO);
         name = (String) record.get(SwcConstants.NAME);
         qualification = (String) record.get(SwcConstants.QUALIFICATION);
+        String sex;
+        Long age;
+        String type;
+        sex = (String) record.get(SwcConstants.SWC_SEX);
+        age = (Long) record.get(SwcConstants.SWC_AGE);
+        type = (String) record.get(SwcConstants.TYPE);
+
 
 
         if (contactNumber != null) {
@@ -78,6 +85,12 @@ public final class SwcMapper {
         if (name != null) {
             swc.setName(name);
         }
+        if (sex != null) {
+            swc.setSex(sex);
+        }
+        if (age != null) {
+            swc.setAge(age.intValue());
+        }
 
             SwcJobStatus jobStatus = SwcJobStatus.ACTIVE;
             swc.setJobStatus(jobStatus);
@@ -86,7 +99,7 @@ public final class SwcMapper {
         setSwcLocation(swc, location);
 
         if (swc.getQualification() == null) {
-            swc.setQualification(qualification);
+            swc.setQualification(type);
         }
 
         LocalDate date;

@@ -179,8 +179,8 @@ public class SwcImportServiceImpl implements SwcImportService {
         long districtId = (long) swc.get(SwcConstants.DISTRICT_ID);
         long blockId = (long) swc.get(SwcConstants.BLOCK_ID);
         long panchayatId = (long) swc.get(SwcConstants.PANCHAYAT_ID);
-        String swcId = importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT) ? swc.get(SwcConstants.ID).toString() : swc.get(SwcConstants.GF_ID).toString();
-        long contactNumber = importOrigin.equals(SubscriptionOrigin.MCTS_IMPORT) ? (long) swc.get(SwcConstants.CONTACT_NO) : (long) swc.get(SwcConstants.MOBILE_NO);
+        String swcId = swc.get(SwcConstants.ID).toString();
+        long contactNumber = (long) swc.get(SwcConstants.MOBILE_NO);
 
         String action = "";
 
@@ -220,7 +220,7 @@ public class SwcImportServiceImpl implements SwcImportService {
         Swachchagrahi existingSwcBySwcId = swcService.getBySwcIdAndPanchayat(swcId, panchayat);
         Map<String, Object> location = new HashMap<>();
         try {
-            location = locationService.getLocations(swc, false);
+            location = locationService.getLocations(swc, true);
 
                 action = this.rchSwcActionFinder(convertMapToRchAsha(swc));
                 if (existingSwcBySwcId != null && existingSwcByNumber != null) {
@@ -396,8 +396,8 @@ public class SwcImportServiceImpl implements SwcImportService {
         mapping.put(SwcConstants.PANCHAYAT_ID, new Optional(new GetLong()));
         mapping.put(SwcConstants.PANCHAYAT_NAME, new Optional(new GetString()));
 
-        mapping.put(SwcConstants.GF_AGE, new Optional(new GetLong()));
-        mapping.put(SwcConstants.GF_SEX, new Optional(new GetString()));
+        mapping.put(SwcConstants.SWC_AGE, new Optional(new GetLong()));
+        mapping.put(SwcConstants.SWC_SEX, new Optional(new GetString()));
     }
 
 
@@ -425,10 +425,13 @@ public class SwcImportServiceImpl implements SwcImportService {
         rchAnmAshaRecord.setPanchayatName(record.get(SwcConstants.PANCHAYAT_NAME) == null ? null : (String) record.get(SwcConstants.PANCHAYAT_NAME));
         rchAnmAshaRecord.setGfId(record.get(SwcConstants.ID) == null ? null : (Long) record.get(SwcConstants.ID));
         rchAnmAshaRecord.setMobileNo(record.get(SwcConstants.MOBILE_NO) == null ? null : (String) record.get(SwcConstants.MOBILE_NO));
-        rchAnmAshaRecord.setGfName(record.get(SwcConstants.GF_NAME) == null ? null : (String) record.get(SwcConstants.GF_NAME));
-        rchAnmAshaRecord.setGfAge(record.get(SwcConstants.GF_AGE) == null ? null : (long) record.get(SwcConstants.GF_AGE));
-        rchAnmAshaRecord.setGfSex(record.get(SwcConstants.GF_SEX) == null ? null : (String) record.get(SwcConstants.GF_SEX));
+        rchAnmAshaRecord.setGfName(record.get(SwcConstants.NAME) == null ? null : (String) record.get(SwcConstants.NAME));
+        rchAnmAshaRecord.setGfAge(record.get(SwcConstants.SWC_AGE) == null ? null : (long) record.get(SwcConstants.SWC_AGE));
+        rchAnmAshaRecord.setGfSex(record.get(SwcConstants.SWC_SEX) == null ? null : (String) record.get(SwcConstants.SWC_SEX));
         rchAnmAshaRecord.setExecDate(record.get(SwcConstants.EXEC_DATE) == null ? null : (String) record.get(SwcConstants.EXEC_DATE));
+        rchAnmAshaRecord.setType(record.get(SwcConstants.TYPE) == null ? null : (String) record.get(SwcConstants.TYPE));
+        rchAnmAshaRecord.setJobStatus(record.get(SwcConstants.JOB_STATUS) == null ? null : (String) record.get(SwcConstants.JOB_STATUS));
+
         return rchAnmAshaRecord;
     }
 
@@ -451,6 +454,11 @@ public class SwcImportServiceImpl implements SwcImportService {
     @Autowired
     public void setSwcService(SwcService swcService) {
         this.swcService = swcService;
+    }
+
+    @Autowired
+    public void setPanchayatDataService(PanchayatDataService panchayatDataService) {
+        this.panchayatDataService = panchayatDataService;
     }
 
     @Autowired
