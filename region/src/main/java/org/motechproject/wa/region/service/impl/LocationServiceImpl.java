@@ -31,7 +31,6 @@ public class LocationServiceImpl implements LocationService {
     private static final String BLOCK_NAME = "Block_Name";
     private static final String PANCHAYAT_ID = "Panchayat_ID";
     private static final String PANCHAYAT_NAME = "Panchayat_Name";
-    private static final String NON_CENSUS_PANCHAYAT = "SVID";
 
     private StateDataService stateDataService;
 
