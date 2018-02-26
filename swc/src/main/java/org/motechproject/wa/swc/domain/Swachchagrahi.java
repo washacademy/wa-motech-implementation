@@ -56,6 +56,9 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     private String qualification;
 
     @Field
+    private String designation;
+
+    @Field
     private Boolean trainedInCommunityService;
 
     @Field
@@ -191,6 +194,13 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
         return block;
     }
 
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
 
     @Override
     public void setBlock(Block block) {

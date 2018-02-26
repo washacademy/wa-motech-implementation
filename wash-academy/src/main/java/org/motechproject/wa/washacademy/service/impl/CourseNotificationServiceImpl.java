@@ -7,6 +7,9 @@ import org.motechproject.alerts.domain.AlertType;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mtraining.service.ActivityService;
+import org.motechproject.wa.region.domain.District;
+import org.motechproject.wa.region.domain.Language;
+import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.swc.domain.Swachchagrahi;
 import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
 import org.motechproject.wa.swc.service.SwcService;
@@ -73,6 +76,8 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
      */
     private MotechSchedulerService schedulerService;
 
+    private DistrictDataService districtDataService;
+
     /**
      * Used to pull completion activity for swc
      */
@@ -90,7 +95,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                                          MotechSchedulerService schedulerService,
                                          CourseCompletionRecordDataService courseCompletionRecordDataService,
                                          AlertService alertService,
-                                         SwcService swcService) {
+                                         SwcService swcService,DistrictDataService districtDataService) {
 
         this.smsNotificationService = smsNotificationService;
         this.settingsFacade = settingsFacade;
@@ -99,6 +104,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         this.activityService = activityService;
         this.swcService = swcService;
         this.courseCompletionRecordDataService = courseCompletionRecordDataService;
+        this.districtDataService = districtDataService;
     }
 
     @MotechListener(subjects = { COURSE_COMPLETED_SUBJECT })
@@ -217,6 +223,20 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         // Build location code
         if (swc.getState() != null && swc.getDistrict() != null) {
             locationCode = swc.getState().getCode().toString() + swc.getDistrict().getCode();
+        }
+        // set sms content language
+        if (swc.getLanguage() != null) {
+            // get language from flw, if exists
+            smsLanguageProperty = swc.getLanguage().getCode();
+        } else {
+            District flwDistrict = swc.getDistrict();
+            if (flwDistrict != null) {
+                // get language from flw location (district), if exists
+                Language flwLanguage = (Language) districtDataService.getDetachedField(flwDistrict, "language");
+                if (flwLanguage != null) {
+                    smsLanguageProperty = flwLanguage.getCode();
+                }
+            }
         }
 
         if (smsLanguageProperty == null || smsLanguageProperty.isEmpty()) {

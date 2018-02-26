@@ -138,7 +138,8 @@ public class WashAcademyController extends BaseController {
     @Transactional(readOnly = true)
     @RequestMapping(
             value = "/bookmarkWithScore",
-            method = RequestMethod.GET)
+            method = RequestMethod.GET,
+            headers = { "Content-type=application/json" })
     @ResponseBody
     public GetBookmarkResponse getBookmarkWithScore(@RequestParam(required = false) Long callingNumber,
                                                     @RequestParam(required = false) String callId) {

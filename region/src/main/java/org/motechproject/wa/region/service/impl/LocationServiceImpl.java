@@ -31,7 +31,6 @@ public class LocationServiceImpl implements LocationService {
     private static final String BLOCK_NAME = "Block_Name";
     private static final String PANCHAYAT_ID = "Panchayat_ID";
     private static final String PANCHAYAT_NAME = "Panchayat_Name";
-    private static final String NON_CENSUS_PANCHAYAT = "SVID";
 
     private StateDataService stateDataService;
 
@@ -102,7 +101,7 @@ public class LocationServiceImpl implements LocationService {
         if (!isValidID(map, BLOCK_ID)) {
             return locations;
         }
-        Block block = blockService.findByDistrictAndCode(district, (long) map.get(BLOCK_ID));
+        Block block = blockService.findByDistrictAndCode(district, (Long) map.get(BLOCK_ID));
         if (block == null && createIfNotExists) {
             block = new Block();
             block.setCode((Long) map.get(BLOCK_ID));

@@ -235,6 +235,10 @@ public class BaseController {
     protected StringBuilder validate(Long callingNumber, String callId, String operator, String circle) {
         StringBuilder failureReasons = validate(callingNumber, callId);
 
+        validateFieldPresent(failureReasons, "circle", circle);
+
+        validateFieldPresent(failureReasons, "operator", operator);
+
         validateFieldMaxLength(failureReasons, "operator", operator, MAX_LENGTH_255);
 
         validateFieldMaxLength(failureReasons, "circle", circle, MAX_LENGTH_255);

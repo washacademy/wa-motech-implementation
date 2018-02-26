@@ -32,7 +32,7 @@ public class PropertyServiceImpl implements PropertyService {
             public Long execute(Query query, InstanceSecurityRestriction restriction) {
 
                 query.setFilter("state == _state && service == _service");
-                query.declareParameters("State _state, Service _service");
+                query.declareParameters("org.motechproject.wa.region.domain.State _state, org.motechproject.wa.props.domain.Service _service");
                 query.setResult("count(state)");
                 query.setUnique(true);
 

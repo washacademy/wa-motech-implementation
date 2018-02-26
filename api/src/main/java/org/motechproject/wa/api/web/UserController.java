@@ -21,10 +21,7 @@ import org.motechproject.wa.region.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,7 +67,9 @@ public class UserController extends BaseController {
      * /api/mobilekunji/user?callingNumber=9999999900&operator=A&circle=AP&callId=234000011111111
      *
      */
-    @RequestMapping("/{serviceName}/user") // NO CHECKSTYLE Cyclomatic Complexity
+    @RequestMapping(value = "/{serviceName}/user",
+            method = RequestMethod.GET,
+            headers = { "Content-type=application/json" }) // NO CHECKSTYLE Cyclomatic Complexity
     @ResponseBody
     @Transactional(noRollbackFor = NotAuthorizedException.class)
     public UserResponse getUserDetails(@PathVariable String serviceName,

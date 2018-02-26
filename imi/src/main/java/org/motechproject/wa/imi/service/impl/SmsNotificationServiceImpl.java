@@ -117,6 +117,7 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         }
         template = template.replace("<phoneNumber>", String.valueOf(callingNumber));
         template = template.replace("<senderId>", senderId);
+        template = template.replaceAll("\\s", "");
         template = template.replace("<messageContent>", content);
         template = template.replace("<notificationUrl>", callbackEndpoint);
         template = template.replace("<correlationId>", DateTime.now().toString());

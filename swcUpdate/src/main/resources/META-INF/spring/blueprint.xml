@@ -22,7 +22,7 @@
                     interface="org.motechproject.wa.region.repository.StateDataService" />
 
     <osgi:reference id="panchayatDataService"
-                    interface="org.motechproject.nms.region.repository.PanchayatDataService" />
+                    interface="org.motechproject.wa.region.repository.PanchayatDataService" />
 
 
     <osgi:reference id="swcService"

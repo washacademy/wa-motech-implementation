@@ -60,11 +60,9 @@ public final class SwcMapper {
         String swcId;
         Long contactNumber;
         String name;
-        String qualification;
         swcId = (String) record.get(SwcConstants.ID);
         contactNumber = (Long) record.get(SwcConstants.MOBILE_NO);
         name = (String) record.get(SwcConstants.NAME);
-        qualification = (String) record.get(SwcConstants.QUALIFICATION);
         String sex;
         Long age;
         String type;
@@ -98,8 +96,8 @@ public final class SwcMapper {
 
         setSwcLocation(swc, location);
 
-        if (swc.getQualification() == null) {
-            swc.setQualification(type);
+        if (swc.getDesignation() == null) {
+            swc.setDesignation(type);
         }
 
         LocalDate date;

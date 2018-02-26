@@ -20,7 +20,7 @@
         </property>
         <property name="rawConfigFiles">
             <list>
-                <value>classpath:waCourse.json</value>
+                <value>classpath:WaCourse.json</value>
             </list>
         </property>
     </bean>

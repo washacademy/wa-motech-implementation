@@ -15,6 +15,7 @@ import org.motechproject.mtraining.repository.ActivityDataService;
 import org.motechproject.mtraining.service.ActivityService;
 import org.motechproject.mtraining.service.BookmarkService;
 import org.motechproject.mtraining.service.MTrainingService;
+import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.swc.domain.Swachchagrahi;
 import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.imi.service.SmsNotificationService;
@@ -100,6 +101,9 @@ public class WashAcademyServiceUnitTest {
     private MotechSchedulerService schedulerService;
 
     @Mock
+    private DistrictDataService districtDataService;
+
+    @Mock
     private MtrainingModuleActivityRecordAuditDataService mtrainingModuleActivityRecordAuditDataService;
 
     private Validator validator;
@@ -113,7 +117,7 @@ public class WashAcademyServiceUnitTest {
                 WaCourseDataService, activityDataService, courseCompletionRecordDataService, swcService, eventRelay, mtrainingModuleActivityRecordAuditDataService, settingsFacade, alertService);
         courseNotificationService = new CourseNotificationServiceImpl(smsNotificationService,
                     settingsFacade, activityService, schedulerService, courseCompletionRecordDataService, alertService,
-                swcService);
+                swcService,districtDataService);
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         when(activityService.createActivity(any(ActivityRecord.class))).thenReturn(new ActivityRecord());
     }

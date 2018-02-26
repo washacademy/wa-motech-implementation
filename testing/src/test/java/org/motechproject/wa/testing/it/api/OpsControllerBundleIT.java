@@ -434,7 +434,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setJobStatus("Active");
         return request;
     }
 
@@ -446,7 +445,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setJobStatus("Active");
         return request;
     }
 
@@ -458,7 +456,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setJobStatus("Active");
         return request;
     }
 
@@ -469,7 +466,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
             request.setSwcId("123");
             request.setStateId(state.getCode());
             request.setDistrictId(district.getCode());
-            request.setJobStatus("Inactive");
             return request;
     }
 
@@ -654,7 +650,6 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setSwcId("123");
         request.setStateId(state.getCode());
         request.setDistrictId(district.getCode());
-        request.setJobStatus("Active");
         httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, request);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 

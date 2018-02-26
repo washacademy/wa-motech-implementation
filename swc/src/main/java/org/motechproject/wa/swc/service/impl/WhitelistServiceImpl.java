@@ -30,7 +30,7 @@ public class WhitelistServiceImpl implements WhitelistService {
             public Long execute(Query query, InstanceSecurityRestriction restriction) {
 
                 query.setFilter("state == swc_state");
-                query.declareParameters("State swc_state");
+                query.declareParameters("org.motechproject.wa.region.domain.State swc_state");
                 query.setResult("count(state)");
                 query.setUnique(true);
 
@@ -78,7 +78,7 @@ public class WhitelistServiceImpl implements WhitelistService {
             public Long execute(Query query, InstanceSecurityRestriction restriction) {
 
                 query.setFilter("state == swc_state && contactNumber == swc_number");
-                query.declareParameters("State swc_state, Long swc_number");
+                query.declareParameters("org.motechproject.wa.region.domain.State swc_state, Long swc_number");
                 query.setResult("count(contactNumber)");
                 query.setUnique(true);
 

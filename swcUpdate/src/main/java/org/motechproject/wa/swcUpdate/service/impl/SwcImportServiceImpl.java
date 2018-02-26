@@ -183,35 +183,34 @@ public class SwcImportServiceImpl implements SwcImportService {
         long contactNumber = (long) swc.get(SwcConstants.MOBILE_NO);
 
         String action = "";
+        String rejectionAction = "";
+        rejectionAction = this.rejectionSwcActionFinder(convertMapToRchAsha(swc));
 
         State state = locationService.getState(stateId);
         if (state == null) {
             swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_STATE));
 //                action = this.swcActionFinder(convertMapToAsha(swc));
-                swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+                swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
             return false;
         }
         District district = locationService.getDistrict(stateId, districtId);
         if (district == null) {
             swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_DISTRICT));
-                action = this.rchSwcActionFinder(convertMapToRchAsha(swc));
-                swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+                swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
 
             return false;
         }
         Block block = locationService.getBlock(stateId, districtId, blockId);
         if (block == null) {
             swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_BLOCK));
-            action = this.rchSwcActionFinder(convertMapToRchAsha(swc));
-            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
 
             return false;
         }
         Panchayat panchayat = locationService.getPanchayat(stateId, districtId, blockId, panchayatId, panchayatId);
         if (panchayat == null) {
             swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_PANCHAYAT));
-            action = this.rchSwcActionFinder(convertMapToRchAsha(swc));
-            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
 
             return false;
         }
@@ -222,7 +221,6 @@ public class SwcImportServiceImpl implements SwcImportService {
         try {
             location = locationService.getLocations(swc, true);
 
-                action = this.rchSwcActionFinder(convertMapToRchAsha(swc));
                 if (existingSwcBySwcId != null && existingSwcByNumber != null) {
 
                     if (existingSwcBySwcId.getSwcId().equalsIgnoreCase(existingSwcByNumber.getSwcId()) &&
@@ -230,7 +228,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // we are trying to update the same existing swc. set fields and update
                         LOGGER.debug("Updating existing user with same phone number");
                         swcService.update(SwcMapper.updateSwc(existingSwcBySwcId, swc, location, SubscriptionOrigin.RCH_IMPORT));
-                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, action));
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, rejectionAction));
                         return true;
                     } else if ((!existingSwcBySwcId.getSwcId().equalsIgnoreCase(existingSwcByNumber.getSwcId()) ||
                             !existingSwcBySwcId.getPanchayat().equals(existingSwcByNumber.getPanchayat())) &&
@@ -242,7 +240,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // we are trying to update 2 different users and/or phone number used by someone else
                         LOGGER.debug("Existing swc but phone number(update) already in use");
                         swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
-                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), rejectionAction));
                         return false;
                     }
                 } else if (existingSwcBySwcId != null && existingSwcByNumber == null) {
@@ -253,7 +251,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                     long existingContactNumber = existingSwcBySwcId.getContactNumber();
                     Swachchagrahi swcInstance = SwcMapper.updateSwc(existingSwcBySwcId, swc, location, SubscriptionOrigin.RCH_IMPORT);
                     updateSwcMaMsisdn(swcInstance, existingContactNumber, contactNumber);
-                    swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, action));
+                    swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, rejectionAction));
                     return true;
                 } else if (existingSwcBySwcId == null && existingSwcByNumber != null) {
 
@@ -262,7 +260,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // merging those records
                         LOGGER.debug("Merging rch data with previously anonymous user");
                         swcService.update(SwcMapper.updateSwc(existingSwcByNumber, swc, location, SubscriptionOrigin.RCH_IMPORT));
-                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, action));
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, rejectionAction));
                         return true;
                     } else if (existingSwcByNumber.getJobStatus().equals(SwcJobStatus.INACTIVE)) {
                         LOGGER.debug("Adding new RCH swc user");
@@ -278,7 +276,7 @@ public class SwcImportServiceImpl implements SwcImportService {
                         // phone number used by someone else.
                         LOGGER.debug("New swc but phone number(update) already in use");
                         swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.PHONE_NUMBER_IN_USE));
-                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), action));
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.MOBILE_NUMBER_ALREADY_IN_USE.toString(), rejectionAction));
                         return false;
                     }
 
@@ -288,11 +286,11 @@ public class SwcImportServiceImpl implements SwcImportService {
                     Swachchagrahi swachchagrahi = SwcMapper.createRchSwc(swc, location);
                     if (swachchagrahi != null) {
                         swcService.add(swachchagrahi);
-                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, action));
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, rejectionAction));
                         return true;
                     } else {
-                        LOGGER.error("GF Status is INACTIVE. So cannot create record.");
-                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.GF_STATUS_INACTIVE.toString(), action));
+                        LOGGER.error("Job Status is INACTIVE. So cannot create record.");
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.GF_STATUS_INACTIVE.toString(), rejectionAction));
                         return false;
                     }
                 }
@@ -300,8 +298,7 @@ public class SwcImportServiceImpl implements SwcImportService {
 
         } catch (InvalidLocationException ile) {
             LOGGER.debug(ile.toString());
-                action = this.rchSwcActionFinder(convertMapToRchAsha(swc));
-                swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), action));
+                swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
             return false;
         }
     }
@@ -493,6 +490,14 @@ public class SwcImportServiceImpl implements SwcImportService {
 //            return "UPDATE";
 //        }
 //    }
+    private String rejectionSwcActionFinder(SwcRecord record) {
+        Long swcId = record.getGfId().toString() == null ? null : Long.parseLong(record.getGfId().toString());
+        if (swcRejectionService.findBySwcIdAndPanchayatId(swcId, record.getPanchayatId()) == null) {
+            return "CREATE";
+        } else {
+            return "UPDATE";
+        }
+    }
 
 
     private String rchSwcActionFinder(SwcRecord record) {

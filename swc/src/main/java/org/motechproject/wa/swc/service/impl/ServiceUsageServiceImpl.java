@@ -35,7 +35,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
                 DateTime monthStart = DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay();
 
                 query.setFilter("swachchagrahi == swc && service == swc_service && callStartTime >= monthStart");
-                query.declareParameters("Swachchagrahi swc, org.joda.time.DateTime monthStart, Service swc_service");
+                query.declareParameters("Swachchagrahi swc, org.joda.time.DateTime monthStart, org.motechproject.wa.props.domain.Service swc_service");
 
                 return (List<CallDetailRecord>) query.execute(swachchagrahi, monthStart, service);
             }

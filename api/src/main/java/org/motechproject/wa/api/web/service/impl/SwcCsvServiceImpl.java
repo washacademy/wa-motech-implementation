@@ -44,12 +44,6 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     private SwcRejectionService swcRejectionService;
 
     @Autowired
-    private SwcService swcService;
-
-    @Autowired
-    private PanchayatDataService panchayatDataService;
-
-    @Autowired
     private SwcImportService swcImportService;
 
     @Override
