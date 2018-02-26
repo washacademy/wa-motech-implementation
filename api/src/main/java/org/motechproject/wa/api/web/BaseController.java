@@ -57,8 +57,8 @@ public class BaseController {
     public static final int CALL_ID_LENGTH = 25;
     public static final long MILLIS = 1000;
     public static final int MAX_LENGTH_255 = 255;
-    public static final int MA_MIN_SCORE = 0;
-    public static final int MA_MAX_SCORE = 4;
+    public static final int WA_MIN_SCORE = 0;
+    public static final int WA_MAX_SCORE = 4;
     public static final String CALLING_NUMBER = "callingNumber";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
@@ -321,10 +321,10 @@ public class BaseController {
         return propertyService.isServiceDeployedInState(service, state);
     }
 
-    protected  boolean validateMAScores(Map<String, Integer> scores) {
+    protected  boolean validateWAScores(Map<String, Integer> scores) {
         if (scores != null) {
             for (Integer currentScore : scores.values()) {
-                if (currentScore < MA_MIN_SCORE || currentScore > MA_MAX_SCORE) {
+                if (currentScore < WA_MIN_SCORE || currentScore > WA_MAX_SCORE) {
                     throw new IllegalArgumentException(String.format(INVALID, "scoresByChapter"));
                 }
             }
