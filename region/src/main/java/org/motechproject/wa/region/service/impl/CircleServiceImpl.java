@@ -59,9 +59,9 @@ public class CircleServiceImpl implements CircleService {
             @Override
             public String getSqlQuery() {
                 String query = "select * " +
-                        "from wa_circles c " +
-                        "join wa_districts d on d.circle_id_oid = c.id " +
-                        "join wa_states s on d.state_id_oid = s.id and s.id = ?";
+                        "from wash_circles c " +
+                        "join wash_districts d on d.circle_id_oid = c.id " +
+                        "join wash_states s on d.state_id_oid = s.id and s.id = ?";
 
                 return query;
             }

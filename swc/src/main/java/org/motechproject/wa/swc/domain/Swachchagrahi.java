@@ -6,15 +6,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.InstanceLifecycleListeners;
 import org.motechproject.mds.domain.MdsEntity;
-import org.motechproject.wa.region.domain.Panchayat;
-import org.motechproject.wa.region.domain.Block;
-import org.motechproject.wa.region.domain.FullLocation;
-import org.motechproject.wa.region.domain.District;
-import org.motechproject.wa.region.domain.Language;
-import org.motechproject.wa.region.domain.State;
-import org.motechproject.wa.region.domain.Circle;
-import org.motechproject.wa.swc.domain.validation.ValidSwachchagrahi;
+import org.motechproject.wa.region.domain.*;
 import org.motechproject.wa.region.domain.validation.ValidFullLocation;
+import org.motechproject.wa.swc.domain.validation.ValidSwachchagrahi;
 import org.motechproject.wa.tracking.annotation.TrackClass;
 import org.motechproject.wa.tracking.annotation.TrackFields;
 

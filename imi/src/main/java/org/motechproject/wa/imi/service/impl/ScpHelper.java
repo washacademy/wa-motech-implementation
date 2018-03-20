@@ -1,8 +1,8 @@
 package org.motechproject.wa.imi.service.impl;
 
 
-import org.motechproject.wa.imi.exception.ExecException;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.wa.imi.exception.ExecException;
 
 
 /**

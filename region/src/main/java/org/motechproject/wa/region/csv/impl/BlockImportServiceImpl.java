@@ -54,7 +54,6 @@ public class BlockImportServiceImpl extends BaseLocationImportService<Block>
             existing.setIdentity(instance.getIdentity());
             existing.setRegionalName(instance.getRegionalName());
             existing.setName(instance.getName());
-
             blockService.update(existing);
         } else {
             blockService.create(instance);

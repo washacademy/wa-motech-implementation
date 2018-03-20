@@ -2,6 +2,8 @@ package org.motechproject.wa.testing.it.props;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.wa.props.domain.DeployedService;
 import org.motechproject.wa.props.domain.Service;
 import org.motechproject.wa.props.repository.DeployedServiceDataService;
@@ -9,8 +11,6 @@ import org.motechproject.wa.props.service.PropertyService;
 import org.motechproject.wa.region.domain.State;
 import org.motechproject.wa.region.repository.StateDataService;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;

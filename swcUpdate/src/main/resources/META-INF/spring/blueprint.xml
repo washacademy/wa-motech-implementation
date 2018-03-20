@@ -17,6 +17,9 @@
 
     <osgi:service ref="swcImportService"
                   interface="org.motechproject.wa.swcUpdate.service.SwcImportService" />
+    <osgi:service ref="swcUpdateImportService"
+                  interface="org.motechproject.wa.swcUpdate.service.SwcUpdateImportService" />
+
 
     <osgi:reference id="stateDataService"
                     interface="org.motechproject.wa.region.repository.StateDataService" />

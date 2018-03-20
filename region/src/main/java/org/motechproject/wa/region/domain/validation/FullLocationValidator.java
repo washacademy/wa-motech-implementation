@@ -1,10 +1,9 @@
 package org.motechproject.wa.region.domain.validation;
 
+import org.motechproject.wa.region.domain.Block;
 import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.domain.FullLocation;
-import org.motechproject.wa.region.domain.Block;
 import org.motechproject.wa.region.domain.Panchayat;
-
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -3,22 +3,24 @@ package org.motechproject.wa.testing.it.region;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.wa.csv.exception.CsvImportDataException;
-import org.motechproject.wa.region.csv.*;
 import org.motechproject.wa.region.csv.BlockImportService;
-import org.motechproject.wa.region.domain.District;
-import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.csv.DistrictImportService;
+import org.motechproject.wa.region.csv.PanchayatImportService;
+import org.motechproject.wa.region.csv.StateImportService;
 import org.motechproject.wa.region.domain.Block;
+import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.domain.Panchayat;
+import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.repository.BlockDataService;
 import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.region.repository.StateDataService;
-import org.motechproject.wa.region.repository.BlockDataService;
 import org.motechproject.wa.region.service.BlockService;
 import org.motechproject.wa.region.service.DistrictService;
 import org.motechproject.wa.region.service.PanchayatService;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -30,10 +32,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.motechproject.wa.testing.it.utils.RegionHelper.createDistrict;
 import static org.motechproject.wa.testing.it.utils.RegionHelper.createTaluka;
 
@@ -119,10 +118,11 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
         assertEquals("district regional name", district.getRegionalName());
         assertNotNull(district.getState());
 
-        blockImportService.importData(read("csv/taluka.csv"));
-        Block block = blockService.findByDistrictAndCode(district, 0L);
+        blockImportService.importData(read("csv/block.csv"));
+        Block block = blockService.findByDistrictAndCode(district, 23L);
+        System.out.print(block.getDistrict());
         assertNotNull(block);
-        assertEquals("TALUKA", block.getCode());
+        assertEquals(23L, (long)block.getCode());
         assertEquals(2, (int) block.getIdentity());
         assertEquals("block name", block.getName());
         assertEquals("block regional name", block.getRegionalName());
@@ -243,7 +243,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT223() throws Exception {
         boolean thrown = false;
         String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "District, violations: {'state': may not be null}";
+                "org.motechproject.wa.region.domain.District, violations: {'state': may not be null}";
         Reader reader = createReaderWithHeaders(districtHeader, "1,district regional name,district name,12345");
         try {
             districtImportService.importData(reader);
@@ -312,7 +312,7 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT230() throws Exception {
         boolean thrown = false;
         String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "Block, violations: {'district': may not be null}";
+                "org.motechproject.wa.region.domain.Block, violations: {'district': may not be null}";
         Reader reader = createReaderWithHeaders(talukaHeader, "TALUKA,2,block regional name,block name,1,3");
         try {
             blockImportService.importData(reader);
@@ -537,9 +537,9 @@ public class LocationDataImportServiceBundleIT extends BasePaxIT {
     public void verifyFT258() throws Exception {
         boolean thrown = false;
         String errorMessage = "CSV instance error [row: 2]: validation failed for instance of type " +
-                "Panchayat, violations: {'block': may not be null}";
+                "org.motechproject.wa.region.domain.Panchayat, violations: {'block': may not be null}";
         Reader reader = createReaderWithHeaders(
-                villageHeader, "3,census panchayat regional name,census panchayat name,1,2,invalid block");
+                villageHeader, "3,census panchayat regional name,census panchayat name,1,2,44");
         try {
             panchayatImportService.importData(reader);
         } catch (CsvImportDataException e) {

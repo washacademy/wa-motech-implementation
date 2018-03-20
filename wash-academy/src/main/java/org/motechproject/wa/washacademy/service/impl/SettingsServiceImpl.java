@@ -1,7 +1,7 @@
 package org.motechproject.wa.washacademy.service.impl;
 
-import org.motechproject.wa.washacademy.service.SettingsService;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.wa.washacademy.service.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

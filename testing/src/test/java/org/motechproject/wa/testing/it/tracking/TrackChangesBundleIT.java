@@ -2,14 +2,15 @@ package org.motechproject.wa.testing.it.tracking;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.wa.testing.tracking.domain.TrackedSimple;
 import org.motechproject.wa.testing.tracking.repository.TrackedSimpleDataService;
 import org.motechproject.wa.tracking.domain.ChangeLog;
 import org.motechproject.wa.tracking.repository.ChangeLogDataService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -18,12 +19,9 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 
 import javax.inject.Inject;
-
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -50,7 +48,6 @@ public class TrackChangesBundleIT extends BasePaxIT {
     public void testChangesTrackedForInstanceCreation() {
         final TrackedSimple relatedInstance = trackedSimpleDataService.create(new TrackedSimple());
         TrackedSimple trackedInstance = createInstanceInTransaction(42, "hello", relatedInstance);
-
         List<ChangeLog> changes = changeLogDataService.findByEntityNameAndInstanceId(TrackedSimple.class.getName(), trackedInstance.getId());
 
         assertEquals(1, changes.size());

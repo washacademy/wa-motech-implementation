@@ -9,20 +9,18 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
-import org.motechproject.wa.region.domain.Panchayat;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.domain.SwcStatusUpdateAudit;
-import org.motechproject.wa.swc.domain.UpdateStatusType;
-import org.motechproject.wa.swc.repository.SwcDataService;
-import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
-import org.motechproject.wa.swc.service.SwcService;
-import org.motechproject.wa.region.domain.District;
-import org.motechproject.wa.region.domain.State;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.wa.region.domain.District;
+import org.motechproject.wa.region.domain.Language;
+import org.motechproject.wa.region.domain.Panchayat;
+import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.service.LanguageService;
+import org.motechproject.wa.swc.domain.*;
+import org.motechproject.wa.swc.repository.SwcDataService;
+import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
+import org.motechproject.wa.swc.service.SwcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,7 @@ import javax.jdo.Query;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Simple implementation of the {@link SwcService} interface.
@@ -55,15 +54,17 @@ public class SwcServiceImpl implements SwcService {
 
     private SettingsFacade settingsFacade;
     private MotechSchedulerService schedulerService;
+    private LanguageService languageService;
 
     @Autowired
     public SwcServiceImpl(@Qualifier("swcSettings") SettingsFacade settingsFacade,
                           MotechSchedulerService schedulerService,
-                          SwcDataService swcDataService,
+                          SwcDataService swcDataService,LanguageService languageService,
                           SwcStatusUpdateAuditDataService swcStatusUpdateAuditDataService) {
         this.swcDataService = swcDataService;
         this.schedulerService = schedulerService;
         this.settingsFacade = settingsFacade;
+        this.languageService = languageService;
         this.swcStatusUpdateAuditDataService = swcStatusUpdateAuditDataService;
         schedulePurgeOfOldSwc();
     }
@@ -140,6 +141,15 @@ public class SwcServiceImpl implements SwcService {
         if (district != null) {
             state = district.getState();
         }
+        if (state == null) {
+            Language language = swachchagrahi.getLanguage();
+            if (language != null) {
+                Set<State> states = languageService.getAllStatesForLanguage(language);
+                if (states.size() == 1) {
+                    state = states.iterator().next();
+                }
+            }
+        }
 
         return state;
     }
@@ -183,7 +193,7 @@ public class SwcServiceImpl implements SwcService {
             @Override
             public Swachchagrahi execute(Query query, InstanceSecurityRestriction restriction) {
                 query.setFilter("swcId == _swcId && panchayat == _panchayat");
-                query.declareParameters("String _swcId, Panchayat _panchayat");
+                query.declareParameters("String _swcId, org.motechproject.wa.region.domain.Panchayat _panchayat");
                 query.setClass(Swachchagrahi.class);
                 query.setUnique(true);
 

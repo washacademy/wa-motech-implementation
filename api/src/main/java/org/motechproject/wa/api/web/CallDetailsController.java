@@ -3,28 +3,19 @@ package org.motechproject.wa.api.web;
 import org.joda.time.DateTime;
 import org.motechproject.wa.api.web.contract.CallContentRequest;
 import org.motechproject.wa.api.web.contract.CallDetailRecordRequest;
-import org.motechproject.wa.swc.domain.SwcStatusUpdateAudit;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.UpdateStatusType;
-import org.motechproject.wa.swc.domain.CallDetailRecord;
-import org.motechproject.wa.swc.domain.CallContent;
+import org.motechproject.wa.props.domain.FinalCallStatus;
+import org.motechproject.wa.props.domain.Service;
+import org.motechproject.wa.props.service.LogHelper;
+import org.motechproject.wa.swc.domain.*;
 import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
 import org.motechproject.wa.swc.service.CallContentService;
 import org.motechproject.wa.swc.service.CallDetailRecordService;
 import org.motechproject.wa.swc.service.SwcService;
-import org.motechproject.wa.props.domain.FinalCallStatus;
-import org.motechproject.wa.props.domain.Service;
-import org.motechproject.wa.props.service.LogHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class CallDetailsController extends BaseController {

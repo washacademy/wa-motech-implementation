@@ -3,10 +3,10 @@ package org.motechproject.wa.swc.ut;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
 import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.swc.domain.Swachchagrahi;
+import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

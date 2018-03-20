@@ -1,21 +1,19 @@
 package org.motechproject.wa.testing.it.region;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.motechproject.wa.region.domain.*;
-import org.motechproject.wa.region.domain.Block;
-import org.motechproject.wa.region.repository.DistrictDataService;
-import org.motechproject.wa.region.repository.StateDataService;
-import org.motechproject.wa.region.repository.BlockDataService;
-import org.motechproject.wa.region.repository.PanchayatDataService;
-import org.motechproject.wa.testing.service.TestingService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.wa.region.domain.Block;
+import org.motechproject.wa.region.domain.District;
+import org.motechproject.wa.region.domain.Panchayat;
+import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.repository.BlockDataService;
+import org.motechproject.wa.region.repository.DistrictDataService;
+import org.motechproject.wa.region.repository.PanchayatDataService;
+import org.motechproject.wa.region.repository.StateDataService;
+import org.motechproject.wa.testing.service.TestingService;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -29,10 +27,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)

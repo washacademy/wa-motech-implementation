@@ -9,13 +9,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.wa.rch.exception.RchImportConfigurationException;
-import org.motechproject.wa.rch.service.RchWsImportService;
-import org.motechproject.wa.rch.utils.Constants;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.testing.utils.TimeFaker;
+import org.motechproject.wa.rch.exception.RchImportConfigurationException;
+import org.motechproject.wa.rch.service.RchWsImportService;
+import org.motechproject.wa.rch.utils.Constants;
 
 import java.net.URL;
 
@@ -23,9 +23,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RchImportJobHandlerTest {

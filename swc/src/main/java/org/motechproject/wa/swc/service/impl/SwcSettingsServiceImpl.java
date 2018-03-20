@@ -1,7 +1,7 @@
 package org.motechproject.wa.swc.service.impl;
 
-import org.motechproject.wa.swc.service.SwcSettingsService;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.wa.swc.service.SwcSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

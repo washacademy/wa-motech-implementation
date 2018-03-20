@@ -3,11 +3,11 @@ package org.motechproject.wa.testing.service.impl;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.metrics.service.Timer;
+import org.motechproject.server.config.SettingsFacade;
 import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.domain.State;
 import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.region.repository.StateDataService;
-import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class MctsHelper {
 

@@ -1,10 +1,6 @@
 package org.motechproject.wa.region.service.impl;
 
-import org.motechproject.wa.region.domain.Block;
-import org.motechproject.wa.region.domain.District;
-import org.motechproject.wa.region.domain.Panchayat;
-import org.motechproject.wa.region.domain.State;
-import org.motechproject.wa.region.domain.Circle;
+import org.motechproject.wa.region.domain.*;
 import org.motechproject.wa.region.exception.InvalidLocationException;
 import org.motechproject.wa.region.repository.StateDataService;
 import org.motechproject.wa.region.service.*;

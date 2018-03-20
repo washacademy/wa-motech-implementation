@@ -1,14 +1,14 @@
 package org.motechproject.wa.api.web;
 
 import org.motechproject.wa.api.web.contract.AddSwcRequest;
-import org.motechproject.wa.api.web.service.SwcCsvService;
 import org.motechproject.wa.api.web.contract.washAcademy.GetBookmarkResponse;
 import org.motechproject.wa.api.web.converter.WashAcademyConverter;
+import org.motechproject.wa.api.web.service.SwcCsvService;
 import org.motechproject.wa.imi.service.CdrFileService;
+import org.motechproject.wa.props.service.LogHelper;
 import org.motechproject.wa.swc.domain.DeactivationReason;
 import org.motechproject.wa.swc.repository.SwcDataService;
 import org.motechproject.wa.swc.service.SwcService;
-import org.motechproject.wa.props.service.LogHelper;
 import org.motechproject.wa.washacademy.dto.WaBookmark;
 import org.motechproject.wa.washacademy.service.WashAcademyService;
 import org.slf4j.Logger;
@@ -17,12 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller to expose methods for OPS personnel

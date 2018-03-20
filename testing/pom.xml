@@ -34,6 +34,11 @@
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>mtraining</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
 
         <!-- common properties -->
         <dependency>
@@ -41,6 +46,21 @@
             <artifactId>props</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+
+
+        <dependency>
+            <groupId>org.motechproject.wa</groupId>
+            <artifactId>swc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.wa</groupId>
+            <artifactId>swcUpdate</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.motechproject.wa</groupId>
@@ -264,9 +284,12 @@
                             org.motechproject.wa.tracking.repository,
                             org.motechproject.wa.rch.contract,
                             org.motechproject.wa.rch.service,
+                            org.motechproject.wa.swcUpdate.service,
                             org.motechproject.wa.rch.soap,
                             org.motechproject.wa.rejectionhandler.repository,
                             org.motechproject.wa.rejectionhandler.service,
+                            org.motechproject.mtraining.domain,
+                            org.motechproject.mtraining.service,
                             org.aopalliance.aop,
                             org.springframework.aop,
                             org.springframework.aop.framework,

@@ -5,8 +5,8 @@ import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.query.QueryParams;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.wa.rch.domain.RchImportFailRecord;
 import org.motechproject.mds.util.Constants;
+import org.motechproject.wa.rch.domain.RchImportFailRecord;
 import org.motechproject.wa.rch.domain.RchUserType;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.motechproject.wa.imi.service.impl;
 
-import org.motechproject.wa.imi.service.SettingsService;
 import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.wa.imi.service.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

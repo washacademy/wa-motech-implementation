@@ -2,10 +2,10 @@ package org.motechproject.wa.swc.service.impl;
 
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
+import org.motechproject.wa.region.domain.State;
 import org.motechproject.wa.swc.repository.WhitelistEntryDataService;
 import org.motechproject.wa.swc.repository.WhitelistStateDataService;
 import org.motechproject.wa.swc.service.WhitelistService;
-import org.motechproject.wa.region.domain.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

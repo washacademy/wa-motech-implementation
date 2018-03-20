@@ -7,16 +7,9 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.mds.ex.JdoListenerInvocationException;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
-import org.motechproject.wa.swc.repository.SwcDataService;
-import org.motechproject.wa.swc.repository.WhitelistEntryDataService;
-import org.motechproject.wa.swc.repository.WhitelistStateDataService;
-import org.motechproject.wa.swc.service.SwcSettingsService;
-import org.motechproject.wa.swc.service.SwcService;
-import org.motechproject.wa.swc.service.ServiceUsageService;
+import org.motechproject.server.config.SettingsFacade;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.wa.region.domain.Circle;
 import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.domain.Language;
@@ -27,10 +20,17 @@ import org.motechproject.wa.region.repository.LanguageDataService;
 import org.motechproject.wa.region.repository.StateDataService;
 import org.motechproject.wa.region.service.DistrictService;
 import org.motechproject.wa.region.service.LanguageService;
+import org.motechproject.wa.swc.domain.Swachchagrahi;
+import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
+import org.motechproject.wa.swc.domain.SwcJobStatus;
+import org.motechproject.wa.swc.repository.SwcDataService;
+import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
+import org.motechproject.wa.swc.repository.WhitelistEntryDataService;
+import org.motechproject.wa.swc.repository.WhitelistStateDataService;
+import org.motechproject.wa.swc.service.ServiceUsageService;
+import org.motechproject.wa.swc.service.SwcService;
+import org.motechproject.wa.swc.service.SwcSettingsService;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.server.config.SettingsFacade;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -44,11 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -146,7 +142,6 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    @Ignore
     public void testPurgeOldInvalidFrontLineWorkers() {
         // SWC1 & 2 Should be purged, the others should remain
 

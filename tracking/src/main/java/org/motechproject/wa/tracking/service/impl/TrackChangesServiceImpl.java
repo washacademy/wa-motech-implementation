@@ -6,10 +6,10 @@ import org.motechproject.mds.listener.MotechLifecycleListener;
 import org.motechproject.mds.service.JdoListenerRegistryService;
 import org.motechproject.mds.util.Constants;
 import org.motechproject.mds.util.PropertyUtil;
-import org.motechproject.wa.tracking.service.EntityServiceWrapper;
 import org.motechproject.wa.tracking.domain.ChangeLog;
 import org.motechproject.wa.tracking.exception.TrackChangesException;
 import org.motechproject.wa.tracking.repository.ChangeLogDataService;
+import org.motechproject.wa.tracking.service.EntityServiceWrapper;
 import org.motechproject.wa.tracking.service.TrackChangesService;
 import org.motechproject.wa.tracking.utils.Change;
 import org.motechproject.wa.tracking.utils.CollectionChange;
@@ -20,13 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TrackChangesServiceImpl implements TrackChangesService {

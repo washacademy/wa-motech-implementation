@@ -2,11 +2,9 @@ package org.motechproject.wa.imi.ut;
 
 import org.junit.Test;
 import org.motechproject.wa.imi.service.impl.CdrHelper;
+
 //import org.motechproject.wa.kilkari.dto.CallDetailRecordDto;
 //import org.motechproject.wa.kilkari.exception.InvalidCallRecordDataException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class CdrHelperUnitTest {
 

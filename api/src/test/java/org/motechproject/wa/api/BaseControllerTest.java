@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import org.motechproject.wa.api.web.contract.BadRequest;
 import org.motechproject.wa.swc.service.SwcService;
 import org.springframework.test.web.server.MockMvc;

@@ -1,22 +1,19 @@
 package org.motechproject.wa.swcUpdate.service.impl;
 
 import org.motechproject.wa.csv.exception.CsvImportDataException;
-import org.motechproject.wa.csv.utils.ConstraintViolationUtils;
-import org.motechproject.wa.csv.utils.CsvImporterBuilder;
-import org.motechproject.wa.csv.utils.CsvMapImporter;
-import org.motechproject.wa.csv.utils.GetInstanceByLong;
-import org.motechproject.wa.csv.utils.GetInstanceByString;
-import org.motechproject.wa.csv.utils.GetLong;
-import org.motechproject.wa.csv.utils.GetString;
+import org.motechproject.wa.csv.utils.*;
+import org.motechproject.wa.region.domain.Language;
 import org.motechproject.wa.region.domain.Panchayat;
+import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.repository.PanchayatDataService;
+import org.motechproject.wa.region.repository.StateDataService;
+import org.motechproject.wa.region.service.LanguageService;
 import org.motechproject.wa.swc.domain.Swachchagrahi;
 import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.swcUpdate.service.SwcUpdateImportService;
 import org.motechproject.wa.washacademy.service.WashAcademyService;
-import org.motechproject.wa.region.domain.Language;
-import org.motechproject.wa.region.domain.State;
-import org.motechproject.wa.region.repository.StateDataService;
-import org.motechproject.wa.region.service.LanguageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +39,10 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
     public static final String MSISDN = "MSISDN";
     public static final String LANGUAGE_CODE = "LANGUAGE CODE";
     public static final String NEW_MSISDN = "NEW MSISDN";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwcUpdateImportServiceImpl.class);
     private SwcService swcService;
     private LanguageService languageService;
-    private StateDataService stateDataService;
+    private PanchayatDataService panchayatDataService;
     private WashAcademyService washAcademyService;
 
     /*
@@ -79,7 +76,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
                                     MSISDN, record.get(MSISDN)),
                                                                         csvImporter.getRowNumber()));
                 }
-
+                swc.setLanguage(language);
                 swcService.update(swc);
             }
         } catch (ConstraintViolationException e) {
@@ -156,6 +153,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         }
 
         if (swc == null && mctsSwcId != null) {
+            LOGGER.info("reached gere");
             swc = swcService.getBySwcIdAndPanchayat(mctsSwcId, state);
         }
 
@@ -172,10 +170,11 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         mapping.put(wa_SWC_ID, new Optional(new GetString()));
         mapping.put(MCTS_SWC_ID, new Optional(new GetString()));
         mapping.put(MSISDN, new Optional(new GetLong()));
-        mapping.put(STATE, new GetInstanceByLong<State>() {
+        mapping.put(STATE, new GetInstanceByLong<Panchayat>() {
             @Override
-            public State retrieve(Long value) {
-                return stateDataService.findByCode(value);
+            public Panchayat retrieve(Long value) {
+                LOGGER.info("Panchayat id is {}", value);
+                return panchayatDataService.findByCode(value);
             }
         });
 
@@ -228,8 +227,8 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
     }
 
     @Autowired
-    public void setStateDataService(StateDataService stateDataService) {
-        this.stateDataService = stateDataService;
+    public void setStateDataService(PanchayatDataService stateDataService) {
+        this.panchayatDataService = stateDataService;
     }
 
     @Autowired

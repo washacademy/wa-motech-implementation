@@ -1,13 +1,12 @@
 package org.motechproject.wa.testing.it.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
+import com.google.common.base.Joiner;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.motechproject.testing.utils.TestContext;
 
-import com.google.common.base.Joiner;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 //Class contains method to create request URL for API.
 public class ApiRequestHelper {

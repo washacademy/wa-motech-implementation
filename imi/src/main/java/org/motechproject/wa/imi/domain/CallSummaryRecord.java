@@ -2,10 +2,11 @@ package org.motechproject.wa.imi.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-//import org.motechproject.wa.kilkari.dto.CallSummaryRecordDto;
-//import org.motechproject.wa.kilkari.exception.InvalidCallRecordDataException;
 
 import javax.jdo.annotations.Index;
+
+//import org.motechproject.wa.kilkari.dto.CallSummaryRecordDto;
+//import org.motechproject.wa.kilkari.exception.InvalidCallRecordDataException;
 
 /**
  * See wa API - 4.4.2 CDR Summary File Format

@@ -14,6 +14,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.service.BookmarkService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.wa.api.web.BaseController;
 import org.motechproject.wa.api.web.contract.BadRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.CourseResponse;
@@ -21,19 +25,15 @@ import org.motechproject.wa.api.web.contract.washAcademy.SaveBookmarkRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.SmsStatusRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.sms.DeliveryStatus;
 import org.motechproject.wa.api.web.contract.washAcademy.sms.RequestData;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
 import org.motechproject.wa.swc.domain.Swachchagrahi;
+import org.motechproject.wa.swc.domain.SwcJobStatus;
 import org.motechproject.wa.swc.service.SwcService;
+import org.motechproject.wa.testing.it.api.utils.RequestBuilder;
+import org.motechproject.wa.testing.service.TestingService;
 import org.motechproject.wa.washacademy.domain.CourseCompletionRecord;
 import org.motechproject.wa.washacademy.domain.WaCourse;
 import org.motechproject.wa.washacademy.repository.CourseCompletionRecordDataService;
 import org.motechproject.wa.washacademy.repository.WaCourseDataService;
-import org.motechproject.wa.testing.it.api.utils.RequestBuilder;
-import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
-import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -47,10 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Integration tests for mobile academy controller
@@ -140,6 +137,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore?callingNumber=1234567890&callId=1234567890123456789012345",
                 TestContext.getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
+        request.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(request, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
         assertNotNull(response);
         assertEquals(200, response.getStatusLine().getStatusCode());
@@ -390,7 +388,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // bookmark in the system for the user
         HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID);
-
+        getRequest.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -410,7 +408,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     public void verifyFT405() throws IOException, InterruptedException {
         HttpGet request = createHttpGetBookmarkWithScore(null,
                 VALID_CALL_ID);
-
+        request.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 request, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -429,7 +427,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT406() throws IOException, InterruptedException {
         HttpGet request = createHttpGetBookmarkWithScore("1234567890", null);
-
+        request.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 request, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -450,7 +448,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // 11 digit callingNumber
         HttpGet request = createHttpGetBookmarkWithScore("12345678901",
                 VALID_CALL_ID);
-
+        request.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 request, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -493,7 +491,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // callId more than 25 digit
         HttpGet request = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID.concat("14"));
-
+        request.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 request, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -812,6 +810,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // assert if bookmark has been saved
         HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -872,6 +871,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // assert if bookmark has been saved
         HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -931,6 +931,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // assert if bookmark has been saved
         HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -1001,6 +1002,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // assert if bookmark has been reset
         HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -1038,6 +1040,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // fetch bookmark for the same user
         HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
                 VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/json");
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
@@ -1046,16 +1049,19 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
                 .equals(EntityUtils.toString(response.getEntity())));
     }
 
-    @Ignore
+
     @Test
+    @Ignore
     /**
      * Testing sms status updates. See https://applab.atlassian.net/browse/wa-250
      */
     public void verifyFT564() throws IOException, InterruptedException {
         // create completion record for msisdn 1234567890l
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
         swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
         CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
         ccr = courseCompletionRecordDataService.create(ccr);
         assertNull(ccr.getLastDeliveryStatus());

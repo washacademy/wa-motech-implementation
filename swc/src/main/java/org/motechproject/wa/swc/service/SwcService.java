@@ -4,8 +4,8 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.mds.annotations.InstanceLifecycleListener;
 import org.motechproject.mds.annotations.InstanceLifecycleListenerType;
 import org.motechproject.wa.region.domain.Panchayat;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
 import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.swc.domain.Swachchagrahi;
 
 import java.util.List;
 

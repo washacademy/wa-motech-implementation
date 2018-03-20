@@ -2,12 +2,7 @@ package org.motechproject.wa.tracking.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.DeclareMixin;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.motechproject.mds.util.PropertyUtil;
 import org.motechproject.wa.tracking.exception.TrackChangesException;
 import org.motechproject.wa.tracking.service.TrackChangesService;
@@ -28,21 +23,21 @@ public class TrackChangesAspect {
 
     private TrackChangesService trackChangesService;
 
-    @DeclareMixin("(@TrackClass *)")
+    @DeclareMixin("(@org.motechproject.wa.tracking.annotation.TrackClass *)")
     public static TrackChanges implementTrackChanges() {
         return new TrackChangesImpl();
     }
 
-    @Pointcut("staticinitialization(@TrackClass *)")
+    @Pointcut("staticinitialization(@org.motechproject.wa.tracking.annotation.TrackClass *)")
     public void trackedClassInit() { }
 
-    @Pointcut("within(@TrackClass *)")
+    @Pointcut("within(@org.motechproject.wa.tracking.annotation.TrackClass *)")
     public void withinTrackClass() { }
 
-    @Pointcut("within(@TrackFields *)")
+    @Pointcut("within(@org.motechproject.wa.tracking.annotation.TrackFields *)")
     public void withinTrackFields() { }
 
-    @Pointcut("set(@TrackField * *)")
+    @Pointcut("set(@org.motechproject.wa.tracking.annotation.TrackField * *)")
     public void trackedFieldWithAnnotationSetter() { }
 
     @Pointcut("set(* *) && withinTrackFields()")
@@ -51,7 +46,7 @@ public class TrackChangesAspect {
     @Pointcut("trackedFieldWithAnnotationSetter() || trackedFieldWithinAnnotationSetter()")
     public void trackedFieldSetter() { }
 
-    @Pointcut("get(@TrackField java.util.Collection+ *)")
+    @Pointcut("get(@org.motechproject.wa.tracking.annotation.TrackField java.util.Collection+ *)")
     public void trackedCollectionFieldWithAnnotationGetter() { }
 
     @Pointcut("get(java.util.Collection+ *) && withinTrackFields()")

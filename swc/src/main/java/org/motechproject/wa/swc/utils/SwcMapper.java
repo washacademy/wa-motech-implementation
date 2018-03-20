@@ -3,15 +3,15 @@ package org.motechproject.wa.swc.utils;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.SubscriptionOrigin;
 import org.motechproject.wa.region.domain.Block;
+import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.domain.Panchayat;
 import org.motechproject.wa.region.domain.State;
-import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.exception.InvalidLocationException;
+import org.motechproject.wa.swc.domain.SubscriptionOrigin;
+import org.motechproject.wa.swc.domain.Swachchagrahi;
+import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
+import org.motechproject.wa.swc.domain.SwcJobStatus;
 
 import java.util.Map;
 

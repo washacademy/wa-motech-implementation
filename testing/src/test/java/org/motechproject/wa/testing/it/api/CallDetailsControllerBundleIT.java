@@ -13,16 +13,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.wa.api.web.contract.SwcUserResponse;
-import org.motechproject.wa.swc.domain.*;
-import org.motechproject.wa.swc.repository.CallDetailRecordDataService;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.domain.SwcStatusUpdateAudit;
-import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
-import org.motechproject.wa.swc.service.CallDetailRecordService;
-import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.props.domain.DeployedService;
 import org.motechproject.wa.props.domain.Service;
 import org.motechproject.wa.props.repository.DeployedServiceDataService;
@@ -32,12 +27,13 @@ import org.motechproject.wa.region.repository.LanguageDataService;
 import org.motechproject.wa.region.repository.StateDataService;
 import org.motechproject.wa.region.service.DistrictService;
 import org.motechproject.wa.region.service.LanguageService;
+import org.motechproject.wa.swc.domain.*;
+import org.motechproject.wa.swc.repository.CallDetailRecordDataService;
+import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
+import org.motechproject.wa.swc.service.CallDetailRecordService;
+import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.testing.it.utils.RegionHelper;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
-import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -54,10 +50,7 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -165,6 +158,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         if (includeWelcomeMessagePromptFlag) {
             array.add(String.format("\"welcomeMessagePromptFlag\": %s", welcomeMessagePromptFlag));
+            System.out.println(welcomeMessagePromptFlag);
         }
 
         if (includeCallStatus) {
@@ -534,7 +528,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertNull(cdr.getContent().get(1).getCompletionFlag());
 
         assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
-                "frontLineWorker")).getId());
+                "swachchagrahi")).getId());
 
         transactionManager.commit(status);
     }
@@ -614,7 +608,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         assertNull(cc.getMobileKunjiCardCode());
 
         assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
-                "frontLineWorker")).getId());
+                "swachchagrahi")).getId());
 
         transactionManager.commit(status);
     }
@@ -1434,7 +1428,6 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      * "CallData>>type" is having invalid format.
      */
     // TODO https://applab.atlassian.net/browse/wa-232
-    @Ignore
     @Test
     public void verifyFT505() throws InterruptedException, IOException {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
@@ -1614,7 +1607,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1719,11 +1712,11 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
-                /* circle */ false, null,
+                /* circle */ false, "AP",
                 /* callStartTime */ false, null,
                 /* callEndTime */ true, 1422879903l,
                 /* callDurationInPulses */ true, 60,
@@ -1733,7 +1726,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* callDisconnectReason */ true, 1,
                 /* content */ false, null);
 
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+        assertFalse(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                 "{\"failureReason\":\"<callStartTime: Not Present>\"}",
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
@@ -1747,7 +1740,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1775,7 +1768,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1803,7 +1796,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1831,7 +1824,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1845,7 +1838,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* callDisconnectReason */ true, 1,
                 /* content */ false, null);
 
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+        assertFalse(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                 "{\"failureReason\":\"<welcomeMessagePromptFlag: Not Present>\"}",
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
@@ -1859,7 +1852,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1887,7 +1880,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -2468,7 +2461,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_KUNJI));
+                Service.WASH_ACADEMY));
 
         // SWC usage
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
@@ -2479,14 +2472,16 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         // invoke get user detail API
         StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
         String sep = "";
-        sb.append(String.format("%s/", "mobilekunji"));
+        sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
         sb.append(String.format("callingNumber=%s", "1200000000"));
         sep = "&";
+        sb.append(String.format("%scircle=%s", sep, rh.delhiCircle().getName()));
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
+        sb.append(String.format("%soperator=%s", sep, "OP"));
         HttpGet httpGet = new HttpGet(sb.toString());
-
-        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
+        httpGet.addHeader("content-type", "application/json");
+        String expectedJsonResponse = createSwcUserResponseJson(rh.hindiLanguage().getCode(), // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses
@@ -2504,20 +2499,20 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
 
         ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
+        array.add(createContentJson(true, "lesson",                   // type
                 true, "a",                     // mkCardCode
                 true, "YellowFever",           // contentName
                 true, "Yellowfever.wav",       // contentFile
                 true, 1200000000l,             // startTime
                 true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
+                true, true,                   // completionFlag
                 false, null));                 // correctAnswerEntered
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 true, 1200000000l,       // callingNumber
                 true, VALID_CALL_ID,  // callId
-                true, "A",               // operator
-                true, "AP",              // circle
+                true, "OP",               // operator
+                true, rh.delhiCircle().getName(),              // circle
                 true, DateTime.now().getMillis()/1000,       // callStartTime
                 true, 1422879903l,       // callEndTime
                 true, 60,                // callDurationInPulses
@@ -2533,19 +2528,21 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         // invoke get user detail API
         sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
         sep = "";
-        sb.append(String.format("%s/", "mobilekunji"));
+        sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
         sb.append(String.format("callingNumber=%s", "1200000000"));
         sep = "&";
+        sb.append(String.format("%scircle=%s", sep, rh.delhiCircle().getName()));
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
+        sb.append(String.format("%soperator=%s", sep, "OP"));
         httpGet = new HttpGet(sb.toString());
-
-        expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
+        httpGet.addHeader("content-type", "application/json");
+        expectedJsonResponse = createSwcUserResponseJson(rh.hindiLanguage().getCode(), // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 null, // allowedLanguageLocationCodes
                 60L, // currentUsageInPulses
                 0L, // endOfUsagePromptCounter
-                true, // welcomePromptFlag
+                false, // welcomePromptFlag
                 -1, // maxAllowedUsageInPulses=No capping
                 2 // maxAllowedEndOfUsagePrompt
         );
@@ -2567,7 +2564,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
-                Service.MOBILE_KUNJI));
+                Service.WASH_ACADEMY));
 
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1200000001L);
         swc.setLanguage(rh.hindiLanguage());
@@ -2580,14 +2577,16 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         // invoke get user detail API
         StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
         String sep = "";
-        sb.append(String.format("%s/", "mobilekunji"));
+        sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
         sb.append(String.format("callingNumber=%s", "1200000001"));
         sep = "&";
+        sb.append(String.format("%scircle=%s", sep, rh.delhiCircle().getName()));
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
+        sb.append(String.format("%soperator=%s", sep, "OP"));
         HttpGet httpGet = new HttpGet(sb.toString());
-
-        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
+        httpGet.addHeader("content-type", "application/json");
+        String expectedJsonResponse = createSwcUserResponseJson(rh.hindiLanguage().getCode(), // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated
@@ -2604,16 +2603,16 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 EntityUtils.toString(response.getEntity()));
 
         ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
+        array.add(createContentJson(true, "lesson",                   // type
                 true, "a",                     // mkCardCode
                 true, "YellowFever",           // contentName
                 true, "Yellowfever.wav",       // contentFile
                 true, 1200000000l,             // startTime
                 true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
+                true, true,                   // completionFlag
                 false, null));                 // correctAnswerEntered
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 true, 1200000001l,       // callingNumber
                 true, VALID_CALL_ID,  // callId
                 true, "A",               // operator
@@ -2664,10 +2663,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         sb.append("user?");
         sb.append(String.format("callingNumber=%s", "1200000001"));
         sep = "&";
+        sb.append(String.format("%scircle=%s", sep, rh.delhiCircle().getName()));
         sb.append(String.format("%scallId=%s", sep, VALID_CALL_ID));
+        sb.append(String.format("%soperator=%s", sep, "OP"));
+        System.out.println(sb.toString());
         HttpGet httpGet = new HttpGet(sb.toString());
-
-        String expectedJsonResponse = createSwcUserResponseJson(null, // defaultLanguageLocationCode
+        httpGet.addHeader("content-type", "application/json");
+        String expectedJsonResponse = createSwcUserResponseJson(rh.hindiLanguage().getCode(), // defaultLanguageLocationCode
                 rh.hindiLanguage().getCode(), // locationCode
                 new ArrayList<String>(), // allowedLanguageLocationCodes
                 0L, // currentUsageInPulses=updated

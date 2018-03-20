@@ -1,8 +1,8 @@
 package org.motechproject.wa.swc.service;
 
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.ServiceUsage;
 import org.motechproject.wa.props.domain.Service;
+import org.motechproject.wa.swc.domain.ServiceUsage;
+import org.motechproject.wa.swc.domain.Swachchagrahi;
 
 
 public interface ServiceUsageService {

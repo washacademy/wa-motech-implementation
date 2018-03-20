@@ -1,8 +1,8 @@
 package org.motechproject.wa.swcUpdate.utils;
 
+import org.motechproject.wa.rejectionhandler.domain.SwcImportRejection;
 import org.motechproject.wa.swc.domain.SwcJobStatus;
 import org.motechproject.wa.swcUpdate.contract.SwcRecord;
-import org.motechproject.wa.rejectionhandler.domain.SwcImportRejection;
 
 
 public final class RejectedObjectConverter {

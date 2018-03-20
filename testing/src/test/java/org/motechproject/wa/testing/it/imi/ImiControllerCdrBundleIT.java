@@ -8,6 +8,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.wa.imi.repository.FileAuditRecordDataService;
 import org.motechproject.wa.imi.service.SettingsService;
 import org.motechproject.wa.imi.service.TargetFileService;
@@ -22,10 +26,6 @@ import org.motechproject.wa.region.service.DistrictService;
 import org.motechproject.wa.region.service.LanguageService;
 import org.motechproject.wa.testing.it.utils.CdrHelper;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
-import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -36,8 +36,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(PaxExam.class)

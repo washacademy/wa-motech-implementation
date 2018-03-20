@@ -10,31 +10,27 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.wa.api.web.contract.UserLanguageRequest;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.ServiceUsageCap;
-import org.motechproject.wa.swc.repository.ServiceUsageCapDataService;
-import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.props.domain.DeployedService;
 import org.motechproject.wa.props.domain.Service;
 import org.motechproject.wa.props.repository.DeployedServiceDataService;
 import org.motechproject.wa.region.domain.Language;
 import org.motechproject.wa.region.domain.NationalDefaultLanguage;
-import org.motechproject.wa.region.repository.CircleDataService;
-import org.motechproject.wa.region.repository.DistrictDataService;
-import org.motechproject.wa.region.repository.LanguageDataService;
-import org.motechproject.wa.region.repository.NationalDefaultLanguageDataService;
-import org.motechproject.wa.region.repository.StateDataService;
+import org.motechproject.wa.region.repository.*;
 import org.motechproject.wa.region.service.DistrictService;
 import org.motechproject.wa.region.service.LanguageService;
+import org.motechproject.wa.swc.domain.ServiceUsageCap;
+import org.motechproject.wa.swc.domain.Swachchagrahi;
+import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
+import org.motechproject.wa.swc.domain.SwcJobStatus;
+import org.motechproject.wa.swc.repository.ServiceUsageCapDataService;
+import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.testing.it.utils.RegionHelper;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
-import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -43,9 +39,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -102,8 +96,6 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         rh.delhiCircle();
 
         // All 3 services deployed in DELHI
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.KILKARI));
-        deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.MOBILE_KUNJI));
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
         // Services not deployed in KARNATAKA
@@ -115,7 +107,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1111111111l);
         swcService.add(swc);
 
-        ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
+        ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.WASH_ACADEMY, 3600);
         serviceUsageCapDataService.create(serviceUsageCap);
     }
 
@@ -221,10 +213,9 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     }
 
     @Test
-    @Ignore
     public void testSetLanguageNoSWC() throws IOException, InterruptedException {
 
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/washacademy/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111111,\"callId\":" + VALID_CALL_ID + ",\"languageLocationCode\":\""
                         + rh.hindiLanguage().getCode() + "\"}");
@@ -261,7 +252,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     @Test
     public void testSetLanguageUndeployedState() throws IOException, InterruptedException {
         createSwcCappedServiceNoUsageNoLocationNoLanguage();
-
+//
         HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/washacademy/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\""
@@ -272,6 +263,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
 
         // the WASH_ACADEMY service hasn't been deployed for KARNATAKA, so this request should fail
         HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpPost, ADMIN_USERNAME, ADMIN_PASSWORD);
+        System.out.println(response.getEntity().getContent());
         assertEquals(HttpStatus.SC_NOT_IMPLEMENTED, response.getStatusLine().getStatusCode());
         assertEquals("{\"failureReason\":\"<WASH_ACADEMY: Not Deployed In State>\"}", EntityUtils.toString(response.getEntity()));
 
@@ -281,7 +273,7 @@ public class LanguageControllerBundleIT extends BasePaxIT {
     public void testSetLanguageValid() throws IOException, InterruptedException {
         createSwcCappedServiceNoUsageNoLocationNoLanguage();
 
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/washacademy/languageLocationCode", TestContext.getJettyPort()));
         StringEntity params = new StringEntity(
                 "{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID + ",\"languageLocationCode\":\""
                         + rh.hindiLanguage().getCode() + "\"}");

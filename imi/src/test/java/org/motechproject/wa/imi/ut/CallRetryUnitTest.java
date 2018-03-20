@@ -1,16 +1,12 @@
 package org.motechproject.wa.imi.ut;
 
 import org.junit.Before;
-import org.junit.Test;
-//import org.motechproject.wa.kilkari.domain.CallRetry;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+//import org.motechproject.wa.kilkari.domain.CallRetry;
 
 public class CallRetryUnitTest {
     Validator validator;

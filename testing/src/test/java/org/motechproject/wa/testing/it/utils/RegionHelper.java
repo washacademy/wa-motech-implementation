@@ -1,7 +1,6 @@
 package org.motechproject.wa.testing.it.utils;
 
 import org.motechproject.wa.region.domain.*;
-import org.motechproject.wa.region.domain.Block;
 import org.motechproject.wa.region.repository.CircleDataService;
 import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.region.repository.LanguageDataService;

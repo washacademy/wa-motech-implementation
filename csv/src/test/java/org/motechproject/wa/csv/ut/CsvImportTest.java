@@ -5,15 +5,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.wa.csv.exception.CsvImportDataException;
-import org.motechproject.wa.csv.utils.CsvImporterBuilder;
-import org.motechproject.wa.csv.utils.CsvInstanceImporter;
-import org.motechproject.wa.csv.utils.CsvMapImporter;
-import org.motechproject.wa.csv.utils.GetBoolean;
-import org.motechproject.wa.csv.utils.GetInstanceByLong;
-import org.motechproject.wa.csv.utils.GetInteger;
-import org.motechproject.wa.csv.utils.GetLong;
-import org.motechproject.wa.csv.utils.GetString;
-import org.motechproject.wa.csv.utils.Store;
+import org.motechproject.wa.csv.utils.*;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.util.CsvContext;
 
@@ -23,10 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;

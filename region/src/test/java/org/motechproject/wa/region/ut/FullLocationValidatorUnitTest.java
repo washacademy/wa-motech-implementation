@@ -2,13 +2,9 @@ package org.motechproject.wa.region.ut;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import org.motechproject.wa.region.domain.Block;
-import org.motechproject.wa.region.domain.District;
-import org.motechproject.wa.region.domain.Panchayat;
-import org.motechproject.wa.region.domain.State;
-import org.motechproject.wa.region.domain.FullLocation;
+import org.motechproject.wa.region.domain.*;
 import org.motechproject.wa.region.domain.validation.ValidFullLocation;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;

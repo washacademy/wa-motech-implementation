@@ -2,16 +2,17 @@ package org.motechproject.wa.testing.it.tracking;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.wa.testing.tracking.domain.Author;
 import org.motechproject.wa.testing.tracking.domain.Book;
 import org.motechproject.wa.testing.tracking.repository.AuthorDataService;
 import org.motechproject.wa.testing.tracking.repository.BookDataService;
 import org.motechproject.wa.tracking.domain.ChangeLog;
 import org.motechproject.wa.tracking.repository.ChangeLogDataService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -20,12 +21,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -131,7 +127,7 @@ public class TrackManyToManyChangesBundleIT extends BasePaxIT {
         List<ChangeLog> johnDoeChanges = getAuthorChangeLogs(johnDoe);
         assertEquals(2, johnDoeChanges.size());
         String johnDoeChange = getLatestChangeLog(johnDoeChanges).getChange();
-        assertThat(johnDoeChange, Matchers.containsString(String.format("books(added[%d,%d], removed[%d])", chocolateBunny.getId(), areYouThere.getId(), zombies.getId())));
+        assertThat(johnDoeChange, Matchers.containsString(String.format("books(added[%d,%d], removed[%d])", chocolateBunny.getId(),  areYouThere.getId(), zombies.getId())));
 
         List<ChangeLog> janeRoeChanges = getAuthorChangeLogs(janeRoe);
         assertEquals(2, janeRoeChanges.size());

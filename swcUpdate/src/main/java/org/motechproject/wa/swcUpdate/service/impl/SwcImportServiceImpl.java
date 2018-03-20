@@ -2,38 +2,29 @@ package org.motechproject.wa.swcUpdate.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.wa.csv.exception.CsvImportDataException;
-import org.motechproject.wa.csv.utils.GetString;
-import org.motechproject.wa.csv.utils.CsvMapImporter;
-import org.motechproject.wa.csv.utils.GetLong;
-import org.motechproject.wa.csv.utils.GetLocalDate;
-import org.motechproject.wa.csv.utils.CsvImporterBuilder;
-import org.motechproject.wa.csv.utils.ConstraintViolationUtils;
-
-import org.motechproject.wa.region.domain.*;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
-import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.domain.SwcError;
-import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
-import org.motechproject.wa.swc.domain.SwcErrorReason;
+import org.motechproject.wa.csv.utils.*;
+import org.motechproject.wa.props.service.LogHelper;
+import org.motechproject.wa.region.domain.Block;
+import org.motechproject.wa.region.domain.District;
+import org.motechproject.wa.region.domain.Panchayat;
+import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.exception.InvalidLocationException;
+import org.motechproject.wa.region.repository.PanchayatDataService;
+import org.motechproject.wa.region.repository.StateDataService;
+import org.motechproject.wa.region.service.LocationService;
+import org.motechproject.wa.rejectionhandler.service.SwcRejectionService;
+import org.motechproject.wa.swc.domain.*;
 import org.motechproject.wa.swc.exception.SwcExistingRecordException;
 import org.motechproject.wa.swc.exception.SwcImportException;
 import org.motechproject.wa.swc.repository.ContactNumberAuditDataService;
 import org.motechproject.wa.swc.repository.SwcErrorDataService;
-import org.motechproject.wa.swc.domain.RejectionReasons;
 import org.motechproject.wa.swc.service.SwcService;
-import org.motechproject.wa.swcUpdate.contract.SwcRecord;
-import org.motechproject.wa.swcUpdate.service.SwcImportService;
 import org.motechproject.wa.swc.utils.SwcConstants;
 import org.motechproject.wa.swc.utils.SwcMapper;
-import org.motechproject.wa.swc.domain.SubscriptionOrigin;
+import org.motechproject.wa.swcUpdate.contract.SwcRecord;
+import org.motechproject.wa.swcUpdate.service.SwcImportService;
 import org.motechproject.wa.swcUpdate.utils.RejectedObjectConverter;
 import org.motechproject.wa.washacademy.service.WashAcademyService;
-import org.motechproject.wa.props.service.LogHelper;
-import org.motechproject.wa.region.exception.InvalidLocationException;
-import org.motechproject.wa.region.repository.StateDataService;
-import org.motechproject.wa.region.repository.PanchayatDataService;
-import org.motechproject.wa.region.service.LocationService;
-import org.motechproject.wa.rejectionhandler.service.SwcRejectionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +77,8 @@ public class SwcImportServiceImpl implements SwcImportService {
     public void importData(Reader reader, SubscriptionOrigin importOrigin) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(reader);
 
-        Panchayat panchayat = importHeader(bufferedReader);
+        State state = importHeader(bufferedReader);
+
         CsvMapImporter csvImporter;
             csvImporter = new CsvImporterBuilder()
                     .setProcessorMapping(getRchProcessorMapping())
@@ -95,7 +87,8 @@ public class SwcImportServiceImpl implements SwcImportService {
             try {
                 Map<String, Object> record;
                 while (null != (record = csvImporter.read())) {
-                        importRchFrontLineWorker(record, panchayat);
+                    LOGGER.info("state {}", record.toString());
+                        importRchFrontLineWorker(record, panchayatDataService.findByCode((Long)record.get(SwcConstants.PANCHAYAT_ID)));
 
                 }
             } catch (ConstraintViolationException e) {
@@ -119,7 +112,7 @@ public class SwcImportServiceImpl implements SwcImportService {
     public void importRchFrontLineWorker(Map<String, Object> record, Panchayat panchayat) throws InvalidLocationException, SwcExistingRecordException {
         String swcId = (String) record.get(SwcConstants.ID);
         Long msisdn = (Long) record.get(SwcConstants.MOBILE_NO);
-
+        LOGGER.info("panchayat {}", panchayat);
         record.put(SwcConstants.PANCHAYAT_ID, panchayat.getPanchayatCode());
         Map<String, Object> location = locationService.getLocations(record);
 
@@ -308,15 +301,15 @@ public class SwcImportServiceImpl implements SwcImportService {
         washAcademyService.updateMsisdn(swcInstance.getId(), existingMsisdn, newMsisdn);
     }
 
-    private Panchayat importHeader(BufferedReader bufferedReader) throws IOException {
+    private State importHeader(BufferedReader bufferedReader) throws IOException {
         String line = readLineWhileBlank(bufferedReader);
         // expect state name in the first line
-        if (line.matches("^Panchayat Name : .*$")) {
-            String panchayatName = line.substring(line.indexOf(':') + 1).trim();
-            Panchayat panchayat = panchayatDataService.findByName(panchayatName);
-            verify(null != panchayat, "panchayat does not exists");
+        if (line.matches("^State Name : .*$")) {
+            String stateName = line.substring(line.indexOf(':') + 1).trim();
+            State state = stateDataService.findByName(stateName);
+            verify(null != state, "state does not exists");
             readLineWhileNotBlank(bufferedReader);
-            return panchayat;
+            return state;
         } else {
             throw new IllegalArgumentException("Invalid file format");
         }
@@ -420,8 +413,8 @@ public class SwcImportServiceImpl implements SwcImportService {
 
         rchAnmAshaRecord.setPanchayatId(record.get(SwcConstants.PANCHAYAT_ID) == null ? null : (Long) record.get(SwcConstants.PANCHAYAT_ID));
         rchAnmAshaRecord.setPanchayatName(record.get(SwcConstants.PANCHAYAT_NAME) == null ? null : (String) record.get(SwcConstants.PANCHAYAT_NAME));
-        rchAnmAshaRecord.setGfId(record.get(SwcConstants.ID) == null ? null : (Long) record.get(SwcConstants.ID));
-        rchAnmAshaRecord.setMobileNo(record.get(SwcConstants.MOBILE_NO) == null ? null : (String) record.get(SwcConstants.MOBILE_NO));
+        rchAnmAshaRecord.setGfId(record.get(SwcConstants.ID) == null ? null : Long.parseLong(record.get(SwcConstants.ID).toString()));
+        rchAnmAshaRecord.setMobileNo(record.get(SwcConstants.MOBILE_NO) == null ? null : record.get(SwcConstants.MOBILE_NO).toString());
         rchAnmAshaRecord.setGfName(record.get(SwcConstants.NAME) == null ? null : (String) record.get(SwcConstants.NAME));
         rchAnmAshaRecord.setGfAge(record.get(SwcConstants.SWC_AGE) == null ? null : (long) record.get(SwcConstants.SWC_AGE));
         rchAnmAshaRecord.setGfSex(record.get(SwcConstants.SWC_SEX) == null ? null : (String) record.get(SwcConstants.SWC_SEX));

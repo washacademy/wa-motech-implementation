@@ -1,8 +1,8 @@
 package org.motechproject.wa.testing.it.api.utils;
 
+import org.motechproject.wa.swc.domain.Swachchagrahi;
 import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
 import org.motechproject.wa.swc.domain.SwcJobStatus;
-import org.motechproject.wa.swc.domain.Swachchagrahi;
 
 /**
  * Api test helper with static methods

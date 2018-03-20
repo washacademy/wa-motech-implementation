@@ -3,6 +3,8 @@ package org.motechproject.wa.testing.it.imi;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import org.motechproject.alerts.contract.AlertsDataService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.motechproject.wa.imi.service.SettingsService;
 import org.motechproject.wa.imi.service.TargetFileService;
 import org.motechproject.wa.region.repository.CircleDataService;
@@ -14,8 +16,6 @@ import org.motechproject.wa.region.service.LanguageService;
 import org.motechproject.wa.testing.it.utils.RegionHelper;
 import org.motechproject.wa.testing.it.utils.SubscriptionHelper;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -23,11 +23,6 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.inject.Inject;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 
 @RunWith(PaxExam.class)

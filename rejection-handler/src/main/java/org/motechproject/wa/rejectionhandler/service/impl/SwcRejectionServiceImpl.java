@@ -30,7 +30,7 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public void createUpdate(SwcImportRejection swcImportRejection) {
-        LOGGER.info("Creating rejection record: ");
+        LOGGER.info("Creating rejection record: {} ", swcImportRejection);
         if (swcImportRejection.getSwcID() != null && swcImportRejection.getPanchayatId() != null) {
             SwcImportRejection swcImportRejection1 = findBySwcIdAndPanchayatId(swcImportRejection.getSwcID(), swcImportRejection.getPanchayatId());
 

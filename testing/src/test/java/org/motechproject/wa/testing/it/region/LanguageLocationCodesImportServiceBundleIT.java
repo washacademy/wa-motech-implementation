@@ -11,6 +11,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.motechproject.testing.osgi.http.SimpleHttpClient;
+import org.motechproject.testing.utils.TestContext;
 import org.motechproject.wa.csv.exception.CsvImportDataException;
 import org.motechproject.wa.region.csv.LanguageLocationImportService;
 import org.motechproject.wa.region.domain.Circle;
@@ -26,10 +30,6 @@ import org.motechproject.wa.region.service.DistrictService;
 import org.motechproject.wa.region.service.StateService;
 import org.motechproject.wa.testing.it.api.utils.RequestBuilder;
 import org.motechproject.wa.testing.service.TestingService;
-import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
-import org.motechproject.testing.osgi.http.SimpleHttpClient;
-import org.motechproject.testing.utils.TestContext;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -43,13 +43,8 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.motechproject.wa.testing.it.utils.RegionHelper.createCircle;
-import static org.motechproject.wa.testing.it.utils.RegionHelper.createDistrict;
-import static org.motechproject.wa.testing.it.utils.RegionHelper.createState;
+import static org.junit.Assert.*;
+import static org.motechproject.wa.testing.it.utils.RegionHelper.*;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
