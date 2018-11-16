@@ -952,7 +952,7 @@
         "questions": [
           {
             "name": "Question01",
-            "correctAnswerOption": 1,
+            "correctAnswerOption": 2,
             "content": {
               "id": "Chapter08_Question01",
               "question": "ch8_q1.wav",
@@ -962,7 +962,7 @@
           },
           {
             "name": "Question02",
-            "correctAnswerOption": 2,
+            "correctAnswerOption": 1,
             "content": {
               "id": "Chapter08_Question02",
               "question": "ch8_q2.wav",
@@ -972,7 +972,7 @@
           },
           {
             "name": "Question03",
-            "correctAnswerOption": 1,
+            "correctAnswerOption": 2,
             "content": {
               "id": "Chapter08_Question03",
               "question": "ch8_q3.wav",
@@ -982,7 +982,7 @@
           },
           {
             "name": "Question04",
-            "correctAnswerOption": 2,
+            "correctAnswerOption": 1,
             "content": {
               "question": "ch8_q4.wav",
               "id": "Chapter08_Question04",
@@ -1076,7 +1076,7 @@
         "questions": [
           {
             "name": "Question01",
-            "correctAnswerOption": 2,
+            "correctAnswerOption": 1,
             "content": {
               "id": "Chapter09_Question01",
               "question": "ch9_q1.wav",
@@ -1220,7 +1220,7 @@
           },
           {
             "name": "Question03",
-            "correctAnswerOption": 2,
+            "correctAnswerOption": 1,
             "content": {
               "id": "Chapter10_Question03",
               "question": "ch10_q3.wav",
