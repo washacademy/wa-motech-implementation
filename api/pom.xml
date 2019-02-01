@@ -130,6 +130,12 @@
                             org.springframework.transaction,
                             org.motechproject.wa.rejectionhandler.service,
                             org.motechproject.wa.region.repository,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
+                            org.springframework.cglib.proxy,
+                            org.springframework.cglib.core,
+                            org.springframework.core,
+                            org.springframework.cglib.reflect,
                             *
                         </Import-Package>
                     </instructions>

@@ -29,6 +29,20 @@
             <groupId>org.motechproject</groupId>
             <artifactId>mtraining</artifactId>
             <version>${motech.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -47,6 +61,12 @@
             <groupId>org.everit.osgi.bundles</groupId>
             <artifactId>org.everit.osgi.bundles.org.json</artifactId>
             <version>1.0.0-v20140107</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>4.1.0-release</version>
         </dependency>
 
     </dependencies>
@@ -94,8 +114,11 @@
                             org.apache.commons.io,
                             org.apache.http.ssl,
                             org.json,
+                            org.datanucleus.enhancer,
                             org.motechproject.mtraining.service,
                             org.motechproject.wa.region.repository,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                     </instructions>

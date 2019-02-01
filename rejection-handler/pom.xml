@@ -104,6 +104,8 @@
                             org.springframework.cache.concurrent,
                             net.sf.cglib.proxy,
                             net.sf.cglib.core,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
                             *
                         </Import-Package>
                     </instructions>

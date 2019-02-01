@@ -110,6 +110,9 @@
                             org.motechproject.wa.swc.repository,
                             org.motechproject.wa.swc.service,
                             org.motechproject.wa.rejectionhandler.service,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
+                            org.springframework.core,
                             *
                         </Import-Package>
                     </instructions>

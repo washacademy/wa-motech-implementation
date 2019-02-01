@@ -41,6 +41,17 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>4.1.0-release</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.spring-test</artifactId>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -96,6 +107,10 @@
                             org.springframework.web.multipart.commons,
                             org.springframework.cache.support,
                             org.springframework.cache.concurrent,
+                            org.datanucleus.enhancer,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
+                            org.springframework.core,
                             *
                         </Import-Package>
                     </instructions>

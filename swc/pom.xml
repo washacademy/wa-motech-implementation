@@ -111,6 +111,9 @@
                             org.springframework.web.multipart.commons,
                             org.motechproject.event.listener,
                             org.motechproject.wa.region.service,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
+                            org.springframework.core,
                             *
                         </Import-Package>
                     </instructions>
