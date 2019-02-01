@@ -3,12 +3,7 @@ package org.motechproject.wa.testing.it;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.motechproject.wa.testing.it.api.*;
-import org.motechproject.wa.testing.it.imi.CdrFileServiceBundleIT;
-import org.motechproject.wa.testing.it.imi.ImiControllerCdrBundleIT;
-import org.motechproject.wa.testing.it.imi.ImiControllerObdBundleIT;
-import org.motechproject.wa.testing.it.imi.TargetFileServiceBundleIT;
 import org.motechproject.wa.testing.it.props.PropertyServiceBundleIT;
-import org.motechproject.wa.testing.it.rch.RchWebServiceFacadeBundleIT;
 import org.motechproject.wa.testing.it.region.*;
 import org.motechproject.wa.testing.it.swc.ServiceUsageCapServiceBundleIT;
 import org.motechproject.wa.testing.it.swc.ServiceUsageServiceBundleIT;
@@ -50,11 +45,11 @@ import org.motechproject.wa.testing.it.wa.WashAcademyServiceBundleIT;
     /**
      * IMI
      * https://github.com/motech-implementations/mim/issues/381 (Re-enable)
-     */
-    ImiControllerCdrBundleIT.class,
-    ImiControllerObdBundleIT.class,
-    TargetFileServiceBundleIT.class,
-    CdrFileServiceBundleIT.class,
+//     */
+//    ImiControllerCdrBundleIT.class,
+//    ImiControllerObdBundleIT.class,
+//    TargetFileServiceBundleIT.class,
+//    CdrFileServiceBundleIT.class,
 
     /**
      * Kilkari
@@ -85,16 +80,6 @@ import org.motechproject.wa.testing.it.wa.WashAcademyServiceBundleIT;
     LanguageLocationCodesImportServiceBundleIT.class,
     LanguageServiceBundleIT.class,
 
-    /**
-     * MCTS
-     */
-//    MctsWebServiceFacadeBundleIT.class,
-//    MctsImportBundleIT.class,
-
-    /**
-     * RCH
-     */
-    RchWebServiceFacadeBundleIT.class,
 
     /**
      * Testing

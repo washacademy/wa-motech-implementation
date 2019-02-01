@@ -81,12 +81,12 @@ public class CallDetailsController extends BaseController {
             failureReasons.append(validateCallDetailsWashAcademyElements(callDetailRecordRequest));
         }
 
-        if (MOBILE_KUNJI.equals(serviceName)) {
-            service = Service.MOBILE_KUNJI;
-
-            // Verify MK elements (welcomeMessagePromptFlag)
-            failureReasons.append(validateCallDetailsMobileKunjiElements(callDetailRecordRequest));
-        }
+//        if (MOBILE_KUNJI.equals(serviceName)) {
+//            service = Service.MOBILE_KUNJI;
+//
+//            // Verify MK elements (welcomeMessagePromptFlag)
+//            failureReasons.append(validateCallDetailsMobileKunjiElements(callDetailRecordRequest));
+//        }
 
         for (CallContentRequest callContentRequest : callDetailRecordRequest.getContent()) {
             failureReasons.append(validateCallContentRequest(service, callContentRequest));
@@ -145,9 +145,9 @@ public class CallDetailsController extends BaseController {
         cdr.setFinalCallStatus(FinalCallStatus.fromInt(callDetailRecordRequest.getCallStatus()));
         cdr.setCallDisconnectReason(callDetailRecordRequest.getCallDisconnectReason());
 
-        if (service == Service.MOBILE_KUNJI) {
-            cdr.setWelcomePrompt(callDetailRecordRequest.getWelcomeMessagePromptFlag());
-        }
+//        if (service == Service.MOBILE_KUNJI) {
+//            cdr.setWelcomePrompt(callDetailRecordRequest.getWelcomeMessagePromptFlag());
+//        }
 
         callDetailRecordService.add(cdr);
 
@@ -159,9 +159,9 @@ public class CallDetailsController extends BaseController {
             content.setStartTime(new DateTime(callContentRequest.getStartTime() * MILLISECONDS_PER_SECOND));
             content.setEndTime(new DateTime(callContentRequest.getEndTime() * MILLISECONDS_PER_SECOND));
 
-            if (service == Service.MOBILE_KUNJI) {
-                content.setMobileKunjiCardCode(callContentRequest.getMkCardCode());
-            }
+//            if (service == Service.MOBILE_KUNJI) {
+//                content.setMobileKunjiCardCode(callContentRequest.getMkCardCode());
+//            }
 
             if (service == Service.WASH_ACADEMY) {
                 content.setType(callContentRequest.getType());
@@ -256,11 +256,11 @@ public class CallDetailsController extends BaseController {
         }
 
         // MK elements (mkCardCode)
-        if (service == Service.MOBILE_KUNJI) {
-            if (null == callContentRequest.getMkCardCode() || callContentRequest.getMkCardCode().isEmpty()) {
-                failureReasons.append(String.format(NOT_PRESENT, "mkCardCode"));
-            }
-        }
+//        if (service == Service.MOBILE_KUNJI) {
+//            if (null == callContentRequest.getMkCardCode() || callContentRequest.getMkCardCode().isEmpty()) {
+//                failureReasons.append(String.format(NOT_PRESENT, "mkCardCode"));
+//            }
+//        }
 
         // MA elements (type, completionFlag)
         if (service == Service.WASH_ACADEMY) {

@@ -1,6 +1,6 @@
 package org.motechproject.wa.api.web.contract.washAcademy;
 
-import org.codehaus.jackson.annotate.JsonRawValue;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import javax.validation.constraints.NotNull;
 

@@ -1,6 +1,6 @@
 package org.motechproject.wa.testing.it.api.utils;
 
-import org.apache.http.annotation.NotThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 
 import java.net.URI;

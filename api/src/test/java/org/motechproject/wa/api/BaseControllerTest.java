@@ -1,6 +1,6 @@
 package org.motechproject.wa.api;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.wa.api.web.contract.BadRequest;
 import org.motechproject.wa.swc.service.SwcService;
-import org.springframework.test.web.server.MockMvc;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;

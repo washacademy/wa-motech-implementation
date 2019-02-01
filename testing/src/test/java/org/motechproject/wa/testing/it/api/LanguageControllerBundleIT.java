@@ -5,7 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -449,39 +449,39 @@ public class LanguageControllerBundleIT extends BasePaxIT {
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
     
-    private void createSwcWithStatusAnonymous(){
-    	Language language = new Language("99", "Papiamento");
-        languageDataService.create(language);
-        
-    	// create anonymous SWC record
-        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
-        swcService.add(swc);
-        
-        ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
-        serviceUsageCapDataService.create(serviceUsageCap);
-        
-        nationalDefaultLanguageDataService.create(new NationalDefaultLanguage(language));
-        
-    }
+//    private void createSwcWithStatusAnonymous(){
+//    	Language language = new Language("99", "Papiamento");
+//        languageDataService.create(language);
+//
+//    	// create anonymous SWC record
+//        Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+//        swcService.add(swc);
+//
+//        ServiceUsageCap serviceUsageCap = new ServiceUsageCap(null, Service.MOBILE_KUNJI, 3600);
+//        serviceUsageCapDataService.create(serviceUsageCap);
+//
+//        nationalDefaultLanguageDataService.create(new NationalDefaultLanguage(language));
+//
+//    }
     
     /*
      * To set the LanguageLocationCode of the anonymous user using languageLocationCode API.
      */
-    @Test
-    public void verifyFT359() throws IOException, InterruptedException{
-    	createSwcWithStatusAnonymous();
-    	HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
-        StringEntity params = new StringEntity("{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID +",\"languageLocationCode\":99}");
-        httpPost.setEntity(params);
-
-        httpPost.addHeader("content-type", "application/json");
-
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
-
-        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
-        Language language = swc.getLanguage();
-        assertNotNull(language);
-        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
-        assertEquals("SWC Language Code", "99", language.getCode());
-    }
+//    @Test
+//    public void verifyFT359() throws IOException, InterruptedException{
+//    	createSwcWithStatusAnonymous();
+//    	HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/mobilekunji/languageLocationCode", TestContext.getJettyPort()));
+//        StringEntity params = new StringEntity("{\"callingNumber\":1111111111,\"callId\":"+ VALID_CALL_ID +",\"languageLocationCode\":99}");
+//        httpPost.setEntity(params);
+//
+//        httpPost.addHeader("content-type", "application/json");
+//
+//        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
+//
+//        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
+//        Language language = swc.getLanguage();
+//        assertNotNull(language);
+//        assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
+//        assertEquals("SWC Language Code", "99", language.getCode());
+//    }
 }

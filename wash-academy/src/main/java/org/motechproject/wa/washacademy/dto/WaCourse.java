@@ -1,6 +1,6 @@
 package org.motechproject.wa.washacademy.dto;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Course object containing all the course related information and metadata

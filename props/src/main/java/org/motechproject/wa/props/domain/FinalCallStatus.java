@@ -32,14 +32,4 @@ public enum FinalCallStatus {
         throw new IllegalArgumentException(String.format("%d is an invalid FinalCallStatus", i));
     }
 
-    public static FinalCallStatus fromStatusCode(StatusCode code) {
-        switch (code) {
-            case OBD_SUCCESS_CALL_CONNECTED:
-                return SUCCESS;
-            case OBD_DNIS_IN_DND:
-                return REJECTED;
-            default:
-                return FAILED;
-        }
-    }
 }

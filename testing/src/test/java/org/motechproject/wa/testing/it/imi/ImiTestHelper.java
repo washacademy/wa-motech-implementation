@@ -12,11 +12,6 @@ public final class ImiTestHelper {
     protected static final String ADMIN_USERNAME = "motech";
     protected static final String ADMIN_PASSWORD = "motech";
 
-    protected static final String LOCAL_OBD_DIR = "imi.local_obd_dir";
-    protected static final String REMOTE_OBD_DIR = "imi.remote_obd_dir";
-    protected static final String LOCAL_CDR_DIR = "imi.local_cdr_dir";
-    protected static final String REMOTE_CDR_DIR = "imi.remote_cdr_dir";
-
     public static String setupTestDir(SettingsService settingsService, String property, String dir) {
         String backup = settingsService.getSettingsFacade().getProperty(property);
         dir = ".motech/" + dir;

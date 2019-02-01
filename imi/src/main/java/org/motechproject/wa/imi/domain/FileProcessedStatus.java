@@ -1,6 +1,6 @@
 package org.motechproject.wa.imi.domain;
 
-import org.codehaus.jackson.annotate.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * File processing status, provided by IVR

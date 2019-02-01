@@ -175,7 +175,6 @@ public class SwcImportServiceImpl implements SwcImportService {
         String swcId = swc.get(SwcConstants.ID).toString();
         long contactNumber = (long) swc.get(SwcConstants.MOBILE_NO);
 
-        String action = "";
         String rejectionAction = "";
         rejectionAction = this.rejectionSwcActionFinder(convertMapToRchAsha(swc));
 

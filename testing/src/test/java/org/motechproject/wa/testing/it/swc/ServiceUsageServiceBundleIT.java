@@ -86,27 +86,27 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         lastMonth.setCallStartTime(DateTime.now().minusMonths(2));
         callDetailRecordDataService.create(lastMonth);
 
-        // A usage record for a different service that should be ignored
-        CallDetailRecord differentService = new CallDetailRecord();
-        differentService.setSwachchagrahi(swc);
-        differentService.setCallingNumber(1111111111l);
-        differentService.setService(Service.MOBILE_KUNJI);
-        differentService.setCallDurationInPulses(1);
-        differentService.setEndOfUsagePromptCounter(1);
-        differentService.setWelcomePrompt(true);
-        differentService.setCallStartTime(DateTime.now());
-        callDetailRecordDataService.create(differentService);
+//        // A usage record for a different service that should be ignored
+//        CallDetailRecord differentService = new CallDetailRecord();
+//        differentService.setSwachchagrahi(swc);
+//        differentService.setCallingNumber(1111111111l);
+//        differentService.setService(Service.MOBILE_KUNJI);
+//        differentService.setCallDurationInPulses(1);
+//        differentService.setEndOfUsagePromptCounter(1);
+//        differentService.setWelcomePrompt(true);
+//        differentService.setCallStartTime(DateTime.now());
+//        callDetailRecordDataService.create(differentService);
 
-        // A usage record for a different SWC that should be ignored
-        CallDetailRecord differentSWC = new CallDetailRecord();
-        differentSWC.setSwachchagrahi(swcIgnored);
-        differentSWC.setCallingNumber(1111111111l);
-        differentSWC.setService(Service.MOBILE_KUNJI);
-        differentSWC.setCallDurationInPulses(1);
-        differentSWC.setEndOfUsagePromptCounter(1);
-        differentSWC.setWelcomePrompt(true);
-        differentSWC.setCallStartTime(DateTime.now());
-        callDetailRecordDataService.create(differentSWC);
+//        // A usage record for a different SWC that should be ignored
+//        CallDetailRecord differentSWC = new CallDetailRecord();
+//        differentSWC.setSwachchagrahi(swcIgnored);
+//        differentSWC.setCallingNumber(1111111111l);
+//        differentSWC.setService(Service.MOBILE_KUNJI);
+//        differentSWC.setCallDurationInPulses(1);
+//        differentSWC.setEndOfUsagePromptCounter(1);
+//        differentSWC.setWelcomePrompt(true);
+//        differentSWC.setCallStartTime(DateTime.now());
+//        callDetailRecordDataService.create(differentSWC);
 
         // Two valid records that should get aggregated
         CallDetailRecord recordOne = new CallDetailRecord();
@@ -138,8 +138,8 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         assertEquals(true, serviceUsage.getWelcomePrompt());
 
         callDetailRecordDataService.delete(lastMonth);
-        callDetailRecordDataService.delete(differentService);
-        callDetailRecordDataService.delete(differentSWC);
+//        callDetailRecordDataService.delete(differentService);
+//        callDetailRecordDataService.delete(differentSWC);
         callDetailRecordDataService.delete(recordOne);
         callDetailRecordDataService.delete(recordTwo);
 

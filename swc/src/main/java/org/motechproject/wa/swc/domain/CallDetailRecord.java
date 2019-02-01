@@ -1,6 +1,6 @@
 package org.motechproject.wa.swc.domain;
 
-import org.codehaus.jackson.annotate.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;

@@ -9,28 +9,10 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="targetFileService"
-                  interface="org.motechproject.wa.imi.service.TargetFileService" />
-
-    <osgi:service ref="cdrFileService"
-                  interface="org.motechproject.wa.imi.service.CdrFileService" />
-
     <osgi:service ref="smsNotificationService"
                   interface="org.motechproject.wa.imi.service.SmsNotificationService" />
 
     <osgi:service ref="settingsService" interface="org.motechproject.wa.imi.service.SettingsService" />
-
-    <osgi:reference id="fileAuditRecordDataService"
-                    interface="org.motechproject.wa.imi.repository.FileAuditRecordDataService" />
-
-    <osgi:reference id="callDetailRecordDataService"
-                    interface="org.motechproject.wa.imi.repository.CallDetailRecordDataService" />
-
-    <osgi:reference id="chunkAuditRecordDataService"
-                    interface="org.motechproject.wa.imi.repository.ChunkAuditRecordDataService" />
-
-    <osgi:reference id="callSummaryRecordDataService"
-                    interface="org.motechproject.wa.imi.repository.CallSummaryRecordDataService" />
 
     <osgi:reference id="languageService"
                     interface="org.motechproject.wa.region.service.LanguageService" />

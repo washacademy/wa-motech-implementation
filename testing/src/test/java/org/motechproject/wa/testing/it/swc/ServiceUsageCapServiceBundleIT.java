@@ -135,26 +135,26 @@ public class ServiceUsageCapServiceBundleIT extends BasePaxIT {
         serviceUsageCapDataService.delete(serviceUsageCapNat);
         stateDataService.delete(state);
     }
-
-    @Test
-    public void testCappedOtherService() throws Exception {
-        setupData();
-
-        State state = new State("New Jersey", 1l);
-        stateDataService.create(state);
-
-        ServiceUsageCap serviceUsageCap1 = new ServiceUsageCap(state, Service.WASH_ACADEMY, 100);
-        serviceUsageCapDataService.create(serviceUsageCap1);
-
-        ServiceUsageCap serviceUsageCap = serviceUsageCapService.getServiceUsageCap(state, Service.MOBILE_KUNJI);
-
-        assertEquals(null, serviceUsageCap.getState());
-        assertEquals(null, serviceUsageCap.getService());
-        assertEquals(-1, serviceUsageCap.getMaxUsageInPulses());
-
-        serviceUsageCapDataService.delete(serviceUsageCap1);
-        stateDataService.delete(state);
-    }
+//
+//    @Test
+//    public void testCappedOtherService() throws Exception {
+//        setupData();
+//
+//        State state = new State("New Jersey", 1l);
+//        stateDataService.create(state);
+//
+//        ServiceUsageCap serviceUsageCap1 = new ServiceUsageCap(state, Service.WASH_ACADEMY, 100);
+//        serviceUsageCapDataService.create(serviceUsageCap1);
+//
+//        ServiceUsageCap serviceUsageCap = serviceUsageCapService.getServiceUsageCap(state, Service.MOBILE_KUNJI);
+//
+//        assertEquals(null, serviceUsageCap.getState());
+//        assertEquals(null, serviceUsageCap.getService());
+//        assertEquals(-1, serviceUsageCap.getMaxUsageInPulses());
+//
+//        serviceUsageCapDataService.delete(serviceUsageCap1);
+//        stateDataService.delete(state);
+//    }
 
     @Test
     public void testNullStateService() throws Exception {

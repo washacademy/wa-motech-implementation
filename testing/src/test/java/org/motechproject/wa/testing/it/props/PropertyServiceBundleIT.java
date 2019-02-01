@@ -67,15 +67,15 @@ public class PropertyServiceBundleIT extends BasePaxIT {
     }
 
     // Test a state that has a deployed service but not the one being queried
-    @Test
-    public void testDeployedStateNotDeployedService() {
-        cleanUp();
-
-        State state = makeState(1L, "State 1");
-        deployedServiceDataService.create(new DeployedService(state, Service.WASH_ACADEMY));
-
-        assertFalse(propertyService.isServiceDeployedInState(Service.KILKARI, state));
-    }
+//    @Test
+//    public void testDeployedStateNotDeployedService() {
+//        cleanUp();
+//
+//        State state = makeState(1L, "State 1");
+//        deployedServiceDataService.create(new DeployedService(state, Service.WASH_ACADEMY));
+//
+//        assertFalse(propertyService.isServiceDeployedInState(Service.KILKARI, state));
+//    }
 
     // Test a state with no deployments but a service that is in a different state
     @Test

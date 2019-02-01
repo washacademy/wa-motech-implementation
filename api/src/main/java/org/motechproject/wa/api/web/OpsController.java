@@ -4,7 +4,6 @@ import org.motechproject.wa.api.web.contract.AddSwcRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.GetBookmarkResponse;
 import org.motechproject.wa.api.web.converter.WashAcademyConverter;
 import org.motechproject.wa.api.web.service.SwcCsvService;
-import org.motechproject.wa.imi.service.CdrFileService;
 import org.motechproject.wa.props.service.LogHelper;
 import org.motechproject.wa.swc.domain.DeactivationReason;
 import org.motechproject.wa.swc.repository.SwcDataService;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controller to expose methods for OPS personnel
  */
+@SuppressWarnings("PMD")
 @RequestMapping("/ops")
 @Controller
 public class OpsController extends BaseController {
@@ -32,10 +32,7 @@ public class OpsController extends BaseController {
     private SwcDataService swcDataService;
 
     @Autowired
-    private SwcService subscriberService;
-
-    @Autowired
-    private CdrFileService cdrFileService;
+    private SwcService subscriberService;;
 
     @Autowired
     private WashAcademyService washAcademyService;
@@ -64,13 +61,13 @@ public class OpsController extends BaseController {
         return "PING";
     }
 
-    @RequestMapping("/cleanCallRecords")
-    @ResponseStatus(HttpStatus.OK)
-    public void clearCallRecords() {
-
-        LOGGER.info("/cleanCdr()");
-        cdrFileService.cleanOldCallRecords();
-    }
+//    @RequestMapping("/cleanCallRecords")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void clearCallRecords() {
+//
+//        LOGGER.info("/cleanCdr()");
+//        cdrFileService.cleanOldCallRecords();
+//    }
     @RequestMapping(value = "/createUpdateRchSwc",
             method = RequestMethod.POST,
             headers = { "Content-type=application/json" })
