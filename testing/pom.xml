@@ -34,10 +34,15 @@
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.motechproject</groupId>-->
+            <!--<artifactId>mtraining</artifactId>-->
+            <!--<version>${motech.version}</version>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>mtraining</artifactId>
-            <version>${motech.version}</version>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>1.3.9</version>
         </dependency>
 
         <!-- common properties -->
@@ -106,11 +111,11 @@
     </dependencies>
 
     <repositories>
-        <!--<repository>-->
-            <!--<id>motech-repo</id>-->
-            <!--<name>MOTECH Maven Repository</name>-->
-            <!--<url>http://nexus.motechproject.org/content/repositories/public</url>-->
-        <!--</repository>-->
+        <repository>
+            <id>motech-repo</id>
+            <name>MOTECH Maven Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/public</url>
+        </repository>
     </repositories>
 
     <profiles>
@@ -166,7 +171,8 @@
                                     </excludes>
                                     <encoding>UTF-8</encoding>
                                     <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
-                                    <argLine>-Xmx2G -XX:MaxPermSize=2G -Xms2G -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005</argLine>
+                                    <!--<argLine>-Xmx2G -XX:MaxPermSize=2G -Xms2G -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005</argLine>-->
+                                    <argLine>-Xms512m -Xmx1028m -XX:PermSize=512m -XX:MaxPermSize=2048m</argLine>
                                     <systemPropertiesFile>${modules.root.dir}/maven.properties</systemPropertiesFile>
                                     <runOrder>random</runOrder>
                                 </configuration>
@@ -276,10 +282,7 @@
                             org.motechproject.wa.region.service,
                             org.motechproject.wa.csv.service,
                             org.motechproject.wa.tracking.repository,
-                            org.motechproject.wa.rch.contract,
-                            org.motechproject.wa.rch.service,
                             org.motechproject.wa.swcUpdate.service,
-                            org.motechproject.wa.rch.soap,
                             org.motechproject.wa.rejectionhandler.repository,
                             org.motechproject.wa.rejectionhandler.service,
                             org.motechproject.mtraining.domain,
@@ -292,6 +295,11 @@
                             net.sf.cglib.reflect,
                             org.springframework.transaction,
                             javax.mail,
+                            org.datanucleus.enhancement,
+                            org.springframework.validation.beanvalidation,
+                            org.springframework.core,
+                            org.springframework.cglib.proxy,
+                            org.springframework.cglib.core,
                             *
                         </Import-Package>
                     </instructions>
@@ -343,7 +351,7 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <!--<goal>test-compile</goal>-->
+                            <goal>test-compile</goal>
                         </goals>
                     </execution>
                 </executions>
