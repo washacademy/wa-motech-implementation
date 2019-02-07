@@ -59,6 +59,4 @@
 
     <osgi:reference id="eventRelay" interface="org.motechproject.event.listener.EventRelay"/>
 
-    <osgi:reference id="cdrFileService" interface="org.motechproject.wa.imi.service.CdrFileService" />
-
 </beans>

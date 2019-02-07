@@ -61,7 +61,7 @@ public class CallDetailsController extends BaseController {
         Service service = null;
         StringBuilder failureReasons;
 
-        if (!(WASH_ACADEMY.equals(serviceName) || MOBILE_KUNJI.equals(serviceName))) {
+        if (!(WASH_ACADEMY.equals(serviceName))) {
             throw new IllegalArgumentException(String.format(INVALID, "serviceName"));
         }
 

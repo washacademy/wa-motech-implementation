@@ -39,7 +39,6 @@ import java.util.Set;
  */
 public class BaseController {
     public static final String WASH_ACADEMY = "washacademy";
-    public static final String MOBILE_KUNJI = "mobilekunji";
 
     public static final String NOT_PRESENT = "<%s: Not Present>";
     public static final String INVALID = "<%s: Invalid>";
@@ -393,9 +392,6 @@ public class BaseController {
             service = Service.WASH_ACADEMY;
         }
 //
-//        if (MOBILE_KUNJI.equals(serviceName)) {
-//            service = Service.MOBILE_KUNJI;
-//        }
 
         return service;
     }

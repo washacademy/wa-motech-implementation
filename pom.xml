@@ -1050,39 +1050,39 @@
                     <downloadSources>true</downloadSources>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-pmd-plugin</artifactId>-->
-                <!--<version>3.5</version>-->
-                <!--<configuration>-->
-                    <!--<rulesets>-->
-                        <!--<ruleset>${modules.root.dir}/pmd.xml</ruleset>-->
-                    <!--</rulesets>-->
-                    <!--<includeTests>false</includeTests>-->
-                    <!--<targetJdk>${jdk.version}</targetJdk>-->
-                    <!--<skip>${pmd.skip}</skip>-->
-                    <!--<excludes>-->
-                        <!--&lt;!&ndash; Skip contract classes &ndash;&gt;-->
-                        <!--<exclude>**/api/**/contract/*.java</exclude>-->
-                    <!--</excludes>-->
-                <!--</configuration>-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>org.motechproject</groupId>-->
-                        <!--<artifactId>pmd-rules</artifactId>-->
-                        <!--<version>0.3</version>-->
-                    <!--</dependency>-->
-                <!--</dependencies>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>compile</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>check</goal>-->
-                            <!--<goal>cpd-check</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.5</version>
+                <configuration>
+                    <rulesets>
+                        <ruleset>${modules.root.dir}/pmd.xml</ruleset>
+                    </rulesets>
+                    <includeTests>false</includeTests>
+                    <targetJdk>${jdk.version}</targetJdk>
+                    <skip>${pmd.skip}</skip>
+                    <excludes>
+                        <!-- Skip contract classes -->
+                        <exclude>**/api/**/contract/*.java</exclude>
+                    </excludes>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.motechproject</groupId>
+                        <artifactId>pmd-rules</artifactId>
+                        <version>0.3</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>cpd-check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

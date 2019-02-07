@@ -19,7 +19,6 @@
     <osgi:reference id="3" interface="org.motechproject.wa.region.repository.DistrictDataService" />
     <osgi:reference id="4" interface="org.motechproject.wa.region.repository.StateDataService" />
     <osgi:reference id="5" interface="org.motechproject.wa.region.service.LanguageService" />
-    <osgi:reference id="7" interface="org.motechproject.wa.rch.service.RchWebServiceFacade" />
     <osgi:reference id="8" interface="org.motechproject.wa.rejectionhandler.repository.SwcImportRejectionDataService" />
     <osgi:reference id="9" interface="org.motechproject.wa.rejectionhandler.service.SwcRejectionService" />
     <osgi:reference id="10" interface="org.motechproject.wa.api.web.service.SwcCsvService"/>

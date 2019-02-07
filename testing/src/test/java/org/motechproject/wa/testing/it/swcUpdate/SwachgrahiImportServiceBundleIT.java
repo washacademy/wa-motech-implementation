@@ -203,13 +203,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
     }
 
-    @Test
-    @Ignore
-    public void testASHAvalidation() throws Exception {
-        swcImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
-        List<Swachchagrahi> swcs = swcDataService.retrieveAll();
-        assertEquals(9,swcs.size());
-    }
+
 
     /**
      * VerifyFT513  verify that status of swc must be set to "inactive" when the swc data is imported into
@@ -247,23 +241,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     }
 
 
-    @Test
-    @Ignore
-    public void testImportFromSampleDataFile() throws Exception {
-        swcImportService.importData(read("csv/anm-asha.txt"), SubscriptionOrigin.MCTS_IMPORT);
 
-        Swachchagrahi swc1 = swcService.getByContactNumber(9999999996L);
-        assertSWC(swc1, "72185", 9999999996L, "Bishnu Priya Behera", "Koraput", null);
-
-        // verify location data was created on the fly
-        State state = stateDataService.findByCode(1L);
-        District district = districtService.findByStateAndCode(state, 18L);
-        Block block = talukaDataService.findByDistrictAndCode(district, 111L);
-        assertEquals("Block", block.getName());
-
-        Panchayat panchayat = panchayatService.findByBlockAndVcodeAndSvid(block, 555L, 0L);
-        assertEquals("Panchayat", panchayat.getName());
-    }
 
     /**
      * To verify SWC record is uploaded successfully when all mandatory parameters are present.
