@@ -16,7 +16,6 @@ import javax.jdo.annotations.Unique;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class Models data for District location records
@@ -56,7 +55,7 @@ public class District extends MdsEntity {
     @Cascade(delete = true)
     @Persistent(mappedBy = "district", defaultFetchGroup = "false")
     @JsonManagedReference
-    private List<Block> blocks;
+    private ArrayList<Block> blocks;
 
     @Field
     @JsonBackReference
@@ -102,11 +101,11 @@ public class District extends MdsEntity {
         this.state = state;
     }
 
-    public List<Block> getBlocks() {
+    public ArrayList<Block> getBlocks() {
         return blocks;
     }
 
-    public void setBlocks(List<Block> blocks) {
+    public void setBlocks(ArrayList<Block> blocks) {
         this.blocks = blocks;
     }
 

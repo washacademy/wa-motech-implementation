@@ -26,15 +26,7 @@
         <level value="DEBUG"/>
     </logger>
 
-    <logger name="DataNucleus.Datastore.Native">
-        <level value="DEBUG"/>
-    </logger>
-
     <logger name="org.motechproject.testing">
-        <level value="DEBUG"/>
-    </logger>
-
-    <logger name="org.motechproject.mds.reflections">
         <level value="DEBUG"/>
     </logger>
 

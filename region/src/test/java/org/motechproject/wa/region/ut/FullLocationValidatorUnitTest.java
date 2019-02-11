@@ -9,7 +9,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -120,7 +122,7 @@ public class FullLocationValidatorUnitTest {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
-        testLocation.getState().setDistricts(Collections.<District>emptySet());
+        testLocation.getState().setDistricts(new HashSet<>());
         testLocation.getDistrict().setState(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
@@ -135,7 +137,7 @@ public class FullLocationValidatorUnitTest {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
-        testLocation.getDistrict().setBlocks(Collections.<Block>emptyList());
+        testLocation.getDistrict().setBlocks(new ArrayList<>());
         testLocation.getBlock().setDistrict(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);
