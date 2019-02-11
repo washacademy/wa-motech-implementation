@@ -469,69 +469,69 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         return mapper.writeValueAsString(userResponse);
     }
 
-    // verifyFT366
-    @Test
-    public void testCallDetailsValidMobileKunji() throws IOException, InterruptedException {
-
-        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swc.setJobStatus(SwcJobStatus.ACTIVE);
-        swcService.add(swc);
-
-
-        ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
-                true, "a",                     // mkCardCode
-                true, "YellowFever",           // contentName
-                true, "Yellowfever.wav",       // contentFile
-                true, 1200000000l,             // startTime
-                true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
-                false, null));                 // correctAnswerEntered
-        array.add(createContentJson(false, null,                   // type
-                true, "b",                     // mkCardCode
-                true, "Malaria",               // contentName
-                true, "Malaria.wav",           // contentFile
-                true, 1200000000l,             // startTime
-                true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
-                false, null));                 // correctAnswerEntered
-
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
-                true, 9810320300l,       // callingNumber
-                true, VALID_CALL_ID,  // callId
-                true, "A",               // operator
-                true, "AP",              // circle
-                true, 1422879843l,       // callStartTime
-                true, 1422879903l,       // callEndTime
-                true, 60,                // callDurationInPulses
-                true, 0,                 // endOfUsagePromptCounter
-                true, true,              // welcomeMessagePromptFlag
-                true, 1,                 // callStatus
-                true, 1,                 // callDisconnectReason
-                true, Joiner.on(",").join(array));          // content
-
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
-
-        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-
-        CallDetailRecord cdr = callDetailRecordService.getByCallingNumber(9810320300l);
-
-        assertNotNull(cdr);
-        assertEquals(VALID_CALL_ID, cdr.getCallId());
-        assertEquals(2, cdr.getContent().size());
-
-        assertEquals("YellowFever", cdr.getContent().get(0).getContentName());
-        assertNull(cdr.getContent().get(0).getType());
-        assertNull(cdr.getContent().get(0).getCompletionFlag());
-        assertEquals("Malaria", cdr.getContent().get(1).getContentName());
-        assertNull(cdr.getContent().get(1).getType());
-        assertNull(cdr.getContent().get(1).getCompletionFlag());
-
-        assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
-                "swachchagrahi")).getId());
-
-        transactionManager.commit(status);
-    }
+//    // verifyFT366
+//    @Test
+//    public void testCallDetailsValidMobileKunji() throws IOException, InterruptedException {
+//
+//        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+//        swc.setJobStatus(SwcJobStatus.ACTIVE);
+//        swcService.add(swc);
+//
+//
+//        ArrayList<String> array = new ArrayList<>();
+//        array.add(createContentJson(false, null,                   // type
+//                true, "a",                     // mkCardCode
+//                true, "YellowFever",           // contentName
+//                true, "Yellowfever.wav",       // contentFile
+//                true, 1200000000l,             // startTime
+//                true, 1222222221l,             // endTime
+//                false, null,                   // completionFlag
+//                false, null));                 // correctAnswerEntered
+//        array.add(createContentJson(false, null,                   // type
+//                true, "b",                     // mkCardCode
+//                true, "Malaria",               // contentName
+//                true, "Malaria.wav",           // contentFile
+//                true, 1200000000l,             // startTime
+//                true, 1222222221l,             // endTime
+//                false, null,                   // completionFlag
+//                false, null));                 // correctAnswerEntered
+//
+//        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+//                true, 9810320300l,       // callingNumber
+//                true, VALID_CALL_ID,  // callId
+//                true, "A",               // operator
+//                true, "AP",              // circle
+//                true, 1422879843l,       // callStartTime
+//                true, 1422879903l,       // callEndTime
+//                true, 60,                // callDurationInPulses
+//                true, 0,                 // endOfUsagePromptCounter
+//                true, true,              // welcomeMessagePromptFlag
+//                true, 1,                 // callStatus
+//                true, 1,                 // callDisconnectReason
+//                true, Joiner.on(",").join(array));          // content
+//
+//        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
+//
+//        TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+//
+//        CallDetailRecord cdr = callDetailRecordService.getByCallingNumber(9810320300l);
+//
+//        assertNotNull(cdr);
+//        assertEquals(VALID_CALL_ID, cdr.getCallId());
+//        assertEquals(2, cdr.getContent().size());
+//
+//        assertEquals("YellowFever", cdr.getContent().get(0).getContentName());
+//        assertNull(cdr.getContent().get(0).getType());
+//        assertNull(cdr.getContent().get(0).getCompletionFlag());
+//        assertEquals("Malaria", cdr.getContent().get(1).getContentName());
+//        assertNull(cdr.getContent().get(1).getType());
+//        assertNull(cdr.getContent().get(1).getCompletionFlag());
+//
+//        assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
+//                "swachchagrahi")).getId());
+//
+//        transactionManager.commit(status);
+//    }
 
     /**
      * verifyFT470, verifyFT489
@@ -605,7 +605,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         // TODO correctAnswerEntered assertion
 
         assertNull(cdr.getWelcomePrompt());
-        assertNull(cc.getMobileKunjiCardCode());
+        assertNull(cc.getWashAcademyCardCode());
 
         assertEquals(swc.getId(), ((Swachchagrahi) callDetailRecordDataService.getDetachedField(cdr,
                 "swachchagrahi")).getId());
@@ -1547,7 +1547,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      *****************************************************************************************************************/
     @Test
     public void testCallDetailsNullWelcomeMessagePromptFlag() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1577,7 +1577,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* endTime */ true, 1222222221l,
                 /* completionFlag */ false, null,
                 /* correctAnswerEntered */ false, null));
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 9810320300l,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1656,7 +1656,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ false, null,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1684,7 +1684,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ false, null,
                 /* operator */ true, "A",
@@ -1919,7 +1919,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 false, null));                 // correctAnswerEntered
 
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1958,7 +1958,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 false, null));                 // correctAnswerEntered
 
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -1997,7 +1997,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 false, null));                 // correctAnswerEntered
 
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -2036,7 +2036,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 false, null));                 // correctAnswerEntered
 
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -2075,7 +2075,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 false, null));                 // correctAnswerEntered
 
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -2104,7 +2104,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 12356789L,
                 /* callId */ true, VALID_CALL_ID,
                 /* operator */ true, "A",
@@ -2133,7 +2133,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
                 /* callingNumber */ true, 1234567890L,
                 /* callId */ true, VALID_CALL_ID.substring(5),
                 /* operator */ true, "A",
@@ -2164,7 +2164,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, "9810320300",
         /* callId */true, "234000011111111",
         /* operator */true, "A",
@@ -2198,7 +2198,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, "9810320300",
         /* callId */true, "234000011111111",
         /* operator */true, "A",
@@ -2231,7 +2231,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
          /* callingNumber */true, "9810320300",
          /* callId */true, "234000011111111",
          /* operator */true, "A",
@@ -2265,7 +2265,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
          /* callingNumber */true, "9810320300",
          /* callId */true, "234000011111111",
          /* operator */true, "A",
@@ -2297,7 +2297,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swcService.add(swc);
 
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
          /* callingNumber */true, "9810320300",
          /* callId */true, "234000011111111",
          /* operator */true, "A",
@@ -2325,7 +2325,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
         swcService.add(swc);
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -2355,7 +2355,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
                 9810320300L);
         swcService.add(swc);
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -2394,7 +2394,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "1222222221",
         /* completionFlag */true, "true",
         /* correctAnswerEntered */true, "false"));
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",
@@ -2433,7 +2433,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         /* endTime */true, "122ss2222221",// Invalid
         /* completionFlag */true, "true",
         /* correctAnswerEntered */true, "false"));
-        HttpPost httpPost = createCallDetailsPost("mobilekunji",
+        HttpPost httpPost = createCallDetailsPost("washacademy",
         /* callingNumber */true, 9810320300l,
         /* callId */true, VALID_CALL_ID,
         /* operator */true, "A",

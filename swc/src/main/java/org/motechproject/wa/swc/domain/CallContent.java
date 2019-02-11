@@ -19,7 +19,7 @@ public class CallContent {
     private String type;
 
     @Field
-    private String mobileKunjiCardCode;
+    private String washAcademyCardCode;
 
     @Field
     private String contentName;
@@ -55,12 +55,12 @@ public class CallContent {
         this.type = type;
     }
 
-    public String getMobileKunjiCardCode() {
-        return mobileKunjiCardCode;
+    public String getWashAcademyCardCode() {
+        return washAcademyCardCode;
     }
 
-    public void setMobileKunjiCardCode(String mobileKunjiCardCode) {
-        this.mobileKunjiCardCode = mobileKunjiCardCode;
+    public void setWashAcademyCardCode(String mwashAcademyCardCode) {
+        this.washAcademyCardCode = washAcademyCardCode;
     }
 
     public String getContentName() {
