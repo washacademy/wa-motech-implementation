@@ -3827,7 +3827,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT327() throws IOException, InterruptedException {
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
 
@@ -3837,6 +3837,8 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ANONYMOUS);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -4038,7 +4040,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT328() throws IOException, InterruptedException {
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
@@ -4050,6 +4052,8 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -4122,7 +4126,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT331() throws IOException, InterruptedException {
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
@@ -4134,6 +4138,8 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 

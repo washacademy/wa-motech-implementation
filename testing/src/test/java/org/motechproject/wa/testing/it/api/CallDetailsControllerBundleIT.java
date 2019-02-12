@@ -1545,56 +1545,56 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      Test the existence and validity of elements specific to MK
      welcomeMessagePromptFlag, content.mkCardCode
      *****************************************************************************************************************/
-    @Test
-    public void testCallDetailsNullWelcomeMessagePromptFlag() throws IOException, InterruptedException {
-        HttpPost httpPost = createCallDetailsPost("washacademy",
-                /* callingNumber */ true, 9810320300l,
-                /* callId */ true, VALID_CALL_ID,
-                /* operator */ true, "A",
-                /* circle */ true, "AP",
-                /* callStartTime */ true, 1422879903l,
-                /* callEndTime */ true, 1422879903l,
-                /* callDurationInPulses */ true, 60,
-                /* endOfUsagePromptCounter */ true, 0,
-                /* welcomeMessagePromptFlag */ false, null,
-                /* callStatus */ true, 1,
-                /* callDisconnectReason */ true, 1,
-                /* content */ false, null);
-
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
-                "{\"failureReason\":\"<welcomeMessagePromptFlag: Not Present>\"}",
-                ADMIN_USERNAME, ADMIN_PASSWORD));
-    }
-
-    @Test
-    public void testCallDetailsNullContentMkCardNumber() throws IOException, InterruptedException {
-        ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(/* type */ false, null,
-                /* mkCardCode */ false, null,
-                /* contentName */ true, "Chapter-01lesson-04",
-                /* contentFile */ true, "ch1_l4.wav",
-                /* startTime */ true, 1200000000l,
-                /* endTime */ true, 1222222221l,
-                /* completionFlag */ false, null,
-                /* correctAnswerEntered */ false, null));
-        HttpPost httpPost = createCallDetailsPost("washacademy",
-                /* callingNumber */ true, 9810320300l,
-                /* callId */ true, VALID_CALL_ID,
-                /* operator */ true, "A",
-                /* circle */ true, "AP",
-                /* callStartTime */ true, 1422879843l,
-                /* callEndTime */ true, 1422879903l,
-                /* callDurationInPulses */ true, 60,
-                /* endOfUsagePromptCounter */ true, 0,
-                /* welcomeMessagePromptFlag */ true, false,
-                /* callStatus */ true, 1,
-                /* callDisconnectReason */ true, 1,
-                /* content */ true, Joiner.on(",").join(array));
-
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
-                "{\"failureReason\":\"<mkCardCode: Not Present>\"}",
-                ADMIN_USERNAME, ADMIN_PASSWORD));
-    }
+//    @Test
+//    public void testCallDetailsNullWelcomeMessagePromptFlag() throws IOException, InterruptedException {
+//        HttpPost httpPost = createCallDetailsPost("washacademy",
+//                /* callingNumber */ true, 9810320300l,
+//                /* callId */ true, VALID_CALL_ID,
+//                /* operator */ true, "A",
+//                /* circle */ true, "AP",
+//                /* callStartTime */ true, 1422879903l,
+//                /* callEndTime */ true, 1422879903l,
+//                /* callDurationInPulses */ true, 60,
+//                /* endOfUsagePromptCounter */ true, 0,
+//                /* welcomeMessagePromptFlag */ false, null,
+//                /* callStatus */ true, 1,
+//                /* callDisconnectReason */ true, 1,
+//                /* content */ false, null);
+//
+//        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+//                "{\"failureReason\":\"<welcomeMessagePromptFlag: Not Present>\"}",
+//                ADMIN_USERNAME, ADMIN_PASSWORD));
+//    }
+//
+//    @Test
+//    public void testCallDetailsNullContentMkCardNumber() throws IOException, InterruptedException {
+//        ArrayList<String> array = new ArrayList<>();
+//        array.add(createContentJson(/* type */ false, null,
+//                /* mkCardCode */ false, null,
+//                /* contentName */ true, "Chapter-01lesson-04",
+//                /* contentFile */ true, "ch1_l4.wav",
+//                /* startTime */ true, 1200000000l,
+//                /* endTime */ true, 1222222221l,
+//                /* completionFlag */ false, null,
+//                /* correctAnswerEntered */ false, null));
+//        HttpPost httpPost = createCallDetailsPost("washacademy",
+//                /* callingNumber */ true, 9810320300l,
+//                /* callId */ true, VALID_CALL_ID,
+//                /* operator */ true, "A",
+//                /* circle */ true, "AP",
+//                /* callStartTime */ true, 1422879843l,
+//                /* callEndTime */ true, 1422879903l,
+//                /* callDurationInPulses */ true, 60,
+//                /* endOfUsagePromptCounter */ true, 0,
+//                /* welcomeMessagePromptFlag */ true, false,
+//                /* callStatus */ true, 1,
+//                /* callDisconnectReason */ true, 1,
+//                /* content */ true, Joiner.on(",").join(array));
+//
+//        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+//                "{\"failureReason\":\"<mkCardCode: Not Present>\"}",
+//                ADMIN_USERNAME, ADMIN_PASSWORD));
+//    }
 
     /**
      * To check that call details of user is saved successfully using Save Call
@@ -1909,13 +1909,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
-                true, "a",                     // mkCardCode
+        array.add(createContentJson(true, "question",                   // type
+                false, null,                     // mkCardCode
                 false, null,           // contentName
                 true, "Yellowfever.wav",       // contentFile
                 true, 1200000000l,             // startTime
                 true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
+                true, true,                   // completionFlag
                 false, null));                 // correctAnswerEntered
 
 
@@ -1948,13 +1948,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
-                true, "a",                     // mkCardCode
+        array.add(createContentJson(true, "question",                   // type
+                false, "a",                     // mkCardCode
                 true, "YellowFever",           // contentName
                 false, null,       // contentFile
                 true, 1200000000l,             // startTime
                 true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
+                true, true,                   // completionFlag
                 false, null));                 // correctAnswerEntered
 
 
@@ -1987,13 +1987,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
-                true, "a",                     // mkCardCode
+        array.add(createContentJson(true, "question",                   // type
+                false, null,                     // mkCardCode
                 true, "YellowFever",           // contentName
                 true, "YellowFever.wav",       // contentFile
                 false, null,             // startTime
                 true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
+                true, true,                   // completionFlag
                 false, null));                 // correctAnswerEntered
 
 
@@ -2026,13 +2026,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
-                true, "a",                     // mkCardCode
+        array.add(createContentJson(true, "question",                   // type
+                false, null,                     // mkCardCode
                 true, "YellowFever",           // contentName
                 true, "YellowFever.wav",       // contentFile
                 true, 1222222220l,             // startTime
                 false, null,             // endTime
-                false, null,                   // completionFlag
+                true, true,                   // completionFlag
                 false, null));                 // correctAnswerEntered
 
 
@@ -2058,41 +2058,41 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>MKCardCode" is missing
      */
-    @Test
-    public void verifyFT383() throws IOException, InterruptedException {
-
-        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
-        swcService.add(swc);
-
-        ArrayList<String> array = new ArrayList<>();
-        array.add(createContentJson(false, null,                   // type
-                false, null,                     // mkCardCode
-                true, "YellowFever",           // contentName
-                true, "YellowFever.wav",       // contentFile
-                true, 1222222220l,             // startTime
-                true, 1222222221l,             // endTime
-                false, null,                   // completionFlag
-                false, null));                 // correctAnswerEntered
-
-
-        HttpPost httpPost = createCallDetailsPost("washacademy",
-                /* callingNumber */ true, 1234567890L,
-                /* callId */ true, VALID_CALL_ID,
-                /* operator */ true, "A",
-                /* circle */ true, "AP",
-                /* callStartTime */ true, 1422879843l,
-                /* callEndTime */ true, 1422879903l,
-                /* callDurationInPulses */ true, 60,
-                /* endOfUsagePromptCounter */ true, 0,
-                /* welcomeMessagePromptFlag */ true, true,
-                /* callStatus */ true, 1,
-                /* callDisconnectReason */ true, 1,
-                /* content */ true, Joiner.on(",").join(array));
-
-        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
-                "{\"failureReason\":\"<mkCardCode: Not Present>\"}",
-                ADMIN_USERNAME, ADMIN_PASSWORD));
-    }
+//    @Test
+//    public void verifyFT383() throws IOException, InterruptedException {
+//
+//        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+//        swcService.add(swc);
+//
+//        ArrayList<String> array = new ArrayList<>();
+//        array.add(createContentJson(true, "question",                   // type
+//                false, null,                     // mkCardCode
+//                true, "YellowFever",           // contentName
+//                true, "YellowFever.wav",       // contentFile
+//                true, 1222222220l,             // startTime
+//                true, 1222222221l,             // endTime
+//                false, null,                   // completionFlag
+//                false, null));                 // correctAnswerEntered
+//
+//
+//        HttpPost httpPost = createCallDetailsPost("washacademy",
+//                /* callingNumber */ true, 1234567890L,
+//                /* callId */ true, VALID_CALL_ID,
+//                /* operator */ true, "A",
+//                /* circle */ true, "AP",
+//                /* callStartTime */ true, 1422879843l,
+//                /* callEndTime */ true, 1422879903l,
+//                /* callDurationInPulses */ true, 60,
+//                /* endOfUsagePromptCounter */ true, 0,
+//                /* welcomeMessagePromptFlag */ true, true,
+//                /* callStatus */ true, 1,
+//                /* callDisconnectReason */ true, 1,
+//                /* content */ true, Joiner.on(",").join(array));
+//
+//        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+//                "{\"failureReason\":\"<mkCardCode: Not Present>\"}",
+//                ADMIN_USERNAME, ADMIN_PASSWORD));
+//    }
 
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
