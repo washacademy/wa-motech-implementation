@@ -202,13 +202,15 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     private void createSwcWithLanguageFullServiceUsageAndCappedService() {
 
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         rh.southDelhiDistrict();
         rh.delhiCircle();
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1111111111L);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);

@@ -816,7 +816,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
                 RequestBuilder.ADMIN_PASSWORD);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine()
                 .getStatusCode());
-        String expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"3\":0,\"2\":1,\"1\":2}}";
+        String expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"1\":2,\"2\":1,\"3\":0}}";
         assertTrue(expectedJsonResponse.equals(EntityUtils.toString(response
                 .getEntity())));
 
@@ -833,7 +833,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         response = SimpleHttpClient.httpRequestAndResponse(getRequest,
                 RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"3\":3,\"2\":1,\"1\":2}}";
+        expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"1\":2,\"2\":1,\"3\":3}}";
         String actualResponse = EntityUtils.toString(response.getEntity());
         System.out.println(actualResponse);
         assertTrue(expectedJsonResponse.equals(actualResponse));
@@ -876,7 +876,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        String expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"3\":4,\"2\":1,\"1\":2}}";
+        String expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"1\":2,\"2\":1,\"3\":4}}";
         assertTrue(expectedJsonResponse.equals(EntityUtils.toString(response
                 .getEntity())));
 
@@ -893,7 +893,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         response = SimpleHttpClient.httpRequestAndResponse(getRequest,
                 RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"3\":3,\"2\":1,\"1\":2}}";
+        expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"1\":2,\"2\":1,\"3\":3}}";
         assertTrue(expectedJsonResponse.equals(EntityUtils.toString(response
                 .getEntity())));
     }
@@ -936,7 +936,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
                 getRequest, RequestBuilder.ADMIN_USERNAME,
                 RequestBuilder.ADMIN_PASSWORD);
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
-        String expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"3\":4,\"2\":1,\"1\":2}}";
+        String expectedJsonResponse = "{\"bookmark\":\"Chapter03_Lesson01\",\"scoresByChapter\":{\"1\":2,\"2\":1,\"3\":4}}";
         assertTrue(expectedJsonResponse.equals(EntityUtils.toString(response
                 .getEntity())));
 

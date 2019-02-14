@@ -21,6 +21,7 @@ import org.motechproject.wa.api.web.contract.SwcUserResponse;
 import org.motechproject.wa.props.domain.DeployedService;
 import org.motechproject.wa.props.domain.Service;
 import org.motechproject.wa.props.repository.DeployedServiceDataService;
+import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.repository.CircleDataService;
 import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.region.repository.LanguageDataService;
@@ -2458,13 +2459,15 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT522() throws IOException, InterruptedException {
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
 
         // SWC usage
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
