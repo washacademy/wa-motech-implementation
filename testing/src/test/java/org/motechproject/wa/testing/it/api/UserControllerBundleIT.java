@@ -999,7 +999,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         httpPost.setEntity(params);
         httpPost.addHeader("content-type", "application/json");
 
-        Pattern expectedJsonPattern = Pattern.compile(".*Could not read JSON.*");
+        Pattern expectedJsonPattern = Pattern.compile(".*JSON parse error.*");
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST, expectedJsonPattern,
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
@@ -2028,13 +2028,15 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT333() throws IOException, InterruptedException {
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         rh.southDelhiDistrict();
         rh.delhiCircle();
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -3937,7 +3939,7 @@ public class UserControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT330() throws IOException, InterruptedException {
-        rh.newDelhiDistrict();
+        District district = rh.newDelhiDistrict();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
 
@@ -3948,6 +3950,8 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // SWC usage
         Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        swc.setDistrict(district);
+        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
