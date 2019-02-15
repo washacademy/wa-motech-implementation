@@ -2459,15 +2459,13 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT522() throws IOException, InterruptedException {
-        District district = rh.newDelhiDistrict();
+        rh.newDelhiDistrict();
         rh.delhiCircle();
         deployedServiceDataService.create(new DeployedService(rh.delhiState(),
                 Service.WASH_ACADEMY));
 
         // SWC usage
         Swachchagrahi swc = new Swachchagrahi("Frank Llyod Wright", 1200000000l);
-        swc.setDistrict(district);
-        swc.setState(district.getState());
         swc.setLanguage(rh.hindiLanguage());
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
