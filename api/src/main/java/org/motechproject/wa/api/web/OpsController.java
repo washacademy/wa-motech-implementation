@@ -74,6 +74,7 @@ public class OpsController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void createUpdateRchSwc(@RequestBody AddSwcRequest addSwcRequest) {
         StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
+//        LOGGER.info(failureReasons.toString());
         if (failureReasons != null) {
             throw new IllegalArgumentException(failureReasons.toString());
         } else {

@@ -66,9 +66,11 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         validateFieldPresent(failureReasons, "panchayatId", addSwcRequest.getPanchayatId());
         validateNameFields(failureReasons, "blockName", addSwcRequest.getBlockName(), addSwcRequest.getBlockId());
         validateNameFields(failureReasons, "panchayatName", addSwcRequest.getPanchayatName(), addSwcRequest.getPanchayatId());
+        LOGGER.info(failureReasons.toString());
         if (failureReasons.length() > 0) {
             String fieldName = failureReasons.toString().split("[\\W]")[1];
             csvRejectionsRch(fieldName, addSwcRequest);
+            LOGGER.info(failureReasons.toString());
             return failureReasons;
         }
         return null;

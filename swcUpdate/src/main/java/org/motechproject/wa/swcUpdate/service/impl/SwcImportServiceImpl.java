@@ -1,6 +1,7 @@
 package org.motechproject.wa.swcUpdate.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.wa.csv.exception.CsvImportDataException;
 import org.motechproject.wa.csv.utils.*;
 import org.motechproject.wa.props.service.LogHelper;
@@ -35,12 +36,14 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.prefs.CsvPreference;
 
 import javax.jdo.JDODataStoreException;
+import javax.jdo.Query;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -179,35 +182,42 @@ public class SwcImportServiceImpl implements SwcImportService {
         rejectionAction = this.rejectionSwcActionFinder(convertMapToRchAsha(swc));
 
         State state = locationService.getState(stateId);
+        LOGGER.info("fetching state");
         if (state == null) {
+            LOGGER.info("state not present");
             swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_STATE));
 //                action = this.swcActionFinder(convertMapToAsha(swc));
                 swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
             return false;
         }
+        LOGGER.info("state valid, fetching district");
         District district = locationService.getDistrict(stateId, districtId);
+        LOGGER.info("district fetched");
         if (district == null) {
             swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_DISTRICT));
                 swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
 
             return false;
         }
+        LOGGER.info("fetching block");
         Block block = locationService.getBlock(stateId, districtId, blockId);
-        if (block == null) {
-            swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_BLOCK));
-            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
-
-            return false;
-        }
+//        if (block == null) {
+//            swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_BLOCK));
+//            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
+//
+//            return false;
+//        }
         Panchayat panchayat = locationService.getPanchayat(stateId, districtId, blockId, panchayatId, panchayatId);
-        if (panchayat == null) {
-            swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_PANCHAYAT));
-            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
-
-            return false;
-        }
-
+//        if (panchayat == null) {
+//            swcErrorDataService.create(new SwcError(swcId, stateId, districtId, SwcErrorReason.INVALID_LOCATION_PANCHAYAT));
+//            swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), false, RejectionReasons.INVALID_LOCATION.toString(), rejectionAction));
+//
+//            return false;
+//        }
+        LOGGER.info("fetching swc by contact number");
         Swachchagrahi existingSwcByNumber = swcService.getByContactNumber(contactNumber);
+        if(existingSwcByNumber==null) LOGGER.info("failed to fetch swc by contact number");
+//        LOGGER.info(existingSwcByNumber.toString());
         Swachchagrahi existingSwcBySwcId = swcService.getBySwcIdAndPanchayat(swcId, panchayat);
         Map<String, Object> location = new HashMap<>();
         try {
@@ -236,15 +246,24 @@ public class SwcImportServiceImpl implements SwcImportService {
                         return false;
                     }
                 } else if (existingSwcBySwcId != null && existingSwcByNumber == null) {
-                    // trying to update the phone number of the person. possible migration scenario
-                    // making design decision that swc will lose all progress when phone number is changed. Usage and tracking is not
-                    // worth the effort & we don't really know that its the same swc
-                    LOGGER.debug("Updating phone number for swc");
-                    long existingContactNumber = existingSwcBySwcId.getContactNumber();
-                    Swachchagrahi swcInstance = SwcMapper.updateSwc(existingSwcBySwcId, swc, location, SubscriptionOrigin.RCH_IMPORT);
-                    updateSwcMaMsisdn(swcInstance, existingContactNumber, contactNumber);
-                    swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, rejectionAction));
-                    return true;
+                    Swachchagrahi existingSwcByNumberAndJobStatus = swcService.getInctiveByContactNumber(contactNumber);
+                    if(existingSwcByNumberAndJobStatus!=null) {
+                        LOGGER.info("job status inactive");
+                        swcService.update(SwcMapper.updateSwc(existingSwcBySwcId, swc, location, SubscriptionOrigin.RCH_IMPORT));
+                        LOGGER.info("updated existed swc job status to active");
+                        return true;
+
+                    } else {
+                        // trying to update the phone number of the person. possible migration scenario
+                        // making design decision that swc will lose all progress when phone number is changed. Usage and tracking is not
+                        // worth the effort & we don't really know that its the same swc
+                        LOGGER.debug("Updating phone number for swc");
+                        long existingContactNumber = existingSwcBySwcId.getContactNumber();
+                        Swachchagrahi swcInstance = SwcMapper.updateSwc(existingSwcBySwcId, swc, location, SubscriptionOrigin.RCH_IMPORT);
+                        updateSwcMaMsisdn(swcInstance, existingContactNumber, contactNumber);
+                        swcRejectionService.createUpdate(RejectedObjectConverter.swcRejection(convertMapToRchAsha(swc), true, null, rejectionAction));
+                        return true;
+                    }
                 } else if (existingSwcBySwcId == null && existingSwcByNumber != null) {
 
                     if (existingSwcByNumber.getSwcId() == null) {

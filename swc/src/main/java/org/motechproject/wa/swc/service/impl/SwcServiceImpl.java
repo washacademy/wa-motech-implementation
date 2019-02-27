@@ -1,5 +1,4 @@
 package org.motechproject.wa.swc.service.impl;
-
 import org.joda.time.DateTime;
 import org.joda.time.Weeks;
 import org.joda.time.format.DateTimeFormat;
@@ -8,6 +7,7 @@ import org.motechproject.commons.date.util.DateUtil;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.query.QueryExecution;
+import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.jdo.Query;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Simple implementation of the {@link SwcService} interface.
@@ -209,10 +206,28 @@ public class SwcServiceImpl implements SwcService {
         return swcDataService.findById(id);
     }
 
+
     @Override
     public Swachchagrahi getByContactNumber(Long contactNumber) {
-        List<Swachchagrahi> swcs = swcDataService.findByContactNumberAndJobStatus(contactNumber, SwcJobStatus.ACTIVE);
-        Collections.sort(swcs, new Comparator<Swachchagrahi>() {
+        SqlQueryExecution<List<Swachchagrahi>> queryExecution = new SqlQueryExecution<List<Swachchagrahi>>() {
+            @Override
+            public String getSqlQuery() {
+                String query = "Select * FROM wash_swachchagrahi where contactNumber=" + contactNumber +" and jobStatus='ACTIVE';";
+                return query;
+            }
+            @Override
+            public List<Swachchagrahi> execute(Query query) {
+
+                query.setClass(Swachchagrahi.class);
+
+                return (List<Swachchagrahi>) query.execute();
+            }
+        };
+        List<Swachchagrahi> swcs = swcDataService.executeSQLQuery(queryExecution); //query result set cannot be modified in sorting
+        List<Swachchagrahi> swachchagrahis = new ArrayList<>();
+        swachchagrahis.addAll(swcs);
+
+        Collections.sort(swachchagrahis, new Comparator<Swachchagrahi>() {
             @Override
             public int compare(Swachchagrahi t1, Swachchagrahi t2) {
                 if (t1.getCreationDate().isBefore(t2.getCreationDate())) {
@@ -224,8 +239,8 @@ public class SwcServiceImpl implements SwcService {
                 }
             }
         });
-        if (swcs.size() != 0) {
-            return swcs.get(swcs.size() - 1);
+        if (swachchagrahis.size() != 0) {
+            return swachchagrahis.get(swcs.size() - 1);
         } else {
             return null;
         }
@@ -233,7 +248,21 @@ public class SwcServiceImpl implements SwcService {
 
     @Override
     public Swachchagrahi getInctiveByContactNumber(Long contactNumber) {
-        List<Swachchagrahi> swcs = swcDataService.findByContactNumberAndJobStatus(contactNumber, SwcJobStatus.INACTIVE);
+        SqlQueryExecution<List<Swachchagrahi>> queryExecution = new SqlQueryExecution<List<Swachchagrahi>>() {
+            @Override
+            public String getSqlQuery() {
+                String query = "Select * FROM wash_swachchagrahi where contactNumber=" + contactNumber +" and jobStatus='INACTIVE';";
+                return query;
+            }
+            @Override
+            public List<Swachchagrahi> execute(Query query) {
+
+                query.setClass(Swachchagrahi.class);
+
+                return (List<Swachchagrahi>) query.execute();
+            }
+        };
+        List<Swachchagrahi> swcs = swcDataService.executeSQLQuery(queryExecution);
         if (swcs.size() != 0) {
             return swcs.get(swcs.size() - 1);
         } else {

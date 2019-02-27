@@ -168,7 +168,6 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
     // Test Swc Id takes precedence over MSISDN
     @Test
-    @Ignore //to be fixed before deployment
     public void testImportWhenwaIdTakesPrecedenceOverMSIDN() throws Exception {
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setSwcId("72185");
