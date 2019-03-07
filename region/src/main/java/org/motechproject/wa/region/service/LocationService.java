@@ -26,6 +26,8 @@ public interface LocationService {
      * @throws InvalidLocationException when the map of code set violates the location hierarchy
      */
     Map<String, Object> getLocations(Map<String, Object> locationMapping, boolean createIfNotExist) throws InvalidLocationException;
+    Block createBlock(District d,Long bId,String bName);
+    Panchayat createPanchayat(Block b, long pId, String pName);
 
     State getState(Long stateId);
 

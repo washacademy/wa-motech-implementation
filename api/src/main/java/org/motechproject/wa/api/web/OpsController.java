@@ -18,6 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Controller to expose methods for OPS personnel
  */
@@ -79,6 +81,23 @@ public class OpsController extends BaseController {
             throw new IllegalArgumentException(failureReasons.toString());
         } else {
             swcCsvService.persistSwcRch(addSwcRequest);
+        }
+    }
+
+    @RequestMapping(value = "/csvimportRchSwc",
+            method = RequestMethod.POST,
+            headers = { "Content-type=application/json" })
+    @ResponseStatus(HttpStatus.OK)
+    public void csvimportRchSwc(@RequestBody List<AddSwcRequest> addSwcRequestList) {
+        swcCsvService.createLocation();
+        for(AddSwcRequest addSwcRequest: addSwcRequestList) {
+            StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
+//        LOGGER.info(failureReasons.toString());
+            if (failureReasons != null) {
+                throw new IllegalArgumentException(failureReasons.toString());
+            } else {
+                swcCsvService.persistCsvSwcRch(addSwcRequest);
+            }
         }
     }
 

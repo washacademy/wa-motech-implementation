@@ -4,6 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.motechproject.wa.api.web.contract.AddSwcRequest;
 import org.motechproject.wa.api.web.service.SwcCsvService;
 import org.motechproject.wa.props.service.LogHelper;
+import org.motechproject.wa.region.domain.Block;
+import org.motechproject.wa.region.domain.District;
+import org.motechproject.wa.region.domain.Panchayat;
+import org.motechproject.wa.region.domain.State;
+import org.motechproject.wa.region.repository.BlockDataService;
+import org.motechproject.wa.region.repository.DistrictDataService;
+import org.motechproject.wa.region.repository.PanchayatDataService;
+import org.motechproject.wa.region.repository.StateDataService;
 import org.motechproject.wa.rejectionhandler.domain.SwcImportRejection;
 import org.motechproject.wa.rejectionhandler.service.SwcRejectionService;
 import org.motechproject.wa.swc.domain.RejectionReasons;
@@ -18,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +43,16 @@ public class SwcCsvServiceImpl implements SwcCsvService {
     private static final long LARGEST_10_DIGIT_NUMBER  = 9999999999L;
     private final String contactNumber = "contactNumber";
     private final String gfStatus = "gfStatus";
+
+    private DistrictDataService districtDataService;
+    private BlockDataService blockDataService;
+    private StateDataService stateDataService;
+    private PanchayatDataService panchayatDataService;
+
+    private HashMap<String,State> stateHashMap = new HashMap<>();
+    private HashMap<String,District> districtHashMap = new HashMap();
+    private HashMap<String,Block> blockHashMap = new HashMap();
+    private HashMap<String,Panchayat> panchayatHashMap = new HashMap();
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwcCsvServiceImpl.class);
@@ -96,6 +115,30 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
         swcImportService.createUpdate(swcProperties, SubscriptionOrigin.RCH_IMPORT);
     }
+
+    @Override
+    @Transactional
+    public void persistCsvSwcRch(AddSwcRequest addSwcRequest) {
+        Map<String, Object> swcProperties = new HashMap<>();
+        swcProperties.put(SwcConstants.NAME, addSwcRequest.getName());
+        swcProperties.put(SwcConstants.ID, addSwcRequest.getSwcId());
+        swcProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
+        swcProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
+        swcProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
+        swcProperties.put(SwcConstants.JOB_STATUS, SwcJobStatus.ACTIVE.toString());
+        swcProperties.put(SwcConstants.BLOCK_ID, addSwcRequest.getBlockId());
+        swcProperties.put(SwcConstants.PANCHAYAT_ID, addSwcRequest.getPanchayatId());
+        swcProperties.put(SwcConstants.BLOCK_NAME, addSwcRequest.getBlockName());
+        swcProperties.put(SwcConstants.PANCHAYAT_NAME, addSwcRequest.getPanchayatName());
+        swcProperties.put(SwcConstants.SWC_SEX, addSwcRequest.getSex());
+        swcProperties.put(SwcConstants.SWC_AGE, addSwcRequest.getAge());
+        swcProperties.put(SwcConstants.TYPE, addSwcRequest.getType());
+
+        swcImportService.createCsvUpdate(swcProperties, SubscriptionOrigin.RCH_IMPORT, this.stateHashMap, this.districtHashMap,
+                this.blockHashMap, this.panchayatHashMap);
+    }
+
+
 
     @Override
     @Transactional
@@ -195,5 +238,57 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
     protected static void log(final String endpoint, final String s) {
         LOGGER.info(IVR_INTERACTION_LOG.format(endpoint) + (StringUtils.isBlank(s) ? "" : " : " + s));
+    }
+
+    @Transactional
+    public void createLocation() {
+        createLocations(this.stateHashMap,this.districtHashMap,this.blockHashMap,this.panchayatHashMap);
+//        LOGGER.info("stateMap:"+this.stateHashMap.toString());
+//        LOGGER.info("districtMap:"+ this.districtHashMap.toString());
+//        LOGGER.info("blockMap:"+ this.blockHashMap.toString());
+//        LOGGER.info("panchayatMap:"+ this.panchayatHashMap.toString());
+    }
+
+    public void createLocations(HashMap<String, State> sMap, HashMap<String, District> dMap,
+                                HashMap<String, Block> bMap, HashMap<String, Panchayat> pMap) {
+        List<State> stateList = stateDataService.retrieveAll();
+        for(State s: stateList) {
+            sMap.put(s.getCode().toString(),s);
+        }
+        List<District> districtList = districtDataService.retrieveAll();
+        for(District d: districtList) {
+            dMap.put(d.getState().getCode().toString()+d.getCode().toString(),d);
+        }
+        List<Block> blockList = blockDataService.retrieveAll();
+        for(Block b: blockList) {
+            bMap.put(b.getDistrict().getState().getCode().toString()+b.getDistrict().getCode().toString()+
+                    b.getCode().toString(),b);
+        }
+        List<Panchayat> panchayatList = panchayatDataService.retrieveAll();
+        for(Panchayat p: panchayatList) {
+            pMap.put(p.getBlock().getDistrict().getState().getCode().toString()+
+                    p.getBlock().getDistrict().getCode().toString()+p.getBlock().getCode().toString()+
+                    Long.toString(p.getVcode()),p);
+        }
+    }
+
+    @Autowired
+    public void setDistrictDataService(DistrictDataService districtDataService) {
+        this.districtDataService = districtDataService;
+    }
+
+    @Autowired
+    public void setBlockDataService(BlockDataService blockDataService) {
+        this.blockDataService = blockDataService;
+    }
+
+    @Autowired
+    public void setStateDataService(StateDataService stateDataService) {
+        this.stateDataService = stateDataService;
+    }
+
+    @Autowired
+    public void setPanchayatDataService(PanchayatDataService panchayatDataService) {
+        this.panchayatDataService = panchayatDataService;
     }
 }

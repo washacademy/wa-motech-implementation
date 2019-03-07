@@ -12,4 +12,8 @@ public interface SwcCsvService {
     void persistSwcRch(AddSwcRequest addSwcRequest);
 
     void csvRejectionsRch(String fieldName, AddSwcRequest addSwcRequest);
+
+    void persistCsvSwcRch(AddSwcRequest addSwcRequest);
+
+    void createLocation();
 }

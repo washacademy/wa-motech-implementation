@@ -86,7 +86,7 @@ public class PanchayatUnitTest {
     public void testPanchayatCodeInvalid() {
         Block block = new Block();
         block.setName("Block 1");
-        block.setCode((long)0004);
+        block.setCode((long) 0004);
 
         Panchayat panchayat = new Panchayat();
         panchayat.setName("Panchayat");

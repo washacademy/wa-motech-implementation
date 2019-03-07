@@ -152,7 +152,7 @@ public class FullLocationValidatorUnitTest {
         TestLocation testLocation = new TestLocation();
         buildValidFullLocation(testLocation);
 
-        testLocation.getBlock().setPanchayats(Collections.<Panchayat>emptyList());
+        testLocation.getBlock().setPanchayats(new ArrayList<>());
         testLocation.getPanchayat().setBlock(null);
 
         Set<ConstraintViolation<TestLocation>> constraintViolations = validator.validate(testLocation);

@@ -21,8 +21,10 @@
                   interface="org.motechproject.wa.swcUpdate.service.SwcUpdateImportService" />
 
 
+
     <osgi:reference id="stateDataService"
                     interface="org.motechproject.wa.region.repository.StateDataService" />
+
 
     <osgi:reference id="panchayatDataService"
                     interface="org.motechproject.wa.region.repository.PanchayatDataService" />

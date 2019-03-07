@@ -44,6 +44,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
     private LanguageService languageService;
     private PanchayatDataService panchayatDataService;
     private WashAcademyService washAcademyService;
+    private HashMap<String,State> StateMap = new HashMap<>();
 
     /*
         Expected file format:

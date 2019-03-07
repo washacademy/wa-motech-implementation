@@ -9,6 +9,7 @@ import org.motechproject.mds.annotations.InstanceLifecycleListeners;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.wa.tracking.annotation.TrackClass;
 import org.motechproject.wa.tracking.annotation.TrackFields;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;

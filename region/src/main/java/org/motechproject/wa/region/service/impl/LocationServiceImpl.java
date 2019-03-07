@@ -1,5 +1,7 @@
 package org.motechproject.wa.region.service.impl;
 
+import org.datanucleus.store.rdbms.query.ForwardQueryResult;
+import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.wa.region.domain.*;
 import org.motechproject.wa.region.exception.InvalidLocationException;
 import org.motechproject.wa.region.repository.StateDataService;
@@ -8,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.jdo.Query;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -132,6 +136,27 @@ public class LocationServiceImpl implements LocationService {
         
         return locations;
     }
+
+    @Override
+    public Block createBlock(District d, Long bId, String bName) {
+            Block block = new Block();
+            block.setCode(bId);
+            block.setName(bName);
+            block.setDistrict(d);
+            LOGGER.debug(String.format("Created %s in %s with id %d", block, d, block.getId()));
+            return blockService.create(block);
+        }
+    @Override
+    public Panchayat createPanchayat(Block b, long pId, String pName) {
+            Panchayat panchayat = new Panchayat();
+            panchayat.setVcode(pId);
+            panchayat.setSvid(pId);
+            panchayat.setBlock(b);
+            panchayat.setName(pName);LOGGER.debug(String.format("Created %s in %s with id %d", panchayat, b, panchayat.getId()));
+            return panchayatService.create(panchayat);
+        }
+
+
 
     @Override
     public State getState(Long stateId) {

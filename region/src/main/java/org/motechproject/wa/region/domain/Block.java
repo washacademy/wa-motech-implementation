@@ -57,7 +57,7 @@ public class Block extends MdsEntity {
     @Cascade(delete = true)
     @Persistent(mappedBy = "block", defaultFetchGroup = "false")
     @JsonManagedReference
-    private List<Panchayat> panchayats;
+    private ArrayList<Panchayat> panchayats;
 
     public Block() {
         this.panchayats = new ArrayList<>();
@@ -107,7 +107,7 @@ public class Block extends MdsEntity {
         return panchayats;
     }
 
-    public void setPanchayats(List<Panchayat> panchayats) {
+    public void setPanchayats(ArrayList<Panchayat> panchayats) {
         this.panchayats = panchayats;
     }
 
