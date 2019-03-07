@@ -94,7 +94,7 @@ public class OpsController extends BaseController {
             StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
 //        LOGGER.info(failureReasons.toString());
             if (failureReasons != null) {
-                throw new IllegalArgumentException(failureReasons.toString());
+                continue;
             } else {
                 swcCsvService.persistCsvSwcRch(addSwcRequest);
             }

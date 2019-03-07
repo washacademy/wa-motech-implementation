@@ -780,6 +780,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         originalCensusPanchayat.setRegionalName("rn");
         originalCensusPanchayat.setBlock(block);
         originalCensusPanchayat.setVcode(1l);
+        originalCensusPanchayat.setSvid(1l);
         originalCensusPanchayat = panchayatDataService
                 .create(originalCensusPanchayat);
         return  originalCensusPanchayat;

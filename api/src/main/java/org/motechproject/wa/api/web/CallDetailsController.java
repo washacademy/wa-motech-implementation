@@ -239,11 +239,11 @@ public class CallDetailsController extends BaseController {
         StringBuilder failureReasons = new StringBuilder();
 
         // Common elements (contentName, contentFile, startTime, endTime)
-        if (null == callContentRequest.getContentName()) {
+        if (null == callContentRequest.getContentName()|| callContentRequest.getContentName().isEmpty()) {
             failureReasons.append(String.format(NOT_PRESENT, "contentName"));
         }
 
-        if (null == callContentRequest.getContentFileName()) {
+        if (null == callContentRequest.getContentFileName() || callContentRequest.getContentFileName().isEmpty()) {
             failureReasons.append(String.format(NOT_PRESENT, "contentFile"));
         }
 
