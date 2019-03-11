@@ -65,7 +65,7 @@ public final class WashAcademyValidator {
             return String.format(INVALID, "DeliveryInfoNotification");
         }
 
-        if (din.getClientCorrelator() == null) {
+        if (din.getClientCorrelator() == null|| din.getClientCorrelator().isEmpty()) {
             return String.format(INVALID, "ClientCorrelator");
         }
 
