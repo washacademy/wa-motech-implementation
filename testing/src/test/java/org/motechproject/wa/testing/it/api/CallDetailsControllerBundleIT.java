@@ -33,6 +33,7 @@ import org.motechproject.wa.swc.repository.CallDetailRecordDataService;
 import org.motechproject.wa.swc.repository.SwcStatusUpdateAuditDataService;
 import org.motechproject.wa.swc.service.CallDetailRecordService;
 import org.motechproject.wa.swc.service.SwcService;
+import org.motechproject.wa.testing.it.api.utils.RequestBuilder;
 import org.motechproject.wa.testing.it.utils.RegionHelper;
 import org.motechproject.wa.testing.service.TestingService;
 import org.ops4j.pax.exam.ExamFactory;
@@ -2725,6 +2726,41 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         List<SwcStatusUpdateAudit> swcStatusUpdateAuditList = swcStatusUpdateAuditDataService.findBySwcId(swc.getSwcId());
         assertEquals(swcStatusUpdateAuditList.size(), 1);
 
+    }
+
+    @Test
+    public void testCallDetailscontentFileMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson( true, "question", false, null, true, "Chapter-01lesson-04",
+                false, "",true, 1200000000l,
+               true, 1222222221l,
+                true, true,
+               true, true));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                true, 9810320300l,
+                 true, VALID_CALL_ID,
+                 true, "A",
+                 true, "AP",
+                 true, 1422879843l,
+                 true, 1422879903l,
+                 true, 60,
+                true, 1,
+                false, null,
+               true, 1,
+                true, 2,
+                 true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<contentFile: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
     }
 
     // Test with no content

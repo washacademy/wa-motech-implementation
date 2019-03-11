@@ -18,6 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -90,15 +94,19 @@ public class OpsController extends BaseController {
     @ResponseStatus(HttpStatus.OK)
     public void csvimportRchSwc(@RequestBody List<AddSwcRequest> addSwcRequestList) {
         swcCsvService.createLocation();
-        for(AddSwcRequest addSwcRequest: addSwcRequestList) {
-            StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
-//        LOGGER.info(failureReasons.toString());
-            if (failureReasons != null) {
-                continue;
-            } else {
-                swcCsvService.persistCsvSwcRch(addSwcRequest);
+        try {
+            PrintWriter out = new PrintWriter("skipped.txt");
+            for (AddSwcRequest addSwcRequest : addSwcRequestList) {
+                StringBuilder failureReasons = swcCsvService.csvUploadRch(addSwcRequest);
+                if (failureReasons != null) {
+                    out.println(addSwcRequest);
+                    continue;
+                } else {
+                    swcCsvService.persistCsvSwcRch(addSwcRequest);
+                }
+                out.close();
             }
-        }
+        }catch(FileNotFoundException f) {f.printStackTrace();}
     }
 
     @RequestMapping("/getbookmark")
