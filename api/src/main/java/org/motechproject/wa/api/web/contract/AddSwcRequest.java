@@ -15,6 +15,26 @@ public class AddSwcRequest {
     private String panchayatName;
     private Long age;
     private  String sex;
+
+    @Override
+    public String toString() {
+        return "AddSwcRequest{" +
+                "name='" + name + '\'' +
+                ", swcId='" + swcId + '\'' +
+                ", msisdn=" + msisdn +
+                ", stateId=" + stateId +
+                ", districtId=" + districtId +
+                ", blockId=" + blockId +
+                ", panchayatId=" + panchayatId +
+                ", blockName='" + blockName + '\'' +
+                ", panchayatName='" + panchayatName + '\'' +
+                ", age=" + age +
+                ", sex='" + sex + '\'' +
+                ", type='" + type + '\'' +
+                ", jobStatus='" + jobStatus + '\'' +
+                '}';
+    }
+
     private  String type;
     private  String jobStatus;
     public AddSwcRequest() {
