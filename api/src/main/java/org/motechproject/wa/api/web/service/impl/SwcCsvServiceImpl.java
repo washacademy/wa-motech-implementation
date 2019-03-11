@@ -123,6 +123,8 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcProperties.put(SwcConstants.NAME, addSwcRequest.getName());
         swcProperties.put(SwcConstants.ID, addSwcRequest.getSwcId());
         swcProperties.put(SwcConstants.MOBILE_NO, addSwcRequest.getMsisdn());
+        swcProperties.put(SwcConstants.DISTRICT_NAME, addSwcRequest.getDistrictName());
+        swcProperties.put(SwcConstants.STATE_NAME, addSwcRequest.getStateName());
         swcProperties.put(SwcConstants.STATE_ID, addSwcRequest.getStateId());
         swcProperties.put(SwcConstants.DISTRICT_ID, addSwcRequest.getDistrictId());
         swcProperties.put(SwcConstants.JOB_STATUS, SwcJobStatus.ACTIVE.toString());

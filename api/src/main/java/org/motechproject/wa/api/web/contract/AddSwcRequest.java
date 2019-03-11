@@ -8,7 +8,9 @@ public class AddSwcRequest {
     private String swcId;
     private Long msisdn;
     private Long stateId;
+    private String stateName;
     private Long districtId;
+    private String districtName;
     private Long blockId;
     private Long panchayatId;
     private String blockName;
@@ -23,7 +25,9 @@ public class AddSwcRequest {
                 ", swcId='" + swcId + '\'' +
                 ", msisdn=" + msisdn +
                 ", stateId=" + stateId +
+                ", stateName='" + stateName + '\'' +
                 ", districtId=" + districtId +
+                ", districtName='" + districtName + '\'' +
                 ", blockId=" + blockId +
                 ", panchayatId=" + panchayatId +
                 ", blockName='" + blockName + '\'' +
@@ -120,6 +124,22 @@ public class AddSwcRequest {
 
     public void setAge(Long age) {
         this.age = age;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
     }
 
     public String getSex() {
