@@ -169,13 +169,14 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     // Test Swc Id takes precedence over MSISDN
     @Test
     public void testImportWhenwaIdTakesPrecedenceOverMSIDN() throws Exception {
+        Block block = createBlock(rh.mysuruDistrict());
+        Panchayat panchayat = createPanchayat(block);
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setSwcId("72185");
         swc.setLanguage(rh.kannadaLanguage());
         swc.setState(rh.karnatakaState());
         swc.setDistrict(rh.mysuruDistrict());
-        Block block = createBlock(rh.mysuruDistrict());
-        Panchayat panchayat = createPanchayat(block);
+
         swc.setPanchayat(panchayat);
         swc.setBlock(block);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
