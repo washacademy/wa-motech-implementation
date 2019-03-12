@@ -2621,7 +2621,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 true, VALID_CALL_ID,  // callId
                 true, "A",               // operator
                 true, "AP",              // circle
-                true, DateTime.now().getMillis() / 1000,       // callStartTime
+                true, DateTime.now().getMillis()/1000,       // callStartTime
                 true, 1422879903l,       // callEndTime
                 true, 60,                // callDurationInPulses
                 true, 0,                 // endOfUsagePromptCounter
