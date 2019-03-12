@@ -931,6 +931,9 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
     }
 
+    /**
+     * To verify that SetLanguageLocation API is rejected when mandatory parameter "CallingNumber" is null
+     */
     @Test
     public void testSetLanguageMissingCallingNumber() throws IOException, InterruptedException {
         HttpPost httpPost = createHttpPost("washacademy", new UserLanguageRequest(null, VALID_CALL_ID, "10"));
@@ -953,6 +956,10 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
     }
 
+
+    /**
+     * To verify that SetLanguageLocation API is rejected when mandatory parameter "CallId" is null
+     */
     @Test
     public void testSetLanguageMissingCallId() throws IOException, InterruptedException {
         HttpPost httpPost = createHttpPost("washacademy", new UserLanguageRequest(1111111111L, null, "10"));
@@ -975,6 +982,9 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
     }
 
+    /**
+     * To verify SetLanguageLocation API is rejected when mandatory parameter "languageLocationCode" is missing
+     */
     @Test
     public void testSetLanguageMissingLanguageLocationCode() throws IOException, InterruptedException {
         HttpPost httpPost = createHttpPost("washacademy", new UserLanguageRequest(1111111111L, VALID_CALL_ID, null));
@@ -998,6 +1008,19 @@ public class UserControllerBundleIT extends BasePaxIT {
         Pattern expectedJsonPattern = Pattern.compile(".*JSON parse error.*");
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST, expectedJsonPattern,
                 ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testSetLanguageCallingNumberMissing() throws IOException, InterruptedException {
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/washacademy/languageLocationCode",
+                TestContext.getJettyPort()));
+        StringEntity params = new StringEntity(
+                "{\"callingNumber\":\"\",\"callId\":\"123456789012345\",\"languageLocationCode\":\"10\"}");
+        httpPost.setEntity(params);
+        httpPost.addHeader("content-type", "application/json");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpPost, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
 
     @Test
@@ -2366,12 +2389,12 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify that getuserdetails API is rejected when mandatory parameter
-     * callingNumber is missing.
+     * callingNumber is null.
      */
     @Test
     public void verifyFT456() throws IOException, InterruptedException {
         HttpGet httpGet = createHttpGet(true, "washacademy", // service
-                false, null, // callingNumber missing
+                false, null, // callingNumber null
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
                 true, VALID_CALL_ID // callId
@@ -2385,7 +2408,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify that getuserdetails API is rejected when mandatory parameter
-     * callId is missing.
+     * callId is null.
      */
     @Test
     public void verifyFT457() throws IOException, InterruptedException {
@@ -2393,7 +2416,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 true, "1200000000", // callingNumber
                 true, "OP", // operator
                 true, rh.delhiCircle().getName(),// circle
-                false, null // callId Missing
+                false, null // callId null
         );
         httpGet.addHeader("content-type", "application/json");
         String expectedJsonResponse = createFailureResponseJson("<callId: Not Present>");
@@ -2707,7 +2730,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 //
     /*
      * To verify that getuserdetails API is rejected when mandatory parameter 
-     * callingNumber is missing.
+     * callingNumber is null.
      */
     @Test
     public void verifyFT352() throws IOException, InterruptedException {
@@ -2727,7 +2750,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     }
     
     /*
-     * To verify that getuserdetails API is rejected when mandatory parameter callId is missing.
+     * To verify that getuserdetails API is rejected when mandatory parameter callId is null.
      */
     @Test
     public void verifyFT353() throws IOException, InterruptedException {
@@ -4474,4 +4497,171 @@ public class UserControllerBundleIT extends BasePaxIT {
 //
 //    }
 
+    /**
+     * To verify that getuserdetails API is rejected when mandatory parameter
+     * callingNumber is missing in request body.
+     */
+    @Test
+    public void verifyGetUserCallingNumberMissing() throws IOException, InterruptedException {
+        //Used this method to set up WASH_ACADEMY environment
+        createCircleWithLanguage();
+
+        HttpGet httpGet = createHttpGet(
+                true, "washacademy",    //service
+                false, "", //callingNumber
+                true, "OP",         //operator
+                true, "AA",         //circle
+                true, VALID_CALL_ID         //callId
+        );
+        httpGet.addHeader("content-type", "application/json");
+        String expectedJsonResponse = createFailureResponseJson("<callingNumber: Not Present>");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+        assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
+    }
+
+    /**
+     * To verify that getuserdetails API is rejected when mandatory parameter
+     * callId is missing in request body.
+     */
+    @Test
+    public void verifyGetUserCallIdMissing() throws IOException, InterruptedException {
+        //Used this method to set up WASH_ACADEMY environment
+        createCircleWithLanguage();
+
+        HttpGet httpGet = createHttpGet(
+                true, "washacademy",    //service
+                true, "1200000000", //callingNumber
+                true, "OP",         //operator
+                true, "AA",         //circle
+                false, ""         //callId
+        );
+        httpGet.addHeader("content-type", "application/json");
+        String expectedJsonResponse = createFailureResponseJson("<callId: Not Present>");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+        assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
+    }
+
+    /**
+     * To verify that getuserdetails API is rejected when mandatory parameter
+     * callingNumber is having invalid value >10 digits
+     */
+    @Test
+    public void verifyGetUserCallingNumberMoreThan10Digits() throws IOException, InterruptedException {
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
+                true, "1234567891234567", // callingNumber Invalid
+                true, "OP", // operator
+                true, rh.delhiCircle().getName(),// circle
+                true, VALID_CALL_ID // callId
+        );
+        httpGet.addHeader("content-type", "application/json");
+        String expectedJsonResponse = createFailureResponseJson("<callingNumber: Invalid>");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
+                .getStatusCode());
+        assertEquals(expectedJsonResponse,
+                EntityUtils.toString(response.getEntity()));
+    }
+
+    /**
+     * To verify that getuserdetails API throws proper error message when request
+     * sent without header.
+     */
+    @Test
+    public void verifyGetUserWhenRequestWithoutHeader() throws IOException, InterruptedException {
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
+                true, "1234567890", // callingNumber Invalid
+                true, "OP", // operator
+                true, rh.delhiCircle().getName(),// circle
+                true, VALID_CALL_ID // callId
+        );
+        httpGet.addHeader("content-type", "");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine()
+                .getStatusCode());
+    }
+
+    /**
+     * To verify that getuserdetails API throws proper error message when request
+     * sent with invalid header.
+     */
+    @Test
+    public void verifyGetUserWhenRequestInvalidHeader() throws IOException, InterruptedException {
+        HttpGet httpGet = createHttpGet(true, "washacademy", // service
+                true, "1234567890", // callingNumber Invalid
+                true, "OP", // operator
+                true, rh.delhiCircle().getName(),// circle
+                true, VALID_CALL_ID // callId
+        );
+        httpGet.addHeader("content-type", "application/javascript");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine()
+                .getStatusCode());
+    }
+
+    @Test
+    public void testSetLanguageWithoutHeader() throws IOException, InterruptedException {
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
+
+        HttpPost request = createHttpPost("washacademy", new UserLanguageRequest(1111111111L, VALID_CALL_ID, "99"));
+        request.addHeader("content-type", "");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine()
+                .getStatusCode());
+    }
+
+    @Test
+    public void testSetLanguageInvalidHeader() throws IOException, InterruptedException {
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
+
+        HttpPost request = createHttpPost("washacademy", new UserLanguageRequest(1111111111L, VALID_CALL_ID, "99"));
+        request.addHeader("content-type", "application/javascript");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine()
+                .getStatusCode());
+    }
+
+    @Test
+    public void testSetLanguageCallIdMissing() throws IOException, InterruptedException {
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
+
+        HttpPost request = createHttpPost("washacademy", new UserLanguageRequest(1111111111L, "", "99"));
+        request.addHeader("content-type", "application/json");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
+                .getStatusCode());
+        String expectedJsonResponse = createFailureResponseJson("<callId: Not Present>");
+        assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
+    }
+
+    @Test
+    public void testSetLanguageWhenLanguageLocationCodeMissing() throws IOException, InterruptedException {
+        createSwcCappedServiceNoUsageNoLocationNoLanguage();
+
+        HttpPost request = createHttpPost("washacademy", new UserLanguageRequest(1111111111L,VALID_CALL_ID , ""));
+        request.addHeader("content-type", "application/json");
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusLine()
+                .getStatusCode());
+        String expectedJsonResponse = createFailureResponseJson("<languageLocationCode: Not Found>");
+        assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
+    }
 }
