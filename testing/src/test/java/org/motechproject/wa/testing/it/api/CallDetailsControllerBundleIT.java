@@ -51,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import org.motechproject.wa.testing.it.api.utils.RequestBuilder;
+
 
 import static org.junit.Assert.*;
 
@@ -329,7 +331,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         httpPost.addHeader("content-type", "application/json");
         return httpPost;
     }
-    
+
     /**
      * method to pass all values as per data type mentioned in API
      */
@@ -617,7 +619,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     /**
      * verifyFT471 To check that call details of user is saved successfully
-     * using Save Call Details API when optional parameter "content" is missing.
+     * using Save Call Details API when optional parameter "content" is null.
      */
     @Test
     public void testCallDetailsValidNoContent() throws IOException, InterruptedException {
@@ -898,7 +900,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 /* callStatus */ true, 1,
                 /* callDisconnectReason */ true, 1,
                 /* content */ false, null);
-        
+
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                 "{\"failureReason\":\"<callId: Invalid>\"}",
                 ADMIN_USERNAME, ADMIN_PASSWORD));
@@ -1019,7 +1021,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         Pattern expectedJsonResponse = Pattern
                 .compile(".*callStartTime.*");
-        
+
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                 expectedJsonResponse, ADMIN_USERNAME, ADMIN_PASSWORD));
 
@@ -1053,12 +1055,12 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         Pattern expectedJsonResponse = Pattern
                 .compile(".*callEndTime.*");
-        
+
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                 expectedJsonResponse, ADMIN_USERNAME, ADMIN_PASSWORD));
 
     }
-    
+
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
      * "CallDurationPulses" is having invalid format.
@@ -1087,12 +1089,12 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
          Pattern expectedJsonResponse = Pattern
                 .compile(".*callDurationInPulses.*");
-         
+
          assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                  expectedJsonResponse, ADMIN_USERNAME, ADMIN_PASSWORD));
 
      }
-    
+
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
      * "EndOfUsagePrompt" is having invalid format.
@@ -1121,7 +1123,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
          Pattern expectedJsonResponse = Pattern
                 .compile(".*endOfUsagePromptCounter.*");
-         
+
          assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                  expectedJsonResponse, ADMIN_USERNAME, ADMIN_PASSWORD));
 
@@ -1209,7 +1211,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
-     * "CallData>>ContentName" is missing
+     * "CallData>>ContentName" is null
      */
     @Test
     public void verifyFT483() throws IOException, InterruptedException {
@@ -1244,7 +1246,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
-     * "CallData>>ContentFile" is missing
+     * "CallData>>ContentFile" is null
      */
     @Test
     public void verifyFT484() throws IOException, InterruptedException {
@@ -1279,7 +1281,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
-     * "CallData>>StartTime" is missing
+     * "CallData>>StartTime" is null
      */
     @Test
     public void verifyFT485() throws IOException, InterruptedException {
@@ -1314,7 +1316,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
-     * "CallData>>EndTime" is missing
+     * "CallData>>EndTime" is null
      */
     @Test
     public void verifyFT486() throws IOException, InterruptedException {
@@ -1385,7 +1387,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 HttpStatus.SC_BAD_REQUEST, expectedJsonResponse,
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
-    
+
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
      * "CallData>>EndTime" is having invalid format.
@@ -1424,7 +1426,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 HttpStatus.SC_BAD_REQUEST, expectedJsonResponse,
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
-    
+
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
      * "CallData>>type" is having invalid format.
@@ -1464,7 +1466,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                 HttpStatus.SC_BAD_REQUEST, expectedJsonResponse,
                 ADMIN_USERNAME, ADMIN_PASSWORD));
     }
-    
+
     /**
      * To verify that Save Call Details API if rejected when mandatory parameter
      * callData>> completionFlag" is having invalid format.
@@ -1600,7 +1602,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
     /**
      * To check that call details of user is saved successfully using Save Call
-     * Details API when optional parameter "content" is missing.
+     * Details API when optional parameter "content" is null.
      */
     @Test
     public void verifyFT367() throws IOException, InterruptedException {
@@ -1650,7 +1652,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallingNumber" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallingNumber" is null
      */
     @Test
     public void verifyFT368() throws IOException, InterruptedException {
@@ -1678,7 +1680,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallId" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallId" is null
      */
     @Test
     public void verifyFT369() throws IOException, InterruptedException {
@@ -1706,7 +1708,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallStartTime" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallStartTime" is null
      */
     @Test
     public void verifyFT372() throws IOException, InterruptedException {
@@ -1734,7 +1736,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallEndTime" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallEndTime" is null
      */
     @Test
     public void verifyFT373() throws IOException, InterruptedException {
@@ -1762,7 +1764,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallDurationPulses" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallDurationPulses" is null
      */
     @Test
     public void verifyFT374() throws IOException, InterruptedException {
@@ -1790,7 +1792,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "EndOfUsagePrompt" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "EndOfUsagePrompt" is null
      */
     @Test
     public void verifyFT375() throws IOException, InterruptedException {
@@ -1818,7 +1820,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "WelcomeMessageFlag" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "WelcomeMessageFlag" is null
      */
     @Test
     public void verifyFT376() throws IOException, InterruptedException {
@@ -1846,7 +1848,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallStatus" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallStatus" is null
      */
     @Test
     public void verifyFT377() throws IOException, InterruptedException {
@@ -1874,7 +1876,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallDisconnectReason" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallDisconnectReason" is null
      */
     @Test
     public void verifyFT378() throws IOException, InterruptedException {
@@ -1902,7 +1904,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>ContentName" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>ContentName" is null
      */
     @Test
     public void verifyFT379() throws IOException, InterruptedException {
@@ -1941,7 +1943,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>ContentFile" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>ContentFile" is null
      */
     @Test
     public void verifyFT380() throws IOException, InterruptedException {
@@ -1980,7 +1982,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>StartTime" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>StartTime" is null
      */
     @Test
     public void verifyFT381() throws IOException, InterruptedException {
@@ -2019,7 +2021,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     /**
-     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>EndTime" is missing
+     * To verify that Save Call Details API if rejected when mandatory parameter "CallData>>EndTime" is null
      */
     @Test
     public void verifyFT382() throws IOException, InterruptedException {
@@ -2729,7 +2731,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testCallDetailscontentFileMissing() throws IOException, InterruptedException {
+    public void testCallDetailscontentFileNull() throws IOException, InterruptedException {
 
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -2737,7 +2739,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         ArrayList<String> array = new ArrayList<>();
         array.add(createContentJson( true, "question", false, null, true, "Chapter-01lesson-04",
-                false, "",true, 1200000000l,
+                false, null,true, 1200000000l,
                true, 1222222221l,
                 true, true,
                true, true));
@@ -2770,4 +2772,439 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
     // Test with no swc for callingNumber
     // Test with invalid callId
     // Test with missing callId
+
+
+    @Test
+    public void testCallDetailsCallIdMissing() throws IOException, InterruptedException {
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ false, "",
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879903l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */ true, 0,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callId: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDetailsCallingNumberMissing() throws IOException,
+            InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+                9810320300L);
+        swcService.add(swc);
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */false, "",
+                /* callId */true, VALID_CALL_ID,
+                /* operator */true, "A",
+                /* circle */true, "AP",
+                /* callStartTime */true, "1422879902",
+                /* callEndTime */true, "1422879903",
+                /* callDurationInPulses */true, "60",
+                /* endOfUsagePromptCounter */true, "0",
+                /* welcomeMessagePromptFlag */false, null,
+                /* callStatus */true, "1",
+                /* callDisconnectReason */true, "1",
+                /* content */false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callingNumber: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+
+    }
+
+    @Test
+    public void testCallDetailsCallStartTimeMissing() throws IOException,
+            InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+                9810320300L);
+        swcService.add(swc);
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */true, "9810320300",
+                /* callId */true, VALID_CALL_ID,
+                /* operator */true, "A",
+                /* circle */true, "AP",
+                /* callStartTime */false, "",
+                /* callEndTime */true, "1422879903",
+                /* callDurationInPulses */true, "60",
+                /* endOfUsagePromptCounter */true, "0",
+                /* welcomeMessagePromptFlag */false, null,
+                /* callStatus */true, "1",
+                /* callDisconnectReason */true, "1",
+                /* content */false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callStartTime: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDetailscallEndTimeMissing() throws IOException,
+            InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+                9810320300L);
+        swcService.add(swc);
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */true, "9810320300",
+                /* callId */true, VALID_CALL_ID,
+                /* operator */true, "A",
+                /* circle */true, "AP",
+                /* callStartTime */true, "1422879902",
+                /* callEndTime */false, "1422879903",
+                /* callDurationInPulses */true, "60",
+                /* endOfUsagePromptCounter */true, "0",
+                /* welcomeMessagePromptFlag */false, null,
+                /* callStatus */true, "1",
+                /* callDisconnectReason */true, "1",
+                /* content */false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callEndTime: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDetailscallDurationInPulsesMissing() throws IOException,
+            InterruptedException {
+    Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+            9810320300L);
+    swcService.add(swc);
+
+    HttpPost httpPost = createCallDetailsPost("washacademy",
+            /* callingNumber */true, "9810320300",
+            /* callId */true, VALID_CALL_ID,
+            /* operator */true, "A",
+            /* circle */true, "AP",
+            /* callStartTime */true, "1422879902",
+            /* callEndTime */true, "1422879903",
+            /* callDurationInPulses */false, "",
+            /* endOfUsagePromptCounter */true, "0",
+            /* welcomeMessagePromptFlag */false, null,
+            /* callStatus */true, "1",
+            /* callDisconnectReason */true, "1",
+            /* content */false, null);
+
+    assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callDurationInPulses: Not Present>\"}",
+               ADMIN_USERNAME, ADMIN_PASSWORD));
+}
+
+    @Test
+    public void testCallDetailsEndOfUsagePromptCountMissing() throws IOException,
+            InterruptedException {
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+                9810320300L);
+        swcService.add(swc);
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */true, "9810320300",
+                /* callId */true, VALID_CALL_ID,
+                /* operator */true, "A",
+                /* circle */true, "AP",
+                /* callStartTime */true, "1422879902",
+                /* callEndTime */true, "1422879903",
+                /* callDurationInPulses */true, "60",
+                /* endOfUsagePromptCounter */false, "",
+                /* welcomeMessagePromptFlag */false, null,
+                /* callStatus */true, "1",
+                /* callDisconnectReason */true, "1",
+                /* content */false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<endOfUsagePromptCount: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDetailsCallStatusMissing() throws IOException,
+            InterruptedException {
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+                9810320300L);
+        swcService.add(swc);
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */true, "9810320300",
+                /* callId */true, VALID_CALL_ID,
+                /* operator */true, "A",
+                /* circle */true, "AP",
+                /* callStartTime */true, "1422879902",
+                /* callEndTime */true, "1422879903",
+                /* callDurationInPulses */true, "60",
+                /* endOfUsagePromptCounter */true, "0",
+                /* welcomeMessagePromptFlag */false, null,
+                /* callStatus */false, "",
+                /* callDisconnectReason */true, "1",
+                /* content */false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callStatus: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDetailscallDisconnectReasonMissing() throws IOException,
+            InterruptedException {
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright",
+                9810320300L);
+        swcService.add(swc);
+
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */true, "9810320300",
+                /* callId */true, VALID_CALL_ID,
+                /* operator */true, "A",
+                /* circle */true, "AP",
+                /* callStartTime */true, "1422879902",
+                /* callEndTime */true, "1422879903",
+                /* callDurationInPulses */true, "60",
+                /* endOfUsagePromptCounter */true, "0",
+                /* welcomeMessagePromptFlag */false, null,
+                /* callStatus */true, "1",
+                /* callDisconnectReason */false, "",
+                /* content */false, null);
+
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<callDisconnectReason: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDataTypeMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson(/* type */ false, "",
+                /* mkCardCode */ false, null,
+                /* contentName */ true, "Chapter-01lesson-04",
+                /* contentFile */ true, "ch1_l4.wav",
+                /* startTime */ true, 1200000000l,
+                /* endTime */ true, 1222222221l,
+                /* completionFlag */ true, true,
+                /* correctAnswerEntered */false, null));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ true, VALID_CALL_ID,
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879843l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */true, 1,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<type: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDetailsContentNameMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson(/* type */true, "question",
+                /* mkCardCode */false, null,
+                /* contentName */false, "",
+                /* contentFile */true, "ch1_q1.wav",
+                /* startTime */true, 1200000000l,
+                /* endTime */true, 1222222221l,
+                /* completionFlag */true, true,
+                /* correctAnswerEntered */true, true));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ true, VALID_CALL_ID,
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879843l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */true, 1,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<contentName: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+    @Test
+    public void testCallDetailscontentFileMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson(/* type */true, "question",
+                /* mkCardCode */false, null,
+                /* contentName */true, "Chapter-01lesson-04",
+                /* contentFile */false, "",
+                /* startTime */true, 1200000000l,
+                /* endTime */true, 1222222221l,
+                /* completionFlag */true, true,
+                /* correctAnswerEntered */true, true));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ true, VALID_CALL_ID,
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879843l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */true, 1,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<contentFile: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+    @Test
+    public void testCallDataCompletionFlagMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson(/* type */ true, "lesson",
+                /* mkCardCode */ false, null,
+                /* contentName */ true, "Chapter-01lesson-04",
+                /* contentFile */ true, "ch1_l4.wav",
+                /* startTime */ true, 1200000000l,
+                /* endTime */ true, 1222222221l,
+                /* completionFlag */ false, false,
+                /* correctAnswerEntered */false, null));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ true, VALID_CALL_ID,
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879843l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */true, 1,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<completionFlag: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDataStartTimeMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson(/* type */ true, "lesson",
+                /* mkCardCode */ false, null,
+                /* contentName */ true, "Chapter-01lesson-04",
+                /* contentFile */ true, "ch1_l4.wav",
+                /* startTime */ false, 1200000000l,
+                /* endTime */ true, 1222222221l,
+                /* completionFlag */ true, true,
+                /* correctAnswerEntered */false, null));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ true, VALID_CALL_ID,
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879843l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */true, 1,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<startTime: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
+
+    @Test
+    public void testCallDataEndTimeMissing() throws IOException, InterruptedException {
+
+        Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 9810320300L);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+
+        ArrayList<String> array = new ArrayList<>();
+        array.add(createContentJson(/* type */ true, "lesson",
+                /* mkCardCode */ false, null,
+                /* contentName */ true, "Chapter-01lesson-04",
+                /* contentFile */ true, "ch1_l4.wav",
+                /* startTime */ true, 1200000000l,
+                /* endTime */ false, 1222222221l,
+                /* completionFlag */ true, true,
+                /* correctAnswerEntered */false, null));
+        HttpPost httpPost = createCallDetailsPost("washacademy",
+                /* callingNumber */ true, 9810320300l,
+                /* callId */ true, VALID_CALL_ID,
+                /* operator */ true, "A",
+                /* circle */ true, "AP",
+                /* callStartTime */ true, 1422879843l,
+                /* callEndTime */ true, 1422879903l,
+                /* callDurationInPulses */ true, 60,
+                /* endOfUsagePromptCounter */true, 1,
+                /* welcomeMessagePromptFlag */ false, null,
+                /* callStatus */ true, 1,
+                /* callDisconnectReason */true, 2,
+                /* content */ true, Joiner.on(",").join(array));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                httpPost, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
+                "{\"failureReason\":\"<endTime: Not Present>\"}",
+                ADMIN_USERNAME, ADMIN_PASSWORD));
+    }
 }

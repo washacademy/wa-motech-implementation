@@ -401,7 +401,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify Get Bookmark with Score API is rejected when mandatory
-     * parameter CallingNumber is missing
+     * parameter CallingNumber is null
      */
     // TODO JIRA issue: https://applab.atlassian.net/browse/wa-238
     @Test
@@ -421,7 +421,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     /**
      * To verify Get Bookmark with Score API is rejected when mandatory
-     * parameter CallId is missing.
+     * parameter CallId is null.
      */
     // TODO JIRA issue: https://applab.atlassian.net/browse/wa-238
     @Test
@@ -1081,6 +1081,406 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // assert completion record
         ccr = courseCompletionRecordDataService.findBySwcId(swc.getId()).get(0);
         assertEquals(DeliveryStatus.DeliveredToNetwork.toString(), ccr.getLastDeliveryStatus());
+    }
+
+    /**
+     * To verify Get Bookmark with Score API is rejected when mandatory
+     * parameter CallingNumber is missing from request body
+     */
+
+    @Test
+    public void verifyGetBookmarkCallingNumberMissing() throws IOException, InterruptedException {
+        HttpGet getRequest = createHttpGetBookmarkWithScore("",
+                VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/json");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                getRequest, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
+                .getStatusCode());
+
+        String expectedJsonResponse = createFailureResponseJson("<callingNumber: Not Present>");
+        assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
+    }
+
+    /**
+     * To verify Get Bookmark with Score API is rejected when mandatory
+     * parameter CallId is missing from request body
+     */
+
+    @Test
+    public void verifyGetBookmarkCallIdMissing() throws IOException, InterruptedException {
+        HttpGet request = createHttpGetBookmarkWithScore("1234567890", "");
+        request.addHeader("content-type", "application/json");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
+                .getStatusCode());
+
+        String expectedJsonResponse = createFailureResponseJson("<callId: Not Present>");
+        assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
+    }
+
+    /**
+     * To verify Get Bookmark with Score API is rejected when mandatory
+     * parameter CallId is having invalid value less than 25 digits.
+     */
+    @Test
+    public void verifyGetBookmarkCallIdLessThan25Digits﻿() throws IOException, InterruptedException {
+        // callId less than 25 digit
+        HttpGet request = createHttpGetBookmarkWithScore("1234567890",
+                "12345678");
+        request.addHeader("content-type", "application/json");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine()
+                .getStatusCode());
+
+        String expectedJsonResponse = createFailureResponseJson("<callId: Invalid>");
+        assertTrue(expectedJsonResponse.equals(EntityUtils.toString(response
+                .getEntity())));
+    }
+
+    /**
+     * To verify that getbookmark API throws proper error message when request
+     * sent without header.
+     */
+    @Test
+    public void verifyGetBookmarkRequestWithoutHeader() throws IOException, InterruptedException {
+        bookmarkService.deleteAllBookmarksForUser("1234567890");
+
+        // Blank bookmark should come as request response, As there is no any
+        // bookmark in the system for the user
+        HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
+                VALID_CALL_ID);
+        getRequest.addHeader("content-type", "");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                getRequest, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine()
+                .getStatusCode());
+        String responseJson = EntityUtils.toString(response.getEntity());
+        assertNotNull(responseJson);
+    }
+
+    /**
+     * To verify that getbookmark API throws proper error message when request
+     * sent without header.
+     */
+    @Test
+    public void verifyGetBookmarkRequestWithInvalidHeader() throws IOException, InterruptedException {
+        bookmarkService.deleteAllBookmarksForUser("1234567890");
+
+        // Blank bookmark should come as request response, As there is no any
+        // bookmark in the system for the user
+        HttpGet getRequest = createHttpGetBookmarkWithScore("1234567890",
+                VALID_CALL_ID);
+        getRequest.addHeader("content-type", "application/javascript");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                getRequest, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine()
+                .getStatusCode());
+        String responseJson = EntityUtils.toString(response.getEntity());
+        assertNotNull(responseJson);
+    }
+
+    /**
+     * To verify that savebookmark API throws proper error message when request
+     * sent without header.
+     */
+    @Test
+    public void verifySaveBookmarkWhenRequestWithoutHeader() throws IOException, InterruptedException {
+
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                TestContext.getJettyPort());
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
+        bookmarkRequest.setCallId(VALID_CALL_ID);
+        bookmarkRequest.setCallingNumber(1234567890l);
+        bookmarkRequest.setBookmark("Chapter01_Lesson01");
+        Map<String, Integer> scoreMap = new HashMap<String, Integer>();
+        scoreMap.put("1", 2);
+        scoreMap.put("2", 0);
+        scoreMap.put("3", 3);
+        bookmarkRequest.setScoresByChapter(scoreMap);
+        HttpPost request = RequestBuilder.createPostRequest(endpoint,
+                bookmarkRequest);
+        request.addHeader("content-type", "");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine()
+                .getStatusCode());
+    }
+
+    /**
+     * To verify that savebookmark API throws proper error message when request
+     * sent with invalid header.
+     */
+    @Test
+    public void verifySaveBookmarkWhenRequestWithInvalidHeader() throws IOException, InterruptedException {
+
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                TestContext.getJettyPort());
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
+        bookmarkRequest.setCallId(VALID_CALL_ID);
+        bookmarkRequest.setCallingNumber(1234567890l);
+        bookmarkRequest.setBookmark("Chapter01_Lesson01");
+        Map<String, Integer> scoreMap = new HashMap<String, Integer>();
+        scoreMap.put("1", 2);
+        scoreMap.put("2", 0);
+        scoreMap.put("3", 3);
+        bookmarkRequest.setScoresByChapter(scoreMap);
+        HttpPost request = RequestBuilder.createPostRequest(endpoint,
+                bookmarkRequest);
+        request.setHeader("content-type", "application/javascript");
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                request, RequestBuilder.ADMIN_USERNAME,
+                RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine()
+                .getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApiWithoutHeader() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": \"abc100\""
+                + ",\"deliveryInfo\": {\"address\": \"tel: 1234567890\",\"deliveryStatus\": \"DeliveredToNetwork\"}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApiWithInvalidHeader() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/javascript");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": \"abc100\""
+                + ",\"deliveryInfo\": {\"address\": \"tel: 1234567890\",\"deliveryStatus\": \"DeliveredToNetwork\"}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyRequestDataMissingInDeliveryNotification() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifydeliveryInfoNotificationMissing() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": }}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApiclientCorrelatorMissing() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": "
+                + ",\"deliveryInfo\": {\"address\": \"tel: 1234567890\",\"deliveryStatus\": \"DeliveredToNetwork\"}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApideliveryInfoMissing() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": \"abc100\""
+                + ",\"deliveryInfo\": {,\"deliveryStatus\": \"DeliveredToNetwork\"}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApiAddressMissing() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": \"abc100\""
+                + ",\"deliveryInfo\": {\"address\": ,\"deliveryStatus\": \"DeliveredToNetwork\"}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApiDeliveryStatusMissing() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": \"abc100\""
+                + ",\"deliveryInfo\": {\"address\": \"tel: 1234567890\",\"deliveryStatus\": }}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
+    }
+
+    @Test
+    public void verifyDeliveryNotificationApiInvalidTelephoneLength() throws IOException, InterruptedException {
+        // create completion record for msisdn 1234567890l
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
+        swc = swcService.getByContactNumber(1234567890l);
+        System.out.print(swc);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        ccr = courseCompletionRecordDataService.create(ccr);
+        assertNull(ccr.getLastDeliveryStatus());
+        // invoke delivery notification API
+        String endpoint = String.format(
+                "http://localhost:%d/api/washacademy/sms/status/imi",
+                TestContext.getJettyPort());
+        HttpPost postRequest = new HttpPost(endpoint);
+        postRequest.setHeader("Content-type", "application/json");
+        String inputJson = "{\"requestData\": {\"deliveryInfoNotification\": {\"clientCorrelator\": \"abc100\""
+                + ",\"deliveryInfo\": {\"address\": \"tel: 123456\",\"deliveryStatus\": \"DeliveredToNetwork\"}}}}";
+        postRequest.setEntity(new StringEntity(inputJson));
+
+        HttpResponse response = SimpleHttpClient.httpRequestAndResponse(
+                postRequest, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusLine().getStatusCode());
     }
 }
 
