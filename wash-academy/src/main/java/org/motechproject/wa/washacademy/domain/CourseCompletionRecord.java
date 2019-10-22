@@ -37,23 +37,38 @@ public class CourseCompletionRecord extends MdsEntity {
     @Field
     private int notificationRetryCount;
 
+    @Field
+    private int courseId;
 
-    public CourseCompletionRecord(long swcId, int score, String chapterWiseScores) {
-        this(swcId, score, chapterWiseScores, false);
+    @Field
+    private String clientCorrelator;
+
+    public int getCourseId() {  return courseId;  }
+
+    public void setCourseId(int courseId) {  this.courseId = courseId;  }
+
+    public String getClientCorrelator() { return clientCorrelator;  }
+
+    public void setClientCorrelator(String clientCorrelator) {  this.clientCorrelator = clientCorrelator; }
+
+
+    public CourseCompletionRecord(long swcId, int score, String chapterWiseScores, int courseId) {
+        this(swcId, score, chapterWiseScores,false, courseId);
     }
 
-    public CourseCompletionRecord(long swcId, int score, String chapterWiseScores, boolean sentNotification) {
-        this(swcId, score, chapterWiseScores, false, sentNotification, 0);
+    public CourseCompletionRecord(long swcId, int score, String chapterWiseScores, boolean sentNotification, int courseId) {
+        this(swcId, score, chapterWiseScores, false, sentNotification, 0, courseId);
 
     }
 
-    public CourseCompletionRecord(Long swcId, int score, String chapterWiseScores, boolean passed, boolean sentNotification, int notificationRetryCount) {
+    public CourseCompletionRecord(Long swcId, int score, String chapterWiseScores, boolean passed, boolean sentNotification, int notificationRetryCount, int courseId) {
         this.swcId = swcId;
         this.score = score;
         this.chapterWiseScores = chapterWiseScores;
         this.passed = passed;
         this.sentNotification = sentNotification;
         this.notificationRetryCount = notificationRetryCount;
+        this.courseId = courseId;
     }
 
     public Long getSwcId() {
@@ -119,4 +134,8 @@ public class CourseCompletionRecord extends MdsEntity {
     public void setPassed(boolean passed) {
         this.passed = passed;
     }
+
+//    public WaCourse getWaCourse() { return waCourse;   }
+//
+//    public void setWaCourse(WaCourse waCourse) { this.waCourse = waCourse;  }
 }

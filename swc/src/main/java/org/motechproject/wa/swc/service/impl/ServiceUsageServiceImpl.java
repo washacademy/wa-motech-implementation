@@ -2,8 +2,6 @@ package org.motechproject.wa.swc.service.impl;
 
 //import org.joda.time.DateTime;
 import org.motechproject.mds.query.SqlQueryExecution;
-//import org.motechproject.mds.query.QueryExecution;
-//import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.wa.swc.domain.CallDetailRecord;
 import org.motechproject.wa.swc.domain.ServiceUsage;
 import org.motechproject.wa.swc.domain.Swachchagrahi;
@@ -11,11 +9,14 @@ import org.motechproject.wa.swc.repository.CallDetailRecordDataService;
 import org.motechproject.wa.swc.service.ServiceUsageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 
 import javax.jdo.Query;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+//import org.motechproject.mds.query.QueryExecution;
+//import org.motechproject.mds.util.InstanceSecurityRestriction;
 
 
 @Service("serviceUsageService")
@@ -28,7 +29,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
     }
 
     @Override
-    public ServiceUsage getCurrentMonthlyUsageForSWCAndService(final Swachchagrahi swachchagrahi, final org.motechproject.wa.props.domain.Service service) {
+    public ServiceUsage getCurrentMonthlyUsageForSWCAndService(final Swachchagrahi swachchagrahi, final org.motechproject.wa.props.domain.Service service, Integer courseId) {
         ServiceUsage serviceUsage = new ServiceUsage(swachchagrahi, service, 0, 0, false);
         Long phone = swachchagrahi.getContactNumber();
 
@@ -48,7 +49,7 @@ public class ServiceUsageServiceImpl implements ServiceUsageService {
             public String getSqlQuery() {
                 LocalDateTime monthStart = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String query = "Select * FROM wash_swachgrahi_cdrs where callingNumber=" + phone +" and callStartTime >= '"+dtf.format(monthStart)+"';";
+                String query = "Select * FROM wash_swachgrahi_cdrs where callingNumber=" + phone +" and callStartTime >= '"+dtf.format(monthStart)+"' and courseId=" + courseId +";";
                 return query;
             }
             @Override

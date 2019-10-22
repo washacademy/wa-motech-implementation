@@ -63,9 +63,9 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
      * @param content sms content to send
      */
     @Override
-    public boolean sendSms(Long callingNumber, String content) {
+    public boolean sendSms(Long callingNumber, String content, Integer courseId) {
 
-        HttpPost httpPost = prepareSmsRequest(callingNumber, content);
+        HttpPost httpPost = prepareSmsRequest(callingNumber, content, courseId);
 
         if (httpPost == null) {
             LOGGER.error("Unable to build POST request for SMS notification");
@@ -78,7 +78,7 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         return sender.sendNotificationRequest(httpPost, HttpStatus.SC_CREATED, ALERT_ID, ALERT_NAME);
     }
 
-    private HttpPost prepareSmsRequest(Long callingNumber, String content) {
+    private HttpPost prepareSmsRequest(Long callingNumber, String content, Integer courseId) {
 
         String senderId = settingsFacade.getProperty(SMS_SENDER_ID);
         String endpoint = settingsFacade.getProperty(SMS_NOTIFICATION_URL);
@@ -120,7 +120,7 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         template = template.replaceAll("\\s", "");
         template = template.replace("<messageContent>", content);
         template = template.replace("<notificationUrl>", callbackEndpoint);
-        template = template.replace("<correlationId>", DateTime.now().toString());
+        template = template.replace("<correlationId>", DateTime.now().toString() + "_" + courseId);
 
         try {
             request.setEntity(new StringEntity(template));

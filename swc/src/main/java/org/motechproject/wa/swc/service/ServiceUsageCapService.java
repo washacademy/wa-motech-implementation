@@ -5,5 +5,5 @@ import org.motechproject.wa.region.domain.State;
 import org.motechproject.wa.swc.domain.ServiceUsageCap;
 
 public interface ServiceUsageCapService {
-    ServiceUsageCap getServiceUsageCap(final State state, final Service service);
+    ServiceUsageCap getServiceUsageCap(final State state, final Service service, Integer courseId);
 }

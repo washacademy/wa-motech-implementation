@@ -1062,7 +1062,8 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
         swc = swcService.getByContactNumber(1234567890l);
         System.out.print(swc);
-        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0);
+        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0,1);
         ccr = courseCompletionRecordDataService.create(ccr);
         assertNull(ccr.getLastDeliveryStatus());
         // invoke delivery notification API

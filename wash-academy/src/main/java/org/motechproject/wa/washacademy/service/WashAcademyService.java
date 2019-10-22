@@ -11,9 +11,8 @@ public interface WashAcademyService {
 
     /**
      * Get the MA course structure for the given course name. This defaults to "WashAcademyCourse" name
-     * @return Course data object with the course name
      */
-    WaCourse getCourse();
+    WaCourse getCourse(Integer courseId);
 
     /**
      * Set the MA course structure. This should only be called by the config handler on json update
@@ -25,7 +24,7 @@ public interface WashAcademyService {
      * Gets the course modification date as an epoch representation. This defaults to WashAcademyCourse name
      * @return int representation (epoch) of modified course date
      */
-    long getCourseVersion();
+    long getCourseVersion(Integer courseId);
 
     /**
      * Get the bookmark for a caller
@@ -33,7 +32,7 @@ public interface WashAcademyService {
      * @param callId unique call tracking id
      * @return bookmark for the user if it exists, null otherwise
      */
-    WaBookmark getBookmark(Long callingNumber, String callId);
+    WaBookmark getBookmark(Long callingNumber, String callId, Integer courseId);
 
     /**
      * Get the bookmark for the caller (to be used for Ops only)
@@ -46,13 +45,13 @@ public interface WashAcademyService {
      * Update the bookmark for a caller
      * @param bookmark updated bookmark to be stored
      */
-    void setBookmark(WaBookmark bookmark);
+    void setBookmark(WaBookmark bookmark, Integer courseId);
 
     /**
      * Retrigger the sms notification for course completion for user
      * @param swcId
      */
-    void triggerCompletionNotification(Long swcId);
+    void triggerCompletionNotification(Long swcId, String courseName);
 
     /**
      * Get scores for a user

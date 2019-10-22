@@ -76,13 +76,14 @@ public class UserController extends BaseController {
                              @RequestParam(required = false) Long callingNumber,
                              @RequestParam(required = false) String operator,
                              @RequestParam(required = false) String circle,
-                             @RequestParam(required = false) String callId) {
+                             @RequestParam(required = false) String callId,
+                             @RequestParam(required = false) Integer courseId){
 
         log(String.format("REQUEST: /%s/user", serviceName), String.format(
-                "callingNumber=%s, callId=%s, operator=%s, circle=%s",
-                LogHelper.obscure(callingNumber), callId, operator, circle));
+                "callingNumber=%s, callId=%s, courseId=%s, operator=%s, circle=%s",
+                LogHelper.obscure(callingNumber), callId, courseId.toString(), operator, circle));
 
-        StringBuilder failureReasons = validate(callingNumber, callId, operator, circle);
+        StringBuilder failureReasons = validate(callingNumber, callId, courseId, operator, circle);
         if (failureReasons.length() > 0) {
             throw new IllegalArgumentException(failureReasons.toString());
         }
@@ -106,7 +107,7 @@ public class UserController extends BaseController {
         Handle the SWC services
          */
         if (WASH_ACADEMY.equals(serviceName)) {
-            user = getFrontLineWorkerResponseUser(serviceName, callingNumber, circleObj);
+            user = getFrontLineWorkerResponseUser(serviceName, callingNumber, courseId, circleObj);
         }
 
           Language defaultLanguage = null;
@@ -146,7 +147,7 @@ public class UserController extends BaseController {
         return user;
     }
 
-      private UserResponse getFrontLineWorkerResponseUser(String serviceName, Long callingNumber, Circle circle) {
+      private UserResponse getFrontLineWorkerResponseUser(String serviceName, Long callingNumber, Integer courseId, Circle circle) {
         SwcUserResponse user = new SwcUserResponse();
         Service service = getServiceFromName(serviceName);
         ServiceUsage serviceUsage = new ServiceUsage(null, service, 0, 0, false);
@@ -191,14 +192,14 @@ public class UserController extends BaseController {
                 user.setLanguageLocationCode(language.getCode());
             }
 
-            serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, service);
+            serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, service, courseId);
 
             if (!frontLineWorkerAuthorizedForAccess(swc, state)) {
                 throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
             }
         }
 
-        ServiceUsageCap serviceUsageCap = serviceUsageCapService.getServiceUsageCap(state, service);
+        ServiceUsageCap serviceUsageCap = serviceUsageCapService.getServiceUsageCap(state, service, courseId);
         user.setCurrentUsageInPulses(serviceUsage.getUsageInPulses());
         user.setEndOfUsagePromptCounter(serviceUsage.getEndOfUsage());
         user.setWelcomePromptFlag(serviceUsage.getWelcomePrompt());

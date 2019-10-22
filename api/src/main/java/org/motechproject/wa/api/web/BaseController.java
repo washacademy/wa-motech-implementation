@@ -47,6 +47,9 @@ public class BaseController {
     public static final String NOT_DEPLOYED = "<%s: Not Deployed In State>";
 
     public static final String IVR_INTERACTION_LOG = "IVR INTERACTION: %s";
+    private static final String COURSE_NAME_1 = "WashAcademyCourse";
+
+    private static final String COURSE_NAME_2 = "WashAcademyCoursePlus";
 
     public static final long SMALLEST_10_DIGIT_NUMBER = 1000000000L;
     public static final long LARGEST_10_DIGIT_NUMBER  = 9999999999L;
@@ -160,6 +163,22 @@ public class BaseController {
         return false;
     }
 
+    protected static boolean validateCourseId(StringBuilder errors, Integer value) {
+
+        if (value == null ) {
+            errors.append(String.format(NOT_PRESENT, "courseId"));
+            return false;
+        }
+
+        if (value == 1 | value == 2) {
+            return true;
+        }
+        errors.append(String.format(INVALID, "courseId"));
+        return false;
+    }
+
+
+
     protected static boolean validateFieldCallStatus(StringBuilder errors, String fieldName, Integer value) {
         if (!validateFieldPresent(errors, fieldName, value)) {
             return false;
@@ -221,17 +240,27 @@ public class BaseController {
         return true;
     }
 
+    protected StringBuilder validate(Long callingNumber, String callId, Integer courseId) {
+        StringBuilder failureReasons = new StringBuilder();
+
+        validateField10Digits(failureReasons, "callingNumber", callingNumber);
+        validateCallId(failureReasons, callId);
+        validateCourseId(failureReasons, courseId);
+
+        return failureReasons;
+    }
+
     protected StringBuilder validate(Long callingNumber, String callId) {
         StringBuilder failureReasons = new StringBuilder();
 
         validateField10Digits(failureReasons, "callingNumber", callingNumber);
         validateCallId(failureReasons, callId);
-
         return failureReasons;
     }
 
-    protected StringBuilder validate(Long callingNumber, String callId, String operator, String circle) {
-        StringBuilder failureReasons = validate(callingNumber, callId);
+
+    protected StringBuilder validate(Long callingNumber, String callId, Integer courseId, String operator, String circle) {
+        StringBuilder failureReasons = validate(callingNumber, callId, courseId);
 
         validateFieldPresent(failureReasons, "circle", circle);
 
@@ -395,4 +424,15 @@ public class BaseController {
 
         return service;
     }
+    protected int courseNameTocourseId(String courseName){
+        if (courseName == COURSE_NAME_1){
+           return 1;
+        }
+        else if (courseName == COURSE_NAME_2){
+            return 2;
+        }
+        else {
+            return 0;
+        }
+    };
 }

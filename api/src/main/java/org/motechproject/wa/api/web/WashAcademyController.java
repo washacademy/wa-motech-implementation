@@ -78,17 +78,21 @@ public class WashAcademyController extends BaseController {
             value = "/course",
             method = RequestMethod.GET)
     @ResponseBody
-    public CourseResponse getCourse() {
+    public CourseResponse getCourse(@RequestParam(required = false) Integer courseId) {
 
-        log("REQUEST: /washacademy/course");
+        log("REQUEST: /washacademy/course", String.format("courseId=%s", courseId.toString()));
+        StringBuilder errors = new StringBuilder();
+        validateCourseId(errors, courseId);
+        if (errors.length() != 0) {
+            throw new IllegalArgumentException(errors.toString());
+        }
 
-        WaCourse getCourse = washAcademyService.getCourse();
+        WaCourse getCourse = washAcademyService.getCourse(courseId);
 
         if (getCourse == null) {
             LOGGER.error("No course found in database. Check course ingestion and name");
             throw new InternalError(String.format(NOT_FOUND, "course"));
         }
-
         CourseResponse response = WashAcademyConverter.convertCourseDto(getCourse);
 
         if (response == null) {
@@ -111,11 +115,18 @@ public class WashAcademyController extends BaseController {
             value = "/courseVersion",
             method = RequestMethod.GET)
     @ResponseBody
-    public CourseVersionResponse getCourseVersion() {
+    public CourseVersionResponse getCourseVersion(@RequestParam(required = false) Integer courseId) {
 
-        log("REQUEST: /washacademy/courseVersion");
+        log("REQUEST: /washacademy/courseVersion", String.format("courseId=%s", courseId.toString()));
 
-        CourseVersionResponse response = new CourseVersionResponse(washAcademyService.getCourseVersion());
+        StringBuilder errors = new StringBuilder();
+
+        validateCourseId(errors, courseId);
+        if (errors.length() != 0) {
+            throw new IllegalArgumentException(errors.toString());
+        }
+
+        CourseVersionResponse response = new CourseVersionResponse(washAcademyService.getCourseVersion(courseId));
         log("RESPONSE: /washacademy/courseVersion", response.toString());
         return response;
     }
@@ -133,10 +144,11 @@ public class WashAcademyController extends BaseController {
             headers = { "Content-type=application/json" })
     @ResponseBody
     public GetBookmarkResponse getBookmarkWithScore(@RequestParam(required = false) Long callingNumber,
-                                                    @RequestParam(required = false) String callId) {
+                                                    @RequestParam(required = false) String callId,
+                                                    @RequestParam(required = false) Integer courseId) {
 
-        log("REQUEST: /washacademy/bookmarkWithScore", String.format("callingNumber=%s, callId=%s",
-                LogHelper.obscure(callingNumber), callId));
+        log("REQUEST: /washacademy/bookmarkWithScore", String.format("callingNumber=%s, callId=%s, courseId=%s",
+                LogHelper.obscure(callingNumber), callId, courseId.toString()));
 
         StringBuilder errors = new StringBuilder();
         validateField10Digits(errors, "callingNumber", callingNumber);
@@ -148,8 +160,12 @@ public class WashAcademyController extends BaseController {
         if (errors.length() != 0) {
             throw new IllegalArgumentException(errors.toString());
         }
+        validateCourseId(errors, courseId);
+        if (errors.length() != 0) {
+            throw new IllegalArgumentException(errors.toString());
+        }
 
-        WaBookmark bookmark = washAcademyService.getBookmark(callingNumber, callId);
+        WaBookmark bookmark = washAcademyService.getBookmark(callingNumber, callId, courseId);
 
         GetBookmarkResponse ret = WashAcademyConverter.convertBookmarkDto(bookmark);
         log("RESPONSE: /washacademy/bookmarkWithScore", String.format("callId=%s, %s", callId, ret.toString()));
@@ -189,13 +205,32 @@ public class WashAcademyController extends BaseController {
             throw new IllegalArgumentException(errors.toString());
         }
 
+        //validate courseId
+        validateCourseId(errors, bookmarkRequest.getCourseId());
+        if (errors.length() != 0){
+            throw new IllegalArgumentException(errors.toString());
+        }
+
+        Integer courseId = bookmarkRequest.getCourseId();
+
         // validate scores
-        if (validateWAScores(bookmarkRequest.getScoresByChapter())) {
+        if (validateWAScores(bookmarkRequest.getScoresByChapter()) && courseId == 1) {
             Swachchagrahi swc = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
             Long swcId = swc.getId();
             WaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, swcId);
-            washAcademyService.setBookmark(bookmark);
+            washAcademyService.setBookmark(bookmark, 1);
         }
+        if (validateWAScores(bookmarkRequest.getScoresByChapter()) && courseId == 2){
+            Swachchagrahi swc = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
+            Long swcId = swc.getId();
+            WaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, swcId);
+            washAcademyService.setBookmark(bookmark, 2);
+        }
+
+
+
+
+
     }
 
     /**
@@ -223,9 +258,20 @@ public class WashAcademyController extends BaseController {
         // we updated the completion record. Start event message to trigger notification workflow
         DeliveryInfo deliveryInfo = smsDeliveryStatus.getRequestData()
                 .getDeliveryInfoNotification().getDeliveryInfo();
+        String clientCorrelator = smsDeliveryStatus.getRequestData().getDeliveryInfoNotification().getClientCorrelator();
+        String segments[] = clientCorrelator.split("_");
+        Integer courseId = Integer.parseInt(segments[segments.length - 1]);
+        String courseName = null;
+        if (courseId ==1){
+            courseName = "WashAcademyCourse";
+        }
+        else if(courseId ==2){
+            courseName = "WashAcademyCoursePlus";
+        }
         Map<String, Object> eventParams = new HashMap<>();
         eventParams.put("address", deliveryInfo.getAddress());
         eventParams.put("deliveryStatus", deliveryInfo.getDeliveryStatus().toString());
+        eventParams.put("courseName", courseName);
         MotechEvent motechEvent = new MotechEvent(SMS_STATUS_SUBJECT, eventParams);
         eventRelay.sendEventMessage(motechEvent);
         LOGGER.debug("Sent event message to process completion notification");
@@ -236,13 +282,22 @@ public class WashAcademyController extends BaseController {
             value = "/notify",
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void sendNotification(@RequestBody Long swcId) {
-
+    public void sendNotification(@RequestBody Long swcId, @RequestParam Integer courseId) {
+        String coursename;
+        if (courseId == 1){
+            coursename = "WashAcademyCourse";
+        }
+        else if (courseId == 2){
+            coursename = "WashAcademyCoursePlus";
+        }
+        else {
+            coursename = null;
+        }
         log("REQUEST: /washacademy/notify (POST)", String.format("swcId=%s", String.valueOf(swcId)));
 
         // done with validation
         try {
-            washAcademyService.triggerCompletionNotification(swcId);
+            washAcademyService.triggerCompletionNotification(swcId, coursename );
         } catch (CourseNotCompletedException cnc) {
             LOGGER.error("Could not send notification: " + cnc.toString());
             throw cnc;

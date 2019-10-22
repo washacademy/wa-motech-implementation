@@ -129,7 +129,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         recordTwo.setCallStartTime(DateTime.now());
         callDetailRecordDataService.create(recordTwo);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, Service.WASH_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, Service.WASH_ACADEMY,1);
 
         assertEquals(swc, serviceUsage.getSwachchagrahi());
         assertEquals(Service.WASH_ACADEMY, serviceUsage.getService());
@@ -160,7 +160,7 @@ public class ServiceUsageServiceBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Valid Worker", 1111111111L);
         swcService.add(swc);
 
-        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, Service.WASH_ACADEMY);
+        ServiceUsage serviceUsage = serviceUsageService.getCurrentMonthlyUsageForSWCAndService(swc, Service.WASH_ACADEMY,1);
 
         assertEquals(swc, serviceUsage.getSwachchagrahi());
         assertEquals(Service.WASH_ACADEMY, serviceUsage.getService());

@@ -66,7 +66,7 @@ public class CallDetailsController extends BaseController {
         }
 
         failureReasons = validate(callDetailRecordRequest.getCallingNumber(),
-                callDetailRecordRequest.getCallId(), callDetailRecordRequest.getOperator(),
+                callDetailRecordRequest.getCallId(),callDetailRecordRequest.getCourseId(), callDetailRecordRequest.getOperator(),
                 callDetailRecordRequest.getCircle());
 
         // Verify common elements
@@ -137,6 +137,7 @@ public class CallDetailsController extends BaseController {
         cdr.setCallingNumber(callDetailRecordRequest.getCallingNumber());
         cdr.setCallId(callDetailRecordRequest.getCallId());
         cdr.setOperator(callDetailRecordRequest.getOperator());
+        cdr.setCourseId(callDetailRecordRequest.getCourseId());
         cdr.setCircle(callDetailRecordRequest.getCircle());
         cdr.setCallStartTime(new DateTime(callDetailRecordRequest.getCallStartTime() * MILLISECONDS_PER_SECOND));
         cdr.setCallEndTime(new DateTime(callDetailRecordRequest.getCallEndTime() * MILLISECONDS_PER_SECOND));
@@ -181,6 +182,14 @@ public class CallDetailsController extends BaseController {
 
         if (null == callDetailRecordRequest.getCallStartTime()) {
             failureReasons.append(String.format(NOT_PRESENT, "callStartTime"));
+        }
+
+        if (null == callDetailRecordRequest.getCourseId()){
+            failureReasons.append(String.format(NOT_PRESENT, "courseId"));
+        }
+
+        if (!(callDetailRecordRequest.getCourseId() ==1 || callDetailRecordRequest.getCourseId() ==2)){
+            failureReasons.append(String.format("Incorrect CourseId", "courseId"));
         }
 
         if (null == callDetailRecordRequest.getCallEndTime()) {

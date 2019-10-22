@@ -17,8 +17,14 @@ public class SaveBookmarkRequest {
 
     private Map<String, Integer> scoresByChapter;
 
+    private Integer courseId;
+
     public SaveBookmarkRequest() {
     }
+
+    public Integer getCourseId() { return courseId;  }
+
+    public void setCourseId(Integer courseId) {  this.courseId = courseId;   }
 
     public Long getCallingNumber() {
         return callingNumber;

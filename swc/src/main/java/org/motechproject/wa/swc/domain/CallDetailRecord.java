@@ -73,11 +73,18 @@ public class CallDetailRecord {
     private CallDisconnectReason callDisconnectReason;
 
     @Field
+    private int courseId;
+
+    @Field
     @Persistent(mappedBy = "callDetailRecord", defaultFetchGroup = "false")
     @Cascade(delete = true)
     @Order(extensions = @Extension(vendorName = "datanucleus", key = "list-ordering", value = "id ASC"))
     @JsonManagedReference
     private List<CallContent> content;
+
+    public int getCourseId() {  return courseId;    }
+
+    public void setCourseId(int courseId) {   this.courseId = courseId;   }
 
     public Swachchagrahi getSwachchagrahi() {
         return swachchagrahi;
@@ -188,10 +195,7 @@ public class CallDetailRecord {
     }
 
     public List<CallContent> getContent() {
-        if (content == null) {
-            return Collections.emptyList();
-        }
-
+        if (content == null) { return Collections.emptyList();  }
         return content;
     }
 

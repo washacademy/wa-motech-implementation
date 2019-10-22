@@ -6,6 +6,7 @@ import org.motechproject.alerts.domain.AlertStatus;
 import org.motechproject.alerts.domain.AlertType;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.mtraining.domain.ActivityRecord;
 import org.motechproject.mtraining.service.ActivityService;
 import org.motechproject.scheduler.contract.RepeatingSchedulableJob;
 import org.motechproject.scheduler.service.MotechSchedulerService;
@@ -114,11 +115,24 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         try {
             LOGGER.debug("Handling course completion notification event");
             Long swcId = (Long) event.getParameters().get(SWCID);
+            String courseName = (String) event.getParameters().get("courseName");
 
-            List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
+            Integer courseId;
+            if (courseName == "WashAcademyCoursePlus"){
+                courseId = 2;
+            }
+            else if (courseName == "WashAcademyCourse"){
+                courseId =1;
+            }else
+            {
+                LOGGER.error("courseId not correct!");
+                return;
+            }
+
+            List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
             if (ccrs == null || ccrs.isEmpty()) {
                 // this should never be possible since the event dispatcher upstream adds the record
-                LOGGER.error("No completion record found for swcId: " + swcId);
+                LOGGER.error("No completion record found for swcId: " + swcId + "for courseId: " + courseId );
                 return;
             }
 
@@ -129,9 +143,9 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                 ccr.setNotificationRetryCount(ccr.getNotificationRetryCount() + 1);
             }
 
-            String smsContent = buildSmsContent(swcId, ccr);
+            String smsContent = buildSmsContent(swcId, ccr, courseName);
             long callingNumber = swcService.getById(swcId).getContactNumber();
-            ccr.setSentNotification(smsNotificationService.sendSms(callingNumber, smsContent));
+            ccr.setSentNotification(smsNotificationService.sendSms(callingNumber, smsContent, courseId));
             courseCompletionRecordDataService.update(ccr);
         } catch (IllegalStateException se) {
             LOGGER.error("Unable to send sms notification. Stack: " + se.toString());
@@ -146,6 +160,16 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         LOGGER.debug("Handling update sms delivery status event");
         String callingNumber = (String) event.getParameters().get(ADDRESS);
+        String courseName = null;
+        courseName = (String)event.getParameters().get("courseName");
+        Integer courseId = null;
+        if (courseName == "WashAcademyCourse"){
+            courseId = 1;
+        }
+        else if (courseName == "WashAcademyCoursePlus"){
+            courseId = 2;
+        }
+
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);
         Swachchagrahi swc = swcService.getByContactNumber(Long.parseLong(callingNumber));
@@ -153,7 +177,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         if (swc != null) {
              swcId= swc.getId();
         }
-        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
+        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
 
         if (ccrs == null || ccrs.isEmpty()) {
             // this should never be possible since the event dispatcher upstream adds the record
@@ -176,7 +200,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                 ccr.getNotificationRetryCount() < Integer.parseInt(settingsFacade.getProperty(SMS_RETRY_COUNT))) {
 
             try {
-                String smsContent = buildSmsContent(swcId, ccr);
+                String smsContent = buildSmsContent(swcId, ccr, courseName);
                 MotechEvent retryEvent = new MotechEvent(COURSE_COMPLETED_SUBJECT);
                 retryEvent.getParameters().put(SWCID, swcId);
                 retryEvent.getParameters().put(SMS_CONTENT, smsContent);
@@ -208,7 +232,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
      * @param swcId calling number of the swc
      * @return localized sms content based on swc preferences or national default otherwise
      */
-    private String buildSmsContent(Long swcId, CourseCompletionRecord ccr) {
+    private String buildSmsContent(Long swcId, CourseCompletionRecord ccr, String courseName) {
 
         Swachchagrahi swc = swcService.getById(swcId);
         String locationCode = "XX"; // unknown location id
@@ -262,8 +286,20 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
 
         Long callingNumber = swc.getContactNumber();
-        int attempts = activityService.getCompletedActivityForUser(callingNumber.toString()).size();
-        String smsReferenceNumber = locationCode + callingNumber + attempts;
+        List<ActivityRecord> activityRecords = activityService.getCompletedActivityForUser(callingNumber.toString());
+        List<ActivityRecord> givenCourseActivityRecord = null;
+        for(int i=1;i<activityRecords.size();i++){
+            if (activityRecords.get(i).getCourseName() == courseName){
+                givenCourseActivityRecord.add(activityRecords.get(i));
+            }
+
+        }
+        int attempts = 0;
+        if (givenCourseActivityRecord != null){
+             attempts = givenCourseActivityRecord.size();
+        }
+
+        String smsReferenceNumber = locationCode + callingNumber + attempts + courseName;
         ccr.setSmsReferenceNumber(smsReferenceNumber);
         courseCompletionRecordDataService.update(ccr);
         return smsContent + smsReferenceNumber;

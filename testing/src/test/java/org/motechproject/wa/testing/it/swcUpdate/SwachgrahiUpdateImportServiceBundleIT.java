@@ -38,8 +38,8 @@ import org.motechproject.wa.testing.it.api.utils.RequestBuilder;
 import org.motechproject.wa.testing.it.utils.RegionHelper;
 import org.motechproject.wa.testing.service.TestingService;
 import org.motechproject.wa.washacademy.domain.CourseCompletionRecord;
+import org.motechproject.wa.washacademy.domain.WaCourse;
 import org.motechproject.wa.washacademy.repository.CourseCompletionRecordDataService;
-import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
@@ -734,8 +734,8 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     private void createMaRecords(Long contactNumber) {
 
         bookmarkDataService.create(new Bookmark(contactNumber.toString(), "1", "1", "1", new HashMap<String, Object>()));
-
-        CourseCompletionRecord ccr = new CourseCompletionRecord(contactNumber, 35, "score", false);
+        WaCourse waCourse = new WaCourse("WashAcademyCourse",null);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(contactNumber, 35, "score", false, 1);
         courseCompletionRecordDataService.create(ccr);
 //        String externalId, String courseName, String chapterName, String lessonName, DateTime startTime, DateTime completionTime, ActivityState.STARTED);
         ActivityRecord ar = new ActivityRecord(contactNumber.toString(), "1", "1", "1", null,null , ActivityState.STARTED);

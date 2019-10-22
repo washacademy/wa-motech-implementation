@@ -19,6 +19,14 @@ public class WaCourse extends MdsEntity {
     @Field(type = "text")
     private String content;
 
+
+
+//    @JsonManagedReference
+//    @Persistent(mappedBy = "waCourse", defaultFetchGroup = "false")
+//    @Cascade(delete = true)
+//    @Order(extensions = @Extension(vendorName = "datanucleus", key = "list-ordering", value = "id ASC"))
+
+
     public WaCourse() {
     }
 

@@ -27,7 +27,7 @@ public class ServiceUsageCapServiceImpl implements ServiceUsageCapService {
                            the national cap applies.
      */
     @Override
-    public ServiceUsageCap getServiceUsageCap(final State state, final org.motechproject.wa.props.domain.Service service) {
+    public ServiceUsageCap getServiceUsageCap(final State state, final org.motechproject.wa.props.domain.Service service, Integer courseId) {
 
         // Todo: #59 Since the only difference between the state and national query is the value of state they should
         //       be combined
@@ -37,11 +37,11 @@ public class ServiceUsageCapServiceImpl implements ServiceUsageCapService {
                 @Override
                 public ServiceUsageCap execute(Query query, InstanceSecurityRestriction restriction) {
 
-                    query.setFilter("state == swc_state && service == swc_service");
-                    query.declareParameters("org.motechproject.wa.region.domain.State swc_state, org.motechproject.wa.props.domain.Service swc_service");
+                    query.setFilter("state == swc_state && service == swc_service && courseId == swc_courseId ");
+                    query.declareParameters("org.motechproject.wa.region.domain.State swc_state, org.motechproject.wa.props.domain.Service swc_service, Integer swc_courseId");
                     query.setUnique(true);
 
-                    return (ServiceUsageCap) query.execute(state, service);
+                    return (ServiceUsageCap) query.execute(state, service, courseId);
                 }
             };
 
@@ -57,11 +57,11 @@ public class ServiceUsageCapServiceImpl implements ServiceUsageCapService {
             @Override
             public ServiceUsageCap execute(Query query, InstanceSecurityRestriction restriction) {
 
-                query.setFilter("state == swc_state && service == swc_service");
-                query.declareParameters("org.motechproject.wa.region.domain.State swc_state, org.motechproject.wa.props.domain.Service swc_service");
+                query.setFilter("state == swc_state && service == swc_service && courseId == swc_courseId ");
+                query.declareParameters("org.motechproject.wa.region.domain.State swc_state, org.motechproject.wa.props.domain.Service swc_service, Integer swc_courseId");
                 query.setUnique(true);
 
-                return (ServiceUsageCap) query.execute(null, service);
+                return (ServiceUsageCap) query.execute(null, service, courseId);
             }
         };
 
@@ -72,6 +72,6 @@ public class ServiceUsageCapServiceImpl implements ServiceUsageCapService {
         }
 
         // Usage is uncapped
-        return new ServiceUsageCap(null, null, -1);
+        return new ServiceUsageCap(null, null, -1, courseId );
     }
 }

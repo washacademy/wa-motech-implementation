@@ -16,7 +16,7 @@ import javax.jdo.annotations.Unique;
  * National capping value will be stored using a 'null' state.
  */
 @Entity(tableName = "wa_service_usage_caps")
-@Unique(name = "UNIQUE_STATE_SERVICE_COMPOSITE_IDX", members = { "state", "service" })
+@Unique(name = "UNIQUE_STATE_SERVICE_COMPOSITE_IDX", members = { "state", "service","courseId" })
 @TrackClass
 @TrackFields
 @InstanceLifecycleListeners
@@ -31,11 +31,25 @@ public class ServiceUsageCap {
     @Field
     private int maxUsageInPulses;
 
+    @Field
+    private int courseId;
+
+    public ServiceUsageCap(State state, Service service, int maxUsageInPulses, int courseId) {
+        this.service = service;
+        this.state = state;
+        this.maxUsageInPulses = maxUsageInPulses;
+        this.courseId = courseId;
+    }
+
     public ServiceUsageCap(State state, Service service, int maxUsageInPulses) {
         this.service = service;
         this.state = state;
         this.maxUsageInPulses = maxUsageInPulses;
     }
+
+    public int getCourse() { return courseId;  }
+
+    public void setCourse(int courseId) { this.courseId = courseId;   }
 
     public Service getService() {
         return service;

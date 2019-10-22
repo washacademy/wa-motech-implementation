@@ -6,5 +6,5 @@ import org.motechproject.wa.swc.domain.Swachchagrahi;
 
 
 public interface ServiceUsageService {
-    ServiceUsage getCurrentMonthlyUsageForSWCAndService(final Swachchagrahi swachchagrahi, final Service service);
+    ServiceUsage getCurrentMonthlyUsageForSWCAndService(final Swachchagrahi swachchagrahi, final Service service, Integer courseId);
 }

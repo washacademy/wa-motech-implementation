@@ -12,4 +12,8 @@ public interface WaCourseDataService extends MotechDataService<WaCourse> {
 
     @Lookup
     WaCourse getCourseByName(@LookupField(name = "name") String name);
+
+    @Lookup
+    WaCourse getCourseById(@LookupField(name = "id") int id);
+
 }

@@ -510,8 +510,8 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
 
         Long swcId = swc.getId();
         WaBookmark bookmark = new WaBookmark(swcId, VALID_CALL_ID, null, null);
-        maService.setBookmark(bookmark);
-        assertNotNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID));
+        maService.setBookmark(bookmark,1);
+        assertNotNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID,1));
         assertEquals(1, activityDataService.findRecordsForUserByState(oldMsisdn.toString(), ActivityState.STARTED).size());
 
         bookmark.setBookmark("COURSE_COMPLETED");
@@ -520,7 +520,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
             scores.put(String.valueOf(i), 3);
         }
         bookmark.setScoresByChapter(scores);
-        maService.setBookmark(bookmark);
+        maService.setBookmark(bookmark,1);
 
         // Update Msisdn
         reader = createReaderWithHeaders("#0\t9876543210\tSWC 0\t11\t18-08-2016\tASHA\tActive");
@@ -530,8 +530,8 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swc = swcService.getByContactNumber(newMsisdn);
         assertSWC(swc, "#0", newMsisdn, "SWC 0", "District 11", "L1");
 
-        assertNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID));
-        assertNotNull(maService.getBookmark(newMsisdn, VALID_CALL_ID));
+        assertNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID,1));
+        assertNotNull(maService.getBookmark(newMsisdn, VALID_CALL_ID,1));
 
         assertEquals(0, activityDataService.findRecordsForUserByState(oldMsisdn.toString(), ActivityState.STARTED).size());
         assertEquals(1, activityDataService.findRecordsForUserByState(newMsisdn.toString(), ActivityState.STARTED).size());

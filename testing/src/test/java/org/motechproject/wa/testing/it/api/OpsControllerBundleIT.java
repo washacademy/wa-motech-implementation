@@ -642,8 +642,8 @@ public class OpsControllerBundleIT extends BasePaxIT {
         Swachchagrahi swc = swcService.getByContactNumber(9876543210L);
         Long swcId = swc.getId();
         WaBookmark bookmark = new WaBookmark(swcId, VALID_CALL_ID, null, null);
-        maService.setBookmark(bookmark);
-        assertNotNull(maService.getBookmark(9876543210L, VALID_CALL_ID));
+        maService.setBookmark(bookmark,1);
+        assertNotNull(maService.getBookmark(9876543210L, VALID_CALL_ID,1));
         assertEquals(1, activityDataService.findRecordsForUserByState("9876543210", ActivityState.STARTED).size());
 
         bookmark.setBookmark("COURSE_COMPLETED");
@@ -654,7 +654,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         swc = swcService.getByContactNumber(9876543210L);
         bookmark.setScoresByChapter(scores);
-        maService.setBookmark(bookmark);
+        maService.setBookmark(bookmark,1);
         List <CourseCompletionRecord> ncrs = courseCompletionRecordDataService.findBySwcId(swc.getId());
         assertEquals(1, ncrs.size());
 
@@ -672,8 +672,8 @@ public class OpsControllerBundleIT extends BasePaxIT {
         httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, request);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        assertNull(maService.getBookmark(9876543210L, VALID_CALL_ID));
-        assertNotNull(maService.getBookmark(7896543210L, VALID_CALL_ID));
+        assertNull(maService.getBookmark(9876543210L, VALID_CALL_ID,1));
+        assertNotNull(maService.getBookmark(7896543210L, VALID_CALL_ID,1));
 
         assertEquals(0, activityDataService.findRecordsForUserByState("9876543210", ActivityState.STARTED).size());
         assertEquals(1, activityDataService.findRecordsForUserByState("7896543210", ActivityState.STARTED).size());

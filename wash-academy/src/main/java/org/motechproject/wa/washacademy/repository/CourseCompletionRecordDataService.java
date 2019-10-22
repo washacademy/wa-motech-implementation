@@ -14,4 +14,7 @@ public interface CourseCompletionRecordDataService extends MotechDataService<Cou
 
     @Lookup
     List<CourseCompletionRecord> findBySwcId(@LookupField(name = "swcId") Long swcId);
+
+    @Lookup
+    List<CourseCompletionRecord> findBySwcIdAndCourseId(@LookupField(name = "swcId" ) Long swcId, @LookupField(name = "washCourse_id_OID") Integer courseId);
 }
