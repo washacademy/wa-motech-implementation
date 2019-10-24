@@ -170,7 +170,7 @@ public class BaseController {
             return false;
         }
 
-        if (value == 1 | value == 2) {
+        if (value == 1 || value == 2) {
             return true;
         }
         errors.append(String.format(INVALID, "courseId"));
@@ -424,15 +424,5 @@ public class BaseController {
 
         return service;
     }
-    protected int courseNameTocourseId(String courseName){
-        if (courseName == COURSE_NAME_1){
-           return 1;
-        }
-        else if (courseName == COURSE_NAME_2){
-            return 2;
-        }
-        else {
-            return 0;
-        }
-    };
+
 }

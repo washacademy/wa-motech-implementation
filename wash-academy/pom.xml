@@ -111,6 +111,7 @@
                         <Import-Package>
                             org.motechproject.osgi.web,
                             org.motechproject.mtraining.domain,
+                            org.motechproject.mtraining.repository,
                             org.apache.commons.io,
                             org.apache.http.ssl,
                             org.json,

@@ -10,8 +10,6 @@ import org.motechproject.config.core.constants.ConfigurationConstants;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.motechproject.mtraining.domain.ActivityRecord;
 import org.motechproject.mtraining.domain.ActivityState;
 import org.motechproject.mtraining.domain.Bookmark;
@@ -211,10 +209,11 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     private Bookmark getBookmarkByUserIdAndCourseName (String swcId, String courseName ){
-        List<org.motechproject.mtraining.domain.Bookmark> bookmarks = bookmarkDataService.findBookmarksForUserParams(swcId, new QueryParams(new Order("modificationDate", Order.Direction.DESC)));
-        org.motechproject.mtraining.domain.Bookmark bookmark = new org.motechproject.mtraining.domain.Bookmark();
+        List<Bookmark> bookmarks = this.bookmarkDataService.findBookmarksForUser(swcId);
+        LOGGER.info(String.valueOf(bookmarks));
+        Bookmark bookmark = new Bookmark();
         for (int i = 0; i < bookmarks.size(); i++) {
-            if (bookmarks.get(i).getCourseIdentifier() == courseName){
+            if (bookmarks.get(i).getCourseIdentifier().equals(courseName)){
                 bookmark = bookmarks.get(i);
                 break;
             }
@@ -230,17 +229,17 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         if (swc == null) {
             return null;
         }
-        Long swcId = swc.getId();
-       // Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId.toString());
+        String swcId = swc.getId().toString();
+//        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId.toString());
         if (courseId == 1){
-            Bookmark existingBookmark = getBookmarkByUserIdAndCourseName(swcId.toString(), COURSE_NAME_1);
+            Bookmark existingBookmark = getBookmarkByUserIdAndCourseName(swcId, COURSE_NAME_1);
             if (existingBookmark != null) {
                 WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
                 toReturn.setCallId(callId);
                 return toReturn;
             }
             else {
-                return null;
+                return new WaBookmark();
             }
         }
         else if (courseId == 2){
@@ -299,30 +298,39 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             LOGGER.error("Bookmark cannot be null, check request");
             throw new IllegalArgumentException("Invalid bookmark, cannot be null");
         }
+        String courseName ;
+        if (courseId ==1){
+            courseName = COURSE_NAME_1;
+        }
+        else if (courseId == 2){
+            courseName = COURSE_NAME_2;
+        }
+        else {
+            LOGGER.error("CourseId Not correct");
+            return;
+        }
 
         String swcId = saveBookmark.getSwcId().toString();
-        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId);
+        List<Bookmark> bookmarks = bookmarkService.getAllBookmarksForUser(swcId);
+        Bookmark existingBookmark = null;
+        for (int i = 0; i< bookmarks.size(); i++){
+            if (bookmarks.get(i).getCourseIdentifier().equals(courseName)){
+                existingBookmark = bookmarks.get(i);
+                break;
+            }
+        }
+
         Swachchagrahi swc = swcService.getById(saveBookmark.getSwcId());
         String callingNumber = swc.getContactNumber().toString();
 
         // write a new activity record if existing bookmark is null or
         // existing bookmark has no progress from earlier reset
 
-        String coursename ;
-        if (courseId ==1){
-            coursename = COURSE_NAME_1;
-        }
-        else if (courseId == 2){
-            coursename = COURSE_NAME_2;
-        }
-        else {
-            coursename =null;
-        }
 
         if (existingBookmark == null ||
                 (existingBookmark.getProgress() != null && existingBookmark.getProgress().isEmpty()))  {
             activityService.createActivity(
-                    new ActivityRecord(callingNumber, coursename, null, null, DateTime.now(), null, ActivityState.STARTED));
+                    new ActivityRecord(callingNumber, courseName, null, null, DateTime.now(), null, ActivityState.STARTED));
         }
 
 
@@ -330,7 +338,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // if no bookmarks exist for user
             LOGGER.info("No bookmarks found for user " + LogHelper.obscure(saveBookmark.getSwcId()));
             Bookmark bookmark = setBookmarkProperties(saveBookmark, new Bookmark());
-            bookmark.setCourseIdentifier(coursename);
+            bookmark.setCourseIdentifier(courseName);
             bookmarkService.createBookmark(bookmark);
         } else {
 
@@ -347,22 +355,23 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             LOGGER.debug("Found last bookmark and 11 scores. Starting evaluation & notification");
             // Create an activity record here since pass/fail counts as 1 try
             activityService.createActivity(
-                    new ActivityRecord(callingNumber, coursename, null, null, null, DateTime.now(), ActivityState.COMPLETED));
-            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), coursename);
+                    new ActivityRecord(callingNumber, courseName, null, null, null, DateTime.now(), ActivityState.COMPLETED));
+            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), courseName);
         }
     }
 
     @Override
     public void triggerCompletionNotification(final Long swcId, String courseName) {
         Integer courseId ;
-        if(courseName == COURSE_NAME_1) {
+        if(courseName.equals( COURSE_NAME_1)) {
             courseId = 1;
         }
-        else if (courseName == COURSE_NAME_2){
+        else if (courseName.equals( COURSE_NAME_2)){
             courseId = 2;
         }
         else {
-            courseId = null;
+            LOGGER.error("CourseId Not correct!");
+            return;
         }
 
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
@@ -465,10 +474,10 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         int totalScore = getTotalScore(scores);
 
         int courseId = 0;
-        if (courseName == COURSE_NAME_1){
+        if (courseName.equals(COURSE_NAME_1)){
             courseId = 1;
         }
-        else if (courseName == COURSE_NAME_2){
+        else if (courseName.equals(COURSE_NAME_2)){
             courseId = 2;
         }
 

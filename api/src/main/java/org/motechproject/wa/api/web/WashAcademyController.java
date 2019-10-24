@@ -140,15 +140,14 @@ public class WashAcademyController extends BaseController {
     @Transactional(readOnly = true)
     @RequestMapping(
             value = "/bookmarkWithScore",
-            method = RequestMethod.GET,
-            headers = { "Content-type=application/json" })
+            method = RequestMethod.GET)
     @ResponseBody
     public GetBookmarkResponse getBookmarkWithScore(@RequestParam(required = false) Long callingNumber,
                                                     @RequestParam(required = false) String callId,
                                                     @RequestParam(required = false) Integer courseId) {
 
-        log("REQUEST: /washacademy/bookmarkWithScore", String.format("callingNumber=%s, callId=%s, courseId=%s",
-                LogHelper.obscure(callingNumber), callId, courseId.toString()));
+        log("REQUEST: /washacademy/bookmarkWithScore", String.format("callingNumber=%s, callId=%s, courseId=%d",
+                LogHelper.obscure(callingNumber), callId, courseId));
 
         StringBuilder errors = new StringBuilder();
         validateField10Digits(errors, "callingNumber", callingNumber);

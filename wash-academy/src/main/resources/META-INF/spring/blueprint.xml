@@ -26,6 +26,9 @@
     <osgi:reference id="activityDataService"
                     interface="org.motechproject.mtraining.repository.ActivityDataService" />
 
+    <osgi:reference id="bookmarkDataService"
+                    interface="org.motechproject.mtraining.repository.BookmarkDataService" />
+
     <osgi:reference id="mTrainingService"
                     interface="org.motechproject.mtraining.service.MTrainingService" />
 

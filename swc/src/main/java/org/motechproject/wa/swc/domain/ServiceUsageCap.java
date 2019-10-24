@@ -47,9 +47,9 @@ public class ServiceUsageCap {
         this.maxUsageInPulses = maxUsageInPulses;
     }
 
-    public int getCourse() { return courseId;  }
+    public int getCourseId() { return courseId;  }
 
-    public void setCourse(int courseId) { this.courseId = courseId;   }
+    public void setCourseId(int courseId) { this.courseId = courseId;   }
 
     public Service getService() {
         return service;

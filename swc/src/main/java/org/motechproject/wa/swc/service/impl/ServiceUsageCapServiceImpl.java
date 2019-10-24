@@ -27,7 +27,7 @@ public class ServiceUsageCapServiceImpl implements ServiceUsageCapService {
                            the national cap applies.
      */
     @Override
-    public ServiceUsageCap getServiceUsageCap(final State state, final org.motechproject.wa.props.domain.Service service, Integer courseId) {
+    public ServiceUsageCap getServiceUsageCap(final State state, final org.motechproject.wa.props.domain.Service service, final Integer courseId) {
 
         // Todo: #59 Since the only difference between the state and national query is the value of state they should
         //       be combined

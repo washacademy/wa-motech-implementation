@@ -118,10 +118,10 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             String courseName = (String) event.getParameters().get("courseName");
 
             Integer courseId;
-            if (courseName == "WashAcademyCoursePlus"){
+            if (courseName.equals("WashAcademyCoursePlus") ){
                 courseId = 2;
             }
-            else if (courseName == "WashAcademyCourse"){
+            else if (courseName.equals("WashAcademyCourse") ){
                 courseId =1;
             }else
             {
@@ -163,10 +163,10 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         String courseName = null;
         courseName = (String)event.getParameters().get("courseName");
         Integer courseId = null;
-        if (courseName == "WashAcademyCourse"){
+        if (courseName.equals("WashAcademyCourse") ){
             courseId = 1;
         }
-        else if (courseName == "WashAcademyCoursePlus"){
+        else if (courseName.equals("WashAcademyCoursePlus")){
             courseId = 2;
         }
 
