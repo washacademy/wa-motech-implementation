@@ -162,6 +162,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         String callingNumber = (String) event.getParameters().get(ADDRESS);
         String courseName = null;
         courseName = (String)event.getParameters().get("courseName");
+        String clientCorrelator = (String)event.getParameters().get("clientCorrelator");
         Integer courseId = null;
         if (courseName.equals("WashAcademyCourse") ){
             courseId = 1;
@@ -185,6 +186,8 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             return;
         }
         CourseCompletionRecord ccr = ccrs.get(ccrs.size() - 1);
+
+        ccr.setClientCorrelator(clientCorrelator);
 
         // read properties
         String deliveryStatus = (String) event.getParameters().get(DELIVERY_STATUS);

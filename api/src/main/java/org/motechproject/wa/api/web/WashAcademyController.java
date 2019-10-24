@@ -271,6 +271,7 @@ public class WashAcademyController extends BaseController {
         eventParams.put("address", deliveryInfo.getAddress());
         eventParams.put("deliveryStatus", deliveryInfo.getDeliveryStatus().toString());
         eventParams.put("courseName", courseName);
+        eventParams.put("clientCorrelator",clientCorrelator );
         MotechEvent motechEvent = new MotechEvent(SMS_STATUS_SUBJECT, eventParams);
         eventRelay.sendEventMessage(motechEvent);
         LOGGER.debug("Sent event message to process completion notification");
