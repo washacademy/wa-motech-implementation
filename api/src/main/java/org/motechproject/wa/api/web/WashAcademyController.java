@@ -282,22 +282,24 @@ public class WashAcademyController extends BaseController {
             value = "/notify",
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void sendNotification(@RequestBody Long swcId, @RequestParam Integer courseId) {
-        String coursename;
+    public void sendNotification(@RequestBody NotifyRequest notifyRequest) {
+        Integer courseId = notifyRequest.getCourseId();
+        Long swcId = notifyRequest.getSwcId();
+        String courseName;
         if (courseId == 1){
-            coursename = "WashAcademyCourse";
+            courseName = "WashAcademyCourse";
         }
         else if (courseId == 2){
-            coursename = "WashAcademyCoursePlus";
+            courseName = "WashAcademyCoursePlus";
         }
         else {
-            coursename = null;
+            courseName = null;
         }
         log("REQUEST: /washacademy/notify (POST)", String.format("swcId=%s", String.valueOf(swcId)));
 
         // done with validation
         try {
-            washAcademyService.triggerCompletionNotification(swcId, coursename );
+            washAcademyService.triggerCompletionNotification(swcId, courseName );
         } catch (CourseNotCompletedException cnc) {
             LOGGER.error("Could not send notification: " + cnc.toString());
             throw cnc;

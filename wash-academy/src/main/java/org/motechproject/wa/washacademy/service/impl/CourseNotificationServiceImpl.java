@@ -163,12 +163,16 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         String courseName = null;
         courseName = (String)event.getParameters().get("courseName");
         String clientCorrelator = (String)event.getParameters().get("clientCorrelator");
-        Integer courseId = null;
+        Integer courseId;
         if (courseName.equals("WashAcademyCourse") ){
             courseId = 1;
         }
         else if (courseName.equals("WashAcademyCoursePlus")){
             courseId = 2;
+        }
+        else {
+            LOGGER.error("CourseID Not Correct" );
+            return;
         }
 
         int startIndex = callingNumber.indexOf(':') + 2;
