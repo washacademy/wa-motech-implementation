@@ -165,8 +165,7 @@ public class BaseController {
 
     protected static boolean validateCourseId(StringBuilder errors, Integer value) {
 
-        if (value == null ) {
-            errors.append(String.format(NOT_PRESENT, "courseId"));
+        if (!validateFieldPresent(errors, "courseId", value)){
             return false;
         }
 
