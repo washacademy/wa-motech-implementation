@@ -69,6 +69,10 @@ public class CallDetailsController extends BaseController {
                 callDetailRecordRequest.getCallId(),callDetailRecordRequest.getCourseId(), callDetailRecordRequest.getOperator(),
                 callDetailRecordRequest.getCircle());
 
+        if (failureReasons.length() > 0) {
+            throw new IllegalArgumentException(failureReasons.toString());
+        }
+
         // Verify common elements
         // (callStartTime, callEndTime, callDurationInPulses, endOfUsagePromptCount, callStatus,
         // callDisconnectReason)

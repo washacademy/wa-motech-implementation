@@ -144,6 +144,7 @@ public class CallDetailRecordRequest {
     public String toString() {
         return "CallDetailRecordRequest{" +
                 "callingNumber=" + LogHelper.obscure(callingNumber) +
+                "courseId=" + courseId +
                 ", callId=" + callId +
                 ", operator='" + operator + '\'' +
                 ", circle='" + circle + '\'' +
