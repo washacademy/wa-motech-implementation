@@ -47,9 +47,6 @@ public class BaseController {
     public static final String NOT_DEPLOYED = "<%s: Not Deployed In State>";
 
     public static final String IVR_INTERACTION_LOG = "IVR INTERACTION: %s";
-    private static final String COURSE_NAME_1 = "WashAcademyCourse";
-
-    private static final String COURSE_NAME_2 = "WashAcademyCoursePlus";
 
     public static final long SMALLEST_10_DIGIT_NUMBER = 1000000000L;
     public static final long LARGEST_10_DIGIT_NUMBER  = 9999999999L;
