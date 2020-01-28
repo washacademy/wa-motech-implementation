@@ -358,7 +358,7 @@ public class WashAcademyServiceUnitTest {
     @Test(expected = CourseNotCompletedException.class)
     public void testNotificationTriggerException() {
         when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(null);
-        washAcademyService.triggerCompletionNotification(123456L, "WashAcademyCourse");
+        washAcademyService.triggerCompletionNotification(123456L, "WashAcademyCourse",1);
     }
     @Ignore
     @Test
@@ -368,8 +368,7 @@ public class WashAcademyServiceUnitTest {
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
         when(courseCompletionRecordDataService.findBySwcIdAndCourseId(123456L,1)).thenReturn(records);
-        washAcademyService.triggerCompletionNotification(123456L,"WashAcademyCourse");
-        washAcademyService.triggerCompletionNotification(123456L, "WashAcademyCourse");
+        washAcademyService.triggerCompletionNotification(123456L,"WashAcademyCourse",1);
         assertFalse(ccr.isSentNotification());
     }
 

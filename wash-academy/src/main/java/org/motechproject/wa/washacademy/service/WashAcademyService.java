@@ -51,7 +51,7 @@ public interface WashAcademyService {
      * Retrigger the sms notification for course completion for user
      * @param swcId
      */
-    void triggerCompletionNotification(Long swcId, String courseName);
+    void triggerCompletionNotification(Long swcId, String courseName, Integer courseId);
 
     /**
      * Get scores for a user

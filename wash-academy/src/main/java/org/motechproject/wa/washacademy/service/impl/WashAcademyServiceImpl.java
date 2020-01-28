@@ -52,10 +52,6 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String COURSE_CONTENT_FILE = "WaCourse.json";
 
-    private static final String COURSE_NAME_1 = "WashAcademyCourse";
-
-    private static final String COURSE_NAME_2 = "WashAcademyCoursePlus";
-
     private static final String FINAL_BOOKMARK = "COURSE_COMPLETED";
 
     private static final String COURSE_COMPLETED = "wa.wa.course.completed";
@@ -204,32 +200,22 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         if (swc == null) {
             return null;
         }
-        String swcId = swc.getId().toString();
-//        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId.toString());
-        if (courseId == 1){
-            Bookmark existingBookmark = getBookmarkByUserIdAndCourseName(swcId, COURSE_NAME_1);
-            if (existingBookmark != null) {
-                WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
-                toReturn.setCallId(callId);
-                return toReturn;
-            }
-            else {
-                return new WaBookmark();
-            }
+        WaCourse currentCourse = WaCourseDataService.getCourseById(courseId);
+        if(currentCourse == null){
+            alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            throw new IllegalStateException("No course bootstrapped. Check deployment");
         }
-        else if (courseId == 2){
-            Bookmark existingBookmark = getBookmarkByUserIdAndCourseName(swcId.toString(), COURSE_NAME_2);
-            if (existingBookmark != null) {
-                WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
-                toReturn.setCallId(callId);
-                return toReturn;
-            }
-            else {
-                return null;
-            }
+        String courseName = currentCourse.getName();
+         String swcId = swc.getId().toString();
+//        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId.toString());
+        Bookmark existingBookmark = getBookmarkByUserIdAndCourseName(swcId, courseName);
+        if (existingBookmark != null) {
+            WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
+            toReturn.setCallId(callId);
+            return toReturn;
         }
         else {
-            throw new IllegalStateException("courseId Not correct. Check courseId!");
+            return new WaBookmark();
         }
 
 
@@ -273,17 +259,13 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             LOGGER.error("Bookmark cannot be null, check request");
             throw new IllegalArgumentException("Invalid bookmark, cannot be null");
         }
-        String courseName ;
-        if (courseId ==1){
-            courseName = COURSE_NAME_1;
+        WaCourse currentCourse = WaCourseDataService.getCourseById(courseId);
+        if(currentCourse == null){
+            alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            throw new IllegalStateException("No course bootstrapped. Check deployment");
         }
-        else if (courseId == 2){
-            courseName = COURSE_NAME_2;
-        }
-        else {
-            LOGGER.error("CourseId Not correct");
-            return;
-        }
+        String courseName = currentCourse.getName();
+
 
         String swcId = saveBookmark.getSwcId().toString();
         List<Bookmark> bookmarks = bookmarkService.getAllBookmarksForUser(swcId);
@@ -331,23 +313,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // Create an activity record here since pass/fail counts as 1 try
             activityService.createActivity(
                     new ActivityRecord(callingNumber, courseName, null, null, null, DateTime.now(), ActivityState.COMPLETED));
-            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), courseName);
+            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), courseName, courseId);
         }
     }
 
     @Override
-    public void triggerCompletionNotification(final Long swcId, String courseName) {
-        Integer courseId ;
-        if(courseName.equals( COURSE_NAME_1)) {
-            courseId = 1;
-        }
-        else if (courseName.equals( COURSE_NAME_2)){
-            courseId = 2;
-        }
-        else {
-            LOGGER.error("CourseId Not correct!");
-            return;
-        }
+    public void triggerCompletionNotification(final Long swcId, String courseName, Integer courseId) {
 
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
         if (ccrs == null || ccrs.isEmpty()) {
@@ -368,11 +339,11 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
                 @Override
                 public void afterCommit() {
-                    sendEvent(ccr.getSwcId(), courseName);
+                    sendEvent(ccr.getSwcId(), courseName, courseId);
                 }
             });
         } else {
-            sendEvent(ccr.getSwcId(), courseName);
+            sendEvent(ccr.getSwcId(), courseName, courseId);
         }
     }
 
@@ -380,11 +351,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
      * Send event to notify
      * @param swcId swc ID to notify
      */
-    private void sendEvent(Long swcId, String courseName) {
+    private void sendEvent(Long swcId, String courseName, Integer courseId) {
 
         Map<String, Object> eventParams = new HashMap<>();
         eventParams.put("swcId", swcId);
         eventParams.put("courseName", courseName);
+        eventParams.put("courseId", courseId);
         MotechEvent motechEvent = new MotechEvent(COURSE_COMPLETED, eventParams);
         eventRelay.sendEventMessage(motechEvent);
         LOGGER.debug("Sent event message to process completion notification");
@@ -444,17 +416,9 @@ public class WashAcademyServiceImpl implements WashAcademyService {
      * @param swcId swc Id of swc
      * @param scores scores in quiz
      */
-    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores,String courseName) {
+    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores,String courseName, Integer courseId) {
 
         int totalScore = getTotalScore(scores);
-
-        int courseId = 0;
-        if (courseName.equals(COURSE_NAME_1)){
-            courseId = 1;
-        }
-        else if (courseName.equals(COURSE_NAME_2)){
-            courseId = 2;
-        }
 
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, totalScore, scores.toString(), courseId );
         courseCompletionRecordDataService.create(ccr);
@@ -468,7 +432,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // we updated the completion record. Start event message to trigger notification workflow
             ccr.setPassed(true);
             courseCompletionRecordDataService.update(ccr);
-            triggerCompletionNotification(swcId, courseName);
+            triggerCompletionNotification(swcId, courseName, courseId);
         }
     }
 

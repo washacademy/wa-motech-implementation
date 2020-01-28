@@ -116,18 +116,8 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             LOGGER.debug("Handling course completion notification event");
             Long swcId = (Long) event.getParameters().get(SWCID);
             String courseName = (String) event.getParameters().get("courseName");
+            int courseId = (int)event.getParameters().get("courseId");
 
-            Integer courseId;
-            if (courseName.equals("WashAcademyCoursePlus") ){
-                courseId = 2;
-            }
-            else if (courseName.equals("WashAcademyCourse") ){
-                courseId =1;
-            }else
-            {
-                LOGGER.error("courseId not correct!");
-                return;
-            }
 
             List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
             if (ccrs == null || ccrs.isEmpty()) {
@@ -163,17 +153,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         String courseName = null;
         courseName = (String)event.getParameters().get("courseName");
         String clientCorrelator = (String)event.getParameters().get("clientCorrelator");
-        Integer courseId;
-        if (courseName.equals("WashAcademyCourse") ){
-            courseId = 1;
-        }
-        else if (courseName.equals("WashAcademyCoursePlus")){
-            courseId = 2;
-        }
-        else {
-            LOGGER.error("CourseID Not Correct" );
-            return;
-        }
+        int courseId = (int)event.getParameters().get("courseId");
 
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);
