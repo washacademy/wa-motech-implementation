@@ -2,7 +2,6 @@ package org.motechproject.wa.washacademy.ut;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -74,7 +73,7 @@ public class WashAcademyServiceUnitTest {
     private SwcService swcService;
 
     @Mock
-    private WaCourseDataService WaCourseDataService;
+    private WaCourseDataService waCourseDataService;
 
     @Mock
     private CourseCompletionRecordDataService courseCompletionRecordDataService;
@@ -114,10 +113,10 @@ public class WashAcademyServiceUnitTest {
     @Before
     public void setup() {
         initMocks(this);
-        WaCourseDataService.deleteAll();
+        waCourseDataService.deleteAll();
         when(settingsFacade.getRawConfig("WaCourse.json")).thenReturn(getFileInputStream("WaCourseTest.json"));
         washAcademyService = new WashAcademyServiceImpl(bookmarkService, activityService,
-                WaCourseDataService, activityDataService, courseCompletionRecordDataService, swcService, eventRelay, mtrainingModuleActivityRecordAuditDataService,bookmarkDataService, settingsFacade, alertService);
+                waCourseDataService, activityDataService, courseCompletionRecordDataService, swcService, eventRelay, mtrainingModuleActivityRecordAuditDataService,bookmarkDataService, settingsFacade, alertService);
         courseNotificationService = new CourseNotificationServiceImpl(smsNotificationService,
                     settingsFacade, activityService, schedulerService, courseCompletionRecordDataService, alertService,
                 swcService,districtDataService);
@@ -128,29 +127,33 @@ public class WashAcademyServiceUnitTest {
     @Test
     public void getCourseTest() {
 
-
-        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]");
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         newCourse.setModificationDate(DateTime.now());
-        WaCourseDataService.create(newCourse);
-        when(WaCourseDataService.getCourseByName("WashAcademyCourse")).thenReturn(newCourse);
-        assertTrue(washAcademyService.getCourse(1).getContent().equals(newCourse.getContent()));
+        waCourseDataService.create(newCourse);
+        when(waCourseDataService.getCourseById(1)).thenReturn(newCourse);
+        assertTrue((washAcademyService.getCourse(1)).getContent().equals(newCourse.getContent()));
 
-        WaCourse newCoursePlus = new WaCourse("WashAcademyCoursePlus", "[]");
+        WaCourse newCoursePlus = new WaCourse("WashAcademyCoursePlus", "[]",2);
         newCoursePlus.setModificationDate(DateTime.now());
-        WaCourseDataService.create(newCoursePlus);
-        when(WaCourseDataService.getCourseByName("WashAcademyCoursePlus")).thenReturn(newCoursePlus);
+        waCourseDataService.create(newCoursePlus);
+        when(waCourseDataService.getCourseById(2)).thenReturn(newCoursePlus);
         assertTrue(washAcademyService.getCourse(2).getContent().equals(newCoursePlus.getContent()));
     }
-    @Ignore
+
     @Test
     public void getBookmarkTest() {
         Bookmark newBookmark = new Bookmark("55", "WashAcademyCourse", null, null, null);
-
+        List<Bookmark> bookmarkList = new ArrayList<Bookmark>();
+        bookmarkList.add(newBookmark);
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(55L);
-        when(bookmarkService.getLatestBookmarkByUserId(anyString()))
-                .thenReturn(newBookmark);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
+        when(swcService.getByContactNumber(anyLong()))
+                .thenReturn(swc);
+        when(waCourseDataService.getCourseById(anyInt()))
+                .thenReturn(course);
+        when(bookmarkDataService.findBookmarksForUser(anyString()))
+                .thenReturn((bookmarkList));
 
         WaBookmark mab = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID, 1);
         assertTrue(mab.getSwcId() == 55L);
@@ -165,12 +168,12 @@ public class WashAcademyServiceUnitTest {
     @Test
     public void setNewBookmarkTest() {
         WaBookmark mab = new WaBookmark(123456L, VALID_CALL_ID, "Chapter1_Lesson1", null);
-
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setId(123456L);
-        when(bookmarkService.createBookmark(any(Bookmark.class))).thenReturn(new Bookmark());
-        when(bookmarkService.getLatestBookmarkByUserId(anyString())).thenReturn(null);
+        WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(course);
         when(swcService.getById(anyLong())).thenReturn(swc);
+        when(bookmarkService.createBookmark(any(Bookmark.class))).thenReturn(new Bookmark());
         washAcademyService.setBookmark(mab, 1);
     }
 
@@ -180,10 +183,8 @@ public class WashAcademyServiceUnitTest {
 
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(123456L);
-        when(bookmarkService.createBookmark(any(Bookmark.class)))
-                .thenReturn(new Bookmark());
-        when(bookmarkService.getLatestBookmarkByUserId(anyString()))
-                .thenReturn(new Bookmark());
+        WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(course);
         when(swcService.getById(anyLong())).thenReturn(swc);
         washAcademyService.setBookmark(mab, 1);
     }
@@ -199,10 +200,12 @@ public class WashAcademyServiceUnitTest {
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, scores.toString(), false, 1);
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
-        when(courseCompletionRecordDataService.findBySwcIdAndCourseId(anyLong(),anyInt())).thenReturn(records);
+        WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(course);
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(123456L);
         when(swcService.getById(anyLong())).thenReturn(swc);
+        when(courseCompletionRecordDataService.findBySwcIdAndCourseId(123456L,1)).thenReturn(records);
         washAcademyService.setBookmark(mab, 1);
     }
 
@@ -216,10 +219,12 @@ public class WashAcademyServiceUnitTest {
         doNothing().when(eventRelay).sendEventMessage(any(MotechEvent.class));
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(123456L);
+        WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(course);
         when(swcService.getById(anyLong())).thenReturn(swc);
         washAcademyService.setBookmark(mab, 1);
     }
-    @Ignore
+
     @Test
     public void getLastBookmarkReset() {
 
@@ -232,11 +237,15 @@ public class WashAcademyServiceUnitTest {
         progress.put("scoresByChapter", scores);
         progress.put("bookmark", "COURSE_COMPLETED");
         Bookmark newBookmark = new Bookmark("55", "WashAcademyCourse", null, null, progress);
-        when(bookmarkService.getLatestBookmarkByUserId(anyString()))
-                .thenReturn(newBookmark);
+        List<Bookmark> bookmarkList = new ArrayList<Bookmark>();
+        bookmarkList.add(newBookmark);
+        WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(55L);
         when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(course);
+        when(bookmarkDataService.findBookmarksForUser(anyString())).thenReturn((bookmarkList));
+
         WaBookmark retrieved = washAcademyService.getBookmark(1234567890L, VALID_CALL_ID,1);
         assertNull(retrieved.getBookmark());
         assertNull(retrieved.getScoresByChapter());
@@ -248,6 +257,7 @@ public class WashAcademyServiceUnitTest {
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveredToTerminal");
         event.getParameters().put("courseName", "WashAcademyCourse");
+        event.getParameters().put("courseID",1);
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true,1);
         ccr.setModificationDate(DateTime.now());
         assertNull(ccr.getLastDeliveryStatus());
@@ -262,14 +272,15 @@ public class WashAcademyServiceUnitTest {
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveredToTerminal"));
     }
-    @Ignore
+
     @Test
     public void testStatusUpdateNotificationRetry() {
         MotechEvent event = new MotechEvent();
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveryImpossible");
         event.getParameters().put("courseName", "WashAcademyCourse");
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        event.getParameters().put("courseId",1);
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true, 1);
         ccr.setModificationDate(DateTime.now().minusDays(1));
         assertNull(ccr.getLastDeliveryStatus());
@@ -300,14 +311,15 @@ public class WashAcademyServiceUnitTest {
         swc.setDistrict(district);
         return swc;
     }
-    @Ignore
+
     @Test
     public void testStatusUpdateNotificationMaxNoRetry() {
         MotechEvent event = new MotechEvent();
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveryImpossible");
         event.getParameters().put("courseName", "WashAcademyCourse");
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        event.getParameters().put("courseId",1);
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true,  1);
         ccr.setModificationDate(DateTime.now().minusDays(1));
         assertNull(ccr.getLastDeliveryStatus());
@@ -334,7 +346,7 @@ public class WashAcademyServiceUnitTest {
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveryImpossible");
         event.getParameters().put("courseName", "WashAcademyCourse");
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true, 1);
         ccr.setModificationDate(DateTime.now());
         assertNull(ccr.getLastDeliveryStatus());
@@ -360,10 +372,9 @@ public class WashAcademyServiceUnitTest {
         when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(null);
         washAcademyService.triggerCompletionNotification(123456L, "WashAcademyCourse",1);
     }
-    @Ignore
+
     @Test
     public void testNotificationTriggerValidNew() {
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, "score",1);
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
@@ -374,7 +385,7 @@ public class WashAcademyServiceUnitTest {
 
     @Test
     public void testNotificationTriggerValidExisting() {
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, "score", true,1);
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);

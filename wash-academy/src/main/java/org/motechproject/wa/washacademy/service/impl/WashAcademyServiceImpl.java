@@ -101,7 +101,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     /**
      * wa course data service
      */
-    private WaCourseDataService WaCourseDataService;
+    private WaCourseDataService waCourseDataService;
 
     /**
      * Eventing system for course completion processing
@@ -125,7 +125,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     @Autowired
     public WashAcademyServiceImpl(BookmarkService bookmarkService,
                                   ActivityService activityService,
-                                  WaCourseDataService WaCourseDataService,
+                                  WaCourseDataService waCourseDataService,
                                   ActivityDataService activityDataService,
                                   CourseCompletionRecordDataService courseCompletionRecordDataService,
                                   SwcService swcService,
@@ -135,7 +135,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
                                   AlertService alertService) {
         this.bookmarkService = bookmarkService;
         this.activityService = activityService;
-        this.WaCourseDataService = WaCourseDataService;
+        this.waCourseDataService = waCourseDataService;
         this.activityDataService = activityDataService;
         this.eventRelay = eventRelay;
         this.settingsFacade = settingsFacade;
@@ -149,7 +149,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     @Override
     public org.motechproject.wa.washacademy.dto.WaCourse getCourse(Integer courseId ) {
-        WaCourse course = WaCourseDataService.getCourseById(courseId);
+        WaCourse course = waCourseDataService.getCourseById(courseId);
         if (course == null) {
             alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
             throw new IllegalStateException("No course bootstrapped. Check deployment");
@@ -171,7 +171,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     @Override
     public long getCourseVersion(Integer courseId) {
-        WaCourse course = WaCourseDataService.getCourseById(courseId);
+        WaCourse course = waCourseDataService.getCourseById(courseId);
         if (course == null) {
             alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
             throw new IllegalStateException("No course bootstrapped. Check deployment");
@@ -179,7 +179,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         return course.getModificationDate().getMillis() / MILLIS_PER_SEC;  //Unix epoch is represented in seconds
     }
 
-    private Bookmark getBookmarkByUserIdAndCourseName (String swcId, String courseName ){
+    public Bookmark getBookmarkByUserIdAndCourseName (String swcId, String courseName ){
         List<Bookmark> bookmarks = this.bookmarkDataService.findBookmarksForUser(swcId);
         LOGGER.info(String.valueOf(bookmarks));
         Bookmark bookmark = new Bookmark();
@@ -200,7 +200,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         if (swc == null) {
             return null;
         }
-        WaCourse currentCourse = WaCourseDataService.getCourseById(courseId);
+        WaCourse currentCourse = waCourseDataService.getCourseById(courseId);
         if(currentCourse == null){
             alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
             throw new IllegalStateException("No course bootstrapped. Check deployment");
@@ -259,7 +259,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             LOGGER.error("Bookmark cannot be null, check request");
             throw new IllegalArgumentException("Invalid bookmark, cannot be null");
         }
-        WaCourse currentCourse = WaCourseDataService.getCourseById(courseId);
+        WaCourse currentCourse = waCourseDataService.getCourseById(courseId);
         if(currentCourse == null){
             alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
             throw new IllegalStateException("No course bootstrapped. Check deployment");
@@ -481,6 +481,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // TODO: validate the json format here
             course.setName(jo.get("name").toString());
             course.setContent(jo.get("chapters").toString());
+            course.setCourseId(1);
             setOrUpdateCourse(course);
         }
         catch (Exception e) {
@@ -490,10 +491,10 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     private void setOrUpdateCourse(org.motechproject.wa.washacademy.dto.WaCourse courseDto) {
-        WaCourse existing = WaCourseDataService.getCourseByName(courseDto.getName());
+        WaCourse existing = waCourseDataService.getCourseById(courseDto.getCourseId());
 
         if (existing == null) {
-            WaCourseDataService.create(new WaCourse(courseDto.getName(), courseDto.getContent()));
+            waCourseDataService.create(new WaCourse(courseDto.getName(), courseDto.getContent(), courseDto.getCourseId()));
             LOGGER.debug("Successfully created new course");
             return;
         }
@@ -502,7 +503,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             LOGGER.debug("Found no changes in course data, dropping update");
         } else {
             existing.setContent(courseDto.getContent());
-            WaCourseDataService.update(existing);
+            waCourseDataService.update(existing);
             LOGGER.debug("Found updated to course data and did the needful");
         }
     }
@@ -513,6 +514,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         courseDto.setName(course.getName());
         courseDto.setVersion(course.getModificationDate().getMillis() / MILLIS_PER_SEC);
         courseDto.setContent(course.getContent());
+        courseDto.setCourseId(course.getCourseId());
         return courseDto;
     }
 

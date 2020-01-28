@@ -21,7 +21,7 @@ public class WaCourse extends MdsEntity {
 
     @Field
     @Unique
-    private int courseId;
+    private Integer courseId;
 
 
 
@@ -34,12 +34,13 @@ public class WaCourse extends MdsEntity {
     public WaCourse() {
     }
 
-    public WaCourse(String name, String content) {
+    public WaCourse(String name, String content, Integer courseId) {
         this.name = name;
         this.content = content;
+        this.courseId = courseId;
     }
 
-    public int getCourseId() {   return courseId;   }
+    public Integer getCourseId() {   return courseId;   }
 
     public void setCourseId(int courseId) {    this.courseId = courseId;   }
 

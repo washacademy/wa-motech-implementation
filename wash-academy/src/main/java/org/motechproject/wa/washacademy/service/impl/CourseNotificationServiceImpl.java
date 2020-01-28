@@ -116,7 +116,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             LOGGER.debug("Handling course completion notification event");
             Long swcId = (Long) event.getParameters().get(SWCID);
             String courseName = (String) event.getParameters().get("courseName");
-            int courseId = (int)event.getParameters().get("courseId");
+            Integer courseId = (Integer) event.getParameters().get("courseId");
 
 
             List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
@@ -150,10 +150,9 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         LOGGER.debug("Handling update sms delivery status event");
         String callingNumber = (String) event.getParameters().get(ADDRESS);
-        String courseName = null;
-        courseName = (String)event.getParameters().get("courseName");
+        String courseName = (String)event.getParameters().get("courseName");
         String clientCorrelator = (String)event.getParameters().get("clientCorrelator");
-        int courseId = (int)event.getParameters().get("courseId");
+        Integer courseId = (Integer) event.getParameters().get("courseId");
 
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);
@@ -192,6 +191,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                 retryEvent.getParameters().put(SWCID, swcId);
                 retryEvent.getParameters().put(SMS_CONTENT, smsContent);
                 retryEvent.getParameters().put(RETRY_FLAG, true);
+                retryEvent.getParameters().put("courseId", courseId);
 
                 if (nextRetryTime.isBefore(currentTime)) {
                     // retry right away
