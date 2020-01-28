@@ -66,7 +66,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String NOT_COMPLETE = "<%s: Course not complete>";
 
-    private static final String COURSE_ENTITY_NAME = "MA.Course";
+    private static final String COURSE_ENTITY_NAME = "WA.Course";
 
     private static final int CHAPTER_COUNT = 11;
 
@@ -153,25 +153,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     @Override
     public org.motechproject.wa.washacademy.dto.WaCourse getCourse(Integer courseId ) {
-        if (courseId == 1){
-            WaCourse course = WaCourseDataService.getCourseByName(COURSE_NAME_1);
-            if (course == null) {
-                alertService.create(COURSE_ENTITY_NAME, COURSE_NAME_1, "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-                throw new IllegalStateException("No course bootstrapped. Check deployment");
-            }
-            return mapCourseDomainToDto(course);
+        WaCourse course = WaCourseDataService.getCourseById(courseId);
+        if (course == null) {
+            alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            throw new IllegalStateException("No course bootstrapped. Check deployment");
         }
-        else if (courseId == 2){
-            WaCourse course = WaCourseDataService.getCourseByName(COURSE_NAME_2);
-            if (course == null) {
-                alertService.create(COURSE_ENTITY_NAME, COURSE_NAME_2, "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-                throw new IllegalStateException("No course bootstrapped. Check deployment");
-            }
-            return mapCourseDomainToDto(course);
-        }
-        else{
-            throw new IllegalStateException("courseId Not correct. Check courseId!");
-        }
+        return mapCourseDomainToDto(course);
     }
 
     @Override
@@ -188,24 +175,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     @Override
     public long getCourseVersion(Integer courseId) {
-        if (courseId == 1){
-            WaCourse course = WaCourseDataService.getCourseByName(COURSE_NAME_1);
-            if (course == null) {
-                alertService.create(COURSE_ENTITY_NAME, COURSE_NAME_1, "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-                throw new IllegalStateException("No course bootstrapped. Check deployment");
-            }
-            return course.getModificationDate().getMillis() / MILLIS_PER_SEC;  //Unix epoch is represented in seconds
-        }else if (courseId == 2) {
-            WaCourse course = WaCourseDataService.getCourseByName(COURSE_NAME_2);
-            if (course == null) {
-                alertService.create(COURSE_ENTITY_NAME, COURSE_NAME_1, "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-                throw new IllegalStateException("No course bootstrapped. Check deployment");
-            }
-            return course.getModificationDate().getMillis() / MILLIS_PER_SEC;  //Unix epoch is represented in seconds
+        WaCourse course = WaCourseDataService.getCourseById(courseId);
+        if (course == null) {
+            alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            throw new IllegalStateException("No course bootstrapped. Check deployment");
         }
-        else{
-            throw new IllegalStateException("courseId Not correct. Check courseId!");
-        }
+        return course.getModificationDate().getMillis() / MILLIS_PER_SEC;  //Unix epoch is represented in seconds
     }
 
     private Bookmark getBookmarkByUserIdAndCourseName (String swcId, String courseName ){

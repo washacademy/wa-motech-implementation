@@ -19,6 +19,10 @@ public class WaCourse extends MdsEntity {
     @Field(type = "text")
     private String content;
 
+    @Field
+    @Unique
+    private int courseId;
+
 
 
 //    @JsonManagedReference
@@ -34,6 +38,10 @@ public class WaCourse extends MdsEntity {
         this.name = name;
         this.content = content;
     }
+
+    public int getCourseId() {   return courseId;   }
+
+    public void setCourseId(int courseId) {    this.courseId = courseId;   }
 
     public String getName() {
         return name;
