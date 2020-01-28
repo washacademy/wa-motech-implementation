@@ -75,7 +75,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     SwcDataService swcDataService;
 
     @Inject
-    WaCourseDataService WaCourseDataService;
+    WaCourseDataService waCourseDataService;
 
     @Inject
     CourseNotificationService courseNotificationService;
@@ -116,7 +116,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         courseCompletionRecordDataService.deleteAll();
         activityDataService.deleteAll();
         bookmarkDataService.deleteAll();
-        WaCourseDataService.deleteAll();
+        waCourseDataService.deleteAll();
         testingService.clearDatabase();
     }
 
@@ -124,36 +124,36 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     public void testSetCourseNoUpdate() throws IOException {
         setupWaCourse();
 
-        WaCourse originalCourse = WaCourseDataService.getCourseByName(VALID_COURSE_NAME);
-        org.motechproject.wa.washacademy.dto.WaCourse copyCourse = new org.motechproject.wa.washacademy.dto.WaCourse(originalCourse.getName(), originalCourse.getModificationDate().getMillis(), originalCourse.getContent());
+        WaCourse originalCourse = waCourseDataService.getCourseByName(VALID_COURSE_NAME);
+        org.motechproject.wa.washacademy.dto.WaCourse copyCourse = new org.motechproject.wa.washacademy.dto.WaCourse(originalCourse.getName(), originalCourse.getModificationDate().getMillis(), originalCourse.getContent(),originalCourse.getCourseId());
         maService.setCourse(copyCourse);
 
         // verify that modified time (version) didn't change
-        assertEquals(WaCourseDataService.getCourseByName(VALID_COURSE_NAME).getModificationDate(),
+        assertEquals(waCourseDataService.getCourseByName(VALID_COURSE_NAME).getModificationDate(),
                 originalCourse.getModificationDate());
     }
 
     @Test
     public void testSetCourseUpdate() throws IOException {
         setupWaCourse();
-        WaCourse originalCourse = WaCourseDataService.getCourseByName(VALID_COURSE_NAME);
+        WaCourse originalCourse = waCourseDataService.getCourseByName(VALID_COURSE_NAME);
         String courseContent = originalCourse.getContent();
-        org.motechproject.wa.washacademy.dto.WaCourse copyCourse = new org.motechproject.wa.washacademy.dto.WaCourse(originalCourse.getName(), originalCourse.getModificationDate().getMillis(), originalCourse.getContent() + "foo");
+        org.motechproject.wa.washacademy.dto.WaCourse copyCourse = new org.motechproject.wa.washacademy.dto.WaCourse(originalCourse.getName(), originalCourse.getModificationDate().getMillis(), originalCourse.getContent() + "foo", 1);
         maService.setCourse(copyCourse);
 
         // verify that modified time (version) did change
-        assertNotEquals(WaCourseDataService.getCourseByName(VALID_COURSE_NAME).getModificationDate(),
+        assertNotEquals(waCourseDataService.getCourseByName(VALID_COURSE_NAME).getModificationDate(),
                 originalCourse.getModificationDate());
         originalCourse.setContent(courseContent);
-        WaCourseDataService.update(originalCourse);
+        waCourseDataService.update(originalCourse);
     }
 
     @Test
     public void testNoCoursePresent() throws IOException {
         setupWaCourse();
-        WaCourse originalCourse = WaCourseDataService.getCourseByName(VALID_COURSE_NAME);
-        WaCourseDataService.delete(originalCourse);
-        assertNull(WaCourseDataService.getCourseByName(VALID_COURSE_NAME));
+        WaCourse originalCourse = waCourseDataService.getCourseByName(VALID_COURSE_NAME);
+        waCourseDataService.delete(originalCourse);
+        assertNull(waCourseDataService.getCourseByName(VALID_COURSE_NAME));
 
         try {
             maService.getCourse(1);
@@ -161,7 +161,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
             assertTrue(is.toString().contains("No course bootstrapped. Check deployment"));
         }
 
-        WaCourseDataService.create(new WaCourse(originalCourse.getName(), originalCourse.getContent()));
+        waCourseDataService.create(new WaCourse(originalCourse.getName(), originalCourse.getContent(), originalCourse.getCourseId()));
     }
 
     @Test
@@ -471,12 +471,12 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
         Long swcId = swcService.getByContactNumber(callingNumber).getId();
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
 
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, 44, "score", true,1);
         courseCompletionRecordDataService.create(ccr);
 
-        maService.triggerCompletionNotification(swcId,"WashAcademyCourse" );
+        maService.triggerCompletionNotification(swcId,"WashAcademyCourse" ,1);
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
         ccr = ccrs.get(ccrs.size()-1);
         assertTrue(ccr.isSentNotification());
@@ -486,7 +486,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     public void testRetriggerNotificationException() {
 
         long callingNumber = 9876543222L;
-        maService.triggerCompletionNotification(callingNumber,"WashAcademyCourse");
+        maService.triggerCompletionNotification(callingNumber,"WashAcademyCourse",1);
     }
 
     @Test
@@ -518,7 +518,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         MotechEvent event = new MotechEvent();
         event.getParameters().put("callingNumber", callingNumber);
         event.getParameters().put("smsContent", "FooBar");
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(callingNumber, 35, "score", false,1);
         courseCompletionRecordDataService.create(ccr);
         courseNotificationService.sendSmsNotification(event);
@@ -546,7 +546,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         MotechEvent event = new MotechEvent();
         event.getParameters().put("callingNumber", callingNumber);
         event.getParameters().put("smsContent", "FooBar");
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(callingNumber, 35, "score", false,1);
         courseCompletionRecordDataService.create(ccr);
         courseNotificationService.sendSmsNotification(event);
@@ -581,7 +581,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         MotechEvent event = new MotechEvent();
         event.getParameters().put("swcId", swcId);
         event.getParameters().put("smsContent", "FooBar");
-        WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
+        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, 35, "score", false,1);
         courseCompletionRecordDataService.create(ccr);
         assertNull(ccr.getSmsReferenceNumber());
@@ -682,8 +682,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         JSONObject jo = new JSONObject(jsonText);
         course.setName(jo.get("name").toString());
         course.setContent(jo.get("chapters").toString());
-        WaCourseDataService.create(new WaCourse(course.getName(), course
-                .getContent()));
+        waCourseDataService.create(new WaCourse(course.getName(), course.getContent(), 1));
         fileStream.close();
         return jo;
     }

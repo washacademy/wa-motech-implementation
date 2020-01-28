@@ -245,7 +245,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         JSONObject jo = new JSONObject(jsonText);
         course.setName(jo.get("name").toString());
         course.setContent(jo.get("chapters").toString());
-        WaCourseDataService.create(new WaCourse(course.getName(), course.getContent()));
+        WaCourseDataService.create(new WaCourse(course.getName(), course.getContent(),1));
         return jo;
     }
 

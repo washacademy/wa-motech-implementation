@@ -734,7 +734,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
     private void createMaRecords(Long contactNumber) {
 
         bookmarkDataService.create(new Bookmark(contactNumber.toString(), "1", "1", "1", new HashMap<String, Object>()));
-        WaCourse waCourse = new WaCourse("WashAcademyCourse",null);
+        WaCourse waCourse = new WaCourse("WashAcademyCourse",null,1);
         CourseCompletionRecord ccr = new CourseCompletionRecord(contactNumber, 35, "score", false, 1);
         courseCompletionRecordDataService.create(ccr);
 //        String externalId, String courseName, String chapterName, String lessonName, DateTime startTime, DateTime completionTime, ActivityState.STARTED);
