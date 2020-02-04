@@ -47,7 +47,6 @@ public class WashAcademyController extends BaseController {
     @Autowired
     private SwcService swcService;
 
-    @Autowired
     private WaCourseDataService waCourseDataService;
 
     /**
