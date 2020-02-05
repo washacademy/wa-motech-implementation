@@ -65,9 +65,9 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String COURSE_ENTITY_NAME = "WA.Course";
 
-//    private static final int CHAPTER_COUNT = 11;
-//
-//    private static final int PASS_SCORE = 22;
+    private static final int CHAPTER_COUNT = 4;
+
+    private static final int PASS_SCORE = 8;
 
     private static final int MILLIS_PER_SEC = 1000;
 
@@ -444,7 +444,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         WaCourse existing = WaCourseDataService.getCourseByName(courseDto.getName());
 
         if (existing == null) {
-            WaCourseDataService.create(new WaCourse(courseDto.getName(), courseDto.getContent(),4,8));
+            WaCourseDataService.create(new WaCourse(courseDto.getName(), courseDto.getContent(),CHAPTER_COUNT,PASS_SCORE));
             LOGGER.debug("Successfully created new course");
             return;
         }
