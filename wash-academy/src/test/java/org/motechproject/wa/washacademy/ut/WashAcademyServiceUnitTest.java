@@ -118,7 +118,7 @@ public class WashAcademyServiceUnitTest {
         washAcademyService = new WashAcademyServiceImpl(bookmarkService, activityService,
                 waCourseDataService, activityDataService, courseCompletionRecordDataService, swcService, eventRelay, mtrainingModuleActivityRecordAuditDataService,bookmarkDataService, settingsFacade, alertService);
         courseNotificationService = new CourseNotificationServiceImpl(smsNotificationService,
-                    settingsFacade, activityService, schedulerService, courseCompletionRecordDataService, alertService,
+                    settingsFacade, activityService, schedulerService, courseCompletionRecordDataService, alertService,waCourseDataService,
                 swcService,districtDataService);
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         when(activityService.createActivity(any(ActivityRecord.class))).thenReturn(new ActivityRecord());
@@ -253,10 +253,10 @@ public class WashAcademyServiceUnitTest {
 
     @Test
     public void testStatusUpdateNotification() {
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveredToTerminal");
-        event.getParameters().put("courseName", "WashAcademyCourse");
         event.getParameters().put("courseID",1);
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true,1);
         ccr.setModificationDate(DateTime.now());
@@ -269,18 +269,18 @@ public class WashAcademyServiceUnitTest {
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setSwcId("123456");
         when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveredToTerminal"));
     }
 
     @Test
     public void testStatusUpdateNotificationRetry() {
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveryImpossible");
-        event.getParameters().put("courseName", "WashAcademyCourse");
         event.getParameters().put("courseId",1);
-        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true, 1);
         ccr.setModificationDate(DateTime.now().minusDays(1));
         assertNull(ccr.getLastDeliveryStatus());
@@ -294,6 +294,7 @@ public class WashAcademyServiceUnitTest {
         when(swcService.getById(anyLong())).thenReturn(getFrontLineWorker());
         when(swcService.getByContactNumber(anyLong())).thenReturn(getFrontLineWorker());
         when(swcService.getById(anyLong())).thenReturn(getFrontLineWorker());
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveryImpossible"));
         assertEquals(1, ccr.getNotificationRetryCount());
@@ -314,10 +315,10 @@ public class WashAcademyServiceUnitTest {
 
     @Test
     public void testStatusUpdateNotificationMaxNoRetry() {
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveryImpossible");
-        event.getParameters().put("courseName", "WashAcademyCourse");
         event.getParameters().put("courseId",1);
         WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true,  1);
@@ -335,6 +336,7 @@ public class WashAcademyServiceUnitTest {
         when(swcService.getById(anyLong())).thenReturn(swc);
         when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
         when(swcService.getById(anyLong())).thenReturn(swc);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveryImpossible"));
         assertEquals(1, ccr.getNotificationRetryCount());
@@ -342,11 +344,11 @@ public class WashAcademyServiceUnitTest {
 
     @Test
     public void testStatusUpdateNotificationScheduler() {
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
         event.getParameters().put("address", "tel: 9876543210");
         event.getParameters().put("deliveryStatus", "DeliveryImpossible");
-        event.getParameters().put("courseName", "WashAcademyCourse");
-        WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
+        event.getParameters().put("courseId",1);
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 34, "score", true, 1);
         ccr.setModificationDate(DateTime.now());
         assertNull(ccr.getLastDeliveryStatus());
@@ -362,6 +364,7 @@ public class WashAcademyServiceUnitTest {
         when(swcService.getById(anyLong())).thenReturn(swc);
         when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
         when(swcService.getById(anyLong())).thenReturn(swc);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveryImpossible"));
         assertEquals(0, ccr.getNotificationRetryCount());
@@ -369,17 +372,21 @@ public class WashAcademyServiceUnitTest {
 
     @Test(expected = CourseNotCompletedException.class)
     public void testNotificationTriggerException() {
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(null);
-        washAcademyService.triggerCompletionNotification(123456L, "WashAcademyCourse",1);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
+        washAcademyService.triggerCompletionNotification(123456L, 1);
     }
 
     @Test
     public void testNotificationTriggerValidNew() {
+        WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         CourseCompletionRecord ccr = new CourseCompletionRecord(123456L, 22, "score",1);
         List<CourseCompletionRecord> records = new ArrayList<>();
         records.add(ccr);
         when(courseCompletionRecordDataService.findBySwcIdAndCourseId(123456L,1)).thenReturn(records);
-        washAcademyService.triggerCompletionNotification(123456L,"WashAcademyCourse",1);
+        when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
+        washAcademyService.triggerCompletionNotification(123456L,1);
         assertFalse(ccr.isSentNotification());
     }
 

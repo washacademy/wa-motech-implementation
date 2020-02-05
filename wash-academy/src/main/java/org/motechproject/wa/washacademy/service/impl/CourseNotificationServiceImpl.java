@@ -20,6 +20,7 @@ import org.motechproject.wa.swc.domain.SwachchagrahiStatus;
 import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.washacademy.domain.CourseCompletionRecord;
 import org.motechproject.wa.washacademy.repository.CourseCompletionRecordDataService;
+import org.motechproject.wa.washacademy.repository.WaCourseDataService;
 import org.motechproject.wa.washacademy.service.CourseNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +90,11 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
      */
     private AlertService alertService;
 
+    /**
+     * Used for fetching courseName
+     */
+    private WaCourseDataService waCourseDataService;
+
     @Autowired
     public CourseNotificationServiceImpl(SmsNotificationService smsNotificationService,
                                          @Qualifier("maSettings") SettingsFacade settingsFacade,
@@ -96,6 +102,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
                                          MotechSchedulerService schedulerService,
                                          CourseCompletionRecordDataService courseCompletionRecordDataService,
                                          AlertService alertService,
+                                         WaCourseDataService waCourseDataService,
                                          SwcService swcService,DistrictDataService districtDataService) {
 
         this.smsNotificationService = smsNotificationService;
@@ -106,6 +113,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         this.swcService = swcService;
         this.courseCompletionRecordDataService = courseCompletionRecordDataService;
         this.districtDataService = districtDataService;
+        this.waCourseDataService = waCourseDataService;
     }
 
     @MotechListener(subjects = { COURSE_COMPLETED_SUBJECT })
@@ -150,9 +158,9 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         LOGGER.debug("Handling update sms delivery status event");
         String callingNumber = (String) event.getParameters().get(ADDRESS);
-        String courseName = (String)event.getParameters().get("courseName");
         String clientCorrelator = (String)event.getParameters().get("clientCorrelator");
         Integer courseId = (Integer) event.getParameters().get("courseId");
+        String courseName = waCourseDataService.getCourseById(courseId).getName();
 
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);

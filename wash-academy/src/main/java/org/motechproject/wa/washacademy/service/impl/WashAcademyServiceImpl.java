@@ -318,9 +318,10 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     }
 
     @Override
-    public void triggerCompletionNotification(final Long swcId, String courseName, Integer courseId) {
+    public void triggerCompletionNotification(final Long swcId, Integer courseId) {
 
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
+        String  courseName = waCourseDataService.getCourseById(courseId).getName();
         if (ccrs == null || ccrs.isEmpty()) {
             throw new CourseNotCompletedException(String.format(NOT_COMPLETE, swcId));
         }
@@ -432,7 +433,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // we updated the completion record. Start event message to trigger notification workflow
             ccr.setPassed(true);
             courseCompletionRecordDataService.update(ccr);
-            triggerCompletionNotification(swcId, courseName, courseId);
+            triggerCompletionNotification(swcId, courseId);
         }
     }
 

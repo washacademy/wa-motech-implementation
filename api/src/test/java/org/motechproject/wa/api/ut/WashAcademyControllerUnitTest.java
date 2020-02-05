@@ -7,6 +7,7 @@ import org.motechproject.event.listener.EventRelay;
 import org.motechproject.wa.api.web.BaseController;
 import org.motechproject.wa.api.web.WashAcademyController;
 import org.motechproject.wa.api.web.contract.washAcademy.SaveBookmarkRequest;
+import org.motechproject.wa.washacademy.repository.WaCourseDataService;
 import org.motechproject.wa.washacademy.service.WashAcademyService;
 
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -25,6 +26,8 @@ public class WashAcademyControllerUnitTest {
 
     @Mock
     private EventRelay eventRelay;
+
+    private WaCourseDataService waCourseDataService;
 
     @Before
     public void setup() {

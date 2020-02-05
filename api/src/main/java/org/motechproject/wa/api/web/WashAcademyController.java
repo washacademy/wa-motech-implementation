@@ -13,7 +13,6 @@ import org.motechproject.wa.swc.service.SwcService;
 import org.motechproject.wa.washacademy.dto.WaBookmark;
 import org.motechproject.wa.washacademy.dto.WaCourse;
 import org.motechproject.wa.washacademy.exception.CourseNotCompletedException;
-import org.motechproject.wa.washacademy.repository.WaCourseDataService;
 import org.motechproject.wa.washacademy.service.WashAcademyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +45,6 @@ public class WashAcademyController extends BaseController {
 
     @Autowired
     private SwcService swcService;
-
-    private WaCourseDataService waCourseDataService;
 
     /**
      * Event relay service to handle async notifications
@@ -263,12 +260,9 @@ public class WashAcademyController extends BaseController {
         String clientCorrelator = smsDeliveryStatus.getRequestData().getDeliveryInfoNotification().getClientCorrelator();
         String segments[] = clientCorrelator.split("_");
         Integer courseId = Integer.parseInt(segments[segments.length - 1]);
-        org.motechproject.wa.washacademy.domain.WaCourse currentCourse = waCourseDataService.getCourseById(courseId);
-        String courseName = currentCourse.getName();
         Map<String, Object> eventParams = new HashMap<>();
         eventParams.put("address", deliveryInfo.getAddress());
         eventParams.put("deliveryStatus", deliveryInfo.getDeliveryStatus().toString());
-        eventParams.put("courseName", courseName);
         eventParams.put("clientCorrelator",clientCorrelator );
         eventParams.put("courseId", courseId);
         MotechEvent motechEvent = new MotechEvent(SMS_STATUS_SUBJECT, eventParams);
@@ -284,14 +278,12 @@ public class WashAcademyController extends BaseController {
     public void sendNotification(@RequestBody NotifyRequest notifyRequest) {
         Integer courseId = notifyRequest.getCourseId();
         Long swcId = notifyRequest.getSwcId();
-        org.motechproject.wa.washacademy.domain.WaCourse course = waCourseDataService.getCourseById(courseId);
-        String courseName = course.getName();
 
         log("REQUEST: /washacademy/notify (POST)", String.format("swcId=%s", String.valueOf(swcId)));
 
         // done with validation
         try {
-            washAcademyService.triggerCompletionNotification(swcId, courseName, courseId );
+            washAcademyService.triggerCompletionNotification(swcId, courseId );
         } catch (CourseNotCompletedException cnc) {
             LOGGER.error("Could not send notification: " + cnc.toString());
             throw cnc;
