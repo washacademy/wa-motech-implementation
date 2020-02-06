@@ -236,8 +236,8 @@ public class WashAcademyController extends BaseController {
             value = "/notify",
             method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void sendNotification(@RequestBody Long swcId) {
-
+    public void sendNotification(@RequestBody NotifyRequest obj) {
+        Long swcId = obj.getSwcId();
         log("REQUEST: /washacademy/notify (POST)", String.format("swcId=%s", String.valueOf(swcId)));
 
         // done with validation
