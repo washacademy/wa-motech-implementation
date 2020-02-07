@@ -1,5 +1,6 @@
 package org.motechproject.wa.testing.it.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -7,7 +8,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,6 +21,7 @@ import org.motechproject.testing.utils.TestContext;
 import org.motechproject.wa.api.web.BaseController;
 import org.motechproject.wa.api.web.contract.BadRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.CourseResponse;
+import org.motechproject.wa.api.web.contract.washAcademy.NotifyRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.SaveBookmarkRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.SmsStatusRequest;
 import org.motechproject.wa.api.web.contract.washAcademy.sms.DeliveryStatus;
@@ -92,7 +93,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void testBookmarkBadCallingNumber() throws IOException, InterruptedException {
 
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
 
         HttpPost request = RequestBuilder.createPostRequest(endpoint, new SaveBookmarkRequest());
@@ -102,7 +103,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void testBookmarkBadCallIdSmallest() throws IOException, InterruptedException {
 
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID.substring(1));
@@ -113,7 +114,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void testBookmarkBadCallIdLargest() throws IOException, InterruptedException {
 
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID + "1");
@@ -124,7 +125,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void testBookmarkNullCallId() throws IOException, InterruptedException {
 
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmark = new SaveBookmarkRequest();
         bookmark.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
@@ -134,7 +135,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testGetBookmarkEmpty() throws IOException, InterruptedException {
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore?callingNumber=1234567890&callId=1234567890123456789012345",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore?callingNumber=1234567890&callId=1234567890123456789012345",
                 TestContext.getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
         request.addHeader("content-type", "application/json");
@@ -145,8 +146,8 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSetValidBookmark() throws IOException, InterruptedException {
-
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        setupWaCourse();
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(BaseController.SMALLEST_10_DIGIT_NUMBER);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -160,8 +161,8 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testTriggerNotification() throws IOException, InterruptedException {
-
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        setupWaCourse();
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmark = new SaveBookmarkRequest();
         bookmark.setCallingNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
@@ -172,7 +173,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         swc = swcService.getByContactNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
 
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 4);
         }
         bookmark.setScoresByChapter(scores);
@@ -181,9 +182,11 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         assertTrue(SimpleHttpClient.execHttpRequest(request, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
         long swcId = swc.getId();
-        endpoint = String.format("http://localhost:%d/api/washacademy/notify",
+        endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/notify",
                 TestContext.getJettyPort());
-        request = RequestBuilder.createPostRequest(endpoint, swcId);
+        NotifyRequest notifyRequest = new NotifyRequest();
+        notifyRequest.setSwcId(swcId);
+        request = RequestBuilder.createPostRequest(endpoint, notifyRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(request, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
         // removed the negative testing since there's not reliable way to clean the data for it to fail
@@ -193,8 +196,8 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSetValidExistingBookmark() throws IOException, InterruptedException {
-
-        String endpoint = String.format("http://localhost:%d/api/washacademy/bookmarkWithScore",
+        setupWaCourse();
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(BaseController.SMALLEST_10_DIGIT_NUMBER);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -214,7 +217,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void testGetCourseValid() throws IOException, InterruptedException {
         setupWaCourse();
-        String endpoint = String.format("http://localhost:%d/api/washacademy/course",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/course",
                 TestContext.getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
 
@@ -227,7 +230,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
     @Test
     public void testSmsStatusInvalidFormat() throws IOException, InterruptedException {
-        String endpoint = String.format("http://localhost:%d/api/washacademy/sms/status/imi",
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/sms/status/imi",
                 TestContext.getJettyPort());
         SmsStatusRequest smsStatusRequest = new SmsStatusRequest();
         smsStatusRequest.setRequestData(new RequestData());
@@ -245,7 +248,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         JSONObject jo = new JSONObject(jsonText);
         course.setName(jo.get("name").toString());
         course.setContent(jo.get("chapters").toString());
-        WaCourseDataService.create(new WaCourse(course.getName(), course.getContent()));
+        WaCourseDataService.create(new WaCourse(course.getName(), course.getContent(),4,8));
         return jo;
     }
 
@@ -255,7 +258,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT400() throws IOException, InterruptedException {
-        String endpoint = String.format("http://localhost:%d/api/washacademy/courseVersion", TestContext
+        String endpoint = String.format("http://localhost:%d/motech-platform-server/module/api/washacademy/courseVersion", TestContext
                 .getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(request, RequestBuilder
@@ -274,7 +277,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         setupWaCourse();
 
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/courseVersion",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/courseVersion",
                 TestContext.getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -300,7 +303,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT402() throws IOException, InterruptedException {
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/course",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/course",
                 TestContext.getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -321,7 +324,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         JSONObject jo = setupWaCourse();
 
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/course",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/course",
                 TestContext.getJettyPort());
         HttpGet request = RequestBuilder.createGetRequest(endpoint);
         HttpResponse httpResponse = SimpleHttpClient.httpRequestAndResponse(
@@ -348,7 +351,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     HttpGet createHttpGetBookmarkWithScore(String callingNo, String callId) {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort()));
         String seperator = "?";
         if (callingNo != null) {
@@ -519,9 +522,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT409() throws IOException, InterruptedException {
-
+        setupWaCourse();
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -549,9 +552,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT410() throws IOException, InterruptedException {
         // Request without callingNumber and Bookmark
-
+        setupWaCourse();
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -575,7 +578,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // callingNumber missing in the request body
 
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID);
@@ -607,7 +610,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // callId missing in the request body
 
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallingNumber(1234567890l);
@@ -637,7 +640,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     public void verifyFT413() throws IOException, InterruptedException {
         // callId more than 25 digit
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallId(VALID_CALL_ID.concat("foo"));
@@ -679,7 +682,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // callingNumber less than 10 digit
 
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallingNumber(123456789l);
@@ -722,7 +725,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // Invalid scores should not be accepted
 
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallingNumber(1234567890l);
@@ -750,12 +753,16 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      * "bookmark" is having invalid value.
      */
     // TODO JIRA issue: https://applab.atlassian.net/browse/wa-222
-    @Test
+    /** there is no check for bookmark other then course_completed */
     @Ignore
+    @Test
     public void verifyFT416() throws IOException, InterruptedException {
-        // Request with invalid bookmark value
+        setupWaCourse();
+        Swachchagrahi swc = new Swachchagrahi(1234567890l);
+        swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swcService.add(swc);
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
         bookmarkRequest.setCallingNumber(1234567890l);
@@ -784,8 +791,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT417() throws IOException, InterruptedException {
+        setupWaCourse();
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -845,8 +853,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT418() throws IOException, InterruptedException {
+        setupWaCourse();
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -904,9 +913,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT419() throws IOException, InterruptedException {
-
+        setupWaCourse();
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -965,8 +974,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
     // TODO JIRA issue: https://applab.atlassian.net/browse/wa-240
     @Test
     public void verifyFT508() throws IOException, InterruptedException {
+        setupWaCourse();
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -983,13 +993,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         scoreMap.put("2", 1);
         scoreMap.put("3", 4);
         scoreMap.put("4", 2);
-        scoreMap.put("5", 1);
-        scoreMap.put("6", 4);
-        scoreMap.put("7", 2);
-        scoreMap.put("8", 1);
-        scoreMap.put("9", 4);
-        scoreMap.put("10", 1);
-        scoreMap.put("11", 4);
+
         bookmarkRequest.setScoresByChapter(scoreMap);
         HttpPost postRequest = RequestBuilder.createPostRequest(endpoint,
                 bookmarkRequest);
@@ -1018,9 +1022,10 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
      */
     @Test
     public void verifyFT532() throws IOException, InterruptedException {
+        setupWaCourse();
         // create bookmark for the user
         String endpoint = String.format(
-                "http://localhost:%d/api/washacademy/bookmarkWithScore",
+                "http://localhost:%d/motech-platform-server/module/api/washacademy/bookmarkWithScore",
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -1051,11 +1056,11 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
 
 
     @Test
-    @Ignore
     /**
      * Testing sms status updates. See https://applab.atlassian.net/browse/wa-250
      */
     public void verifyFT564() throws IOException, InterruptedException {
+        setupWaCourse();
         // create completion record for msisdn 1234567890l
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -1067,7 +1072,7 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         assertNull(ccr.getLastDeliveryStatus());
         // invoke delivery notification API
         String endpoint = String.format(
-        "http://localhost:%d/api/washacademy/smsdeliverystatus",
+        "http://localhost:%d/motech-platform-server/module/api/washacademy/sms/status/imi",
         TestContext.getJettyPort());
         HttpPost postRequest = new HttpPost(endpoint);
         postRequest.setHeader("Content-type", "application/json");
