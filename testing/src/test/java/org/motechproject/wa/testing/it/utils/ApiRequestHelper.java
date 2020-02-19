@@ -25,7 +25,7 @@ public class ApiRequestHelper {
             boolean includeCallDisconnectReason, Integer callDisconnectReason,
             boolean includeContet, String content) {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/%s/callDetails",
+                "http://localhost:%d/motech-platform-server/module/api/%s/callDetails",
                 TestContext.getJettyPort(), serviceName));
         String callDetailsJson = createCallDetailsJson(includeCallingNumber,
                 callingNumber, includeCallId, callId, includeOperator,

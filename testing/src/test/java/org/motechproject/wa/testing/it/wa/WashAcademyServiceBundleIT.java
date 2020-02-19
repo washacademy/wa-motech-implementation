@@ -161,7 +161,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
             assertTrue(is.toString().contains("No course bootstrapped. Check deployment"));
         }
 
-        WaCourseDataService.create(new WaCourse(originalCourse.getName(), originalCourse.getContent()));
+        WaCourseDataService.create(new WaCourse(originalCourse.getName(), originalCourse.getContent(),4,8));
     }
 
     @Test
@@ -210,7 +210,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSetNewBookmark() {
+    public void testSetNewBookmark() throws IOException {
+        setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
@@ -223,7 +224,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testStartedActivity() {
+    public void testStartedActivity() throws IOException {
+        setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
@@ -237,8 +239,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSetExistingBookmark() {
-
+    public void testSetExistingBookmark() throws IOException {
+        setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
@@ -262,8 +264,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSetLastBookmark() {
-
+    public void testSetLastBookmark() throws IOException {
+        setupWaCourse();
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -276,7 +278,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), ((int) (Math.random() * 100)) % 5);
         }
         bookmark.setScoresByChapter(scores);
@@ -284,8 +286,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testCompletionCount() {
-
+    public void testCompletionCount() throws IOException {
+        setupWaCourse();
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -299,7 +301,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), ((int) (Math.random() * 100)) % 5);
         }
         bookmark.setScoresByChapter(scores);
@@ -310,8 +312,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSetGetLastBookmark() {
-
+    public void testSetGetLastBookmark() throws IOException {
+        setupWaCourse();
         long callingNumber = 9987654321L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -324,7 +326,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 1);
         }
         bookmark.setScoresByChapter(scores);
@@ -338,8 +340,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSetGetResetBookmark() {
-
+    public void testSetGetResetBookmark() throws IOException {
+        setupWaCourse();
         long callingNumber = 9987654321L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -352,7 +354,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 4);
         }
         bookmark.setScoresByChapter(scores);
@@ -366,8 +368,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testResetBookmarkNewStartActivity() {
-
+    public void testResetBookmarkNewStartActivity() throws IOException {
+        setupWaCourse();
         long callingNumber = 9987654321L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -381,7 +383,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         // set final bookmark and trigger completed activity record
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 4);
         }
         bookmark.setScoresByChapter(scores);
@@ -412,8 +414,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testTriggerNotificationSent() {
-
+    public void testTriggerNotificationSent() throws IOException {
+        setupWaCourse();
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -427,7 +429,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 3);
         }
         bookmark.setScoresByChapter(scores);
@@ -436,12 +438,12 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         CourseCompletionRecord ccr = courseCompletionRecordDataService.findBySwcId(swcId).get(0);
         assertNotNull(ccr);
         assertEquals(ccr.getSwcId(), swcId);
-        assertEquals(ccr.getScore(), 33);
+        assertEquals(ccr.getScore(), 12);
     }
 
     @Test
-    public void testTriggerNotificationNotSent() {
-
+    public void testTriggerNotificationNotSent() throws IOException {
+        setupWaCourse();
         long callingNumber = 9876543211L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -454,7 +456,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 1);
         }
         bookmark.setScoresByChapter(scores);
@@ -551,7 +553,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testSmsReference() {
+    public void testSmsReference() throws IOException {
+//        setupWaCourse();
         long callingNumber = 2111113333L;
 
         // Setup language/location and swc for notification
@@ -578,7 +581,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         MotechEvent event = new MotechEvent();
         event.getParameters().put("swcId", swcId);
         event.getParameters().put("smsContent", "FooBar");
-        CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, 35, "score", false);
+        CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, 9, "score", false);
         courseCompletionRecordDataService.create(ccr);
         assertNull(ccr.getSmsReferenceNumber());
 
@@ -590,7 +593,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     }
 
     @Test
-    public void testMultipleCompletions() {
+    public void testMultipleCompletions() throws IOException {
+        setupWaCourse();
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
@@ -603,7 +607,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), ((int) (Math.random() * 100)) % 5);
         }
         String chapterwiseScore = scores.toString();
@@ -612,7 +616,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores1 = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores1.put(String.valueOf(i), 3);
         }
         String chapterwiseScore1 = scores1.toString();
@@ -621,7 +625,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         bookmark.setBookmark(FINAL_BOOKMARK);
         Map<String, Integer> scores2 = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores2.put(String.valueOf(i), 1);
         }
         String chapterwiseScore2 = scores2.toString();
@@ -636,8 +640,8 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         assertEquals(ActivityState.COMPLETED, activityDataService.findRecordsForUser((String.valueOf(callingNumber))).get(1).getState());
         assertEquals(ActivityState.COMPLETED, activityDataService.findRecordsForUser((String.valueOf(callingNumber))).get(2).getState());
         assertEquals(ActivityState.COMPLETED, activityDataService.findRecordsForUser((String.valueOf(callingNumber))).get(3).getState());
-        assertEquals(33, ccrs.get(1).getScore());
-        assertEquals(11, ccrs.get(2).getScore());
+        assertEquals(12, ccrs.get(1).getScore());
+        assertEquals(4, ccrs.get(2).getScore());
         assertTrue(ccrs.get(1).isPassed());
         assertFalse(ccrs.get(2).isPassed());
         assertEquals(chapterwiseScore, ccrs.get(0).getChapterWiseScores());
@@ -679,7 +683,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         course.setName(jo.get("name").toString());
         course.setContent(jo.get("chapters").toString());
         WaCourseDataService.create(new WaCourse(course.getName(), course
-                .getContent()));
+                .getContent(),4,8));
         fileStream.close();
         return jo;
     }

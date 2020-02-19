@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,8 +37,10 @@ import org.motechproject.wa.testing.it.utils.RegionHelper;
 import org.motechproject.wa.testing.it.utils.SubscriptionHelper;
 import org.motechproject.wa.testing.service.TestingService;
 import org.motechproject.wa.washacademy.domain.CourseCompletionRecord;
+import org.motechproject.wa.washacademy.domain.WaCourse;
 import org.motechproject.wa.washacademy.dto.WaBookmark;
 import org.motechproject.wa.washacademy.repository.CourseCompletionRecordDataService;
+import org.motechproject.wa.washacademy.repository.WaCourseDataService;
 import org.motechproject.wa.washacademy.service.WashAcademyService;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -49,6 +52,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
@@ -64,9 +68,9 @@ import static org.junit.Assert.*;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class OpsControllerBundleIT extends BasePaxIT {
 
-    private String addSwcEndpoint = String.format("http://localhost:%d/api/ops/createUpdateRchSwc",
+    private String addSwcEndpoint = String.format("http://localhost:%d/motech-platform-server/module/api/ops/createUpdateRchSwc",
             TestContext.getJettyPort());
-    private String deactivationRequest = String.format("http://localhost:%d/api/ops/deactivationRequest",
+    private String deactivationRequest = String.format("http://localhost:%d/motech-platform-server/module/api/ops/deactivationRequest",
             TestContext.getJettyPort());
     State state;
     District district;
@@ -111,6 +115,9 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
     @Inject
     SwcImportRejectionDataService swcImportRejectionDataService;
+
+    @Inject
+    WaCourseDataService waCourseDataService;
 
     private RegionHelper rh;
     private SubscriptionHelper sh;
@@ -348,7 +355,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     @Test
     public void testGetScoresForUser() throws IOException, InterruptedException {
         Long callingNumber = 9876543210L;
-        String getScoresEndpoint = String.format("http://localhost:%d/api/ops/getScores?callingNumber=%d",
+        String getScoresEndpoint = String.format("http://localhost:%d/motech-platform-server/module/api/ops/getScores?callingNumber=%d",
                 TestContext.getJettyPort(), callingNumber);
         Map<String, Integer> scores = new HashMap<>();
         scores.put("1", 4);
@@ -370,7 +377,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     @Test
     public void testGetScoresForUserNoScores() throws IOException, InterruptedException {
         Long callingNumber = 9876543210L;
-        String getScoresEndpoint = String.format("http://localhost:%d/api/ops/getScores?callingNumber=%d",
+        String getScoresEndpoint = String.format("http://localhost:%d/motech-platform-server/module/api/ops/getScores?callingNumber=%d",
                 TestContext.getJettyPort(), 9976543210L);
         Map<String, Integer> scores = new HashMap<>();
         scores.put("1", 4);
@@ -632,6 +639,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     // Test whether MSISDN is updated in Bookmark, Activity and Course Completion Records along with Swc
     @Test
     public void testMaMsisdnUpdate() throws IOException, InterruptedException {
+        setupWaCourse();
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         stateDataService.create(state);
         transactionManager.commit(status);
@@ -648,7 +656,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         bookmark.setBookmark("COURSE_COMPLETED");
         Map<String, Integer> scores = new HashMap<>();
-        for (int i = 1; i < 12; i++) {
+        for (int i = 1; i < 5; i++) {
             scores.put(String.valueOf(i), 3);
         }
 
@@ -680,5 +688,16 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
         swc = swcService.getByContactNumber(7896543210L);
         assertEquals(1, courseCompletionRecordDataService.findBySwcId(swc.getId()).size());
+    }
+
+    private JSONObject setupWaCourse() throws IOException {
+        org.motechproject.wa.washacademy.dto.WaCourse course = new org.motechproject.wa.washacademy.dto.WaCourse();
+        String jsonText = IOUtils.toString(new InputStreamReader(getClass().getClassLoader().
+                getResourceAsStream("WaCourse.json")));
+        JSONObject jo = new JSONObject(jsonText);
+        course.setName(jo.get("name").toString());
+        course.setContent(jo.get("chapters").toString());
+        waCourseDataService.create(new WaCourse(course.getName(), course.getContent(),4,8));
+        return jo;
     }
 }

@@ -63,11 +63,11 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String NOT_COMPLETE = "<%s: Course not complete>";
 
-    private static final String COURSE_ENTITY_NAME = "MA.Course";
+    private static final String COURSE_ENTITY_NAME = "WA.Course";
 
-    private static final int CHAPTER_COUNT = 11;
+    private static final int CHAPTER_COUNT = 4;
 
-    private static final int PASS_SCORE = 22;
+    private static final int PASS_SCORE = 8;
 
     private static final int MILLIS_PER_SEC = 1000;
 
@@ -231,6 +231,14 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         Swachchagrahi swc = swcService.getById(saveBookmark.getSwcId());
         String callingNumber = swc.getContactNumber().toString();
 
+        WaCourse course = WaCourseDataService.getCourseByName(COURSE_NAME);
+        if (course == null){
+            alertService.create(COURSE_ENTITY_NAME, COURSE_NAME, "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            throw new IllegalStateException("No course bootstrapped. Check deployment");
+        }
+        Integer noOfChapters = course.getNoOfChapters();
+        Integer passScore = course.getPassingScore();
+
         // write a new activity record if existing bookmark is null or
         // existing bookmark has no progress from earlier reset
         if (existingBookmark == null ||
@@ -253,13 +261,13 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         if (saveBookmark.getBookmark() != null
                 && saveBookmark.getBookmark().equals(FINAL_BOOKMARK)
                 && saveBookmark.getScoresByChapter() != null
-                && saveBookmark.getScoresByChapter().size() == CHAPTER_COUNT) {
+                && saveBookmark.getScoresByChapter().size() == noOfChapters) {
 
-            LOGGER.debug("Found last bookmark and 11 scores. Starting evaluation & notification");
+            LOGGER.debug("Found last bookmark and 4 scores. Starting evaluation & notification");
             // Create an activity record here since pass/fail counts as 1 try
             activityService.createActivity(
                     new ActivityRecord(callingNumber, null, null, null, null, DateTime.now(), ActivityState.COMPLETED));
-            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter());
+            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), passScore, noOfChapters);
         }
     }
 
@@ -360,13 +368,13 @@ public class WashAcademyServiceImpl implements WashAcademyService {
      * @param swcId swc Id of swc
      * @param scores scores in quiz
      */
-    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores) {
+    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores, Integer passScore, Integer noOfChapters) {
 
-        int totalScore = getTotalScore(scores);
+        int totalScore = getTotalScore(scores,noOfChapters );
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, totalScore, scores.toString());
         courseCompletionRecordDataService.create(ccr);
 
-        if (totalScore < PASS_SCORE) {
+        if (totalScore < passScore) {
             LOGGER.debug("User with swcId: " + LogHelper.obscure(swcId) + " failed with score: " + totalScore);
             ccr.setPassed(false);
             courseCompletionRecordDataService.update(ccr);
@@ -384,14 +392,14 @@ public class WashAcademyServiceImpl implements WashAcademyService {
      * @param scoresByChapter scores by chapter
      * @return total score
      */
-    private static int getTotalScore(Map<String, Integer> scoresByChapter) {
+    private static int getTotalScore(Map<String, Integer> scoresByChapter, Integer noOfChapters) {
 
         if (scoresByChapter == null) {
             return 0;
         }
 
         int totalScore = 0;
-        for (int chapterCount = 1; chapterCount <= CHAPTER_COUNT; chapterCount++) {
+        for (int chapterCount = 1; chapterCount <= noOfChapters; chapterCount++) {
 
             totalScore += scoresByChapter.get(String.valueOf(chapterCount));
         }
@@ -436,7 +444,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         WaCourse existing = WaCourseDataService.getCourseByName(courseDto.getName());
 
         if (existing == null) {
-            WaCourseDataService.create(new WaCourse(courseDto.getName(), courseDto.getContent()));
+            WaCourseDataService.create(new WaCourse(courseDto.getName(), courseDto.getContent(),CHAPTER_COUNT,PASS_SCORE));
             LOGGER.debug("Successfully created new course");
             return;
         }

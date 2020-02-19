@@ -1,5 +1,6 @@
 package org.motechproject.wa.testing.it.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
@@ -7,7 +8,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,7 +21,6 @@ import org.motechproject.wa.api.web.contract.SwcUserResponse;
 import org.motechproject.wa.props.domain.DeployedService;
 import org.motechproject.wa.props.domain.Service;
 import org.motechproject.wa.props.repository.DeployedServiceDataService;
-import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.repository.CircleDataService;
 import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.region.repository.LanguageDataService;
@@ -271,7 +270,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
                                    boolean includeCallStatus, Integer callStatus,
                                    boolean includeCallDisconnectReason, Integer callDisconnectReason,
                                    boolean includeContet, String content) {
-        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/api/%s/callDetails",
+        HttpPost httpPost = new HttpPost(String.format("http://localhost:%d/motech-platform-server/module/api/%s/callDetails",
                 TestContext.getJettyPort(), serviceName));
         String callDetailsJson = createCallDetailsJson(includeCallingNumber, callingNumber, includeCallId,
                 callId, includeOperator, operator, includeCircle, circle, includeCallStartTime, callStartTime,
@@ -307,7 +306,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
             String callStatus, boolean includeCallDisconnectReason,
             String callDisconnectReason, boolean includeContet, String content) {
         HttpPost httpPost = new HttpPost(String.format(
-                "http://localhost:%d/api/%s/callDetails",
+                "http://localhost:%d/motech-platform-server/module/api/%s/callDetails",
                 TestContext.getJettyPort(), serviceName));
         String callDetailsJson = createCallDetailsJson(includeCallingNumber,
                 callingNumber, includeCallId, callId, includeOperator,
@@ -2183,6 +2182,8 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         Pattern expectedJsonResponse = Pattern
                 .compile(".*callStartTime.*");
 
+
+
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_BAD_REQUEST,
                 expectedJsonResponse, ADMIN_USERNAME, ADMIN_PASSWORD));
 
@@ -2472,7 +2473,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         // invoke get user detail API
-        StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
+        StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/motech-platform-server/module/api/", TestContext.getJettyPort()));
         String sep = "";
         sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
@@ -2528,7 +2529,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
 
         // invoke get user detail API
-        sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
+        sb = new StringBuilder(String.format("http://localhost:%d/motech-platform-server/module/api/", TestContext.getJettyPort()));
         sep = "";
         sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
@@ -2577,7 +2578,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         // invoke get user detail API
-        StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
+        StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/motech-platform-server/module/api/", TestContext.getJettyPort()));
         String sep = "";
         sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
@@ -2659,7 +2660,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         // invoke get user detail API
-        StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/api/", TestContext.getJettyPort()));
+        StringBuilder sb = new StringBuilder(String.format("http://localhost:%d/motech-platform-server/module/api/", TestContext.getJettyPort()));
         String sep = "";
         sb.append(String.format("%s/", "washacademy"));
         sb.append("user?");
