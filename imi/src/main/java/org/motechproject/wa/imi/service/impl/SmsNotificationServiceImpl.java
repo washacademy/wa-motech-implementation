@@ -102,8 +102,8 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         }
         endpoint = endpoint.replace("senderId", senderId);
         HttpPost request = new HttpPost(endpoint);
-        request.setHeader("Content-type", "application/json");
-        request.setHeader("Key", settingsFacade.getProperty(SMS_AUTH_KEY));
+        request.setHeader("Content-Type", "application/json");
+        request.setHeader("key", settingsFacade.getProperty(SMS_AUTH_KEY));
 
         String template = getStringFromStream(settingsFacade.getRawConfig(SMS_TEMPLATE_FILE));
         if (template == null) {

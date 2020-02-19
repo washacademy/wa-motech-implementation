@@ -263,7 +263,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
                 && saveBookmark.getScoresByChapter() != null
                 && saveBookmark.getScoresByChapter().size() == noOfChapters) {
 
-            LOGGER.debug("Found last bookmark and 11 scores. Starting evaluation & notification");
+            LOGGER.debug("Found last bookmark and 4 scores. Starting evaluation & notification");
             // Create an activity record here since pass/fail counts as 1 try
             activityService.createActivity(
                     new ActivityRecord(callingNumber, null, null, null, null, DateTime.now(), ActivityState.COMPLETED));
