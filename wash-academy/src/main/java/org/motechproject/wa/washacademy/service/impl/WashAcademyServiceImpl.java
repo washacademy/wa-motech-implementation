@@ -181,15 +181,19 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     public Bookmark getBookmarkByUserIdAndCourseName (String swcId, String courseName ){
         List<Bookmark> bookmarks = this.bookmarkDataService.findBookmarksForUser(swcId);
-        LOGGER.info(String.valueOf(bookmarks));
-        Bookmark bookmark = new Bookmark();
-        for (int i = 0; i < bookmarks.size(); i++) {
-            if (bookmarks.get(i).getCourseIdentifier().equals(courseName)){
-                bookmark = bookmarks.get(i);
-                break;
+        if (bookmarks != null){
+            LOGGER.info(String.valueOf(bookmarks));
+            Bookmark bookmark = new Bookmark();
+            for (int i = 0; i < bookmarks.size(); i++) {
+                if (bookmarks.get(i).getCourseIdentifier().equals(courseName)){
+                    bookmark = bookmarks.get(i);
+                    break;
+                }
             }
+            return bookmark;
         }
-        return bookmark;
+        return new Bookmark();
+
     }
 
 
@@ -209,14 +213,12 @@ public class WashAcademyServiceImpl implements WashAcademyService {
          String swcId = swc.getId().toString();
 //        Bookmark existingBookmark = bookmarkService.getLatestBookmarkByUserId(swcId.toString());
         Bookmark existingBookmark = getBookmarkByUserIdAndCourseName(swcId, courseName);
-        if (existingBookmark != null) {
+//        if (existingBookmark != null) {
             WaBookmark toReturn = setMaBookmarkProperties(existingBookmark);
             toReturn.setCallId(callId);
             return toReturn;
-        }
-        else {
-            return new WaBookmark();
-        }
+//        }
+
 
 
     }
@@ -390,27 +392,34 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     private WaBookmark setMaBookmarkProperties(Bookmark fromBookmark) {
 
         WaBookmark toReturn = new WaBookmark();
-        toReturn.setSwcId(Long.parseLong(fromBookmark.getExternalId()));
+        if (!(fromBookmark.getExternalId() == null || fromBookmark.getExternalId().isEmpty())) {
+            toReturn.setSwcId(Long.parseLong(fromBookmark.getExternalId()));
 
-        // default behavior to map the data
-        if (fromBookmark.getProgress() != null) {
-            Object bookmark = fromBookmark.getProgress().get(BOOKMARK_KEY);
-            toReturn.setBookmark(bookmark == null ? null : bookmark.toString());
-            toReturn.setScoresByChapter((Map<String, Integer>) fromBookmark.getProgress().get(SCORES_KEY));
+            // default behavior to map the data
+            if (fromBookmark.getProgress() != null) {
+                Object bookmark = fromBookmark.getProgress().get(BOOKMARK_KEY);
+                toReturn.setBookmark(bookmark == null ? null : bookmark.toString());
+                toReturn.setScoresByChapter((Map<String, Integer>) fromBookmark.getProgress().get(SCORES_KEY));
+            }
+
+            // if the bookmark is final, reset it
+            if (toReturn.getBookmark() != null && toReturn.getBookmark().equals(FINAL_BOOKMARK)) {
+                LOGGER.debug("We need to reset bookmark to new state.");
+                fromBookmark.setProgress(new HashMap<String, Object>());
+                bookmarkService.updateBookmark(fromBookmark);
+
+                toReturn.setScoresByChapter(null);
+                toReturn.setBookmark(null);
+            }
+
+            return toReturn;
+
         }
-
-        // if the bookmark is final, reset it
-        if (toReturn.getBookmark() != null && toReturn.getBookmark().equals(FINAL_BOOKMARK)) {
-            LOGGER.debug("We need to reset bookmark to new state.");
-            fromBookmark.setProgress(new HashMap<String, Object>());
-            bookmarkService.updateBookmark(fromBookmark);
-
-            toReturn.setScoresByChapter(null);
-            toReturn.setBookmark(null);
+        else {
+            return new WaBookmark();
         }
-
-        return toReturn;
     }
+
 
     /**
      * Helper method to check whether a course meets completion criteria
