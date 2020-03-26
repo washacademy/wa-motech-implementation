@@ -24,6 +24,13 @@ public class WaCourse extends MdsEntity {
     private Integer courseId;
 
 
+    @Field
+    private int passingScore;
+
+    @Field
+    private int noOfChapters;
+
+
 
 //    @JsonManagedReference
 //    @Persistent(mappedBy = "waCourse", defaultFetchGroup = "false")
@@ -59,4 +66,12 @@ public class WaCourse extends MdsEntity {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public int getPassingScore() {    return passingScore;    }
+
+    public void setPassingScore(int passingScore) {       this.passingScore = passingScore;    }
+
+    public int getNoOfChapters() {   return noOfChapters;  }
+
+    public void setNoOfChapters(int noOfChapters) {     this.noOfChapters = noOfChapters;   }
 }

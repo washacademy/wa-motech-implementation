@@ -64,10 +64,6 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
     private static final String COURSE_ENTITY_NAME = "WA.Course";
 
-    private static final int CHAPTER_COUNT = 11;
-
-    private static final int PASS_SCORE = 22;
-
     private static final int MILLIS_PER_SEC = 1000;
 
     /**
@@ -254,6 +250,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         return null;
     }
 
+
     @Override
     public void setBookmark(WaBookmark saveBookmark, Integer courseId) {
 
@@ -261,13 +258,17 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             LOGGER.error("Bookmark cannot be null, check request");
             throw new IllegalArgumentException("Invalid bookmark, cannot be null");
         }
+
         WaCourse currentCourse = waCourseDataService.getCourseById(courseId);
+
         if(currentCourse == null){
-            alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+            alertService.create(COURSE_ENTITY_NAME, "Course with given courseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
             throw new IllegalStateException("No course bootstrapped. Check deployment");
         }
-        String courseName = currentCourse.getName();
 
+        String courseName  = currentCourse.getName();
+        int passingMarks = currentCourse.getPassingScore();
+        int noOfChapters = currentCourse.getNoOfChapters();
 
         String swcId = saveBookmark.getSwcId().toString();
         List<Bookmark> bookmarks = bookmarkService.getAllBookmarksForUser(swcId);
@@ -309,21 +310,85 @@ public class WashAcademyServiceImpl implements WashAcademyService {
         if (saveBookmark.getBookmark() != null
                 && saveBookmark.getBookmark().equals(FINAL_BOOKMARK)
                 && saveBookmark.getScoresByChapter() != null
-                && saveBookmark.getScoresByChapter().size() == CHAPTER_COUNT) {
+                && saveBookmark.getScoresByChapter().size() == noOfChapters) {
 
-            LOGGER.debug("Found last bookmark and 11 scores. Starting evaluation & notification");
+            LOGGER.debug("Found last bookmark and all scores. Starting evaluation & notification");
             // Create an activity record here since pass/fail counts as 1 try
             activityService.createActivity(
                     new ActivityRecord(callingNumber, courseName, null, null, null, DateTime.now(), ActivityState.COMPLETED));
-            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), courseName, courseId);
+            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), courseId, courseName, passingMarks, noOfChapters);
         }
     }
+//    @Override
+//    public void setBookmark(WaBookmark saveBookmark, Integer courseId) {
+//
+//        if (saveBookmark == null) {
+//            LOGGER.error("Bookmark cannot be null, check request");
+//            throw new IllegalArgumentException("Invalid bookmark, cannot be null");
+//        }
+//        WaCourse currentCourse = waCourseDataService.getCourseById(courseId);
+//        if(currentCourse == null){
+//            alertService.create(COURSE_ENTITY_NAME, "Course For Given CourseId", "Could not find course", AlertType.CRITICAL, AlertStatus.NEW, 0, null);
+//            throw new IllegalStateException("No course bootstrapped. Check deployment");
+//        }
+//        String courseName = currentCourse.getName();
+//
+//
+//        String swcId = saveBookmark.getSwcId().toString();
+//        List<Bookmark> bookmarks = bookmarkService.getAllBookmarksForUser(swcId);
+//        Bookmark existingBookmark = null;
+//        for (int i = 0; i< bookmarks.size(); i++){
+//            if (bookmarks.get(i).getCourseIdentifier().equals(courseName)){
+//                existingBookmark = bookmarks.get(i);
+//                break;
+//            }
+//        }
+//
+//        Swachchagrahi swc = swcService.getById(saveBookmark.getSwcId());
+//        String callingNumber = swc.getContactNumber().toString();
+//
+//        // write a new activity record if existing bookmark is null or
+//        // existing bookmark has no progress from earlier reset
+//
+//
+//        if (existingBookmark == null ||
+//                (existingBookmark.getProgress() != null && existingBookmark.getProgress().isEmpty()))  {
+//            activityService.createActivity(
+//                    new ActivityRecord(callingNumber, courseName, null, null, DateTime.now(), null, ActivityState.STARTED));
+//        }
+//
+//
+//        if (existingBookmark == null) {
+//            // if no bookmarks exist for user
+//            LOGGER.info("No bookmarks found for user " + LogHelper.obscure(saveBookmark.getSwcId()));
+//            Bookmark bookmark = setBookmarkProperties(saveBookmark, new Bookmark());
+//            bookmark.setCourseIdentifier(courseName);
+//            bookmarkService.createBookmark(bookmark);
+//        } else {
+//
+//            // update the first bookmark
+//            LOGGER.info("Updating bookmark for user");
+//            bookmarkService.updateBookmark(setBookmarkProperties(saveBookmark, existingBookmark));
+//        }
+//
+//        if (saveBookmark.getBookmark() != null
+//                && saveBookmark.getBookmark().equals(FINAL_BOOKMARK)
+//                && saveBookmark.getScoresByChapter() != null
+//                && saveBookmark.getScoresByChapter().size() == CHAPTER_COUNT) {
+//
+//            LOGGER.debug("Found last bookmark and 11 scores. Starting evaluation & notification");
+//            // Create an activity record here since pass/fail counts as 1 try
+//            activityService.createActivity(
+//                    new ActivityRecord(callingNumber, courseName, null, null, null, DateTime.now(), ActivityState.COMPLETED));
+//            evaluateCourseCompletion(saveBookmark.getSwcId(), saveBookmark.getScoresByChapter(), courseName, courseId);
+//        }
+//    }
 
     @Override
-    public void triggerCompletionNotification(final Long swcId, Integer courseId) {
+    public void triggerCompletionNotification(final Long swcId, String courseName, Integer courseId) {
 
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
-        String  courseName = waCourseDataService.getCourseById(courseId).getName();
+
         if (ccrs == null || ccrs.isEmpty()) {
             throw new CourseNotCompletedException(String.format(NOT_COMPLETE, swcId));
         }
@@ -426,14 +491,14 @@ public class WashAcademyServiceImpl implements WashAcademyService {
      * @param swcId swc Id of swc
      * @param scores scores in quiz
      */
-    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores,String courseName, Integer courseId) {
+    private void evaluateCourseCompletion(Long swcId, Map<String, Integer> scores,Integer courseId, String courseName, Integer passingMarks, Integer noOfChapters) {
 
-        int totalScore = getTotalScore(scores);
+        int totalScore = getTotalScore(scores,noOfChapters);
 
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, totalScore, scores.toString(), courseId );
         courseCompletionRecordDataService.create(ccr);
 
-        if (totalScore < PASS_SCORE) {
+        if (totalScore < passingMarks) {
             LOGGER.debug("User with swcId: " + LogHelper.obscure(swcId) + " failed with score: " + totalScore);
             ccr.setPassed(false);
             courseCompletionRecordDataService.update(ccr);
@@ -442,7 +507,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
             // we updated the completion record. Start event message to trigger notification workflow
             ccr.setPassed(true);
             courseCompletionRecordDataService.update(ccr);
-            triggerCompletionNotification(swcId, courseId);
+            triggerCompletionNotification(swcId, courseName, courseId);
         }
     }
 
@@ -451,14 +516,14 @@ public class WashAcademyServiceImpl implements WashAcademyService {
      * @param scoresByChapter scores by chapter
      * @return total score
      */
-    private static int getTotalScore(Map<String, Integer> scoresByChapter) {
+    private static int getTotalScore(Map<String, Integer> scoresByChapter, Integer noOfChapters) {
 
         if (scoresByChapter == null) {
             return 0;
         }
 
         int totalScore = 0;
-        for (int chapterCount = 1; chapterCount <= CHAPTER_COUNT; chapterCount++) {
+        for (int chapterCount = 1; chapterCount <= noOfChapters; chapterCount++) {
 
             totalScore += scoresByChapter.get(String.valueOf(chapterCount));
         }

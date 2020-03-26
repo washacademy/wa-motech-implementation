@@ -478,7 +478,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, 44, "score", true,1);
         courseCompletionRecordDataService.create(ccr);
 
-        maService.triggerCompletionNotification(swcId,1);
+        maService.triggerCompletionNotification(swcId,"WashAcademyCourse",1);
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
         ccr = ccrs.get(ccrs.size()-1);
         assertTrue(ccr.isSentNotification());
@@ -488,7 +488,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
     public void testRetriggerNotificationException() {
 
         long callingNumber = 9876543222L;
-        maService.triggerCompletionNotification(callingNumber,1);
+        maService.triggerCompletionNotification(callingNumber,"WashAcademyCourse",1);
     }
 
     @Test

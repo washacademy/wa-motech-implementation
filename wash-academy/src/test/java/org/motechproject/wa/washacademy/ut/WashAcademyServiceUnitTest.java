@@ -375,7 +375,7 @@ public class WashAcademyServiceUnitTest {
         WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         when(courseCompletionRecordDataService.findBySwcId(anyLong())).thenReturn(null);
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
-        washAcademyService.triggerCompletionNotification(123456L, 1);
+        washAcademyService.triggerCompletionNotification(123456L, "WashAcademyCourse",1);
     }
 
     @Test
@@ -386,7 +386,7 @@ public class WashAcademyServiceUnitTest {
         records.add(ccr);
         when(courseCompletionRecordDataService.findBySwcIdAndCourseId(123456L,1)).thenReturn(records);
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
-        washAcademyService.triggerCompletionNotification(123456L,1);
+        washAcademyService.triggerCompletionNotification(123456L,"WashAcademyCourse",1);
         assertFalse(ccr.isSentNotification());
     }
 
