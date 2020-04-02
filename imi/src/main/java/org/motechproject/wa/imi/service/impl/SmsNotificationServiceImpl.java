@@ -30,7 +30,9 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
 
     private static final String SMS_NOTIFICATION_URL = "imi.sms.notification.url";
 
-    private static final String SMS_AUTH_KEY = "imi.sms.authentication.key";
+    private static final String SMS_AUTH_KEY_1 = "imi.sms.authentication.key1";
+
+    private static final String SMS_AUTH_KEY_2 = "imi.sms.authentication.key2";
 
     private static final String SMS_MESSAGE_CONTENT = "imi.sms.course.completion.message";
 
@@ -103,7 +105,13 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         endpoint = endpoint.replace("senderId", senderId);
         HttpPost request = new HttpPost(endpoint);
         request.setHeader("Content-type", "application/json");
-        request.setHeader("Key", settingsFacade.getProperty(SMS_AUTH_KEY));
+        if (courseId ==1){
+            request.setHeader("Key", settingsFacade.getProperty(SMS_AUTH_KEY_1));
+        }
+        if(courseId == 2){
+            request.setHeader("Key", settingsFacade.getProperty(SMS_AUTH_KEY_2));
+        }
+
 
         String template = getStringFromStream(settingsFacade.getRawConfig(SMS_TEMPLATE_FILE));
         if (template == null) {
