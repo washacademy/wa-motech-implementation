@@ -10,5 +10,5 @@ public interface SmsNotificationService {
      * @param callingNumber phone number to send sms to
      * @param content sms content to send
      */
-    boolean sendSms(Long callingNumber, String content, Integer courseId);
+    String sendSms(Long callingNumber, String content, Integer courseId);
 }

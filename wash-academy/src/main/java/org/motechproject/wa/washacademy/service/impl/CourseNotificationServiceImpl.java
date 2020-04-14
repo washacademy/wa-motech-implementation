@@ -143,7 +143,11 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
             String smsContent = buildSmsContent(swcId, ccr, courseName);
             long callingNumber = swcService.getById(swcId).getContactNumber();
-            ccr.setSentNotification(smsNotificationService.sendSms(callingNumber, smsContent, courseId));
+            String[] setSentAndClientCorelator =  ((smsNotificationService.sendSms(callingNumber, smsContent, courseId)).split(","));
+            boolean setSentNotification = Boolean.parseBoolean(setSentAndClientCorelator[0]);
+            ccr.setSentNotification(setSentNotification);
+            String clientCorrelator = setSentAndClientCorelator[1];
+            ccr.setClientCorrelator(clientCorrelator);
             courseCompletionRecordDataService.update(ccr);
         } catch (IllegalStateException se) {
             LOGGER.error("Unable to send sms notification. Stack: " + se.toString());
@@ -176,11 +180,13 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             LOGGER.error("No completion record found for swcId: " + swcId);
             return;
         }
-        CourseCompletionRecord ccr = ccrs.get(ccrs.size() - 1);
+        CourseCompletionRecord ccr = null;
+        for (int i =0; i <ccrs.size(); i++){
+            if ((ccrs.get(i)).getClientCorrelator() == clientCorrelator){
+                ccr = ccrs.get(i);
+            }
+        }
 
-        ccr.setClientCorrelator(clientCorrelator);
-
-        // read properties
         String deliveryStatus = (String) event.getParameters().get(DELIVERY_STATUS);
         DateTime currentTime = DateTime.now();
         DateTime nextRetryTime = ccr.getModificationDate().plusDays(1);

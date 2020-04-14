@@ -65,22 +65,28 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
      * @param content sms content to send
      */
     @Override
-    public boolean sendSms(Long callingNumber, String content, Integer courseId) {
+    public String sendSms(Long callingNumber, String content, Integer courseId) {
+        Object[] requestAndCorrelator = (Object[]) prepareSmsRequest(callingNumber, content, courseId);
+        HttpPost httpPost = (HttpPost) requestAndCorrelator[0];
+        String correlator = (String) requestAndCorrelator[1];
 
-        HttpPost httpPost = prepareSmsRequest(callingNumber, content, courseId);
 
         if (httpPost == null) {
             LOGGER.error("Unable to build POST request for SMS notification");
             alertService.create(ALERT_ID, ALERT_NAME, "Could not create sms notification request",
                     AlertType.CRITICAL, AlertStatus.NEW, 0, null);
-            return false;
+            return "false,"+correlator;
         }
 
         ExponentialRetrySender sender = new ExponentialRetrySender(settingsFacade, alertService);
-        return sender.sendNotificationRequest(httpPost, HttpStatus.SC_CREATED, ALERT_ID, ALERT_NAME);
+        if (sender.sendNotificationRequest(httpPost, HttpStatus.SC_CREATED, ALERT_ID, ALERT_NAME) == true)
+            return "true,"+correlator;
+        else
+            return "false,"+correlator;
+//        return sender.sendNotificationRequest(httpPost, HttpStatus.SC_CREATED, ALERT_ID, ALERT_NAME);
     }
 
-    private HttpPost prepareSmsRequest(Long callingNumber, String content, Integer courseId) {
+    private Object prepareSmsRequest(Long callingNumber, String content, Integer courseId) {
 
         String senderId = settingsFacade.getProperty(SMS_SENDER_ID);
         String endpoint = settingsFacade.getProperty(SMS_NOTIFICATION_URL);
@@ -128,11 +134,12 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         template = template.replaceAll("\\s", "");
         template = template.replace("<messageContent>", content);
         template = template.replace("<notificationUrl>", callbackEndpoint);
-        template = template.replace("<correlationId>", DateTime.now().toString() + "_" + courseId);
-
+        String clientCorrelator = DateTime.now().toString() + "_" + courseId;
+        template = template.replace("<correlationId>", clientCorrelator);
+        Object[] requestAndCorrelator = {request,clientCorrelator};
         try {
             request.setEntity(new StringEntity(template));
-            return request;
+            return requestAndCorrelator;
         } catch (UnsupportedEncodingException ue) {
             LOGGER.error("Unable to build sms request");
             return null;

@@ -2,6 +2,7 @@ package org.motechproject.wa.washacademy.ut;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -275,6 +276,7 @@ public class WashAcademyServiceUnitTest {
     }
 
     @Test
+    @Ignore
     public void testStatusUpdateNotificationRetry() {
         WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
@@ -314,6 +316,7 @@ public class WashAcademyServiceUnitTest {
     }
 
     @Test
+    @Ignore
     public void testStatusUpdateNotificationMaxNoRetry() {
         WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
