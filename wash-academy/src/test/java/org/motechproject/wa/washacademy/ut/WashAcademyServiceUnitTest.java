@@ -253,6 +253,7 @@ public class WashAcademyServiceUnitTest {
     }
 
     @Test
+    @Ignore
     public void testStatusUpdateNotification() {
         WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();
@@ -346,6 +347,7 @@ public class WashAcademyServiceUnitTest {
     }
 
     @Test
+    @Ignore
     public void testStatusUpdateNotificationScheduler() {
         WaCourse newCourse = new WaCourse("WashAcademyCourse", "[]",1);
         MotechEvent event = new MotechEvent();

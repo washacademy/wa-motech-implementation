@@ -173,20 +173,20 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
         if (swc != null) {
              swcId= swc.getId();
         }
-        List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcIdAndCourseId(swcId, courseId);
+        CourseCompletionRecord ccr = courseCompletionRecordDataService.findBySwcIdAndCourseIdAndClientCorrelator(swcId, courseId, clientCorrelator);
 
-        if (ccrs == null || ccrs.isEmpty()) {
+        if (ccr == null ) {
             // this should never be possible since the event dispatcher upstream adds the record
-            LOGGER.error("No completion record found for swcId: " + swcId);
+            LOGGER.error("No completion record found for swcId and Correlator: " + swcId);
             return;
         }
-        CourseCompletionRecord ccr = null;
-        for (int i =0; i <ccrs.size(); i++){
-            if ((ccrs.get(i)).getClientCorrelator() == clientCorrelator){
-                ccr = ccrs.get(i);
-            }
-        }
-
+//        CourseCompletionRecord ccr = new CourseCompletionRecord();
+//        for (int i =0; i <ccrs.size(); i++){
+//            if ((ccrs.get(i)).getClientCorrelator() == clientCorrelator){
+//                ccr = ccrs.get(i);
+//                LOGGER.debug(ccr.toString());
+//            }
+//        }
         String deliveryStatus = (String) event.getParameters().get(DELIVERY_STATUS);
         DateTime currentTime = DateTime.now();
         DateTime nextRetryTime = ccr.getModificationDate().plusDays(1);
