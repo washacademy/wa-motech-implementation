@@ -288,16 +288,11 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         Long callingNumber = swc.getContactNumber();
         List<ActivityRecord> activityRecords = activityService.getCompletedActivityForUser(callingNumber.toString());
-        List<ActivityRecord> givenCourseActivityRecord = null;
-        for(int i=1;i<activityRecords.size();i++){
-            if (activityRecords.get(i).getCourseName() == courseName){
-                givenCourseActivityRecord.add(activityRecords.get(i));
-            }
-
-        }
         int attempts = 0;
-        if (givenCourseActivityRecord != null){
-             attempts = givenCourseActivityRecord.size();
+        for(int i=1;i<activityRecords.size();i++){
+            if ((activityRecords.get(i).getCourseName()).equals(courseName)){
+                attempts++;
+            }
         }
 
         String smsReferenceNumber = locationCode + callingNumber + attempts + courseName;
