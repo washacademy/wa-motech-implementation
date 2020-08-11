@@ -295,7 +295,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
             }
         }
 
-        String smsReferenceNumber = locationCode + callingNumber + attempts + courseName;
+        String smsReferenceNumber = locationCode + callingNumber + attempts;
         ccr.setSmsReferenceNumber(smsReferenceNumber);
         courseCompletionRecordDataService.update(ccr);
         String smsContentReference = locationCode + callingNumber + attempts;
