@@ -166,7 +166,7 @@ public class BaseController {
             return false;
         }
 
-        if (value == 1 || value == 2) {
+        if (value == 1 || value == 2 || value == 11 || value == 12 || value == 13) {
             return true;
         }
         errors.append(String.format(INVALID, "courseId"));
