@@ -13,6 +13,8 @@
       "callbackData": ""
     },
     "senderName": "",
-    "category": ""
+    "category": "",
+    "templateId":"<templateId>",
+    "entityId":"<entityId>"
   }
 }
