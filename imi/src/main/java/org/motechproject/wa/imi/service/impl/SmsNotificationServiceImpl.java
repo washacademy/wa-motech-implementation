@@ -137,11 +137,11 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         template = template.replace("<messageContent>", content);
         template = template.replace("<notificationUrl>", callbackEndpoint);
         String clientCorrelator = DateTime.now().toString() + "_" + courseId;
-        String templateId = "";
-        String entityId = "";
+//        String templateId = "";
+//        String entityId = "";
         template = template.replace("<correlationId>", clientCorrelator);
-        template = template.replace("<templateId>", templateId);
-        template = template.replace("<entityId>", entityId);
+//        template = template.replace("<templateId>", templateId);
+//        template = template.replace("<entityId>", entityId);
         Object[] requestAndCorrelator = {request,clientCorrelator};
         try {
             request.setEntity(new StringEntity(template));
