@@ -192,9 +192,9 @@ public class CallDetailsController extends BaseController {
             failureReasons.append(String.format(NOT_PRESENT, "courseId"));
         }
 
-        if (!(callDetailRecordRequest.getCourseId() ==1 || callDetailRecordRequest.getCourseId() ==2)){
-            failureReasons.append(String.format("Incorrect CourseId", "courseId"));
-        }
+//        if (!(callDetailRecordRequest.getCourseId() ==1 || callDetailRecordRequest.getCourseId() ==2)){
+//            failureReasons.append(String.format("Incorrect CourseId", "courseId"));
+//        }
 
         if (null == callDetailRecordRequest.getCallEndTime()) {
             failureReasons.append(String.format(NOT_PRESENT, "callEndTime"));
