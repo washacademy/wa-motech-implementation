@@ -168,8 +168,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         bookmark.setCallId(VALID_CALL_ID);
         Swachchagrahi swc = new Swachchagrahi(BaseController.SMALLEST_10_DIGIT_NUMBER);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(BaseController.SMALLEST_10_DIGIT_NUMBER);
+        swc = swcService.getByContactNumberAndCourseId(BaseController.SMALLEST_10_DIGIT_NUMBER,1);
 
         Map<String, Integer> scores = new HashMap<>();
         for (int i = 1; i < 12; i++) {
@@ -970,8 +971,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
                 TestContext.getJettyPort());
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(1234567890l);
+        swc = swcService.getByContactNumberAndCourseId(1234567890l,1);
         SaveBookmarkRequest bookmarkRequest = new SaveBookmarkRequest();
 
         // save bookamark first
@@ -1059,8 +1061,9 @@ public class WashAcademyControllerBundleIT extends BasePaxIT {
         // create completion record for msisdn 1234567890l
         Swachchagrahi swc = new Swachchagrahi(1234567890l);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(1234567890l);
+        swc = swcService.getByContactNumberAndCourseId(1234567890l,1);
         System.out.print(swc);
         WaCourse waCourse = WaCourseDataService.getCourseByName("WashAcademyCourse");
         CourseCompletionRecord ccr = new CourseCompletionRecord(swc.getId(), 25, "score", true, true, 0,1);

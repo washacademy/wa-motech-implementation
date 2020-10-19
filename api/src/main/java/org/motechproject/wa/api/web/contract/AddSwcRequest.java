@@ -17,6 +17,7 @@ public class AddSwcRequest {
     private String panchayatName;
     private Long age;
     private  String sex;
+    private int courseId;
 
     @Override
     public String toString() {
@@ -36,6 +37,7 @@ public class AddSwcRequest {
                 ", sex='" + sex + '\'' +
                 ", type='" + type + '\'' +
                 ", jobStatus='" + jobStatus + '\'' +
+                ", courseId='" + courseId + '\'' +
                 '}';
     }
 
@@ -165,4 +167,8 @@ public class AddSwcRequest {
     public void setJobStatus(String jobStatus) {
         this.jobStatus = jobStatus;
     }
+
+    public int getCourseId() {    return courseId;    }
+
+    public void setCourseId(int courseId) {    this.courseId = courseId;   }
 }

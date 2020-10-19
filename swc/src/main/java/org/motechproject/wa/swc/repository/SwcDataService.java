@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface SwcDataService extends MotechDataService<Swachchagrahi> {
     @Lookup
-    Swachchagrahi findBySwcId(@LookupField(name = "swcId") String swcId);
+    Swachchagrahi findBySwcIdAndCourseId(@LookupField(name = "swcId") String swcId,
+                                         @LookupField(name = "courseId") Integer courseId);
 
     @Lookup
     List<Swachchagrahi> findByContactNumberAndJobStatus(@LookupField(name = "contactNumber") Long contactNumber,

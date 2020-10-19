@@ -187,8 +187,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        String swcId = swcService.getByContactNumber(1234567890L).getId().toString();
+        String swcId = swcService.getByContactNumberAndCourseId(1234567890L,1).getId().toString();
         bookmarkDataService.create(new Bookmark(swcId, "1", "1", "1", new HashMap<String, Object>()));
         assertNotNull(maService.getBookmark(1234567890L, VALID_CALL_ID,1));
     }
@@ -214,8 +215,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
         List<Bookmark> existing = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
@@ -228,8 +230,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
         List<Bookmark> existing = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
@@ -243,8 +246,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         setupWaCourse();
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
@@ -269,8 +273,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
@@ -291,8 +296,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         int completionCountBefore = activityDataService.findRecordsForUser(String.valueOf(callingNumber)).size();
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
@@ -317,8 +323,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9987654321L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
@@ -345,8 +352,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9987654321L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
@@ -373,8 +381,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9987654321L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
@@ -419,8 +428,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcDataService.create(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
 
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
@@ -434,7 +444,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         }
         bookmark.setScoresByChapter(scores);
         maService.setBookmark(bookmark,1);
-        Long swcId = swcService.getByContactNumber(callingNumber).getId();
+        Long swcId = swcService.getByContactNumberAndCourseId(callingNumber,1).getId();
         CourseCompletionRecord ccr = courseCompletionRecordDataService.findBySwcId(swcId).get(0);
         assertNotNull(ccr);
         assertEquals(ccr.getSwcId(), swcId);
@@ -447,8 +457,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9876543211L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcDataService.create(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(String.valueOf(swc.getId()));
@@ -470,9 +481,10 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         long callingNumber = 9876543211L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
+        swc.setCourseId(1);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
-        Long swcId = swcService.getByContactNumber(callingNumber).getId();
+        Long swcId = swcService.getByContactNumberAndCourseId(callingNumber,1).getId();
         WaCourse waCourse = waCourseDataService.getCourseByName("WashAcademyCourse");
 
         CourseCompletionRecord ccr = new CourseCompletionRecord(swcId, 44, "score", true,1);
@@ -496,7 +508,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 2111113333L;
 
         // Setup language/location and swc for notification
-        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         if (swc != null) {
             swc.setCourseStatus(SwachchagrahiStatus.INVALID);
             swcService.update(swc);
@@ -512,8 +524,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         swc.setState(sampleState);
         swc.setDistrict(sampleState.getDistricts().iterator().next());
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         assertNotNull(swc);
         transactionManager.commit(status);
 
@@ -532,7 +545,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 2111113333L;
 
         // Setup swc for notification (without language/location)
-        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         if (swc != null) {
             swc.setCourseStatus(SwachchagrahiStatus.INVALID);
             swcService.update(swc);
@@ -541,8 +554,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
 
         swc = new Swachchagrahi("Test Worker", callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         assertNotNull(swc);
 
         MotechEvent event = new MotechEvent();
@@ -561,7 +575,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 2111113333L;
 
         // Setup language/location and swc for notification
-        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         if (swc != null) {
             swc.setCourseStatus(SwachchagrahiStatus.INVALID);
             swcService.update(swc);
@@ -575,8 +589,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         swc.setState(sampleState);
         swc.setDistrict(sampleState.getDistricts().iterator().next());
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         assertNotNull(swc);
         Long swcId = swc.getId();
         transactionManager.commit(status);
@@ -602,8 +617,9 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         long callingNumber = 9876543210L;
         Swachchagrahi swc = new Swachchagrahi(callingNumber);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(callingNumber);
+        swc = swcService.getByContactNumberAndCourseId(callingNumber,1);
         WaBookmark bookmark = new WaBookmark(swc.getId(), VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
         List<Bookmark> added = bookmarkDataService.findBookmarksForUser(swc.getId().toString());
@@ -636,7 +652,7 @@ public class WashAcademyServiceBundleIT extends BasePaxIT {
         bookmark.setScoresByChapter(scores2);
         maService.setBookmark(bookmark,1);
 
-        Long swcId = swcService.getByContactNumber(callingNumber).getId();
+        Long swcId = swcService.getByContactNumberAndCourseId(callingNumber,1).getId();
         List<CourseCompletionRecord> ccrs = courseCompletionRecordDataService.findBySwcId(swcId);
         assertEquals(3, ccrs.size());
         assertEquals(4, activityDataService.findRecordsForUser((String.valueOf(callingNumber))).size());

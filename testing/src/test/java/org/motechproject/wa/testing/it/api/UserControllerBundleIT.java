@@ -237,7 +237,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
-        Swachchagrahi swc = ApiTestHelper.createSwc("Hillary Devi", 1111111111L, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Hillary Devi", 1111111111L, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -788,7 +788,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
         assertEquals(expectedJsonResponse, EntityUtils.toString(response.getEntity()));
 
-        Swachchagrahi swc = swcService.getByContactNumber(1111111112l);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(1111111112l,1);
         assertNotNull(swc);
         Language language = swc.getLanguage();
         assertNotNull(language);
@@ -1009,7 +1009,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost));
 
-        Swachchagrahi swc = swcService.getByContactNumber(1111111111l);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(1111111111l,1);
         assertNotNull(swc);
         Language language = swc.getLanguage();
         assertNotNull(language);
@@ -1037,7 +1037,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK));
 
-        Swachchagrahi swc = swcService.getByContactNumber(1111111111L);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(1111111111L,1);
         Language language = swc.getLanguage();
         assertNotNull(language);
         assertEquals("SWC Language Code", "99", language.getCode());
@@ -1088,11 +1088,12 @@ public class UserControllerBundleIT extends BasePaxIT {
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
         whitelistWorker.setLanguage(rh.hindiLanguage());
         whitelistWorker.setJobStatus(SwcJobStatus.ACTIVE);
+        whitelistWorker.setCourseId(1);
         swcService.add(whitelistWorker);
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 whitelistWorker.getCourseStatus());
 
@@ -1118,13 +1119,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Update user's status to active
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         whitelistWorker.setCourseStatus(SwachchagrahiStatus.ACTIVE);
         swcService.update(whitelistWorker);
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ACTIVE, whitelistWorker.getCourseStatus());
 
         // Check the response
@@ -1197,7 +1198,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         Swachchagrahi whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ANONYMOUS,
                 whitelistWorker.getCourseStatus());
     }
@@ -1212,7 +1213,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         setupWhiteListData();
 
         // create a SWC with non-whitelist number and whitelist state
-        Swachchagrahi notWhitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", NOT_WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi notWhitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", NOT_WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE, 1);
         notWhitelistWorker.setState(whitelistState);
         notWhitelistWorker.setDistrict(rh.newDelhiDistrict());
         notWhitelistWorker.setLanguage(rh.hindiLanguage());
@@ -1220,7 +1221,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         notWhitelistWorker = swcService
-                .getByContactNumber(NOT_WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(NOT_WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 notWhitelistWorker.getCourseStatus());
 
@@ -1241,13 +1242,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Update user's status
         notWhitelistWorker = swcService
-                .getByContactNumber(NOT_WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(NOT_WHITELIST_CONTACT_NUMBER,1);
         notWhitelistWorker.setCourseStatus(SwachchagrahiStatus.ACTIVE);
         swcService.update(notWhitelistWorker);
 
         // assert user's status
         notWhitelistWorker = swcService
-                .getByContactNumber(NOT_WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(NOT_WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ACTIVE,
                 notWhitelistWorker.getCourseStatus());
 
@@ -1325,7 +1326,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT344() throws InterruptedException, IOException {
         setupWhiteListData();
         // user's number in whitelist, but state not whitelisted
-        Swachchagrahi whitelistWorker =  ApiTestHelper.createSwc("Test", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi whitelistWorker =  ApiTestHelper.createSwc("Test", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ACTIVE, 1);
         whitelistWorker.setDistrict(rh.bangaloreDistrict());
         whitelistWorker.setLanguage(rh.kannadaLanguage());
         whitelistWorker.setState(nonWhitelistState);
@@ -1333,7 +1334,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 whitelistWorker.getCourseStatus());
 
@@ -1358,13 +1359,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Update user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         whitelistWorker.setCourseStatus(SwachchagrahiStatus.ACTIVE);
         swcService.update(whitelistWorker);
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ACTIVE, whitelistWorker.getCourseStatus());
 
         // Check the response
@@ -1437,7 +1438,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         Swachchagrahi whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ANONYMOUS,
                 whitelistWorker.getCourseStatus());
     }
@@ -1530,7 +1531,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         setupWhiteListData();
 
         // create a SWC with whitelist number and whitelist state
-        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ANONYMOUS);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Frank Llyod Wright", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.ANONYMOUS, 1);
         whitelistWorker.setState(whitelistState);
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
         whitelistWorker.setLanguage(rh.hindiLanguage());
@@ -1538,13 +1539,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Update user's status to active
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         whitelistWorker.setCourseStatus(SwachchagrahiStatus.ACTIVE);
         swcService.update(whitelistWorker);
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ACTIVE, whitelistWorker.getCourseStatus());
 
         // Deploy the service in user's state
@@ -1578,7 +1579,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         setupWhiteListData();
 
         // create a SWC with whitelist number and whitelist state
-        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Dingo Ate Baby", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Dingo Ate Baby", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE, 1);
         whitelistWorker.setState(whitelistState);
         whitelistWorker.setDistrict(rh.newDelhiDistrict());
         whitelistWorker.setLanguage(rh.hindiLanguage());
@@ -1586,7 +1587,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 whitelistWorker.getCourseStatus());
 
@@ -1671,13 +1672,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Update user's status
         notWhitelistWorker = swcService
-                .getByContactNumber(NOT_WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(NOT_WHITELIST_CONTACT_NUMBER,1);
         notWhitelistWorker.setCourseStatus(SwachchagrahiStatus.ACTIVE);
         swcService.update(notWhitelistWorker);
 
         // assert user's status
         notWhitelistWorker = swcService
-                .getByContactNumber(NOT_WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(NOT_WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ACTIVE,
                 notWhitelistWorker.getCourseStatus());
 
@@ -1717,7 +1718,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         notWhitelistWorker = swcService
-                .getByContactNumber(NOT_WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(NOT_WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 notWhitelistWorker.getCourseStatus());
 
@@ -1780,7 +1781,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT447() throws InterruptedException, IOException {
         setupWhiteListData();
         // user's no in whitelist, but state not whitelisted
-        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Baby Dingo", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Baby Dingo", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE, 1);
         whitelistWorker.setDistrict(rh.bangaloreDistrict());
         whitelistWorker.setLanguage(rh.kannadaLanguage());
         whitelistWorker.setState(nonWhitelistState);
@@ -1788,13 +1789,13 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // Update user's status to active
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         whitelistWorker.setCourseStatus(SwachchagrahiStatus.ACTIVE);
         swcService.update(whitelistWorker);
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ACTIVE, whitelistWorker.getCourseStatus());
 
         // create user's number in whitelist entry table
@@ -1826,7 +1827,7 @@ public class UserControllerBundleIT extends BasePaxIT {
     public void verifyFT448() throws InterruptedException, IOException {
         setupWhiteListData();
         // user's no in whitelist, but state not whitelisted
-        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Kangaroo Jack", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi whitelistWorker = ApiTestHelper.createSwc("Kangaroo Jack", WHITELIST_CONTACT_NUMBER, "123", SwachchagrahiStatus.INACTIVE, 1);
         whitelistWorker.setDistrict(rh.bangaloreDistrict());
         whitelistWorker.setLanguage(rh.kannadaLanguage());
         whitelistWorker.setState(nonWhitelistState);
@@ -1834,7 +1835,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 whitelistWorker.getCourseStatus());
 
@@ -1881,19 +1882,19 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INACTIVE,
                 whitelistWorker.getCourseStatus());
 
         // Update user's status to active
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         whitelistWorker.setCourseStatus(SwachchagrahiStatus.INVALID);
         swcService.update(whitelistWorker);
 
         // assert user's status
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.INVALID, whitelistWorker.getCourseStatus());
 
         // create user's number in whitelist entry table
@@ -1917,7 +1918,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         // assert user's status, On issuing the getUserDetails API to a invalid
         // user, its status should get changed to anonymous
         whitelistWorker = swcService
-                .getByContactNumber(WHITELIST_CONTACT_NUMBER);
+                .getByContactNumberAndCourseId(WHITELIST_CONTACT_NUMBER,1);
         assertEquals(SwachchagrahiStatus.ANONYMOUS,
                 whitelistWorker.getCourseStatus());
     }
@@ -1990,7 +1991,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -2030,7 +2031,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -2078,7 +2079,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         deployedServiceDataService.create(new DeployedService(rh.delhiState(), Service.WASH_ACADEMY));
 
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ANONYMOUS);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1111111111l, "123", SwachchagrahiStatus.ANONYMOUS, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -2458,14 +2459,14 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT461() throws IOException, InterruptedException {
         // create Invalid SWC record
-        Swachchagrahi swc = ApiTestHelper.createSwc("Baby Dingo", 1200000001l, "123", SwachchagrahiStatus.INACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Baby Dingo", 1200000001l, "123", SwachchagrahiStatus.INACTIVE, 1);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
         swc.setState(rh.karnatakaState());
         swcService.add(swc);
 
         // assert for SWC status
-        swc = swcService.getByContactNumber(1200000001l);
+        swc = swcService.getByContactNumberAndCourseId(1200000001l,1);
         assertTrue(SwachchagrahiStatus.INACTIVE == swc.getCourseStatus());
         
         Circle circle = rh.karnatakaCircle();
@@ -2506,18 +2507,18 @@ public class UserControllerBundleIT extends BasePaxIT {
     @Test
     public void verifyFT462() throws IOException, InterruptedException {
         // create anonymous SWC record
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frankie Dingo", 1200000001l, "123", SwachchagrahiStatus.ANONYMOUS);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frankie Dingo", 1200000001l, "123", SwachchagrahiStatus.ANONYMOUS, 1);
         swcService.add(swc);
 
         // update SWC status to ACTIVE
-        swc = swcService.getByContactNumber(1200000001l);
+        swc = swcService.getByContactNumberAndCourseId(1200000001l,1);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
         swc.setState(rh.karnatakaState());
         swcService.update(swc);
 
         // assert for SWC status
-        swc = swcService.getByContactNumber(1200000001l);
+        swc = swcService.getByContactNumberAndCourseId(1200000001l,1);
         assertTrue(SwachchagrahiStatus.ACTIVE == swc.getCourseStatus());
 
         Circle circle = rh.karnatakaCircle();
@@ -2568,7 +2569,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         swcService.add(swc);
 
         // update SWC status to ACTIVE
-        swc = swcService.getByContactNumber(1111111111L);
+        swc = swcService.getByContactNumberAndCourseId(1111111111L,1);
         swc.setLanguage(rh.tamilLanguage());
         swc.setDistrict(rh.bangaloreDistrict());
         swc.setState(rh.karnatakaState());
@@ -3312,7 +3313,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(serviceUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Jingo Jango", 1111111111l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Jingo Jango", 1111111111l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setDistrict(district);
         swc.setState(district.getState());
         swc.setLanguage(district.getLanguage());
@@ -3375,7 +3376,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -3427,7 +3428,7 @@ public class UserControllerBundleIT extends BasePaxIT {
                 Service.WASH_ACADEMY));
         
         // Create SWC with no usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
         
@@ -3529,7 +3530,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -3613,7 +3614,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -3719,7 +3720,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -3824,7 +3825,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(nationalUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ANONYMOUS);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ANONYMOUS, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -3931,7 +3932,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -4037,7 +4038,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -4121,7 +4122,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Llyod Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -4202,7 +4203,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // SWC
-        Swachchagrahi swc = ApiTestHelper.createSwc("Claire Underwood", 1200000000l, null, SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Claire Underwood", 1200000000l, null, SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swc.setDistrict(d);
         swc.setState(d.getState());
@@ -4243,7 +4244,7 @@ public class UserControllerBundleIT extends BasePaxIT {
         serviceUsageCapDataService.create(stateUsageCap);
 
         // SWC usage
-        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE);
+        Swachchagrahi swc = ApiTestHelper.createSwc("Frank Lol Wright", 1200000000l, "123", SwachchagrahiStatus.ACTIVE, 1);
         swc.setLanguage(rh.hindiLanguage());
         swcService.add(swc);
 
@@ -4360,7 +4361,7 @@ public class UserControllerBundleIT extends BasePaxIT {
 
         assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 
-        Swachchagrahi swc = swcService.getByContactNumber(1200000000l);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(1200000000l,1);
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
     }
 

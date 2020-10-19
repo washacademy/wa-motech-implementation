@@ -10,6 +10,7 @@ import org.motechproject.wa.api.web.contract.BadRequest;
 import org.motechproject.wa.swc.service.SwcService;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +33,7 @@ public class BaseControllerTest {
         String message = "error";
         ObjectMapper objectMapper = new ObjectMapper();
         BadRequest badRequest = new BadRequest(message);
-        when(subscriberService.getByContactNumber(anyLong())).thenThrow(new NullPointerException(message));
+        when(subscriberService.getByContactNumberAndCourseId(anyLong(),anyInt())).thenThrow(new NullPointerException(message));
 
         String url = "/kilkari/inbox?callingNumber=1111111111&callId=1234567891234561234512345";
 

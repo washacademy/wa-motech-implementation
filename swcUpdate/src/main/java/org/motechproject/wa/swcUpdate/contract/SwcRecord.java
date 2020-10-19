@@ -31,6 +31,7 @@ public class SwcRecord {
     private String execDate;
     private String type;
     private String jobStatus;
+    private int courseId;
 
     @XmlElement(name = "Block_Name")
     public void setBlockName(String talukaName) {
@@ -174,6 +175,13 @@ public class SwcRecord {
     @XmlElement(name = "Job_Status")
     public void setJobStatus(String gfStatus) { this.jobStatus = gfStatus; }
 
+    public int getCourseId(){return courseId;}
+
+    @XmlElement(name = "Course_Id")
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
+    }
+
 
     public Map<String, Object> toSwcRecordMap() {
         Map<String, Object> map = new HashMap<>();
@@ -192,6 +200,7 @@ public class SwcRecord {
         map.put(SwcConstants.EXEC_DATE, "".equals(getExecDate()) ? null : LocalDate.parse(getExecDate(), DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
         map.put(SwcConstants.TYPE, "".equals(getType()) || getType() == null ? null : getType());
         map.put(SwcConstants.JOB_STATUS, "".equals(getJobStatus()) || getJobStatus() == null ? null : getJobStatus());
+        map.put(SwcConstants.COURSE_ID,"".equals(getCourseId()) || getJobStatus() == null ? null : getCourseId());
         return map;
     }
 }

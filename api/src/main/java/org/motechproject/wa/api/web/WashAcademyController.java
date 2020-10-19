@@ -217,7 +217,7 @@ public class WashAcademyController extends BaseController {
 
         // validate scores
         if (validateWAScores(bookmarkRequest.getScoresByChapter()) ) {
-            Swachchagrahi swc = swcService.getByContactNumber(bookmarkRequest.getCallingNumber());
+            Swachchagrahi swc = swcService.getByContactNumberAndCourseId(bookmarkRequest.getCallingNumber(),bookmarkRequest.getCourseId());
             Long swcId = swc.getId();
             WaBookmark bookmark = WashAcademyConverter.convertSaveBookmarkRequest(bookmarkRequest, swcId);
             washAcademyService.setBookmark(bookmark, courseId);

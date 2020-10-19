@@ -7,7 +7,7 @@ import org.motechproject.wa.rejectionhandler.domain.SwcImportRejection;
  */
 public interface SwcRejectionService {
 
-    SwcImportRejection findBySwcIdAndPanchayatId(Long swcId, Long panchayatId);
+    SwcImportRejection findBySwcIdAndPanchayatIdAndCourseId(Long swcId, Long panchayatId, Integer courseId);
 
     void createUpdate(SwcImportRejection swcImportRejection);
 

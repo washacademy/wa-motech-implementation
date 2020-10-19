@@ -196,7 +196,7 @@ public class WashAcademyServiceImpl implements WashAcademyService {
     @Override
     public WaBookmark getBookmark(Long callingNumber, String callId, Integer courseId) {
 
-        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callingNumber,courseId);
         if (swc == null) {
             return null;
         }

@@ -206,12 +206,13 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     public void testFrontLineWorkerService() throws Exception {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 1111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
-        Swachchagrahi otherSwc = swcService.getByContactNumber(1111111111L);
+        Swachchagrahi otherSwc = swcService.getByContactNumberAndCourseId(1111111111L,1);
         assertNotNull(otherSwc);
 
-        Swachchagrahi record = swcService.getByContactNumber(swc.getContactNumber());
+        Swachchagrahi record = swcService.getByContactNumberAndCourseId(swc.getContactNumber(),1);
         assertEquals(swc, record);
 
         List<Swachchagrahi> records = swcService.getRecords();
@@ -219,9 +220,10 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
 
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
+        swc.setCourseId(1);
         swcService.update(swc);
         swcService.delete(swc);
-        record = swcService.getByContactNumber(swc.getContactNumber());
+        record = swcService.getByContactNumberAndCourseId(swc.getContactNumber(),1);
         assertNull(record);
     }
 
@@ -237,18 +239,20 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
 
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
 
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
 
         swc.setState(sampleState);
         swc.setDistrict(district);
         swc.setName("Frank Huster");
+        swc.setCourseId(1);
 //        swc.setLanguage(language);
 
         swcService.update(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         assertEquals(SwachchagrahiStatus.ACTIVE, swc.getCourseStatus());
 
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
@@ -264,8 +268,9 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     public void testDeleteNonInvalidFrontLineWorker() {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
 
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
 
@@ -277,9 +282,10 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     public void testDeleteRecentInvalidFrontLineWorker() {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swcService.update(swc);
 
@@ -294,9 +300,10 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     public void testDeleteOldInvalidFrontLineWorker() {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(swc);
@@ -311,17 +318,19 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
     public void testNewAshaTakingOldResignationNumber() {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setJobStatus(SwcJobStatus.INACTIVE);
         swcService.update(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         assertNull(swc);
 
         swc = new Swachchagrahi("New Asha", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         assertNotNull(swc);
 
         assertEquals("New Asha", swc.getName());
@@ -344,17 +353,19 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
 
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(DateTime.now().minusWeeks(7));
+        swc.setCourseId(1);
         swcService.update(swc);
 
         //call purge event
         swcService.purgeOldInvalidSWCs(motechEvent);
 
         // assert flW deleted
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         assertNull(swc);
 
         // change configuration to disable deletion by setting weeks to large value
@@ -364,8 +375,9 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
         swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setSwcId("SwcId");
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         // set invalid date to 2 years back
         swc.setInvalidationDate(DateTime.now().minusYears(2));
@@ -375,7 +387,7 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
         swcService.purgeOldInvalidSWCs(motechEvent);
 
         // assert flW not deleted
-        swc = swcService.getBySwcId("SwcId");
+        swc = swcService.getBySwcIdAndCourseId("SwcId",1 );
         assertNotNull(swc);
     }
 
@@ -387,9 +399,10 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(swc);
@@ -413,9 +426,10 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
         swc.setDistrict(district);
 //        swc.setLanguage(language);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(swc);
@@ -441,12 +455,13 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Test Worker", 2111111111L);
         swc.setState(sampleState);
         swc.setDistrict(district);
+        swc.setCourseId(1);
 //        swc.setLanguage(language);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
         transactionManager.commit(status);
 
-        swc = swcService.getByContactNumber(2111111111L);
+        swc = swcService.getByContactNumberAndCourseId(2111111111L,1);
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
         swc.setInvalidationDate(new DateTime().withDate(2011, 8, 1));
         swcService.update(swc);
@@ -461,18 +476,19 @@ public class SwachgrahiServiceBundleIT extends BasePaxIT {
         Swachchagrahi swc1 = new Swachchagrahi(2111111112L);
         swc1.setState(sampleState);
         swc1.setDistrict(district1);
+        swc1.setCourseId(1);
 //        swc1.setLanguage(language1);
         swc1.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc1);
         transactionManager.commit(status);
 
-        swc1 = swcService.getByContactNumber(2111111112L);
+        swc1 = swcService.getByContactNumberAndCourseId(2111111112L,1);
         swc1.setName("Test Worker1");
         swcService.update(swc1);
         assertEquals(swcStatusUpdateAuditDataService.count(), 2l);
 
         // Changing the status previous updated Active user to Invalid
-        Swachchagrahi swc2 = swcService.getByContactNumber(2111111112L);
+        Swachchagrahi swc2 = swcService.getByContactNumberAndCourseId(2111111112L,1);
         swc2.setCourseStatus(SwachchagrahiStatus.INVALID);
         swcService.update(swc2);
         assertEquals(swcStatusUpdateAuditDataService.count(), 3l);

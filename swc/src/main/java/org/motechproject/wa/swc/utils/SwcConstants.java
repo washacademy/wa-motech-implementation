@@ -32,6 +32,7 @@ public final class SwcConstants {
     public static final java.lang.String SWC_SEX = "SWC_SEX";
     public static final java.lang.String GF_TYPE = "GF_type";
     public static final java.lang.String EXEC_DATE = "Exec_Date";
+    public static final java.lang.String COURSE_ID = "CourseId";
 
     private SwcConstants() { /* compiled code */ }
 }

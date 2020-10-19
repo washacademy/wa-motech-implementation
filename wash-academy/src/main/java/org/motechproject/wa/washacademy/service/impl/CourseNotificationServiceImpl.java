@@ -168,7 +168,7 @@ public class CourseNotificationServiceImpl implements CourseNotificationService 
 
         int startIndex = callingNumber.indexOf(':') + 2;
         callingNumber = callingNumber.substring(startIndex);
-        Swachchagrahi swc = swcService.getByContactNumber(Long.parseLong(callingNumber));
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(Long.parseLong(callingNumber),courseId);
         Long swcId = null;
         if (swc != null) {
              swcId= swc.getId();

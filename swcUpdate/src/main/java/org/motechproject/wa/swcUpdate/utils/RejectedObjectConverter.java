@@ -30,7 +30,7 @@ public final class RejectedObjectConverter {
         swcImportRejection.setSwcStatus(SwcJobStatus.ACTIVE.toString());
         swcImportRejection.setSex(record.getGfSex());
         swcImportRejection.setUpdateDateNic(record.getExecDate());
-
+        swcImportRejection.setCourseId(record.getCourseId());
 
         return swcImportRejection;
     }

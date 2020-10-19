@@ -100,7 +100,7 @@ public class CallDetailsController extends BaseController {
             throw new IllegalArgumentException(failureReasons.toString());
         }
 
-        Swachchagrahi swc = swcService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callDetailRecordRequest.getCallingNumber(),callDetailRecordRequest.getCourseId());
         if (null == swc) {
             // If the swc doesn't exist it is possible they hung up before providing their language.  We
             // create an anonymous stub swc here
@@ -109,7 +109,7 @@ public class CallDetailsController extends BaseController {
             swcService.add(swc);
 
             // reload so the record can be linked to later.
-            swc = swcService.getByContactNumber(callDetailRecordRequest.getCallingNumber());
+            swc = swcService.getByContactNumberAndCourseId(callDetailRecordRequest.getCallingNumber(),callDetailRecordRequest.getCourseId());
         }
 
         createCallDetailRecord(swc, callDetailRecordRequest, service);

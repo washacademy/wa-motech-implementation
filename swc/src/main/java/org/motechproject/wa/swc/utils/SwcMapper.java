@@ -72,6 +72,7 @@ public final class SwcMapper {
 
 
 
+
         if (contactNumber != null) {
             swc.setContactNumber(contactNumber);
         }

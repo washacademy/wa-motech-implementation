@@ -164,7 +164,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 //        AddSwcRequest addSwcRequest = getAddRequestInactiveGfStatus();
 //        HttpPost httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, addSwcRequest);
 //        assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-//        Swachchagrahi swc = swcService.getByContactNumber(9876543210L);
+//        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(9876543210L);
 //        assertNull(swc);
 //    }
 
@@ -175,12 +175,12 @@ public class OpsControllerBundleIT extends BasePaxIT {
 //        AddSwcRequest addSwcRequest = getAddRequestASHA();
 //        HttpPost httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, addSwcRequest);
 //        assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-//        Swachchagrahi swc = swcService.getByContactNumber(9876543210L);
+//        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(9876543210L);
 //        assertNotNull(swc);
 //        addSwcRequest = getAddRequestInactiveGfStatus();
 //        httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, addSwcRequest);
 //        assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-//        swc = swcService.getByContactNumber(9876543210L);
+//        swc = swcService.getByContactNumberAndCourseId(9876543210L);
 //        assertNull(swc);
 //    }
 
@@ -188,8 +188,8 @@ public class OpsControllerBundleIT extends BasePaxIT {
     @Test
     public void testCreateNewSwcTalukaVillage() throws IOException, InterruptedException {
 
-        createSwcHelper("Chinkoo Devi", 9876543210L, "123");
-        Swachchagrahi swc = swcService.getByContactNumber(9876543210L);
+        createSwcHelper("Chinkoo Devi", 9876543210L, "123",11);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(9876543210L,11);
         assertNotNull(swc.getState());
         assertNotNull(swc.getDistrict());
         assertNotNull(swc.getBlock());    // null since we don't create it by default in helper
@@ -203,7 +203,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 
 
         // refetch and check that taluka and village are set
-        swc = swcService.getByContactNumber(9876543210L);
+        swc = swcService.getByContactNumberAndCourseId(9876543210L,11);
         assertNotNull(swc.getState());
         assertNotNull(swc.getDistrict());
         assertNotNull(swc.getBlock());
@@ -228,12 +228,12 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateSwcName() throws IOException, InterruptedException {
 
         // create swc
-        createSwcHelper("Kookoo Devi", 9876543210L, "123");
+        createSwcHelper("Kookoo Devi", 9876543210L, "123",11);
 
         AddSwcRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
-        Swachchagrahi swc = swcService.getByContactNumber(9876543210L);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(9876543210L,11);
         assertNotEquals(swc.getName(), "Kookoo Devi");
         assertEquals(swc.getName(), updateRequest.getName());
     }
@@ -243,7 +243,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateSwcPhoneOpen() throws IOException, InterruptedException {
 
         // create swc
-        createSwcHelper("Chinkoo Devi", 9876543210L, "123");
+        createSwcHelper("Chinkoo Devi", 9876543210L, "123",11);
 
         AddSwcRequest updateRequest = getAddRequestASHA();
         updateRequest.setMsisdn(9876543211L);    // update
@@ -256,7 +256,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateSwcPhoneOccupied() throws IOException, InterruptedException {
 
         // create swc
-        createSwcHelper("Chinkoo Devi", 9876543210L, "456");
+        createSwcHelper("Chinkoo Devi", 9876543210L, "456",11);
 
         long before = swcImportRejectionDataService.count();
 
@@ -282,13 +282,13 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateSwcAnonymousMctsMerge() throws IOException, InterruptedException {
 
         // create swc with null mcts id
-        createSwcHelper("Chinkoo Devi", 9876543210L, null);
+        createSwcHelper("Chinkoo Devi", 9876543210L, null,11);
 
         AddSwcRequest updateRequest = getAddRequestASHA();
         HttpPost httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, updateRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        Swachchagrahi swcByNumber = swcService.getByContactNumber(9876543210L);
+        Swachchagrahi swcByNumber = swcService.getByContactNumberAndCourseId(9876543210L,11);
         assertEquals("Anonymous user was not merged", updateRequest.getSwcId(), swcByNumber.getSwcId());
     }
 
@@ -297,7 +297,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateNoState() throws IOException, InterruptedException {
 
         // create swc
-        createSwcHelper("State Singh", 9876543210L, "123");
+        createSwcHelper("State Singh", 9876543210L, "123",11);
 
         long before = swcErrorDataService.count();
 
@@ -323,7 +323,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
     public void testUpdateNoDistrict() throws IOException, InterruptedException {
 
         // create swc
-        createSwcHelper("District Singh", 9876543210L, "123");
+        createSwcHelper("District Singh", 9876543210L, "123",11);
 
         long before = swcErrorDataService.count();
 
@@ -408,7 +408,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
 //
 //    }
 
-    private void createSwcHelper(String name, Long phoneNumber, String SwcId) {
+    private void createSwcHelper(String name, Long phoneNumber, String SwcId,int courseId) {
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
         stateDataService.create(state);
         // create swc
@@ -421,6 +421,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         swc.setLanguage(language);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swc.setCourseStatus(SwachchagrahiStatus.INACTIVE);
+        swc.setCourseId(courseId);
         swcDataService.create(swc);
         transactionManager.commit(status);
     }
@@ -639,7 +640,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         HttpPost httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, addSwcRequest);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
-        Swachchagrahi swc = swcService.getByContactNumber(9876543210L);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(9876543210L,1);
         Long swcId = swc.getId();
         WaBookmark bookmark = new WaBookmark(swcId, VALID_CALL_ID, null, null);
         maService.setBookmark(bookmark,1);
@@ -652,7 +653,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
             scores.put(String.valueOf(i), 3);
         }
 
-        swc = swcService.getByContactNumber(9876543210L);
+        swc = swcService.getByContactNumberAndCourseId(9876543210L,1);
         bookmark.setScoresByChapter(scores);
         maService.setBookmark(bookmark,1);
         List <CourseCompletionRecord> ncrs = courseCompletionRecordDataService.findBySwcId(swc.getId());
@@ -669,6 +670,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         request.setPanchayatId(panchayat.getVcode());
         request.setBlockName(block.getName());
         request.setPanchayatName(panchayat.getName());
+        request.setCourseId(1);
         httpRequest = RequestBuilder.createPostRequest(addSwcEndpoint, request);
         assertTrue(SimpleHttpClient.execHttpRequest(httpRequest, HttpStatus.SC_OK, RequestBuilder.ADMIN_USERNAME, RequestBuilder.ADMIN_PASSWORD));
 
@@ -678,7 +680,7 @@ public class OpsControllerBundleIT extends BasePaxIT {
         assertEquals(0, activityDataService.findRecordsForUserByState("9876543210", ActivityState.STARTED).size());
         assertEquals(1, activityDataService.findRecordsForUserByState("7896543210", ActivityState.STARTED).size());
 
-        swc = swcService.getByContactNumber(7896543210L);
+        swc = swcService.getByContactNumberAndCourseId(7896543210L,1);
         assertEquals(1, courseCompletionRecordDataService.findBySwcId(swc.getId()).size());
     }
 }

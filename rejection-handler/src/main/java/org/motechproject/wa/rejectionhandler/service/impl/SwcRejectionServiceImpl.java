@@ -20,19 +20,19 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
     private SwcImportRejectionDataService swcImportRejectionDataService;
 
     @Override
-    public SwcImportRejection findBySwcIdAndPanchayatId(Long swcId, Long stateId) {
-        return swcImportRejectionDataService.findBySwcIdAndPanchayatId(swcId, stateId);
+    public SwcImportRejection findBySwcIdAndPanchayatIdAndCourseId(Long swcId, Long stateId,Integer courseId) {
+        return swcImportRejectionDataService.findBySwcIdAndPanchayatIdAndCourseId(swcId, stateId,courseId);
     }
 
-    private SwcImportRejection findBySwcId(Long swcId) {
-        return swcImportRejectionDataService.findBySwcId(swcId);
+    private SwcImportRejection findBySwcIdAndCourseId(Long swcId,Integer courseId) {
+        return swcImportRejectionDataService.findBySwcIdAndCourseId(swcId,courseId);
     }
 
     @Override //NO CHECKSTYLE CyclomaticComplexity
     public void createUpdate(SwcImportRejection swcImportRejection) {
         LOGGER.info("Creating rejection record: {} ", swcImportRejection);
         if (swcImportRejection.getSwcID() != null && swcImportRejection.getPanchayatId() != null) {
-            SwcImportRejection swcImportRejection1 = findBySwcIdAndPanchayatId(swcImportRejection.getSwcID(), swcImportRejection.getPanchayatId());
+            SwcImportRejection swcImportRejection1 = findBySwcIdAndPanchayatIdAndCourseId(swcImportRejection.getSwcID(), swcImportRejection.getPanchayatId(),swcImportRejection.getCourseId());
 
             if (swcImportRejection1 == null && !swcImportRejection.getAccepted()) {
                 swcImportRejectionDataService.create(swcImportRejection);
@@ -46,7 +46,7 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
                 swcImportRejectionDataService.update(swcImportRejection1);
             }
         } else if (swcImportRejection.getSwcID() != null && swcImportRejection.getPanchayatId() == null) {
-            SwcImportRejection swcImportRejection1 = findBySwcId(swcImportRejection.getSwcID());
+            SwcImportRejection swcImportRejection1 = findBySwcIdAndCourseId(swcImportRejection.getSwcID(),swcImportRejection.getCourseId());
 
             if (swcImportRejection1 == null && !swcImportRejection.getAccepted()) {
                 swcImportRejectionDataService.create(swcImportRejection);
@@ -77,6 +77,7 @@ public class SwcRejectionServiceImpl implements SwcRejectionService {
         swcImportRejection1.setSource(swcImportRejection.getSource());
         swcImportRejection1.setAction(swcImportRejection.getAction());
         swcImportRejection1.setUpdateDateNic(swcImportRejection.getUpdateDateNic());
+        swcImportRejection1.setCourseId(swcImportRejection.getCourseId());
         return swcImportRejection1;
     }
 }

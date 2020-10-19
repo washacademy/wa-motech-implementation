@@ -212,10 +212,10 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     @Test
     @Ignore
     public void testImportWhenDistrictLanguageLocationPresent() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive\t1");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
-        Swachchagrahi swc = swcService.getByContactNumber(1234567890L);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
         assertSWC(swc, "#0", 1234567890L, "SWC 0", "District 11", "L1");
         assertEquals(SwachchagrahiStatus.INACTIVE, swc.getCourseStatus());
     }
@@ -223,10 +223,10 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     @Test
     @Ignore
     public void testImportWhenDistrictLanguageLocationNotPresent() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t12\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t12\t18-08-2016\tASHA\tActive\t1");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
 
-        Swachchagrahi swc = swcService.getByContactNumber(1234567890L);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
         assertSWC(swc, "#0", 1234567890L, "SWC 0", "District 12", null);
     }
 
@@ -250,7 +250,7 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     @Ignore
     public void verifyFT535() throws Exception {
         importCsvFileForSWC("swc.csv");
-        Swachchagrahi swc1 = swcService.getByContactNumber(1234567899L);
+        Swachchagrahi swc1 = swcService.getByContactNumberAndCourseId(1234567899L,1);
         assertSWC(swc1, "1", 1234567899L, "Aisha Bibi", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", swc1.getState().toString());
         assertEquals(SwachchagrahiStatus.INACTIVE, swc1.getCourseStatus());
@@ -271,9 +271,9 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         Swachchagrahi swc = new Swachchagrahi("Frank Lloyd Wright", 1234567890L);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
         swcService.add(swc);
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive\t1");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
-        Swachchagrahi swc1 = swcService.getByContactNumber(1234567890L);
+        Swachchagrahi swc1 = swcService.getByContactNumberAndCourseId(1234567890L,1);
         assertSWC(swc1, "#0", 1234567890L, "SWC 0", "District 11", "L1");
         assertEquals("State{name='State 1', code=1}", swc1.getState().toString());
         assertEquals(SwachchagrahiStatus.ACTIVE, swc1.getCourseStatus());
@@ -432,11 +432,12 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swc.setDistrict(district1);
         swc.setLanguage(language1);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
         importCsvFileForSWC("swc_location_update_msisdn.txt");
 
-        swc = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
 
         // deleting the SWC to avoid conflicts at later stage
         swc.setCourseStatus(SwachchagrahiStatus.INVALID);
@@ -474,11 +475,12 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         swc.setDistrict(district1);
         swc.setLanguage(language1);
         swc.setJobStatus(SwcJobStatus.ACTIVE);
+        swc.setCourseId(1);
         swcService.add(swc);
 
         importCsvFileForSWC("swc_update_state_by_msisdn.txt");
 
-        swc = swcService.getByContactNumber(1234567890L);
+        swc = swcService.getByContactNumberAndCourseId(1234567890L,1);
 
         assertSWC(swc, "#0", 1234567890L, "Test MSISDN", "District 22", language1.getCode());
 
@@ -501,11 +503,11 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
     @Test
     @Ignore
     public void testMsisdnUpdateInMa() throws Exception {
-        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive");
+        Reader reader = createReaderWithHeaders("#0\t1234567890\tSWC 0\t11\t18-08-2016\tASHA\tActive\t1");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long oldMsisdn = 1234567890L;
 
-        Swachchagrahi swc = swcService.getByContactNumber(oldMsisdn);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(oldMsisdn,1);
         assertSWC(swc, "#0", oldMsisdn, "SWC 0", "District 11", "L1");
 
         Long swcId = swc.getId();
@@ -523,11 +525,11 @@ public class SwachgrahiImportServiceBundleIT extends BasePaxIT {
         maService.setBookmark(bookmark,1);
 
         // Update Msisdn
-        reader = createReaderWithHeaders("#0\t9876543210\tSWC 0\t11\t18-08-2016\tASHA\tActive");
+        reader = createReaderWithHeaders("#0\t9876543210\tSWC 0\t11\t18-08-2016\tASHA\tActive\t1");
         swcImportService.importData(reader, SubscriptionOrigin.MCTS_IMPORT);
         Long newMsisdn = 9876543210L;
 
-        swc = swcService.getByContactNumber(newMsisdn);
+        swc = swcService.getByContactNumberAndCourseId(newMsisdn,1);
         assertSWC(swc, "#0", newMsisdn, "SWC 0", "District 11", "L1");
 
         assertNull(maService.getBookmark(oldMsisdn, VALID_CALL_ID,1));

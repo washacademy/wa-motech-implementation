@@ -9,7 +9,7 @@ import org.motechproject.wa.swc.domain.SwcJobStatus;
  */
 public final class ApiTestHelper {
 
-    public static Swachchagrahi createSwc(String name, Long phoneNumber, String mctsSwcId, SwachchagrahiStatus status) {
+    public static Swachchagrahi createSwc(String name, Long phoneNumber, String mctsSwcId, SwachchagrahiStatus status,int courseId) {
         Swachchagrahi swc = new Swachchagrahi(name, phoneNumber);
         swc.setCourseStatus(status);
         swc.setJobStatus(SwcJobStatus.ACTIVE);

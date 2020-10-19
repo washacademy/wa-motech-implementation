@@ -1,5 +1,6 @@
 package org.motechproject.wa.testing.it.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpResponse;
@@ -7,7 +8,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -21,7 +21,6 @@ import org.motechproject.wa.api.web.contract.SwcUserResponse;
 import org.motechproject.wa.props.domain.DeployedService;
 import org.motechproject.wa.props.domain.Service;
 import org.motechproject.wa.props.repository.DeployedServiceDataService;
-import org.motechproject.wa.region.domain.District;
 import org.motechproject.wa.region.repository.CircleDataService;
 import org.motechproject.wa.region.repository.DistrictDataService;
 import org.motechproject.wa.region.repository.LanguageDataService;
@@ -690,7 +689,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
-        Swachchagrahi swc = swcService.getByContactNumber(9810320300l);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(9810320300l,11);
         assertEquals(SwachchagrahiStatus.ANONYMOUS, swc.getCourseStatus());
     }
 
@@ -2630,7 +2629,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
-        swc = swcService.getByContactNumber(1200000001l);
+        swc = swcService.getByContactNumberAndCourseId(1200000001l,11);
         assertEquals(SwachchagrahiStatus.ACTIVE, swc.getCourseStatus());
     }
 
@@ -2720,7 +2719,7 @@ public class CallDetailsControllerBundleIT extends BasePaxIT {
 
         assertTrue(SimpleHttpClient.execHttpRequest(httpPost, HttpStatus.SC_OK, ADMIN_USERNAME, ADMIN_PASSWORD));
 
-        swc = swcService.getByContactNumber(1200000001l);
+        swc = swcService.getByContactNumberAndCourseId(1200000001l,11);
         assertEquals(SwachchagrahiStatus.ACTIVE, swc.getCourseStatus());
         assertEquals(swcStatusUpdateAuditDataService.count(), 1l);
         List<SwcStatusUpdateAudit> swcStatusUpdateAuditList = swcStatusUpdateAuditDataService.findBySwcId(swc.getSwcId());

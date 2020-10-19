@@ -170,16 +170,17 @@ public class SwcServiceImpl implements SwcService {
         }
 
         swcDataService.create(record);
+        LOGGER.debug("created user with courseId:"+record.getCourseId()+" and contactNumber:"+record.getContactNumber().toString());
     }
 
     @Override
-    public Swachchagrahi getBySwcId(String swcId) {
-        return swcDataService.findBySwcId(swcId);
+    public Swachchagrahi getBySwcIdAndCourseId(String swcId, Integer courseId) {
+        return swcDataService.findBySwcIdAndCourseId(swcId,courseId);
     }
 
     @Override
-    public Swachchagrahi getBySwcIdAndPanchayat(final String swcId, final Panchayat panchayat) {
-        if (swcId == null || panchayat == null) {
+    public Swachchagrahi getBySwcIdAndPanchayatAndCourseId(final String swcId, final Panchayat panchayat, final Integer courseId) {
+        if (swcId == null || panchayat == null ) {
             LOGGER.error(String.format("Attempt to look up SWC by a null swcId (%s) or panchayat (%s)",
                     swcId, panchayat == null ? "null" : panchayat.getName()));
             return null;
@@ -189,12 +190,12 @@ public class SwcServiceImpl implements SwcService {
         QueryExecution<Swachchagrahi> queryExecution = new QueryExecution<Swachchagrahi>() {
             @Override
             public Swachchagrahi execute(Query query, InstanceSecurityRestriction restriction) {
-                query.setFilter("swcId == _swcId && panchayat == _panchayat");
-                query.declareParameters("String _swcId, org.motechproject.wa.region.domain.Panchayat _panchayat");
+                query.setFilter("swcId == _swcId && panchayat == _panchayat && courseId == _courseId");
+                query.declareParameters("String _swcId, org.motechproject.wa.region.domain.Panchayat _panchayat, int _courseId");
                 query.setClass(Swachchagrahi.class);
                 query.setUnique(true);
 
-                return (Swachchagrahi) query.execute(swcId, panchayat);
+                return (Swachchagrahi) query.execute(swcId, panchayat, courseId);
             }
         };
 
@@ -213,6 +214,45 @@ public class SwcServiceImpl implements SwcService {
             @Override
             public String getSqlQuery() {
                 String query = "Select * FROM wash_swachchagrahi where contactNumber=" + contactNumber +" and jobStatus='ACTIVE';";
+                return query;
+            }
+            @Override
+            public List<Swachchagrahi> execute(Query query) {
+
+                query.setClass(Swachchagrahi.class);
+
+                return (List<Swachchagrahi>) query.execute();
+            }
+        };
+        List<Swachchagrahi> swcs = swcDataService.executeSQLQuery(queryExecution); //query result set cannot be modified in sorting
+        List<Swachchagrahi> swachchagrahis = new ArrayList<>();
+        swachchagrahis.addAll(swcs);
+
+        Collections.sort(swachchagrahis, new Comparator<Swachchagrahi>() {
+            @Override
+            public int compare(Swachchagrahi t1, Swachchagrahi t2) {
+                if (t1.getCreationDate().isBefore(t2.getCreationDate())) {
+                    return 1;
+                } else if (t1.getCreationDate().isAfter(t2.getCreationDate())) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        if (swachchagrahis.size() != 0) {
+            return swachchagrahis.get(swcs.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Swachchagrahi getByContactNumberAndCourseId(Long contactNumber,Integer courseId){
+        SqlQueryExecution<List<Swachchagrahi>> queryExecution = new SqlQueryExecution<List<Swachchagrahi>>() {
+            @Override
+            public String getSqlQuery() {
+                String query = "Select * FROM wash_swachchagrahi where contactNumber=" + contactNumber +" and "+"courseId="+courseId+" and jobStatus='ACTIVE';";
                 return query;
             }
             @Override
@@ -271,6 +311,31 @@ public class SwcServiceImpl implements SwcService {
     }
 
     @Override
+    public Swachchagrahi getInctiveByContactNumberAndCourseId(Long contactNumber,Integer courseId) {
+        SqlQueryExecution<List<Swachchagrahi>> queryExecution = new SqlQueryExecution<List<Swachchagrahi>>() {
+            @Override
+            public String getSqlQuery() {
+                String query = "Select * FROM wash_swachchagrahi where contactNumber=" + contactNumber +" and "+"courseId="+courseId+" and jobStatus='INACTIVE';";
+                return query;
+            }
+            @Override
+            public List<Swachchagrahi> execute(Query query) {
+
+                query.setClass(Swachchagrahi.class);
+
+                return (List<Swachchagrahi>) query.execute();
+            }
+        };
+        List<Swachchagrahi> swcs = swcDataService.executeSQLQuery(queryExecution);
+        if (swcs.size() != 0) {
+            return swcs.get(swcs.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
     public List<Swachchagrahi> getRecords() {
         return swcDataService.retrieveAll();
     }
@@ -286,7 +351,7 @@ public class SwcServiceImpl implements SwcService {
     public void update(Swachchagrahi record) {
 
 
-        Swachchagrahi retrievedSwc = getByContactNumber(record.getContactNumber());
+        Swachchagrahi retrievedSwc = getByContactNumberAndCourseId(record.getContactNumber(),record.getCourseId());
         if (retrievedSwc == null) {
             swcDataService.update(record);
             return;

@@ -60,6 +60,13 @@ public class SwcImportRejection {
     @Field
     private String panchayatName;
 
+    @Field
+    private int courseId;
+
+    public int getCourseId() {    return courseId;    }
+
+    public void setCourseId(int courseId) {      this.courseId = courseId;    }
+
     public Boolean getAccepted() {
         return accepted;
     }

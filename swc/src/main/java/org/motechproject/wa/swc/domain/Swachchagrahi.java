@@ -103,6 +103,12 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     @Persistent(defaultFetchGroup = "true")
     private SwcJobStatus jobStatus;
 
+    @Field
+    private int courseId;
+
+    public int getCourseId() { return courseId;  }
+
+    public void setCourseId(int courseId) { this.courseId = courseId; }
 
     public String getSex() {
         return sex;
@@ -218,6 +224,12 @@ public class Swachchagrahi extends MdsEntity implements FullLocation {
     public Swachchagrahi(Long contactNumber, Circle circle){
         this.contactNumber = contactNumber;
         this.circle = circle;
+    }
+
+    public Swachchagrahi(Long contactNumber, Circle circle,int courseId){
+        this.contactNumber = contactNumber;
+        this.circle = circle;
+        this.courseId = courseId;
     }
 
     public Swachchagrahi(String name, Long contactNumber) {

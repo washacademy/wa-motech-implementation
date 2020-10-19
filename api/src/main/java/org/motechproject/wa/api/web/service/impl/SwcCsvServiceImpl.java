@@ -112,7 +112,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcProperties.put(SwcConstants.SWC_SEX, addSwcRequest.getSex());
         swcProperties.put(SwcConstants.SWC_AGE, addSwcRequest.getAge());
         swcProperties.put(SwcConstants.TYPE, addSwcRequest.getType());
-
+        swcProperties.put(SwcConstants.COURSE_ID,addSwcRequest.getCourseId());
         swcImportService.createUpdate(swcProperties, SubscriptionOrigin.RCH_IMPORT);
     }
 
@@ -135,6 +135,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcProperties.put(SwcConstants.SWC_SEX, addSwcRequest.getSex());
         swcProperties.put(SwcConstants.SWC_AGE, addSwcRequest.getAge());
         swcProperties.put(SwcConstants.TYPE, addSwcRequest.getType());
+        swcProperties.put(SwcConstants.COURSE_ID,addSwcRequest.getCourseId());
 
         swcImportService.createCsvUpdate(swcProperties, SubscriptionOrigin.RCH_IMPORT, this.stateHashMap, this.districtHashMap,
                 this.blockHashMap, this.panchayatHashMap);
@@ -158,7 +159,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
 
     private String rchSwcActionFinder(AddSwcRequest record) {
         Long swcId = record.getSwcId() == null ? null : Long.parseLong(record.getSwcId());
-        if (swcRejectionService.findBySwcIdAndPanchayatId(swcId, record.getPanchayatId()) == null) {
+        if (swcRejectionService.findBySwcIdAndPanchayatIdAndCourseId(swcId, record.getPanchayatId(),record.getCourseId()) == null) {
             return "CREATE";
         } else {
             return "UPDATE";
@@ -182,6 +183,7 @@ public class SwcCsvServiceImpl implements SwcCsvService {
         swcImportRejection.setRejectionReason(rejectionReason);
         swcImportRejection.setAction(action);
         swcImportRejection.setSex(record.getSex());
+        swcImportRejection.setCourseId(record.getCourseId());
         return swcImportRejection;
     }
 

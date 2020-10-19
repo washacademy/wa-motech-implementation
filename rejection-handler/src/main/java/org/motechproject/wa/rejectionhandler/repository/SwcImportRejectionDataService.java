@@ -11,9 +11,11 @@ import org.motechproject.wa.rejectionhandler.domain.SwcImportRejection;
 public interface SwcImportRejectionDataService extends MotechDataService<SwcImportRejection>  {
 
     @Lookup
-    SwcImportRejection findBySwcIdAndPanchayatId(@LookupField(name = "swcID") Long swcID,
-                                                 @LookupField(name = "panchayatId") Long panchayatId);
+    SwcImportRejection findBySwcIdAndPanchayatIdAndCourseId(@LookupField(name = "swcID") Long swcID,
+                                                 @LookupField(name = "panchayatId") Long panchayatId,
+                                                 @LookupField(name = "courseId") Integer courseId);
 
     @Lookup
-    SwcImportRejection findBySwcId(@LookupField(name = "swcID") Long swcID);
+    SwcImportRejection findBySwcIdAndCourseId(@LookupField(name = "swcID") Long swcID,
+                                   @LookupField(name = "courseId") Integer courseId);
 }

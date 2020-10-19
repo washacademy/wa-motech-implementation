@@ -20,12 +20,15 @@ public interface SwcService {
 
     Swachchagrahi getByContactNumber(Long contactNumber);
 
+    Swachchagrahi getByContactNumberAndCourseId(Long contactNumber,Integer courseId);
+
     Swachchagrahi getInctiveByContactNumber(Long contactNumber);
 
-    Swachchagrahi getBySwcId(String swcId);
+    Swachchagrahi getInctiveByContactNumberAndCourseId(Long contactNumber,Integer courseId);
 
+    Swachchagrahi getBySwcIdAndCourseId(String swcId,Integer courseId);
 
-    Swachchagrahi getBySwcIdAndPanchayat(String mctsSwcId, Panchayat state);
+    Swachchagrahi getBySwcIdAndPanchayatAndCourseId(String mctsSwcId, Panchayat state, Integer courseId);
 
     Swachchagrahi getById(Long id);
 

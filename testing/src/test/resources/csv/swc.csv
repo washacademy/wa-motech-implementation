@@ -4,5 +4,5 @@ Password :
 From Date (dd-mm-yyyy) :	
 To Date (dd-mm-yyyy) :	
 		
-ID	District_ID Panachayat_ID   Panchayat_Name  Block_ID    Block_Name  Name	Contact_No	Updated_On	Type	GF_Status
-1	29  28981   Bharatipur(28981)   0463    Similiguda  Aisha Bibi	1234567899	18-08-2016	ASHA	Active
+ID	District_ID Panachayat_ID   Panchayat_Name  Block_ID    Block_Name  Name	Contact_No	Updated_On	Type	GF_Status   CourseId
+1	29  28981   Bharatipur(28981)   0463    Similiguda  Aisha Bibi	1234567899	18-08-2016	ASHA	Active  1

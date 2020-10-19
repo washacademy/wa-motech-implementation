@@ -148,8 +148,9 @@ public class WashAcademyServiceUnitTest {
         bookmarkList.add(newBookmark);
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(55L);
+        swc.setCourseId(1);
         WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
-        when(swcService.getByContactNumber(anyLong()))
+        when(swcService.getByContactNumberAndCourseId(anyLong(),anyInt()))
                 .thenReturn(swc);
         when(waCourseDataService.getCourseById(anyInt()))
                 .thenReturn(course);
@@ -162,7 +163,6 @@ public class WashAcademyServiceUnitTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void setBookmarkNullTest() {
-
         washAcademyService.setBookmark(null, 1);
     }
 
@@ -243,7 +243,8 @@ public class WashAcademyServiceUnitTest {
         WaCourse course = new WaCourse("WashAcademyCourse", "[]", 1);
         Swachchagrahi swc = new Swachchagrahi(1234567890L);
         swc.setId(55L);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        swc.setCourseId(1);
+        when(swcService.getByContactNumberAndCourseId(anyLong(),anyInt())).thenReturn(swc);
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(course);
         when(bookmarkDataService.findBookmarksForUser(anyString())).thenReturn((bookmarkList));
 
@@ -270,7 +271,8 @@ public class WashAcademyServiceUnitTest {
         when(settingsFacade.getProperty(anyString())).thenReturn("1");
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setSwcId("123456");
-        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        swc.setCourseId(1);
+        when(swcService.getByContactNumberAndCourseId(anyLong(),1)).thenReturn(swc);
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
         assertTrue(ccr.getLastDeliveryStatus().equals("DeliveredToTerminal"));
@@ -295,7 +297,7 @@ public class WashAcademyServiceUnitTest {
         when(settingsFacade.getProperty(anyString())).thenReturn("1");
         doNothing().when(schedulerService).safeScheduleRepeatingJob(any(RepeatingSchedulableJob.class));
         when(swcService.getById(anyLong())).thenReturn(getFrontLineWorker());
-        when(swcService.getByContactNumber(anyLong())).thenReturn(getFrontLineWorker());
+        when(swcService.getByContactNumberAndCourseId(anyLong(),1)).thenReturn(getFrontLineWorker());
         when(swcService.getById(anyLong())).thenReturn(getFrontLineWorker());
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
@@ -337,8 +339,10 @@ public class WashAcademyServiceUnitTest {
         doNothing().when(schedulerService).safeScheduleRepeatingJob(any(RepeatingSchedulableJob.class));
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setId(123456L);
+        swc.setCourseId(1);
         when(swcService.getById(anyLong())).thenReturn(swc);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        when(swcService.getByContactNumberAndCourseId(
+                anyLong(),1)).thenReturn(swc);
         when(swcService.getById(anyLong())).thenReturn(swc);
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);
@@ -366,8 +370,9 @@ public class WashAcademyServiceUnitTest {
         doNothing().when(schedulerService).safeScheduleRepeatingJob(any(RepeatingSchedulableJob.class));
         Swachchagrahi swc = new Swachchagrahi(1000000000L);
         swc.setId(123456L);
+        swc.setCourseId(1);
         when(swcService.getById(anyLong())).thenReturn(swc);
-        when(swcService.getByContactNumber(anyLong())).thenReturn(swc);
+        when(swcService.getByContactNumberAndCourseId(anyLong(),1)).thenReturn(swc);
         when(swcService.getById(anyLong())).thenReturn(swc);
         when(waCourseDataService.getCourseById(anyInt())).thenReturn(newCourse);
         courseNotificationService.updateSmsStatus(event);

@@ -151,18 +151,18 @@ public class UserController extends BaseController {
         SwcUserResponse user = new SwcUserResponse();
         Service service = getServiceFromName(serviceName);
         ServiceUsage serviceUsage = new ServiceUsage(null, service, 0, 0, false);
-        Swachchagrahi swc = swcService.getByContactNumber(callingNumber);
+        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callingNumber,courseId);
+//        log("courseId is:"+swc.getCourseId()+" and contact number:"+swc.getContactNumber().toString());
 //        if (swc == null) {
 //            swc = swcService.getInctiveByContactNumber(callingNumber);
 //        }
 
         if(swc == null && swcService.isAnonymousAllowed()){
-            swc = swcService.getInctiveByContactNumber(callingNumber);
+            swc = swcService.getInctiveByContactNumberAndCourseId(callingNumber,courseId);
             if (swc == null && circle != null) {
-                swc = new Swachchagrahi(callingNumber, circle);
+                swc = new Swachchagrahi(callingNumber, circle, courseId);
                 swc.setJobStatus(SwcJobStatus.ACTIVE);
                 swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
-                swc.setJobStatus(SwcJobStatus.ACTIVE);
                 swcService.add(swc);
             }
 

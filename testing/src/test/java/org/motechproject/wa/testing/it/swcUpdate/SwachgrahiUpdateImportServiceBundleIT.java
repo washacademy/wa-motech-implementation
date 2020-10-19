@@ -194,10 +194,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         Reader reader = createLanguageReaderWithHeaders(" ,72185,2000000000,hi,1");
         swcUpdateImportService.importLanguageData(reader);
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
-        swc = swcService.getByContactNumber(2000000000L);
+        swc = swcService.getByContactNumberAndCourseId(2000000000L,11);
         assertEquals(rh.kannadaLanguage(), swc.getLanguage());
     }
 
@@ -219,10 +219,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         Reader reader = createLanguageReaderWithHeaders("72185,210302604211400029,1000000000,hi,1");
         swcUpdateImportService.importLanguageData(reader);
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
-        swc = swcService.getByContactNumber(2000000000L);
+        swc = swcService.getByContactNumberAndCourseId(2000000000L,11);
         assertEquals(rh.kannadaLanguage(), swc.getLanguage());
     }
 
@@ -252,10 +252,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
         swcUpdateImportService.importLanguageData(read("csv/swc_language_update.csv"));
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
-        swc = swcService.getByContactNumber(2000000000L);
+        swc = swcService.getByContactNumberAndCourseId(2000000000L,11);
         assertEquals(rh.hindiLanguage(), swc.getLanguage());
     }
 
@@ -307,14 +307,14 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         Reader reader = createMSISDNReaderWithHeaders("72185,,2000000000,9439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
 
-        swc = swcService.getByContactNumber(9439986187L);
+        swc = swcService.getByContactNumberAndCourseId(9439986187L,11);
         assertNotNull(swc);
         assertEquals("72185", swc.getSwcId());
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertNull(swc);
 
-        swc = swcService.getByContactNumber(2000000000L);
+        swc = swcService.getByContactNumberAndCourseId(2000000000L,11);
         assertNotNull(swc);
     }
 
@@ -336,13 +336,13 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,9439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
 
-        swc = swcService.getByContactNumber(9439986187L);
+        swc = swcService.getByContactNumberAndCourseId(9439986187L,11);
         assertNotNull(swc);
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertNull(swc);
 
-        swc = swcService.getByContactNumber(2000000000L);
+        swc = swcService.getByContactNumberAndCourseId(2000000000L,11);
         assertNotNull(swc);
 
         assertMaRecords(1000000000L, 9439986187L);
@@ -361,16 +361,16 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
 
         swcUpdateImportService.importMSISDNData(read("csv/swc_msisdn_update.csv"));
 
-        swc = swcService.getByContactNumber(9439986187L);
+        swc = swcService.getByContactNumberAndCourseId(9439986187L,11);
         assertNotNull(swc);
 
-        swc = swcService.getByContactNumber(9439986188L);
+        swc = swcService.getByContactNumberAndCourseId(9439986188L,11);
         assertNotNull(swc);
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertNull(swc);
 
-        swc = swcService.getByContactNumber(2000000000L);
+        swc = swcService.getByContactNumberAndCourseId(2000000000L,11);
         assertNull(swc);
     }
 
@@ -385,10 +385,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         Reader reader = createMSISDNReaderWithHeaders("72185,210302604211400029,1000000000,09439986187,1");
         swcUpdateImportService.importMSISDNData(reader);
 
-        swc = swcService.getByContactNumber(9439986187L);
+        swc = swcService.getByContactNumberAndCourseId(9439986187L,11);
         assertNotNull(swc);
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertNull(swc);
     }
 
@@ -525,7 +525,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
                         "swc_language_update_only_swcId.csv").getStatusLine()
                         .getStatusCode());
 
-        swc = swcService.getBySwcId("210302604211400029");
+        swc = swcService.getBySwcIdAndCourseId("210302604211400029",11 );
         assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -556,7 +556,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
                         "swc_language_update_only_MSISDN.csv").getStatusLine()
                         .getStatusCode());
 
-        swc = swcService.getBySwcId("72185");
+        swc = swcService.getBySwcIdAndCourseId("72185",11 );
         assertEquals(rh.hindiLanguage(), swc.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -584,7 +584,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
                         "swc_language_update_lang_error.csv").getStatusLine()
                         .getStatusCode());
 
-        swc = swcService.getBySwcId("72185");
+        swc = swcService.getBySwcIdAndCourseId("72185",11 );
         assertEquals(rh.kannadaLanguage(), swc.getLanguage());
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -615,10 +615,10 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
                         "swc_msisdn_update_only_swcId.csv").getStatusLine()
                         .getStatusCode());
 
-        swc = swcService.getByContactNumber(9439986187L);
+        swc = swcService.getByContactNumberAndCourseId(9439986187L,11);
         assertNotNull(swc);
 
-        swc = swcService.getByContactNumber(1000000000L);
+        swc = swcService.getByContactNumberAndCourseId(1000000000L,11);
         assertNull(swc);
 
         assertEquals(1, csvAuditRecordDataService.count());
@@ -653,7 +653,7 @@ public class SwachgrahiUpdateImportServiceBundleIT extends BasePaxIT {
         assertEquals(HttpStatus.SC_OK, response.getStatusLine()
                 .getStatusCode());
 
-        swc = swcService.getByContactNumber(1234567899L);
+        swc = swcService.getByContactNumberAndCourseId(1234567899L,11);
         assertEquals(rh.southDelhiDistrict().getCode(), swc.getDistrict()
                 .getCode());
         assertEquals(rh.delhiState().getCode(), swc.getState().getCode());

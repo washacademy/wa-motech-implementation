@@ -6,7 +6,6 @@ import org.motechproject.wa.region.domain.Language;
 import org.motechproject.wa.region.domain.Panchayat;
 import org.motechproject.wa.region.domain.State;
 import org.motechproject.wa.region.repository.PanchayatDataService;
-import org.motechproject.wa.region.repository.StateDataService;
 import org.motechproject.wa.region.service.LanguageService;
 import org.motechproject.wa.swc.domain.Swachchagrahi;
 import org.motechproject.wa.swc.service.SwcService;
@@ -39,6 +38,7 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
     public static final String MSISDN = "MSISDN";
     public static final String LANGUAGE_CODE = "LANGUAGE CODE";
     public static final String NEW_MSISDN = "NEW MSISDN";
+    public static final String COURSE_ID = "CourseId";
     private static final Logger LOGGER = LoggerFactory.getLogger(SwcUpdateImportServiceImpl.class);
     private SwcService swcService;
     private LanguageService languageService;
@@ -112,8 +112,9 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
                 }
 
                 Long msisdn = (Long) record.get(NEW_MSISDN);
+                int courseId = (int) record.get(COURSE_ID);
 
-                Swachchagrahi swcWithNewMSISDN = swcService.getByContactNumber(msisdn);
+                Swachchagrahi swcWithNewMSISDN = swcService.getByContactNumberAndCourseId(msisdn,courseId);
 
                 if (swcWithNewMSISDN != null && swcWithNewMSISDN != swc) {
                     throw new CsvImportDataException(
@@ -148,18 +149,19 @@ public class SwcUpdateImportServiceImpl implements SwcUpdateImportService {
         String mctsSwcId = (String) record.get(MCTS_SWC_ID);
         Panchayat state = (Panchayat) record.get(STATE);
         Long msisdn = (Long) record.get(MSISDN);
+        int courseId = (int) record.get(COURSE_ID);
 
         if (waFlWId != null) {
-            swc = swcService.getBySwcId(waFlWId);
+            swc = swcService.getBySwcIdAndCourseId(waFlWId,courseId);
         }
 
         if (swc == null && mctsSwcId != null) {
             LOGGER.info("reached gere");
-            swc = swcService.getBySwcIdAndPanchayat(mctsSwcId, state);
+            swc = swcService.getBySwcIdAndPanchayatAndCourseId(mctsSwcId, state, courseId);
         }
 
-        if (swc == null && msisdn != null) {
-            swc = swcService.getByContactNumber(msisdn);
+        if (swc == null && msisdn != null ) {
+            swc = swcService.getByContactNumberAndCourseId(msisdn, courseId);
         }
 
         return swc;
