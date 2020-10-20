@@ -41,7 +41,7 @@ public class SwcServiceImpl implements SwcService {
     private static final String SWC_PURGE_TIME = "swc.purge_invalid_swc_start_time";
     private static final String SWC_PURGE_SEC_INTERVAL = "swc.purge_invalid_swc_sec_interval";
     private static final String WEEKS_TO_KEEP_INVALID_SWCS = "swc.weeks_to_keep_invalid_swcs";
-    private static final String ALLOW_ANONYMOUS_CALLS = "allow_anonymous_calls";
+    private static final String ALLOW_ANONYMOUS_CALLS = "allow_anonymous_calls_for_courseId";
 
     private static final String SWC_PURGE_EVENT_SUBJECT = "wa.swc.purge_invalid_swc";
 
@@ -405,8 +405,8 @@ public class SwcServiceImpl implements SwcService {
     }
 
     @Override
-    public Boolean isAnonymousAllowed(){
-        String flag = settingsFacade.getProperty(ALLOW_ANONYMOUS_CALLS);
+    public Boolean isAnonymousAllowed(int courseId){
+        String flag = settingsFacade.getProperty(ALLOW_ANONYMOUS_CALLS+courseId);
         if(flag.equalsIgnoreCase("true")) {
            return true;
         } else {

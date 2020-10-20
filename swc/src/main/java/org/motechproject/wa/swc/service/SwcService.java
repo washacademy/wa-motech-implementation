@@ -38,7 +38,7 @@ public interface SwcService {
 
     void delete(Swachchagrahi record);
 
-    Boolean isAnonymousAllowed();
+    Boolean isAnonymousAllowed(int courseId);
 
     /**
      * MotechEvent handler that responds to scheduler events.  Purges SWC records that are in invalid state
