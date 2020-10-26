@@ -38,7 +38,11 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
 
     private static final String CALLBACK_URL = "imi.sms.status.callback.url";
 
-    private static final String SMS_SENDER_ID = "imi.sms.sender.id";
+    private static final String SMS_SENDER_ID = "imi.sms.sender.id.";
+
+    private static final String SMS_TEMPLATE_ID = "imi.sms.templateId.";
+
+    private static final String SMS_ENTITY_ID = "imi.sms.entityId.";
 
     private static final String SMS_TEMPLATE_FILE = "smsTemplate.json";
 
@@ -88,14 +92,16 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
 
     private Object prepareSmsRequest(Long callingNumber, String content, Integer courseId) {
 
-        String senderId = settingsFacade.getProperty(SMS_SENDER_ID);
+        String senderId = settingsFacade.getProperty(SMS_SENDER_ID+courseId);
+        String entityId = settingsFacade.getProperty(SMS_TEMPLATE_ID+courseId);
+        String templateId = settingsFacade.getProperty(SMS_ENTITY_ID+courseId);
         String endpoint = settingsFacade.getProperty(SMS_NOTIFICATION_URL);
         String callbackEndpoint = settingsFacade.getProperty(CALLBACK_URL);
 
         if (senderId == null || endpoint == null || content == null || callbackEndpoint == null) {
 
             Map<String, String> alertData = new HashMap<>();
-            alertData.put(SMS_SENDER_ID, senderId);
+            alertData.put(SMS_SENDER_ID+courseId, senderId);
             alertData.put(SMS_NOTIFICATION_URL, endpoint);
             alertData.put(SMS_MESSAGE_CONTENT, content);
             alertData.put(CALLBACK_URL, callbackEndpoint);
@@ -116,11 +122,6 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
 
         LOGGER.debug("getting the auth key for courseId(" +SMS_AUTH_KEY+courseId+"):" + courseId + " which is: " +settingsFacade.getProperty(SMS_AUTH_KEY+courseId));
 
-//        if(courseId == 2){
-//            request.setHeader("Key", settingsFacade.getProperty(SMS_AUTH_KEY_2));
-//        }
-
-
         String template = getStringFromStream(settingsFacade.getRawConfig(SMS_TEMPLATE_FILE));
         if (template == null) {
             LOGGER.error("Unable to find sms template. Check IMI sms template file");
@@ -137,11 +138,9 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         template = template.replace("<messageContent>", content);
         template = template.replace("<notificationUrl>", callbackEndpoint);
         String clientCorrelator = DateTime.now().toString() + "_" + courseId;
-//        String templateId = "";
-//        String entityId = "";
         template = template.replace("<correlationId>", clientCorrelator);
-//        template = template.replace("<templateId>", templateId);
-//        template = template.replace("<entityId>", entityId);
+        template = template.replace("<templateId>", templateId);
+        template = template.replace("<entityId>", entityId);
         Object[] requestAndCorrelator = {request,clientCorrelator};
         try {
             request.setEntity(new StringEntity(template));

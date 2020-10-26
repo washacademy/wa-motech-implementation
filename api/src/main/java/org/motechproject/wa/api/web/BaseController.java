@@ -311,7 +311,7 @@ public class BaseController {
      * true if one state in circle is authorized, otherwise
      * false if none of the states in circle are deployed
      */
-    protected boolean serviceDeployedInCircle(Service service, Circle circle) {
+    protected boolean serviceDeployedInCircle(Service service, Circle circle, Integer courseId) {
 
         if (circle == null) {
             return true;
@@ -323,7 +323,7 @@ public class BaseController {
         }
 
         for (State currentState : states) { // multiple states, false if undeployed in all states
-            if (serviceDeployedInUserState(service, currentState)) {
+            if (serviceDeployedInUserState(service, currentState, courseId)) {
                 return true;
             }
         }
@@ -339,8 +339,10 @@ public class BaseController {
      * true, if state is deployed
      * false, if state is not deployed
      */
-    protected boolean serviceDeployedInUserState(Service service, State state) {
-
+    protected boolean serviceDeployedInUserState(Service service, State state, Integer courseId) {
+        if(courseId ==11 || courseId ==12 || courseId ==13){
+            service = Service.RESILIENCE_ACADEMY;
+        }
         return propertyService.isServiceDeployedInState(service, state);
     }
 

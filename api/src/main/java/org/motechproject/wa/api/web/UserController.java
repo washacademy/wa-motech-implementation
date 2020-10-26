@@ -171,12 +171,12 @@ public class UserController extends BaseController {
         State state = getStateForFrontLineWorker(swc, circle);
 
         if (state != null) {
-            if (!serviceDeployedInUserState(service, state)) {
+            if (!serviceDeployedInUserState(service, state, courseId)) {
                 throw new NotDeployedException(String.format(NOT_DEPLOYED, service));
             }
         } else {
             // If we have no state for the user see if the service is deployed in at least one state in the circle
-            if (!serviceDeployedInCircle(service, circle)) {
+            if (!serviceDeployedInCircle(service, circle, courseId)) {
                 throw new NotDeployedException(String.format(NOT_DEPLOYED, service));
             }
         }

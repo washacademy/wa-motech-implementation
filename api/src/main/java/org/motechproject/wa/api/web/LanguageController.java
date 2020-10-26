@@ -85,7 +85,10 @@ public class LanguageController extends BaseController {
 
         State state =  getStateForFrontLineWorker(swc, null);
 
-        if (!serviceDeployedInUserState(service, state)) {
+        //TODO: here in post Language location code we have to add courseID parameter, at the moment its not used,
+        // but if we hit this api it will not upadte language for required swc.
+
+        if (!serviceDeployedInUserState(service, state, swc.getCourseId())) {
             throw new NotDeployedException(String.format(NOT_DEPLOYED, service));
         }
 
