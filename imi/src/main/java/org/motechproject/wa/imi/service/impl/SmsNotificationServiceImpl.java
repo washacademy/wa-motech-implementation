@@ -28,7 +28,7 @@ import java.util.Map;
 @Service("smsNotificationService")
 public class SmsNotificationServiceImpl implements SmsNotificationService {
 
-    private static final String SMS_NOTIFICATION_URL = "imi.sms.notification.url";
+    private static final String SMS_NOTIFICATION_URL = "imi.sms.notification.url.";
 
     private static final String SMS_AUTH_KEY = "imi.sms.authentication.key";
 
@@ -95,7 +95,14 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
         String senderId = settingsFacade.getProperty(SMS_SENDER_ID+courseId);
         String entityId = settingsFacade.getProperty(SMS_TEMPLATE_ID+courseId);
         String templateId = settingsFacade.getProperty(SMS_ENTITY_ID+courseId);
-        String endpoint = settingsFacade.getProperty(SMS_NOTIFICATION_URL);
+        String service ="";
+        if(courseId ==1 || courseId ==2){
+            service = "sbma";
+        }
+        if(courseId == 11 || courseId == 12 || courseId ==13){
+            service = "pradan";
+        }
+        String endpoint = settingsFacade.getProperty(SMS_NOTIFICATION_URL+service);
         String callbackEndpoint = settingsFacade.getProperty(CALLBACK_URL);
 
         if (senderId == null || endpoint == null || content == null || callbackEndpoint == null) {
