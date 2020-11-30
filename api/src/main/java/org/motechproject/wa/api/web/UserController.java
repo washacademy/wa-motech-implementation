@@ -12,8 +12,7 @@ import org.motechproject.wa.props.service.LogHelper;
 import org.motechproject.wa.region.domain.Circle;
 import org.motechproject.wa.region.domain.Language;
 import org.motechproject.wa.region.domain.State;
-import org.motechproject.wa.region.service.CircleService;
-import org.motechproject.wa.region.service.LanguageService;
+import org.motechproject.wa.region.service.*;
 import org.motechproject.wa.swc.domain.*;
 import org.motechproject.wa.swc.service.ServiceUsageCapService;
 import org.motechproject.wa.swc.service.ServiceUsageService;
@@ -33,6 +32,7 @@ public class UserController extends BaseController {
 
     public static final String SERVICE_NAME = "serviceName";
 
+    private LocationService locationService;
 
     @Autowired
     private SwcService swcService;
@@ -47,11 +47,23 @@ public class UserController extends BaseController {
     private CircleService circleService;
 
     @Autowired
+    private DistrictService districtService;
+
+    @Autowired
+    private BlockService blockService;
+
+    @Autowired
+    private PanchayatService panchayatService;
+
+    @Autowired
     private LanguageService languageService;
 
     @Autowired
     private InactiveJobCallAuditDataService inactiveJobCallAuditDataService;
 
+//    @Autowired
+//    private WashAcademyService washAcademyService;
+//
 
     /**
      * 2.2.1 Get User Details API
@@ -218,5 +230,103 @@ public class UserController extends BaseController {
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
         }
     }
+
+
+    /** Api created for importing swc manually **/
+
+    @RequestMapping(value = "/{serviceName}/swcImport",
+            method = RequestMethod.GET,
+            headers = { "Content-type=application/json" }) // NO CHECKSTYLE Cyclomatic Complexity
+    @ResponseBody
+    @Transactional(noRollbackFor = NotAuthorizedException.class)
+    public String createUsers(@PathVariable String serviceName,
+                                 @RequestParam(required = false) Integer courseId) {
+//        List<String[]> importingUsers = new ArrayList<>();
+//       try{
+//           Scanner sc = new Scanner(new File("/home/beehyv/swc/swc.csv"));
+//           sc.useDelimiter("\n");
+//
+//           while (sc.hasNext())  //returns a boolean value
+//           {
+//               importingUsers.add(sc.next().split(","));
+//           }
+//           sc.close();
+//       }
+//       catch (FileNotFoundException e){
+//           log(e.getMessage());
+//       }
+//
+//        log("No Od users who needs to be created is: " + importingUsers.size());
+////        ArrayList<Long> rejectedNumbers= new ArrayList<>();
+//        Circle circleObj = circleService.getByName("BI");
+//
+//        for(int i=0;i<importingUsers.size();i++){
+//            log("record:"+importingUsers.get(i).toString()+"\n");
+//            Long callingNumber = Long.valueOf(importingUsers.get(i)[0]);
+//            String name = importingUsers.get(i)[1];
+//            Long stateId = Long.valueOf(importingUsers.get(i)[2]);
+//
+//
+//
+////            try{
+////                if (!(validate(callingNumber,courseId,circleObj.getName()).length()>0)){
+//                    createRegisteredUser(callingNumber,circleObj, courseId,name,23L);
+////                }
+////                else {
+////                    rejectedNumbers.add(callingNumber);
+////                }
+////            }
+////            catch (Exception e){
+////
+////            }
+//
+//        }
+        return "imported usres";
+    }
+
+//    private void createRegisteredUser(Long callingNumber,Circle circle, Integer courseId, String name,Long districtId) {
+//
+//
+//        Swachchagrahi swc = swcService.getByContactNumberAndCourseId(callingNumber,courseId);
+//
+//        if(swc == null ){
+//            swc = swcService.getInctiveByContactNumberAndCourseId(callingNumber,courseId);
+//            if (swc == null ) {
+//                swc = new Swachchagrahi(callingNumber,circle);
+//            }
+//
+//            swc.setJobStatus(SwcJobStatus.ACTIVE);
+//            swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+//            swc.setCourseId(courseId);
+//            swc.setName(name);
+//            log(swc.toString());
+//
+//            State st=new State();
+//            District dt= new District();
+//            Block bk= new Block();
+//            Panchayat pt= new Panchayat();
+//
+//            //find out state, district, block, panchayat object form db
+//
+//
+//            st=locationService.getState(20L);
+//            districtService.findByStateAndCode(20L,s);
+//            blockService.findByDistrictAndCode();
+//            panchayatService.findByBlockAndVcodeAndSvid();
+//            swc.setState(st);
+//            swc.setDistrict(dt);
+//            swc.setBlock(bk);
+//            swc.setPanchayat(pt);
+//
+//            try{
+//                swcService.createSwc(swc);
+//                swcService.update(swc);
+//            }
+//            catch(Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
 
 }

@@ -1,7 +1,10 @@
 package org.motechproject.wa.washacademy.service;
 
+import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.wa.washacademy.dto.WaBookmark;
 import org.motechproject.wa.washacademy.dto.WaCourse;
+
+import java.util.List;
 
 /**
  * Mobile academy service interface to perform crud operations on course and bookmarks
@@ -33,6 +36,11 @@ public interface WashAcademyService {
      * @return bookmark for the user if it exists, null otherwise
      */
     WaBookmark getBookmark(Long callingNumber, String callId, Integer courseId);
+
+
+    /** Return bookmark list for all swcs **/
+
+    List<Bookmark> getAllBookmarks();
 
     /**
      * Get the bookmark for the caller (to be used for Ops only)

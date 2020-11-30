@@ -3,6 +3,7 @@ package org.motechproject.wa.api.web;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.EventRelay;
+import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.wa.api.web.contract.washAcademy.*;
 import org.motechproject.wa.api.web.contract.washAcademy.sms.DeliveryInfo;
 import org.motechproject.wa.api.web.converter.WashAcademyConverter;
@@ -23,7 +24,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -172,6 +178,42 @@ public class WashAcademyController extends BaseController {
         GetBookmarkResponse ret = WashAcademyConverter.convertBookmarkDto(bookmark);
         log("RESPONSE: /washacademy/bookmarkWithScore", String.format("callId=%s, %s", callId, ret.toString()));
         return ret;
+    }
+
+    @RequestMapping(value = "/bookmarkRepostsWash",
+            method = RequestMethod.GET,
+            headers = { "Content-type=application/json" }) // NO CHECKSTYLE Cyclomatic Complexity
+    @ResponseBody
+    @Transactional(readOnly = true)
+    public List<UserIDBookmarkAndCourseResponse> getDetailedBookmarkReports() {
+
+        List<UserIDBookmarkAndCourseResponse> responses = new ArrayList<>();
+        List<Bookmark> allBookmarks = washAcademyService.getAllBookmarks();
+        for (int i=0;i<allBookmarks.size();i++){
+            UserIDBookmarkAndCourseResponse response = new UserIDBookmarkAndCourseResponse();
+            if (allBookmarks.get(i).getProgress() != null) {
+                Object bookmark = allBookmarks.get(i).getProgress().get("bookmark");
+                response.setBookmark(bookmark == null ? null : bookmark.toString());
+                response.setScoresByChapter((Map<String, Integer>) allBookmarks.get(i).getProgress().get("scoresByChapter"));
+            }
+            response.setUserId(allBookmarks.get(i).getExternalId());
+            response.setCourseIdentifier(allBookmarks.get(i).getCourseIdentifier());
+            responses.add(response);
+            Swachchagrahi swachchagrahi = swcService.getById(Long.parseLong(response.getUserId()));
+            response.setContactNumber(swachchagrahi.getContactNumber());
+        }
+        File myObj = new File("/home/beehyv/Desktop/RA1Bookmark.txt");
+        for (int i =0;i<responses.size();i++){
+            try {
+                FileWriter myWriter = new FileWriter("RA1Bookmark.txt");
+                myWriter.write(responses.get(i).toString()+"\n");
+                myWriter.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        }
+        return responses;
     }
 
     /**

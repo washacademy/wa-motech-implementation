@@ -22,6 +22,8 @@ public interface DistrictService {
      */
     District findByStateAndCode(State state, Long code);
 
+    District findById(Long id);
+
     /**
      * Find district in a state with given district name
      * @param state State to find district in

@@ -174,10 +174,14 @@ public class SwcServiceImpl implements SwcService {
     }
 
     @Override
+    public void createSwc(Swachchagrahi swachchagrahi){
+        swcDataService.create(swachchagrahi);
+    }
+
+    @Override
     public Swachchagrahi getBySwcIdAndCourseId(String swcId, Integer courseId) {
         return swcDataService.findBySwcIdAndCourseId(swcId,courseId);
     }
-
     @Override
     public Swachchagrahi getBySwcIdAndPanchayatAndCourseId(final String swcId, final Panchayat panchayat, final Integer courseId) {
         if (swcId == null || panchayat == null ) {

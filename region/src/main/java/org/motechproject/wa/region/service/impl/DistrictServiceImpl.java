@@ -49,6 +49,32 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
+    public District findById(Long id){
+        SqlQueryExecution<District> queryExecution = new SqlQueryExecution<District>() {
+
+            @Override
+            public String getSqlQuery() {
+                return "select * from wash_districts where id = ?";
+            }
+
+            @Override
+            public District execute(Query query) {
+                query.setClass(District.class);
+                ForwardQueryResult fqr = (ForwardQueryResult) query.execute(id);
+                if (fqr.isEmpty()) {
+                    return null;
+                }
+                if (fqr.size() == 1) {
+                    return (District) fqr.get(0);
+                }
+                throw new IllegalStateException("More than one row returned!");
+            }
+        };
+        return districtDataService.executeSQLQuery(queryExecution);
+    }
+
+
+    @Override
     public District findByStateAndCode(final State state, final Long code) {
 
         if (state == null) { return null; }

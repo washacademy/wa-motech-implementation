@@ -245,6 +245,14 @@ public class BaseController {
 
         return failureReasons;
     }
+    protected StringBuilder validate(Long callingNumber, Integer courseId, String circle) {
+        StringBuilder failureReasons = new StringBuilder();
+        validateField10Digits(failureReasons, "callingNumber", callingNumber);
+        validateFieldPresent(failureReasons, "circle", circle);
+        validateCourseId(failureReasons, courseId);
+        return failureReasons;
+    }
+
 
     protected StringBuilder validate(Long callingNumber, String callId) {
         StringBuilder failureReasons = new StringBuilder();

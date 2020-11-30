@@ -40,6 +40,7 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,6 +218,24 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
 
 
+    }
+
+
+    @Override
+    public List<Bookmark> getAllBookmarks(){
+
+    List<Swachchagrahi> allSwc = swcService.getRecords();
+    List<Bookmark> allBookmarks = new ArrayList<>();
+
+    for(int i=0;i<allSwc.size();i++){
+        List<Bookmark> bookmarks = this.bookmarkDataService.findBookmarksForUser(allSwc.get(i).getId().toString());
+       if(bookmarks.size()!=0){
+           if(bookmarks.get(0).getCourseIdentifier().equalsIgnoreCase("RA1")){
+               allBookmarks.add(bookmarks.get(0));
+           }
+       }
+    }
+        return allBookmarks;
     }
 //    // Method to change swc.domain bookmark to Bookmark object.
 //    private Bookmark mapSwcBookmarkToBookmark(org.motechproject.wa.swc.domain.Bookmark existingBookmark) {
