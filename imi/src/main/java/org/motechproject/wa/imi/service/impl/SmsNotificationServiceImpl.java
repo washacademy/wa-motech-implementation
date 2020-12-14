@@ -93,8 +93,8 @@ public class SmsNotificationServiceImpl implements SmsNotificationService {
     private Object prepareSmsRequest(Long callingNumber, String content, Integer courseId) {
 
         String senderId = settingsFacade.getProperty(SMS_SENDER_ID+courseId);
-        String entityId = settingsFacade.getProperty(SMS_TEMPLATE_ID+courseId);
-        String templateId = settingsFacade.getProperty(SMS_ENTITY_ID+courseId);
+        String entityId = settingsFacade.getProperty(SMS_ENTITY_ID+courseId);
+        String templateId = settingsFacade.getProperty(SMS_TEMPLATE_ID+courseId);
         String service ="";
         if(courseId ==1 || courseId ==2){
             service = "sbma";
