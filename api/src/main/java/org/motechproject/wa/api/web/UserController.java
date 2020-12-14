@@ -36,7 +36,7 @@ public class UserController extends BaseController {
 
 //    public static final String SWC_FILE_LOCATION = "/home/wash/swc/swc.csv";
 
-    public static final String SWC_FILE_LOCATION = "/home/beehyv/swc/swc.csv";
+    public static final String SWC_FILE_LOCATION = "/home/beehyv93/swc/swc.csv";
 
     @Autowired
     private SwcService swcService;
@@ -258,13 +258,13 @@ public class UserController extends BaseController {
         List<Swachchagrahi> duplicateSwc= new ArrayList<>();
         List<Swachchagrahi> acceptedSwc= new ArrayList<>();
 
-        for(int i=0;i<importingUsers.size();i++){
-            log("record:"+importingUsers.get(i).toString()+"\n");
-            Long callingNumber = Long.valueOf(importingUsers.get(i)[0]);
-            String name = importingUsers.get(i)[1];
-            Long stateId = Long.valueOf(importingUsers.get(i)[2]);
-            String circleName = importingUsers.get(i)[3];
-            Long districtId = Long.valueOf(importingUsers.get(i)[4]);
+        for (String[] importingUser : importingUsers) {
+            log("record:" + importingUser.toString() + "\n");
+            Long callingNumber = Long.valueOf(importingUser[0]);
+            String name = importingUser[1];
+            Long stateId = Long.valueOf(importingUser[2]);
+            String circleName = importingUser[3];
+            Long districtId = Long.valueOf(importingUser[4]);
 
 
             if(999999999L<callingNumber && callingNumber<9999999999L) {
