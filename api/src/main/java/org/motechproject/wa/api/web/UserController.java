@@ -23,8 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 
 @SuppressWarnings("PMD")
@@ -33,6 +34,9 @@ public class UserController extends BaseController {
 
     public static final String SERVICE_NAME = "serviceName";
 
+//    public static final String SWC_FILE_LOCATION = "/home/wash/swc/swc.csv";
+
+    public static final String SWC_FILE_LOCATION = "/home/beehyv/swc/swc.csv";
 
     @Autowired
     private SwcService swcService;
@@ -218,5 +222,91 @@ public class UserController extends BaseController {
             throw new NotAuthorizedException(String.format(NOT_AUTHORIZED, CALLING_NUMBER));
         }
     }
+
+    /* Api created for importing swc manually */
+
+    @RequestMapping(value = "/{serviceName}/swcImport",
+            method = RequestMethod.GET,
+            headers = { "Content-type=application/json" }) // NO CHECKSTYLE Cyclomatic Complexity
+    @ResponseBody
+    @Transactional(noRollbackFor = NotAuthorizedException.class)
+    public String createSwcAPI(@PathVariable String serviceName,
+                               @RequestParam(required = false) Integer courseId) {
+        List<String[]> importingUsers = new ArrayList<>();
+
+        try{
+            Scanner sc = new Scanner(new File(SWC_FILE_LOCATION));
+            sc.useDelimiter("\n");
+
+            while (sc.hasNext())  //returns a boolean value
+            {
+                importingUsers.add(sc.next().split(","));
+            }
+            sc.close();
+        }
+        catch (FileNotFoundException e){
+            log(e.getMessage());
+        }
+
+        log("No Od users who needs to be created is: " + importingUsers.size());
+
+        Circle ci=new Circle();
+        ci= circleService.getByName("BI");
+
+
+        List<String> rejectedSwc= new ArrayList<>();
+        List<Swachchagrahi> duplicateSwc= new ArrayList<>();
+        List<Swachchagrahi> acceptedSwc= new ArrayList<>();
+
+        for(int i=0;i<importingUsers.size();i++){
+            log("record:"+importingUsers.get(i).toString()+"\n");
+            Long callingNumber = Long.valueOf(importingUsers.get(i)[0]);
+            String name = importingUsers.get(i)[1];
+            Long stateId = Long.valueOf(importingUsers.get(i)[2]);
+            String circleName = importingUsers.get(i)[3];
+            Long districtId = Long.valueOf(importingUsers.get(i)[4]);
+
+
+            if(999999999L<callingNumber && callingNumber<9999999999L) {
+                Swachchagrahi swc= new Swachchagrahi(name,callingNumber);
+                swc.setJobStatus(SwcJobStatus.ACTIVE);
+                swc.setCourseStatus(SwachchagrahiStatus.ANONYMOUS);
+                swc.setCourseId(courseId);
+
+                swc.setCircle(ci);
+
+                swc.setOwner("importedByAPI");
+                Swachchagrahi existingSwc = swcService.getByContactNumberAndCourseId(callingNumber,courseId);
+
+                if(existingSwc==null){
+                    swcService.createSwc(swc);
+                    acceptedSwc.add(swc);
+                }
+                else{
+                    duplicateSwc.add(swc);
+                }
+            }
+            else {
+                rejectedSwc.add(callingNumber.toString());
+            }
+
+        }
+
+//        Map<String, List<Swachchagrahi>> m = new HashMap<>();
+//        m.put("Rejected Swc",rejectedSwc);
+//        m.put("Duplicate Swc",duplicateSwc);
+//        m.put("Created Swc",acceptedSwc);
+
+        System.out.println( "total " +acceptedSwc.size()+" unique swc imported successfully");
+
+        System.out.println("Rejected swc"+rejectedSwc.toString());
+
+        System.out.println("Duplicate swc"+duplicateSwc.toString());
+
+
+        return "swc import process successful "+"total unique: " +acceptedSwc.size()+", duplicate: "+duplicateSwc.size()+", rejected: "+rejectedSwc.size();
+//        return m;
+    }
+
 
 }

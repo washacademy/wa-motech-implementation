@@ -18,6 +18,8 @@ public interface SwcService {
 
     void add(Swachchagrahi swachchagrahi);
 
+    void createSwc(Swachchagrahi swachchagrahi);
+
     Swachchagrahi getByContactNumber(Long contactNumber);
 
     Swachchagrahi getByContactNumberAndCourseId(Long contactNumber,Integer courseId);
