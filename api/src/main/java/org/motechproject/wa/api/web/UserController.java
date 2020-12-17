@@ -34,9 +34,9 @@ public class UserController extends BaseController {
 
     public static final String SERVICE_NAME = "serviceName";
 
-//    public static final String SWC_FILE_LOCATION = "/home/wash/swc/swc.csv";
+    public static final String SWC_FILE_LOCATION = "/home/wash/swc/swc.csv";
 
-    public static final String SWC_FILE_LOCATION = "/home/beehyv93/swc/swc.csv";
+//    public static final String SWC_FILE_LOCATION = "/home/beehyv93/swc/swc.csv";
 
     @Autowired
     private SwcService swcService;
