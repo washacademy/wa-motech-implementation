@@ -40,7 +40,7 @@ public interface WashAcademyService {
 
     /** Return bookmark list for all swcs **/
 
-    List<Bookmark> getAllBookmarks();
+    List<Bookmark> getAllBookmarks(String courseIdentifier);
 
     /**
      * Get the bookmark for the caller (to be used for Ops only)

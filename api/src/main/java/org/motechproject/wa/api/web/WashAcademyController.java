@@ -185,10 +185,11 @@ public class WashAcademyController extends BaseController {
             headers = { "Content-type=application/json" }) // NO CHECKSTYLE Cyclomatic Complexity
     @ResponseBody
     @Transactional(readOnly = true)
-    public List<UserIDBookmarkAndCourseResponse> getDetailedBookmarkReports() {
+    public List<UserIDBookmarkAndCourseResponse> getDetailedBookmarkReports(
+            @RequestParam(required = false) String courseIdentifier) {
 
         List<UserIDBookmarkAndCourseResponse> responses = new ArrayList<>();
-        List<Bookmark> allBookmarks = washAcademyService.getAllBookmarks();
+        List<Bookmark> allBookmarks = washAcademyService.getAllBookmarks(courseIdentifier);
         for (int i=0;i<allBookmarks.size();i++){
             UserIDBookmarkAndCourseResponse response = new UserIDBookmarkAndCourseResponse();
             if (allBookmarks.get(i).getProgress() != null) {

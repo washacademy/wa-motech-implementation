@@ -222,19 +222,22 @@ public class WashAcademyServiceImpl implements WashAcademyService {
 
 
     @Override
-    public List<Bookmark> getAllBookmarks(){
+    public List<Bookmark> getAllBookmarks(String courseIdentifier){
+        if(courseIdentifier == null){
+            courseIdentifier="RA1";
+        }
 
     List<Swachchagrahi> allSwc = swcService.getRecords();
     List<Bookmark> allBookmarks = new ArrayList<>();
 
-    for(int i=0;i<allSwc.size();i++){
-        List<Bookmark> bookmarks = this.bookmarkDataService.findBookmarksForUser(allSwc.get(i).getId().toString());
-       if(bookmarks.size()!=0){
-           if(bookmarks.get(0).getCourseIdentifier().equalsIgnoreCase("RA1")){
-               allBookmarks.add(bookmarks.get(0));
-           }
-       }
-    }
+        for (Swachchagrahi swachchagrahi : allSwc) {
+            List<Bookmark> bookmarks = this.bookmarkDataService.findBookmarksForUser(swachchagrahi.getId().toString());
+            if (bookmarks.size() != 0) {
+                if (bookmarks.get(0).getCourseIdentifier().equalsIgnoreCase(courseIdentifier)) {
+                    allBookmarks.add(bookmarks.get(0));
+                }
+            }
+        }
         return allBookmarks;
     }
 //    // Method to change swc.domain bookmark to Bookmark object.
